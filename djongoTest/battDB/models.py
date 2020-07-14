@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
 from djongo import models
-from django-mongo-storage import GridFSStorage
+#from django-mongo-storage import GridFSStorage
 import time
 
-grid_fs_storage = GridFSStorage(collection='myfiles')
+#grid_fs_storage = GridFSStorage(collection='myfiles')
+
+NAME_LENGTH=64
 
 # Create your models here.
 
@@ -13,24 +15,42 @@ grid_fs_storage = GridFSStorage(collection='myfiles')
 #    def __str__(self):
 #       return self.name
 
-class TestProtocol(models.Model):
-    name = models.CharField(max_length=30)
-    steps = models.JSONField()
+
+class HasAttributes(models.Model):
+    name = models.CharField(max_length=32)
+    attributes = models.JSONField(null=True)
     def __str__(self):
        return self.name
     class Meta:
         abstract = True
 
-class Equipment(models.Model):
-    type = models.CharField(max_length=32)
+# may need to set each as Abstract
+class TestProtocol(HasAttributes):
+    steps = models.JSONField()
+    class Meta:
+        abstract = True
+
+class Equipment(HasAttributes):
     serialNo = models.CharField(max_length=64)
-    metadata = models.JSONField(null=True)
 
 class TestEquipment(Equipment):
     pass
 
 class EquipmentUnderTest(Equipment):
     pass
+
+class CellSeparator(models.Model):
+    thickness_um = models.FloatField()
+    porosity_pct = models.FloatField()
+    substrate = models.CharField(max_length=32)
+    class Meta:
+        abstract = True
+
+
+class CellBatch(models.Model):
+    separator = models.EmbeddedField(model_container=CellSeparator,null=True)
+    class Meta:
+        abstract = True
 
 class Experiment(models.Model):
     name = models.CharField(max_length=30)
