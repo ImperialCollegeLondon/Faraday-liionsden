@@ -1,95 +1,101 @@
 from django.contrib.auth import get_user_model
-from djongo import models
-#from django-mongo-storage import GridFSStorage
-import time
-
-#grid_fs_storage = GridFSStorage(collection='myfiles')
-
-NAME_LENGTH=64
-
-# Create your models here.
-
-#class User(models.Model):
-#    name = models.CharField(max_length=30)
-#    email = models.EmailField()
-#    def __str__(self):
-#       return self.name
+from django.db import models
+from django.contrib.postgres.fields import JSONField
+#from jsonfield_schema import JSONSchema
 
 
 class HasAttributes(models.Model):
-    name = models.CharField(max_length=32)
-    attributes = models.JSONField(null=True)
+    name = models.CharField(max_length=32, unique=True)
+    attributes = JSONField(default=dict, blank=True)
     def __str__(self):
        return self.name
     class Meta:
         abstract = True
 
-# may need to set each as Abstract
+
+class SignalType(HasAttributes):
+    pass
+
 class TestProtocol(HasAttributes):
-    steps = models.JSONField()
-    class Meta:
-        abstract = True
+    description = models.TextField()
+    parameters=JSONField(default=dict, blank=True)
+
+class Manufacturer(HasAttributes):
+    pass
+
+
+def equipmentType_schema():
+    return {
+       "channels":None,
+    }
+
+class EquipmentType(HasAttributes):
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, null=True, blank=True)
+EquipmentType._meta.get_field('attributes').default = equipmentType_schema
+
 
 class Equipment(HasAttributes):
+    type = models.ForeignKey(EquipmentType, on_delete=models.SET_NULL, null=True, blank=True)
     serialNo = models.CharField(max_length=64)
+    class Meta:
+       verbose_name_plural="Equipment"
 
-class TestEquipment(Equipment):
+def cellSeparator_schema():
+    return {
+       "material":None,
+       "porosity_pct" : None
+    }
+
+class CellSeparator(HasAttributes):
+#    thickness_um = models.FloatField()
+#    porosity_pct = models.FloatField()
+#    substrate = models.CharField(max_length=32)
+    pass
+CellSeparator._meta.get_field('attributes').default = cellSeparator_schema
+
+
+class CellBatch(HasAttributes):
+    manufactured_on = models.DateField(null=True, blank=True)
+    manufacturer    = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, null=True, blank=True)
+    cells_schema = JSONField(default=dict, blank=True)
+    class Meta:
+       verbose_name_plural="CellBatches"
+
+class CellConfig(HasAttributes):
     pass
 
-class EquipmentUnderTest(Equipment):
-    pass
+class Cell(HasAttributes):
+    batch = models.ForeignKey(CellBatch, on_delete=models.SET_NULL, null=True, blank=True)
 
-class CellSeparator(models.Model):
-    thickness_um = models.FloatField()
-    porosity_pct = models.FloatField()
-    substrate = models.CharField(max_length=32)
+class ExperimentalApparatus(HasAttributes):
+    testEquipment = models.ManyToManyField(Equipment)
+    cellConfig = models.ForeignKey(CellConfig, on_delete=models.SET_NULL,  null=True, blank=True)
+    protocol = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL,  null=True, blank=True)
+    photo = models.ImageField(upload_to='apparatus_photos', null=True, blank=True)
     class Meta:
-        abstract = True
+       verbose_name_plural="ExperimentalApparatus"
 
+def experimentParameters_schema():
+    return {
+        "StartVoltage":None,
+        "EndVoltage":None,
+    }
 
-class CellBatch(models.Model):
-    separator = models.EmbeddedField(model_container=CellSeparator,null=True)
-    class Meta:
-        abstract = True
+def experimentAnalysis_schema():
+    return {
+        "MeasuredCapacity":None,
+        "MeasuredResistance":None,
+    }
 
-class Experiment(models.Model):
+class Experiment(HasAttributes):
     name = models.CharField(max_length=30)
-    owner = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING, null=True)
+    owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
-    testEquipment = models.ManyToManyField(TestEquipment)
-    equipmentUnderTest = models.ManyToManyField(EquipmentUnderTest)
-    protocol = models.EmbeddedField(
-        model_container=TestProtocol,
-        null=True
-    )
-    results = models.JSONField(null=True)
-    parameters = models.JSONField(null=True)
-    analysis = models.JSONField(null=True)
-    objects = models.DjongoManager()
+    apparatus = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL,  null=True, blank=True)
+    cells = models.ManyToManyField(Cell)
+    raw_data_file = models.FileField(upload_to='raw_data_files',null=True)
+    processed_data_file = models.FileField(upload_to='processed_data_files',null=True)
+    parameters = JSONField(default=experimentParameters_schema, blank=True)
+    analysis = JSONField(default=experimentAnalysis_schema, blank=True)
 
 
-
-#e = Experiment.objects.create(
-#    name="bork",
-#    date=time.time(),
-#    equipment={},
-#    protocol={
-#        'name': 'foo',
-#        'owner': None,
-#        'steps': {}
-#    },
-#    results = {},
-#    parameters = {},
-#    analysis = {}
-#)
-
-#g = Entry.objects.get(headline='bork')
-#assert e == g
-#
-#e = Experiment()
-#e.protocol = {
-#    'name': 'b2'
-#    'owner': None,
-#    'steps': {}
-#}
-#e.save()
