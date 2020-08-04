@@ -1,3 +1,4 @@
+from jsoneditor.forms import JSONEditor
 from django.contrib.auth import get_user_model
 from djongo import models
 #from django-mongo-storage import GridFSStorage
@@ -52,17 +53,21 @@ class CellBatch(models.Model):
     class Meta:
         abstract = True
 
+
+class ExperimentData(models.Model):
+    file = models.FileField(upload_to='data_files')
+
 class Experiment(models.Model):
     name = models.CharField(max_length=30)
     owner = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING, null=True)
     date = models.DateField()
     testEquipment = models.ManyToManyField(TestEquipment)
     equipmentUnderTest = models.ManyToManyField(EquipmentUnderTest)
-    protocol = models.EmbeddedField(
-        model_container=TestProtocol,
-        null=True
-    )
-    results = models.JSONField(null=True)
+#    protocol = models.EmbeddedField(
+#        model_container=TestProtocol,
+#        null=True
+#    )
+    results_file = models.FileField(upload_to='data_files')
     parameters = models.JSONField(null=True)
     analysis = models.JSONField(null=True)
     objects = models.DjongoManager()

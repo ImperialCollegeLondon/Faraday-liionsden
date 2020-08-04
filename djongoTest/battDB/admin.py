@@ -7,4 +7,13 @@ from djongo import models
 from pymongo.read_concern import ReadConcern
 from .models import Experiment, Equipment
 
-admin.site.register([Experiment, Equipment])
+
+# see https://github.com/nnseva/django-jsoneditor
+from djongo.models import JSONField
+from jsoneditor.forms import JSONEditor
+class MyAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        JSONField:{ 'widget':JSONEditor },
+    }
+
+admin.site.register([Experiment, Equipment], MyAdmin)
