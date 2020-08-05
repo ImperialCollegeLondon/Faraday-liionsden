@@ -47,9 +47,6 @@ def cellSeparator_schema():
     }
 
 class CellSeparator(HasAttributes):
-#    thickness_um = models.FloatField()
-#    porosity_pct = models.FloatField()
-#    substrate = models.CharField(max_length=32)
     pass
 CellSeparator._meta.get_field('attributes').default = cellSeparator_schema
 
@@ -66,6 +63,7 @@ class CellConfig(HasAttributes):
 
 class Cell(HasAttributes):
     batch = models.ForeignKey(CellBatch, on_delete=models.SET_NULL, null=True, blank=True)
+    separator = models.ForeignKey(CellSeparator, on_delete=models.SET_NULL, null=True, blank=True)
 
 class ExperimentalApparatus(HasAttributes):
     testEquipment = models.ManyToManyField(Equipment)
