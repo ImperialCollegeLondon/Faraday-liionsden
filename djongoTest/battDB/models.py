@@ -85,8 +85,8 @@ def experimentAnalysis_schema():
         "MeasuredResistance":None,
     }
 
-class Experiment(HasAttributes):
-    name = models.CharField(max_length=30)
+class Experiment(models.Model):
+    name = models.SlugField(default='experiment')
     owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
     apparatus = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL,  null=True, blank=True)
@@ -95,5 +95,10 @@ class Experiment(HasAttributes):
     processed_data_file = models.FileField(upload_to='processed_data_files',null=True)
     parameters = JSONField(default=experimentParameters_schema, blank=True)
     analysis = JSONField(default=experimentAnalysis_schema, blank=True)
-
+    def __str__(self):
+        return str(self.owner) + "/" + str(self.name) + "/" + str(self.date)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['owner', 'name', 'date'], name='unique_namestring')
+        ]
 

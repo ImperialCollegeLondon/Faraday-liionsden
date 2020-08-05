@@ -1096,27 +1096,94 @@
   }
 },
 {
-  "model": "battDB.experiment",
-  "pk": 1,
+  "model": "admin.logentry",
+  "pk": 18,
   "fields": {
-    "attributes": {},
-    "name": "test test",
-    "owner": 1,
-    "date": "2020-08-04",
-    "apparatus": 1,
-    "raw_data_file": "raw_data_files/MT6735M_Android_scatter.txt",
-    "processed_data_file": "processed_data_files/Pump.io_Logo.svg",
-    "parameters": {
-      "EndVoltage": null,
-      "StartVoltage": null
-    },
-    "analysis": {
-      "MeasuredCapacity": null,
-      "MeasuredResistance": null
-    },
-    "cells": [
-      1
-    ]
+    "action_time": "2020-08-05T12:09:30.332Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "1",
+    "object_repr": "tom/test test/2020-08-04",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 19,
+  "fields": {
+    "action_time": "2020-08-05T12:09:41.169Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "6",
+    "object_repr": "tom/test test/2020-08-05",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 20,
+  "fields": {
+    "action_time": "2020-08-05T12:09:41.245Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "5",
+    "object_repr": "None/test test/2020-08-05",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 21,
+  "fields": {
+    "action_time": "2020-08-05T12:09:41.270Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "4",
+    "object_repr": "None/test test/2020-08-05",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 22,
+  "fields": {
+    "action_time": "2020-08-05T12:15:42.946Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "tom/test2/2020-08-05",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"owner\", \"cells\", \"processed_data_file\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 23,
+  "fields": {
+    "action_time": "2020-08-05T12:15:47.904Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "tom/test2/2020-08-05",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 24,
+  "fields": {
+    "action_time": "2020-08-05T12:17:32.857Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "tom/test2/2020-08-05",
+    "action_flag": 3,
+    "change_message": ""
   }
 }
 ]

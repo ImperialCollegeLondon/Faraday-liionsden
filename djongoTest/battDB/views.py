@@ -4,6 +4,8 @@ from django.views.generic import ListView, CreateView
 from django.urls import reverse_lazy
 from .models import *
 from .forms import ExperimentForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 # Create your views here.
 
@@ -13,11 +15,14 @@ class ExperimentsView(ListView):
     template_name = 'experiments.html'
 
 
-class CreateExperimentView(CreateView): # new
+class CreateExperimentView(LoginRequiredMixin, CreateView):
     model = Experiment
     form_class = ExperimentForm
     template_name = 'create_experiment.html'
-    success_url = reverse_lazy('exp')
+    success_url = reverse_lazy('Experiments')
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
 def index(request):
     return HttpResponse("<h1>Hello, world.</h1>")
