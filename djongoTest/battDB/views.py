@@ -1,10 +1,11 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponse
 from django.views.generic import ListView, CreateView, DetailView
 from django.urls import reverse_lazy
 from .models import *
 from .forms import ExperimentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import ProcessFormView
 
 
 # Create your views here.
@@ -30,6 +31,10 @@ class ExperimentView(DetailView):
             date=self.kwargs['date']
            )
 
+class ProcessExperimentView(LoginRequiredMixin, DetailView, ProcessFormView):
+    model = Experiment
+    template_name='experiment.html'
+
 class CreateExperimentView(LoginRequiredMixin, CreateView):
     model = Experiment
     form_class = ExperimentForm
@@ -40,7 +45,8 @@ class CreateExperimentView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 def index(request):
-    return HttpResponse("<h1>Hello, world.</h1>")
+    return redirect('/exps')
+    #return HttpResponse("<h1>Hello, world.</h1>")
 
 def viewdata(request):
     return HttpResponse("<h3>View data</h3>")
