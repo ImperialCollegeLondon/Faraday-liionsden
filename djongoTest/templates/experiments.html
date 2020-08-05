@@ -2,6 +2,6 @@
 <h1>Experiments List</h1>
 <ul>
   {% for exp in object_list %}
-    <h2>{{ exp.name }}</h2>
+    <li><a href="{{ exp.get_absolute_url }}">{{ exp.slug }}</a></li>
   {% endfor %}
 </ul>

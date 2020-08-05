@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
 from django.urls import reverse_lazy
 from .models import *
 from .forms import ExperimentForm
@@ -14,6 +14,21 @@ class ExperimentsView(ListView):
     model = Experiment
     template_name = 'experiments.html'
 
+class ExperimentView(DetailView):
+    model = Experiment
+    template_name='experiment.html'
+    def get_object(self):
+       if('pk' in self.kwargs):
+            return get_object_or_404(Experiment, pk=self.kwargs['pk'])
+       else:  # doesn't work..
+           return get_object_or_404(
+            Experiment,
+            #slug=self.kwargs['slug']
+            #slug=str(self.kwargs['name']) + "/" + str(self.kwargs['owner']) + "/" + str(self.kwargs['date'])
+            name=self.kwargs['name'],
+            owner=self.kwargs['owner'],
+            date=self.kwargs['date']
+           )
 
 class CreateExperimentView(LoginRequiredMixin, CreateView):
     model = Experiment

@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.postgres.fields import JSONField
+from django.urls import reverse
 #from jsonfield_schema import JSONSchema
 
 
@@ -86,19 +87,25 @@ def experimentAnalysis_schema():
     }
 
 class Experiment(models.Model):
-    name = models.SlugField(default='experiment')
+    name = models.SlugField()
     owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
     apparatus = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL,  null=True, blank=True)
     cells = models.ManyToManyField(Cell)
     raw_data_file = models.FileField(upload_to='raw_data_files',null=True)
-    processed_data_file = models.FileField(upload_to='processed_data_files',null=True)
+    processed_data_file = models.FileField(upload_to='processed_data_files',null=True, blank=True)
     parameters = JSONField(default=experimentParameters_schema, blank=True)
     analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
         return str(self.owner) + "/" + str(self.name) + "/" + str(self.date)
+    @property
+    def slug(self):
+        return str(self)
+    def get_absolute_url(self):
+        #return reverse('Experiment', kwargs={'slug': self.slug})
+        return reverse('Experiment', kwargs={'pk': self.pk})
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['owner', 'name', 'date'], name='unique_namestring')
+            models.UniqueConstraint(fields=['owner', 'name', 'date'], name='unique_slugname')
         ]
 
