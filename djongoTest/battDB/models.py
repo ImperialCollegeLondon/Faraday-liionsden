@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.urls import reverse
+from modules.parsers.biologic_parser import BiologicCSVnTSVParser
 #from jsonfield_schema import JSONSchema
 
 
@@ -109,3 +110,14 @@ class Experiment(models.Model):
             models.UniqueConstraint(fields=['owner', 'name', 'date'], name='unique_slugname')
         ]
 
+
+
+def experiment_pre_save(sender, instance, *args, **kwargs):
+    parser = BiologicCSVnTSVParser(instance.raw_data_file.path)
+    instance.analysis.update(parser.get_metadata()[0])
+    instance.analysis['processed'] = "YES"
+
+
+from django.dispatch import Signal
+from django.db.models import signals
+signals.pre_save.connect(experiment_pre_save, sender=Experiment)
