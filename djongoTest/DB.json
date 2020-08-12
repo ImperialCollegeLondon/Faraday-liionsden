@@ -1581,6 +1581,110 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 38,
+  "fields": {
+    "action_time": "2020-08-12T14:11:16.810Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "9",
+    "object_repr": "tom/foo/2020-08-05",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 39,
+  "fields": {
+    "action_time": "2020-08-12T14:11:41.598Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "9",
+    "object_repr": "tom/foo/2020-08-05",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 40,
+  "fields": {
+    "action_time": "2020-08-12T14:11:42.044Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "9",
+    "object_repr": "tom/foo/2020-08-05",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 41,
+  "fields": {
+    "action_time": "2020-08-12T14:14:51.399Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "9",
+    "object_repr": "tom/fooo/2020-08-05",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 42,
+  "fields": {
+    "action_time": "2020-08-12T14:15:48.104Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "9",
+    "object_repr": "tom/fooo/2020-08-05",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 43,
+  "fields": {
+    "action_time": "2020-08-12T14:19:51.603Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "9",
+    "object_repr": "tom/fooo/2020-08-05",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 44,
+  "fields": {
+    "action_time": "2020-08-12T14:25:19.660Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "9",
+    "object_repr": "tom/fooo/2020-08-05",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 45,
+  "fields": {
+    "action_time": "2020-08-12T14:28:15.196Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "9",
+    "object_repr": "tom/fooo/2020-08-05",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
   "model": "battDB.experiment",
   "pk": 8,
   "fields": {
@@ -1607,7 +1711,7 @@
   "model": "battDB.experiment",
   "pk": 9,
   "fields": {
-    "name": "foo",
+    "name": "fooo",
     "owner": 1,
     "date": "2020-08-05",
     "apparatus": 1,
@@ -1618,115 +1722,201 @@
       "StartVoltage": null
     },
     "analysis": {
-      "x": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "Ns": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "P/W": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "I/mA": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "Rec#": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "Time": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "mode": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "R/Ohm": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "error": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "ox/red": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "Ecell/V": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "I Range": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "dq/mA_h": {
-        "has_data": true,
-        "is_numeric": true
+      "Columns": {
+        "x": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Ns": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "P/W": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "I/mA": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Rec#": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Time": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "mode": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "R/Ohm": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "error": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "ox/red": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Ecell/V": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "I Range": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "dq/mA_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "control/V": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Energy/W_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Ns changes": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "control/mA": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "(Q-Qo)/mA_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "counter inc": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Analog OUT/V": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Efficiency/%": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "control/V/mA": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "cycle number": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Analog IN 1/V": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Capacity/mA_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Q charge/mA_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "control changes": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Q discharge/mA_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Energy charge/W_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Energy discharge/W_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Capacitance charge/\ufffdF": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Capacitance discharge/\ufffdF": {
+          "has_data": true,
+          "is_numeric": true
+        }
       },
       "num_rows": 149,
       "warnings": [],
-      "control/V": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "processed": "YES",
-      "Energy/W_h": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "Ns changes": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "control/mA": {
-        "has_data": true,
-        "is_numeric": true
-      },
       "data_start": 101,
-      "(Q-Qo)/mA_h": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "counter inc": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "Analog OUT/V": {
-        "has_data": true,
-        "is_numeric": true
-      },
       "Dataset_Name": "BioLogic_full_35X61jw",
-      "Efficiency/%": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "control/V/mA": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "cycle number": {
-        "has_data": true,
-        "is_numeric": true
-      },
       "dataset_size": 101861,
-      "Analog IN 1/V": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "Capacity/mA_h": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "Q charge/mA_h": {
-        "has_data": true,
-        "is_numeric": true
+      "YAML_Metadata": {
+        "Mode": "Modulo Bat",
+        "User": null,
+        "DX/DQ": "for DX = 1, DQ = 26.802 mA.h",
+        "Device": "BCS-815 (SN 0455)",
+        "Record": "Analogic IN 1",
+        "Address": "192.109.209.128",
+        "Comments": null,
+        "FileType": "BT-Lab ASCII FILE",
+        "Saved on": [
+          {
+            "File": "Cathode_CE1.mpr"
+          },
+          {
+            "Directory": "D:\\Data\\Ryan\\Entropy CoinCells 18Aug\\"
+          },
+          {
+            "Host": "192.109.209.129"
+          }
+        ],
+        "Electrolyte": null,
+        "Initial state": null,
+        "Safety Limits": [
+          "Ecell min = 2.50 V",
+          "Ecell max = 4.35 V",
+          "for t > 10 ms"
+        ],
+        "Run on channel": "E1 (SN 0355)",
+        "Internet server": "v1.65 (firmware)",
+        "Nb header lines": 102,
+        "Battery capacity": "2.230 mA.h",
+        "Cycle Definition": "Charge/Discharge alternance",
+        "Ecell ctrl range": "min = 0.00 V, max = 9.00 V",
+        "BT-Lab for windows": "v1.65 (software)",
+        "Electrode material": null,
+        "Characteristic mass": "0.001 g",
+        "Command interpretor": "v1.65 (firmware)",
+        "Acquisition started at": "xo = 0.000",
+        "Acquisition started on": "08/19/2019 16:31:18",
+        "Electrode surface area": "0.001 cm\u00b2",
+        "Mass of active material": "0.001 mg at x = 0.000",
+        "External device configuration": {
+          "Analog OUT": {
+            "max": "5.000 at 5.000 V",
+            "min": "0.000 at 0.000 V",
+            "mode": "E/V",
+            "unit": "E/V",
+            "current": 0.0
+          },
+          "Analog IN 1": {
+            "max": "5.000 at 5.000 V",
+            "min": "0.000 at 0.000 V",
+            "unit": "E/V"
+          },
+          "device name": "Other",
+          "device type": "Other"
+        },
+        "Atomic weight of intercalated ion": "0.001 g/mol",
+        "Number of e- transfered per intercalated ion": 1,
+        "Molecular weight of active material (at x = 0)": "0.001 g/mol"
       },
       "misc_file_data": [
         "BT-Lab ASCII FILE\n",
@@ -1831,33 +2021,7 @@
         "Bandwidth           4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   \n",
         "\n"
       ],
-      "control changes": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "first_sample_no": 102,
-      "MeasuredCapacity": null,
-      "Q discharge/mA_h": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "Energy charge/W_h": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "MeasuredResistance": null,
-      "Energy discharge/W_h": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "Capacitance charge/\ufffdF": {
-        "has_data": true,
-        "is_numeric": true
-      },
-      "Capacitance discharge/\ufffdF": {
-        "has_data": true,
-        "is_numeric": true
-      }
+      "first_sample_no": 102
     },
     "cells": [
       1

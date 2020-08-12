@@ -1,5 +1,7 @@
 import os
 import re
+import yaml
+import itertools
 
 import pandas as pd
 
@@ -108,7 +110,8 @@ class BiologicCSVnTSVParser(Parser, ABC):
             # Additional metadata could be extracted from the header if needed
         }
         with open(self.file_path, encoding=self.encoding) as f:
-            metadata["misc_file_data"] = [f.readline() for _ in range(0, self.skip_rows)]
+          metadata["misc_file_data"] = [f.readline() for _ in range(0, self.skip_rows)]
+        metadata["YAML_Metadata"] = self.header_to_yaml("".join(metadata["misc_file_data"]))
 
         column_info = self._get_column_info()
 
@@ -127,3 +130,43 @@ class BiologicCSVnTSVParser(Parser, ABC):
         renamed = wanted.rename(columns=col_mapping, inplace=False)  # Apply renaming
         for row in renamed.to_dict(orient="row"):
             yield row
+
+    # The format of the BioLogix header is /almost/ parsable directly as YAML
+    # We can hack in a few string replacements to make it valid
+
+    yaml_replacements = {
+       "\t": "-  ",  # tabs form lists. in YAML, tab indents are not valid, we need dashes
+       # simple text lines with no colon are not valid - add a colon for some assumed meaning
+       "BT-Lab ASCII FILE" : "FileType : BT-Lab ASCII FILE",
+       "Modulo Bat" : "Mode: Modulo Bat",
+       "BT-Lab for windows" : "BT-Lab for windows : ",
+       "Internet server"  : "Internet server : ",
+       "Command interpretor" : "Command interpretor : ",
+       "for DX =" : "DX/DQ : for DX =",
+       "Record" : "Record : "
+       # lines ending in \ are not valid
+       #"(.+)\\$" : "\1$"
+    } 
+
+    # https://stackoverflow.com/questions/15175142/how-can-i-do-multiple-substitutions-using-regex-in-python
+    def header_to_yaml(self, header):
+        regex = re.compile("(%s)" % "|".join(map(re.escape, self.yaml_replacements.keys())))
+        rep_header =  regex.sub(lambda mo: self.yaml_replacements[mo.string[mo.start():mo.end()]], header)
+        # quote all values for safety:
+        #clean_header = re.sub(r'^([^:]+):\s*(.*)', r'\1:"\2"', rep_header, flags=re.MULTILINE)
+        #print(rep_header)
+        # Table containg per-column metadata is not parseable as YAML. Skip this for now - find line where it starts, and end there.
+        regex = re.compile('^Ns.+');
+        #last_parseable_line = [m.start() for m in regex.finditer(rep_header)]
+
+        parseable_lines=[]
+        for num, line in enumerate(rep_header.split('\n'), 1):
+        #    print('%d\t"%s"' % (num,line))
+            if regex.match(line) is not None:
+        #         print("Stop at line %d" % num)
+                 break
+            parseable_lines.append(line)
+
+        parseable_header = "\n".join(parseable_lines)
+        header_data = yaml.safe_load(parseable_header)
+        return header_data
