@@ -1,4 +1,5 @@
 import os
+import traceback
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.postgres.fields import JSONField
@@ -92,19 +93,6 @@ def resultMetadata_schema():
        "num_rows": 0,
     }
 
-class ExperimentResult(models.Model):
-    raw_data_file = models.FileField(upload_to='raw_data_files',null=True)
-    metadata = JSONField(default=resultMetadata_schema, blank=True)
-    def __str__(self):
-       return os.path.basename(self.raw_data_file.name)
-
-def result_pre_save(sender, instance, *args, **kwargs):
-    filepath = "/".join([instance.raw_data_file.storage.base_location, instance.raw_data_file.name])
-    parser = BiologicCSVnTSVParser(filepath)
-    (instance.metadata, columns) = (parser.get_metadata())
-    instance.metadata['Columns'] = columns
-
-
 class Experiment(models.Model):
     name = models.SlugField()
     owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
@@ -112,7 +100,6 @@ class Experiment(models.Model):
     status = models.CharField(max_length=16, choices=[("edit", "Edit") , ("published", "Published")], default="edit")
     apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
     cells = models.ManyToManyField(Cell, related_name='experiments')
-    results = models.ManyToManyField(ExperimentResult)
     parameters = JSONField(default=experimentParameters_schema, blank=True)
     analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
@@ -128,7 +115,38 @@ class Experiment(models.Model):
             models.UniqueConstraint(fields=['owner', 'name', 'date'], name='unique_slugname')
         ]
 
+class ExperimentResult(models.Model):
+    raw_data_file = models.FileField(upload_to='raw_data_files',null=True)
+    metadata = JSONField(default=resultMetadata_schema, blank=True)
+    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True, related_name='results')
+    def __str__(self):
+       return os.path.basename(self.raw_data_file.name)
+
+def result_pre_save(sender, instance, *args, **kwargs):
+    if not instance:
+       return
+    if hasattr(instance, '_dirty'):
+       return
+
+    try:
+       print("result_post_save: Sender: %s, Instance: %s, args: %s, kwargs: %s, base_loc: %s, dilename: %s" % (sender, instance, args, kwargs, instance.raw_data_file.storage.base_location, instance.raw_data_file.name))
+       filepath = "/".join([instance.raw_data_file.storage.base_location, instance.raw_data_file.name])
+       parser = BiologicCSVnTSVParser(filepath)
+       (instance.metadata, columns) = (parser.get_metadata())
+       instance.metadata['Columns'] = columns
+    except Exception as e:
+       print(e)
+       traceback.print_exc()
+
+    # save again after setting metadata but don't get into a recursion loop!
+    try:
+       instance._dirty = True
+       instance.save()
+    finally:
+       del instance._dirty
+
+
 
 from django.dispatch import Signal
 from django.db.models import signals
-signals.pre_save.connect(result_pre_save, sender=ExperimentResult)
+signals.post_save.connect(result_pre_save, sender=ExperimentResult)

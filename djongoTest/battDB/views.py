@@ -15,7 +15,7 @@ class ExperimentsView(ListView):
     model = Experiment
     template_name = 'experiments.html'
 
-class ExperimentView(DetailView):
+class ExperimentView(ListView):
     model = Experiment
     template_name='experiment.html'
     def get_object(self):
