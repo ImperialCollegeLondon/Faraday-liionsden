@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ["ns3122207.ip-54-38-195.eu"]
 INSTALLED_APPS = [
     'jquery',
     'jsoneditor',
+    'django_extensions',
     'battDB.apps.BattdbConfig',
     'django.contrib.admin',
     'django.contrib.auth',
