@@ -1,3 +1,4 @@
+import os
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.contrib.postgres.fields import JSONField
@@ -73,12 +74,10 @@ class ExperimentalApparatus(HasAttributes):
     protocol = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL,  null=True, blank=True)
     photo = models.ImageField(upload_to='apparatus_photos', null=True, blank=True)
     class Meta:
-       verbose_name_plural="ExperimentalApparatus"
+       verbose_name_plural="Experimental apparatus"
 
 def experimentParameters_schema():
     return {
-        "StartVoltage":None,
-        "EndVoltage":None,
     }
 
 def experimentAnalysis_schema():
@@ -87,14 +86,33 @@ def experimentAnalysis_schema():
         "MeasuredResistance":None,
     }
 
+def resultMetadata_schema():
+    return {
+       "Columns":{},
+       "num_rows": 0,
+    }
+
+class ExperimentResult(models.Model):
+    raw_data_file = models.FileField(upload_to='raw_data_files',null=True)
+    metadata = JSONField(default=resultMetadata_schema, blank=True)
+    def __str__(self):
+       return os.path.basename(self.raw_data_file.name)
+
+def result_pre_save(sender, instance, *args, **kwargs):
+    filepath = "/".join([instance.raw_data_file.storage.base_location, instance.raw_data_file.name])
+    parser = BiologicCSVnTSVParser(filepath)
+    (instance.metadata, columns) = (parser.get_metadata())
+    instance.metadata['Columns'] = columns
+
+
 class Experiment(models.Model):
     name = models.SlugField()
     owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
-    apparatus = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL,  null=True, blank=True)
-    cells = models.ManyToManyField(Cell)
-    raw_data_file = models.FileField(upload_to='raw_data_files',null=True)
-    processed_data_file = models.FileField(upload_to='processed_data_files',null=True, blank=True)
+    status = models.CharField(max_length=16, choices=[("edit", "Edit") , ("published", "Published")], default="edit")
+    apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
+    cells = models.ManyToManyField(Cell, related_name='experiments')
+    results = models.ManyToManyField(ExperimentResult)
     parameters = JSONField(default=experimentParameters_schema, blank=True)
     analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
@@ -111,13 +129,6 @@ class Experiment(models.Model):
         ]
 
 
-
-def experiment_pre_save(sender, instance, *args, **kwargs):
-    parser = BiologicCSVnTSVParser(instance.raw_data_file.path)
-    (instance.analysis, columns) = (parser.get_metadata())
-    instance.analysis['Columns'] = columns
-
-
 from django.dispatch import Signal
 from django.db.models import signals
-signals.pre_save.connect(experiment_pre_save, sender=Experiment)
+signals.pre_save.connect(result_pre_save, sender=ExperimentResult)

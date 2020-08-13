@@ -14,7 +14,7 @@ class MyAdmin(admin.ModelAdmin):
 
 admin.site.register([
     Experiment, TestProtocol, Equipment, EquipmentType, ExperimentalApparatus,
-    CellConfig, CellBatch, Cell, CellSeparator, Manufacturer
+    CellConfig, CellBatch, Cell, CellSeparator, Manufacturer, ExperimentResult
 ], MyAdmin)
 
 

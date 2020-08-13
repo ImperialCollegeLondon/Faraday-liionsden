@@ -105,13 +105,13 @@ class BiologicCSVnTSVParser(Parser, ABC):
             "num_rows": len(self.data.index),
             "data_start": self.skip_rows,
             "first_sample_no": self.skip_rows + 1,
-            "misc_file_data": {},  # Header for BioLogic, empty dict of naked file
+            "file_header": {},  # Header for BioLogic, empty dict of naked file
             "warnings": [],
             # Additional metadata could be extracted from the header if needed
         }
         with open(self.file_path, encoding=self.encoding) as f:
-          metadata["misc_file_data"] = [f.readline() for _ in range(0, self.skip_rows)]
-        metadata["YAML_Metadata"] = self.header_to_yaml("".join(metadata["misc_file_data"]))
+          metadata["file_header"] = [f.readline() for _ in range(0, self.skip_rows)]
+        metadata["Device Metadata"] = self.header_to_yaml("".join(metadata["file_header"]))
 
         column_info = self._get_column_info()
 
@@ -135,7 +135,7 @@ class BiologicCSVnTSVParser(Parser, ABC):
     # We can hack in a few string replacements to make it valid
 
     yaml_replacements = {
-       "\t": "-  ",  # tabs form lists. in YAML, tab indents are not valid, we need dashes
+       "\t": "    ",  # tabs form lists. in YAML, tab indents are not valid
        # simple text lines with no colon are not valid - add a colon for some assumed meaning
        "BT-Lab ASCII FILE" : "FileType : BT-Lab ASCII FILE",
        "Modulo Bat" : "Mode: Modulo Bat",
