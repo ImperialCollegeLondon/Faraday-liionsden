@@ -15,6 +15,6 @@ else
   read FOO
   echo "Backing up DB"
   ./manage.py graph_models battDB -X HasAttributes -o media/images/battDB_visualized.png
-  pg_dump battdb > DB.sql
+  pg_dump battdb --exclude-table BattDB_experimentdata > DB.sql
   ./manage.py dumpdata --indent 2 > DB.json
 fi

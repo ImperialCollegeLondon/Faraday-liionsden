@@ -6,6 +6,7 @@ from .models import *
 from .forms import ExperimentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import ProcessFormView
+from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 
 
 # Create your views here.
@@ -18,10 +19,11 @@ class ExperimentsView(ListView):
 class ExperimentView(ListView):
     model = Experiment
     template_name='experiment.html'
-    def get_object(self):
+    
+    def get_object(self):  # simple unique ID e.g. /exp/94
        if('pk' in self.kwargs):
             return get_object_or_404(Experiment, pk=self.kwargs['pk'])
-       else:  # doesn't work..
+       else:  # wanted to have slugs like /exp/PolymerElectrolyteComposition-bloggs-2020-08-22 but this doesn't seem to work..
            return get_object_or_404(
             Experiment,
             #slug=self.kwargs['slug']
@@ -34,6 +36,14 @@ class ExperimentView(ListView):
 class ProcessExperimentView(LoginRequiredMixin, DetailView, ProcessFormView):
     model = Experiment
     template_name='experiment.html'
+
+class ExperimentDataView(DetailView):
+    model = ExperimentData
+    template_name='experimentData.html'
+    #raw_filename = model.raw_data_file
+    #parser = BiologicCSVnTSVParser(raw_filename)
+    
+
 
 class CreateExperimentView(LoginRequiredMixin, CreateView):
     model = Experiment

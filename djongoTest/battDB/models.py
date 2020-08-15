@@ -72,7 +72,6 @@ class Cell(HasAttributes):
 class ExperimentalApparatus(HasAttributes):
     testEquipment = models.ManyToManyField(Equipment)
     cellConfig = models.ForeignKey(CellConfig, on_delete=models.SET_NULL,  null=True, blank=True)
-    protocol = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL,  null=True, blank=True)
     photo = models.ImageField(upload_to='apparatus_photos', null=True, blank=True)
     class Meta:
        verbose_name_plural="Experimental apparatus"
@@ -93,6 +92,12 @@ def resultMetadata_schema():
        "num_rows": 0,
     }
 
+def resultData_schema():
+    return {
+       "columns":[],
+       "rows": []
+    }
+
 class Experiment(models.Model):
     name = models.SlugField()
     owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
@@ -100,6 +105,7 @@ class Experiment(models.Model):
     status = models.CharField(max_length=16, choices=[("edit", "Edit") , ("published", "Published")], default="edit")
     apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
     cells = models.ManyToManyField(Cell, related_name='experiments')
+    protocol = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL,  null=True, blank=True)
     parameters = JSONField(default=experimentParameters_schema, blank=True)
     analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
@@ -115,14 +121,20 @@ class Experiment(models.Model):
             models.UniqueConstraint(fields=['owner', 'name', 'date'], name='unique_slugname')
         ]
 
-class ExperimentResult(models.Model):
+class ExperimentData(models.Model):
     raw_data_file = models.FileField(upload_to='raw_data_files',null=True)
     metadata = JSONField(default=resultMetadata_schema, blank=True)
-    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True, related_name='results')
+    data = JSONField(default=resultData_schema, blank=True, editable=False)
+    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True, related_name='data')
+    import_columns = models.ManyToManyField(SignalType, blank=True)
+    parameters = JSONField(default=experimentParameters_schema, blank=True)
+    analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
        return os.path.basename(self.raw_data_file.name)
+    class Meta:
+       verbose_name_plural="Experiment Data Files"
 
-def result_pre_save(sender, instance, *args, **kwargs):
+def data_pre_save(sender, instance, *args, **kwargs):
     if not instance:
        return
     if hasattr(instance, '_dirty'):
@@ -134,6 +146,13 @@ def result_pre_save(sender, instance, *args, **kwargs):
        parser = BiologicCSVnTSVParser(filepath)
        (instance.metadata, columns) = (parser.get_metadata())
        instance.metadata['Columns'] = columns
+       instance.data['rows'] = [None] * instance.metadata['num_rows']
+       gen = parser.get_data_generator_for_columns(columns, 10)
+       print(gen)
+       for (idx, row) in enumerate(gen):
+          print(row)
+          instance.data['rows'][idx] = list(row.values())
+       instance.data['columns'] = list(row.keys())
     except Exception as e:
        print(e)
        traceback.print_exc()
@@ -149,4 +168,4 @@ def result_pre_save(sender, instance, *args, **kwargs):
 
 from django.dispatch import Signal
 from django.db.models import signals
-signals.post_save.connect(result_pre_save, sender=ExperimentResult)
+signals.post_save.connect(data_pre_save, sender=ExperimentData)
