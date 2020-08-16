@@ -2,7 +2,7 @@ import os
 import traceback
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.urls import reverse
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 #from jsonfield_schema import JSONSchema
@@ -124,7 +124,7 @@ class Experiment(models.Model):
 class ExperimentData(models.Model):
     raw_data_file = models.FileField(upload_to='raw_data_files',null=True)
     metadata = JSONField(default=resultMetadata_schema, blank=True)
-    data = JSONField(default=resultData_schema, blank=True, editable=False)
+    data = JSONField(default=resultData_schema, blank=True, editable=True)
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True, related_name='data')
     import_columns = models.ManyToManyField(SignalType, blank=True)
     parameters = JSONField(default=experimentParameters_schema, blank=True)
@@ -133,6 +133,17 @@ class ExperimentData(models.Model):
        return os.path.basename(self.raw_data_file.name)
     class Meta:
        verbose_name_plural="Experiment Data Files"
+
+class EC_Cycle(models.Model):
+    dataFile = models.ForeignKey(ExperimentData, on_delete=models.SET_NULL, null=True, blank=True, related_name='cycles')
+    cycle_num = models.PositiveIntegerField()
+    cycle_action = models.CharField(max_length=8, choices=[('chg', 'Charging'), ('dchg', 'Discharging'), ('rest', 'Rest'), (None, 'Undefined')], null=True)
+    ts_headers = ArrayField(models.CharField(max_length=32, null=True), null=True, blank=True)
+    ts_data = ArrayField(ArrayField(models.FloatField(null=True), null=True), null=True, blank=True)
+    events = JSONField(null=True, blank=True)
+    class Meta:
+       verbose_name="EChem Cycle"
+       verbose_name_plural="EChem Cycles"
 
 def data_pre_save(sender, instance, *args, **kwargs):
     if not instance:
