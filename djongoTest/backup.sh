@@ -6,10 +6,10 @@ then
   echo "Restore database. This will drop changes and import from DB.sql. Are you sure? Ctrl-C to cancel."
   read FOO
   echo "Dropping database"
-  #dropdb battdb
-  #createdb battdb
+  dropdb battdb
+  createdb battdb
   echo "Restoring database"
-  #psql battdb < DB.sql
+  psql battdb < DB.sql
 else
   echo "Backup database overwrites DB.sql and DB.json. Are you sure? Ctrl-C to cancel."
   read FOO

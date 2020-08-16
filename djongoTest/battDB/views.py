@@ -40,9 +40,6 @@ class ProcessExperimentView(LoginRequiredMixin, DetailView, ProcessFormView):
 class ExperimentDataView(DetailView):
     model = ExperimentData
     template_name='experimentData.html'
-    #raw_filename = model.raw_data_file
-    #parser = BiologicCSVnTSVParser(raw_filename)
-    
 
 
 class CreateExperimentView(LoginRequiredMixin, CreateView):
