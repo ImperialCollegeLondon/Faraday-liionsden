@@ -105,13 +105,13 @@ class BiologicCSVnTSVParser(Parser, ABC):
             "num_rows": len(self.data.index),
             "data_start": self.skip_rows,
             "first_sample_no": self.skip_rows + 1,
-            "file_header": {},  # Header for BioLogic, empty dict of naked file
+            "misc_file_data": {},  # Header for BioLogic, empty dict of naked file
             "warnings": [],
             # Additional metadata could be extracted from the header if needed
         }
         with open(self.file_path, encoding=self.encoding) as f:
-          metadata["file_header"] = [f.readline() for _ in range(0, self.skip_rows)]
-        metadata["Device Metadata"] = self.header_to_yaml("".join(metadata["file_header"]))
+          metadata["misc_file_data"] = "".join([f.readline() for _ in range(0, 52)]) #self.skip_rows)])
+        metadata["YAML_Metadata"] = self.header_to_yaml(metadata["misc_file_data"])
 
         column_info = self._get_column_info()
 
@@ -135,9 +135,10 @@ class BiologicCSVnTSVParser(Parser, ABC):
     # We can hack in a few string replacements to make it valid
 
     yaml_replacements = {
-       "\t": "    ",  # tabs form lists. in YAML, tab indents are not valid
+       "\t": "-  ",  # tabs form lists. in YAML, tab indents are not valid, we need dashes
        # simple text lines with no colon are not valid - add a colon for some assumed meaning
        "BT-Lab ASCII FILE" : "FileType : BT-Lab ASCII FILE",
+       "EC-LAB SETTING FILE" : "FileType : EC-LAB SETTING FILE",
        "Modulo Bat" : "Mode: Modulo Bat",
        "BT-Lab for windows" : "BT-Lab for windows : ",
        "Internet server"  : "Internet server : ",
@@ -154,16 +155,16 @@ class BiologicCSVnTSVParser(Parser, ABC):
         rep_header =  regex.sub(lambda mo: self.yaml_replacements[mo.string[mo.start():mo.end()]], header)
         # quote all values for safety:
         #clean_header = re.sub(r'^([^:]+):\s*(.*)', r'\1:"\2"', rep_header, flags=re.MULTILINE)
-        #print(rep_header)
+        print(rep_header)
         # Table containg per-column metadata is not parseable as YAML. Skip this for now - find line where it starts, and end there.
         regex = re.compile('^Ns.+');
         #last_parseable_line = [m.start() for m in regex.finditer(rep_header)]
 
         parseable_lines=[]
         for num, line in enumerate(rep_header.split('\n'), 1):
-        #    print('%d\t"%s"' % (num,line))
+            print('%d\t"%s"' % (num,line))
             if regex.match(line) is not None:
-        #         print("Stop at line %d" % num)
+                 print("Stop at line %d" % num)
                  break
             parseable_lines.append(line)
 

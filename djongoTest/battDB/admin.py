@@ -12,9 +12,13 @@ class MyAdmin(admin.ModelAdmin):
         JSONField:{ 'widget':JSONEditor },
     }
 
+
 admin.site.register([
     Experiment, TestProtocol, Equipment, EquipmentType, ExperimentalApparatus,
-    CellConfig, CellBatch, Cell, CellSeparator, Manufacturer
-], MyAdmin)
+    CellConfig, CellBatch, Cell, CellSeparator, Manufacturer, ExperimentData, EC_Cycle], MyAdmin)
 
 
+#class DataAdmin(MyAdmin):
+#    readonly_fields = ["data"]
+#
+#admin.site.register([ExperimentData], DataAdmin)

@@ -93,11 +93,299 @@
     "name": "Tom's Lab",
     "attributes": {},
     "cellConfig": null,
-    "protocol": 1,
     "photo": "",
     "testEquipment": [
       1
     ]
+  }
+},
+{
+  "model": "battDB.experimentdata",
+  "pk": 1,
+  "fields": {
+    "raw_data_file": "raw_data_files/200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "metadata": {
+      "Columns": {
+        "x": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Ns": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "P/W": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "I/mA": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Rec#": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Time": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "mode": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "R/Ohm": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "error": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "ox/red": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Ecell/V": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "I Range": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "dq/mA_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "control/V": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Energy/W_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Ns changes": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "control/mA": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "half cycle": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "(Q-Qo)/mA_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "counter inc": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Analog OUT/V": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Efficiency/%": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "control/V/mA": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "cycle number": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Capacity/mA_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Q charge/mA_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "control changes": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Q discharge/mA_h": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Temperature/\ufffdC": {
+          "has_data": true,
+          "is_numeric": true
+        },
+        "Q charge/discharge/mA.h": {
+          "has_data": true,
+          "is_numeric": true
+        }
+      },
+      "num_rows": 10148,
+      "warnings": [],
+      "data_start": 92,
+      "file_header": [
+        "BT-Lab ASCII FILE\n",
+        "Nb header lines : 93                          \n",
+        "\n",
+        "Modulo Bat\n",
+        "\n",
+        "Run on channel : D1 (SN 0356)\n",
+        "Grouped channel(s) : D1, D2, D3, D4, E1, E2, E3, E4, E5, F2, F3, F4, F5, F6\n",
+        "User : \n",
+        "Ecell ctrl range : min = 0.00 V, max = 9.00 V\n",
+        "Safety Limits :\n",
+        "\tEcell min = 2.45 V\n",
+        "\tEcell max = 4.25 V\n",
+        "\tfor t > 500 ms\n",
+        "\tTemperature max = 55.00 \u00b0C\n",
+        "Acquisition started on : 07/20/2020 12:11:52\n",
+        "Saved on :\n",
+        "\tFile : 200720_C-rate test Co5 cells 1-14_D128_CD1.mpr\n",
+        "\tDirectory : D:\\Data\\Anisha\\AGM single layer cells\\\n",
+        "\tHost : 192.109.209.129\n",
+        "Device : BCS-815 (SN 0455)\n",
+        "Address : 192.109.209.128\n",
+        "BT-Lab for windows v1.65 (software)\n",
+        "Internet server v1.65 (firmware)\n",
+        "Command interpretor v1.65 (firmware)\n",
+        "Electrode material : \n",
+        "Initial state : \n",
+        "Electrolyte : \n",
+        "Comments : \n",
+        "Mass of active material : 0.001 mg\n",
+        " at x = 0.000\n",
+        "Molecular weight of active material (at x = 0) : 0.001 g/mol\n",
+        "Atomic weight of intercalated ion : 0.001 g/mol\n",
+        "Acquisition started at : xo = 0.000\n",
+        "Number of e- transfered per intercalated ion : 1\n",
+        "for DX = 1, DQ = 26.802 mA.h\n",
+        "Battery capacity : 340.000 mA.h\n",
+        "Electrode surface area : 0.001 cm2\n",
+        "Characteristic mass : 0.001 g\n",
+        "Record Temperature\n",
+        "Cycle Definition : Charge/Discharge alternance\n",
+        "External device configuration :\n",
+        "   device type : Other\n",
+        "   device name : Other\n",
+        "   Analog OUT : \n",
+        "      mode : E/V\n",
+        "      unit : E/V\n",
+        "      max : 5.000 at 5.000 V\n",
+        "      min : 0.000 at 0.000 V\n",
+        "      current : 0.000\n",
+        "Ns                  0                   1                   2                   3                   4                   5                   6                   \n",
+        "ctrl_type           Rest                CC                  CV                  Rest                CC                  Rest                Loop                \n",
+        "Apply I/C           I                   C / N               C / N               C / N               C / N               C / N               C / N               \n",
+        "ctrl1_val                               100.000             4.200                                   100.000                                 100.000             \n",
+        "ctrl1_val_unit                          mA                  V                                       mA                                                          \n",
+        "ctrl1_val_vs                            <None>              Ref                                     <None>                                                      \n",
+        "ctrl2_val                                                                                                                                                       \n",
+        "ctrl2_val_unit                                                                                                                                                  \n",
+        "ctrl2_val_vs                                                                                                                                                    \n",
+        "ctrl3_val                                                                                                                                                       \n",
+        "ctrl3_val_unit                                                                                                                                                  \n",
+        "ctrl3_val_vs                                                                                                                                                    \n",
+        "N                   1.00                5.00                20.00               20.00               5.00                2.00                20.00               \n",
+        "charge/discharge    Charge              Charge              Charge              Charge              Discharge           Discharge           Discharge           \n",
+        "ctrl_seq            0                   0                   0                   0                   0                   0                   1                   \n",
+        "ctrl_repeat         0                   0                   0                   0                   0                   0                   4                   \n",
+        "ctrl_trigger        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        \n",
+        "ctrl_TO_t           0.000               0.000               0.000               0.000               0.000               0.000               0.000               \n",
+        "ctrl_TO_t_unit      d                   d                   d                   d                   d                   d                   d                   \n",
+        "ctrl_Nd             6                   6                   6                   6                   6                   6                   6                   \n",
+        "ctrl_Na             1                   1                   1                   1                   1                   1                   1                   \n",
+        "ctrl_corr           1                   1                   1                   1                   1                   1                   1                   \n",
+        "lim_nb              1                   1                   1                   1                   1                   1                   0                   \n",
+        "lim1_type           Time                Ecell               |I|                 Time                Ecell               Time                Ecell               \n",
+        "lim1_comp           >                   >                   <                   >                   <                   >                   <                   \n",
+        "lim1_Q              Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             \n",
+        "lim1_value          4.000               4.200               7.000               30.000              2.500               30.000              2.500               \n",
+        "lim1_value_unit     h                   V                   mA                  mn                  V                   mn                  V                   \n",
+        "lim1_action         Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       \n",
+        "lim1_seq            1                   2                   3                   4                   5                   6                   7                   \n",
+        "rec_nb              1                   1                   1                   1                   1                   1                   0                   \n",
+        "rec1_type           Time                Ecell               Time                Time                Ecell               Time                Time                \n",
+        "rec1_value          120.000             10.000              2.000               60.000              10.000              60.000              2.000               \n",
+        "rec1_value_unit     s                   mV                  s                   s                   mV                  s                   mn                  \n",
+        "E range min (V)     0.000               0.000               0.000               0.000               0.000               0.000               0.000               \n",
+        "E range max (V)     9.000               9.000               9.000               9.000               9.000               9.000               9.000               \n",
+        "I Range             10 mA               100 mA              Auto                100 mA              100 mA              1 A                 100 mA              \n",
+        "I Range min         Unset               Unset               Unset               Unset               Unset               Unset               Unset               \n",
+        "I Range max         Unset               Unset               Unset               Unset               Unset               Unset               Unset               \n",
+        "I Range init        Unset               Unset               Unset               Unset               Unset               Unset               Unset               \n",
+        "auto rest           0                   0                   0                   0                   0                   0                   0                   \n",
+        "Bandwidth           4                   4                   4                   4                   4                   4                   4                   \n",
+        "\n"
+      ],
+      "Dataset_Name": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder",
+      "dataset_size": 4093123,
+      "Device Metadata": {
+        "Mode": "Modulo Bat",
+        "User": null,
+        "DX/DQ": "for DX = 1, DQ = 26.802 mA.h",
+        "Device": "BCS-815 (SN 0455)",
+        "Record": "Temperature",
+        "Address": "192.109.209.128",
+        "Comments": null,
+        "FileType": "BT-Lab ASCII FILE",
+        "Saved on": {
+          "File": "200720_C-rate test Co5 cells 1-14_D128_CD1.mpr",
+          "Host": "192.109.209.129",
+          "Directory": "D:\\Data\\Anisha\\AGM single layer cells\\"
+        },
+        "Electrolyte": null,
+        "Initial state": null,
+        "Safety Limits": "Ecell min = 2.45 V Ecell max = 4.25 V for t > 500 ms Temperature max = 55.00 \u00b0C",
+        "Run on channel": "D1 (SN 0356)",
+        "Internet server": "v1.65 (firmware)",
+        "Nb header lines": 93,
+        "Battery capacity": "340.000 mA.h",
+        "Cycle Definition": "Charge/Discharge alternance",
+        "Ecell ctrl range": "min = 0.00 V, max = 9.00 V",
+        "BT-Lab for windows": "v1.65 (software)",
+        "Electrode material": null,
+        "Grouped channel(s)": "D1, D2, D3, D4, E1, E2, E3, E4, E5, F2, F3, F4, F5, F6",
+        "Characteristic mass": "0.001 g",
+        "Command interpretor": "v1.65 (firmware)",
+        "Acquisition started at": "xo = 0.000",
+        "Acquisition started on": "07/20/2020 12:11:52",
+        "Electrode surface area": "0.001 cm2",
+        "Mass of active material": "0.001 mg at x = 0.000",
+        "External device configuration": {
+          "Analog OUT": {
+            "max": "5.000 at 5.000 V",
+            "min": "0.000 at 0.000 V",
+            "mode": "E/V",
+            "unit": "E/V",
+            "current": 0.0
+          },
+          "device name": "Other",
+          "device type": "Other"
+        },
+        "Atomic weight of intercalated ion": "0.001 g/mol",
+        "Number of e- transfered per intercalated ion": 1,
+        "Molecular weight of active material (at x = 0)": "0.001 g/mol"
+      },
+      "first_sample_no": 93
+    },
+    "data": {
+      "rows": [],
+      "columns": []
+    },
+    "experiment": null,
+    "parameters": {},
+    "analysis": {
+      "MeasuredCapacity": null,
+      "MeasuredResistance": null
+    },
+    "import_columns": []
   }
 },
 {
@@ -234,6 +522,38 @@
   "fields": {
     "app_label": "battDB",
     "model": "cellconfig"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 18,
+  "fields": {
+    "app_label": "battDB",
+    "model": "experimentresult"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 19,
+  "fields": {
+    "app_label": "battDB",
+    "model": "experimentdata"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 20,
+  "fields": {
+    "app_label": "battDB",
+    "model": "ec_cycle"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "gt0dz60n04ed1vrqtlexu7jdi7gptr49",
+  "fields": {
+    "session_data": "YzU3OGZjOTUyOGIwMWRkNTRlNmU5YjdiMDQ2Mzk5ZGQ4ZWFmM2VlMDp7Il9hdXRoX3VzZXJfaWQiOiIzIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI4YzIxYTM2MzE3ZDI0ODU0MmMwODViZDc5NGVjYzFkMTRmMGE3NmJkIn0=",
+    "expire_date": "2020-08-27T09:56:28.222Z"
   }
 },
 {
@@ -865,6 +1185,114 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 69,
+  "fields": {
+    "name": "Can add experiment result",
+    "content_type": 18,
+    "codename": "add_experimentresult"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 70,
+  "fields": {
+    "name": "Can change experiment result",
+    "content_type": 18,
+    "codename": "change_experimentresult"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 71,
+  "fields": {
+    "name": "Can delete experiment result",
+    "content_type": 18,
+    "codename": "delete_experimentresult"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 72,
+  "fields": {
+    "name": "Can view experiment result",
+    "content_type": 18,
+    "codename": "view_experimentresult"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 73,
+  "fields": {
+    "name": "Can add experiment data",
+    "content_type": 19,
+    "codename": "add_experimentdata"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 74,
+  "fields": {
+    "name": "Can change experiment data",
+    "content_type": 19,
+    "codename": "change_experimentdata"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 75,
+  "fields": {
+    "name": "Can delete experiment data",
+    "content_type": 19,
+    "codename": "delete_experimentdata"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 76,
+  "fields": {
+    "name": "Can view experiment data",
+    "content_type": 19,
+    "codename": "view_experimentdata"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 77,
+  "fields": {
+    "name": "Can add e c_ cycle",
+    "content_type": 20,
+    "codename": "add_ec_cycle"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 78,
+  "fields": {
+    "name": "Can change e c_ cycle",
+    "content_type": 20,
+    "codename": "change_ec_cycle"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 79,
+  "fields": {
+    "name": "Can delete e c_ cycle",
+    "content_type": 20,
+    "codename": "delete_ec_cycle"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 80,
+  "fields": {
+    "name": "Can view e c_ cycle",
+    "content_type": 20,
+    "codename": "view_ec_cycle"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -1097,6 +1525,26 @@
       59,
       60
     ]
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$150000$EfLnuKoVFTo5$eI9zlUW09YuBiHiPdlpYqbf8cFyvRvTISVec8IqZaUw=",
+    "last_login": "2020-08-13T09:56:28Z",
+    "is_superuser": true,
+    "username": "binbin",
+    "first_name": "Binbin",
+    "last_name": "Chen",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2020-08-13T08:53:36Z",
+    "groups": [
+      2
+    ],
+    "user_permissions": []
   }
 },
 {
@@ -1685,38 +2133,496 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 46,
+  "fields": {
+    "action_time": "2020-08-12T14:34:24.734Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "9",
+    "object_repr": "tom/fooo/2020-08-05",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 47,
+  "fields": {
+    "action_time": "2020-08-12T14:34:28.362Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "8",
+    "object_repr": "tom/experiment/2020-08-05",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 48,
+  "fields": {
+    "action_time": "2020-08-13T08:53:36.744Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "3",
+    "object_repr": "binbin",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 49,
+  "fields": {
+    "action_time": "2020-08-13T08:54:53.286Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "3",
+    "object_repr": "binbin",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"first_name\", \"last_name\", \"is_staff\", \"groups\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 50,
+  "fields": {
+    "action_time": "2020-08-13T09:08:11.603Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "1",
+    "object_repr": "BioLogic_full_u455xrV.txt",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 51,
+  "fields": {
+    "action_time": "2020-08-13T10:32:39.184Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "3",
+    "object_repr": "binbin",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"is_superuser\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 52,
+  "fields": {
+    "action_time": "2020-08-13T10:45:05.248Z",
+    "user": 3,
+    "content_type": 18,
+    "object_id": "1",
+    "object_repr": "BioLogic_full_u455xrV.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 53,
+  "fields": {
+    "action_time": "2020-08-13T10:45:09.003Z",
+    "user": 3,
+    "content_type": 18,
+    "object_id": "1",
+    "object_repr": "BioLogic_full_u455xrV.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 54,
+  "fields": {
+    "action_time": "2020-08-13T10:45:59.648Z",
+    "user": 3,
+    "content_type": 18,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1.mpt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"raw_data_file\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 55,
+  "fields": {
+    "action_time": "2020-08-13T10:46:07.851Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "1",
+    "object_repr": "bio-logic-data-table.tsv",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"raw_data_file\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 56,
+  "fields": {
+    "action_time": "2020-08-13T10:46:37.388Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "1",
+    "object_repr": "BioLogic_full_Bq7ABsZ.txt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"raw_data_file\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 57,
+  "fields": {
+    "action_time": "2020-08-13T10:47:51.783Z",
+    "user": 3,
+    "content_type": 18,
+    "object_id": "2",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 58,
+  "fields": {
+    "action_time": "2020-08-13T12:41:16.801Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "2",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 59,
+  "fields": {
+    "action_time": "2020-08-13T12:44:28.732Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "2",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 60,
+  "fields": {
+    "action_time": "2020-08-13T12:45:10.469Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "2",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 61,
+  "fields": {
+    "action_time": "2020-08-13T13:56:13.246Z",
+    "user": 3,
+    "content_type": 18,
+    "object_id": "2",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"raw_data_file\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 62,
+  "fields": {
+    "action_time": "2020-08-13T14:42:26.567Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "2",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 63,
+  "fields": {
+    "action_time": "2020-08-13T14:43:05.748Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "3",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_xETlkXH.mpt",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 64,
+  "fields": {
+    "action_time": "2020-08-13T14:43:11.157Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "2",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 65,
+  "fields": {
+    "action_time": "2020-08-13T14:43:45.614Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "3",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_oa7otTL.mpt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"raw_data_file\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 66,
+  "fields": {
+    "action_time": "2020-08-13T14:46:34.261Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "3",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_lj6rngx.mpt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"raw_data_file\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 67,
+  "fields": {
+    "action_time": "2020-08-13T14:52:59.611Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "3",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_lj6rngx.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 68,
+  "fields": {
+    "action_time": "2020-08-13T14:53:09.682Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "3",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_lvMpGzm.mpt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"raw_data_file\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 69,
+  "fields": {
+    "action_time": "2020-08-13T14:54:23.605Z",
+    "user": 1,
+    "content_type": 18,
+    "object_id": "3",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_lvMpGzm.mpt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"experiment\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 70,
+  "fields": {
+    "action_time": "2020-08-13T14:55:13.379Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "9",
+    "object_repr": "tom/fooo/2020-08-05",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"analysis\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 71,
+  "fields": {
+    "action_time": "2020-08-15T15:26:07.435Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 72,
+  "fields": {
+    "action_time": "2020-08-15T15:26:20.330Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 73,
+  "fields": {
+    "action_time": "2020-08-15T15:27:19.328Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 74,
+  "fields": {
+    "action_time": "2020-08-15T15:29:00.149Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 75,
+  "fields": {
+    "action_time": "2020-08-15T15:35:13.104Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 76,
+  "fields": {
+    "action_time": "2020-08-15T15:44:43.695Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 77,
+  "fields": {
+    "action_time": "2020-08-15T21:01:36.300Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 78,
+  "fields": {
+    "action_time": "2020-08-15T21:02:36.949Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 79,
+  "fields": {
+    "action_time": "2020-08-15T21:04:51.218Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 80,
+  "fields": {
+    "action_time": "2020-08-15T21:05:28.350Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 81,
+  "fields": {
+    "action_time": "2020-08-15T21:15:17.813Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 82,
+  "fields": {
+    "action_time": "2020-08-15T21:15:35.627Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
   "model": "battDB.experiment",
   "pk": 8,
   "fields": {
     "name": "experiment",
     "owner": 1,
     "date": "2020-08-05",
+    "status": "edit",
     "apparatus": 1,
-    "raw_data_file": "raw_data_files/BioLogic_full_dLqsqJK.txt",
-    "processed_data_file": "",
-    "parameters": {
-      "EndVoltage": null,
-      "StartVoltage": null
-    },
-    "analysis": {
-      "MeasuredCapacity": null,
-      "MeasuredResistance": null
-    },
-    "cells": [
-      1
-    ]
-  }
-},
-{
-  "model": "battDB.experiment",
-  "pk": 9,
-  "fields": {
-    "name": "fooo",
-    "owner": 1,
-    "date": "2020-08-05",
-    "apparatus": 1,
-    "raw_data_file": "raw_data_files/BioLogic_full_35X61jw.txt",
-    "processed_data_file": "",
+    "protocol": null,
     "parameters": {
       "EndVoltage": null,
       "StartVoltage": null
@@ -1855,70 +2761,7 @@
       "num_rows": 149,
       "warnings": [],
       "data_start": 101,
-      "Dataset_Name": "BioLogic_full_35X61jw",
-      "dataset_size": 101861,
-      "YAML_Metadata": {
-        "Mode": "Modulo Bat",
-        "User": null,
-        "DX/DQ": "for DX = 1, DQ = 26.802 mA.h",
-        "Device": "BCS-815 (SN 0455)",
-        "Record": "Analogic IN 1",
-        "Address": "192.109.209.128",
-        "Comments": null,
-        "FileType": "BT-Lab ASCII FILE",
-        "Saved on": [
-          {
-            "File": "Cathode_CE1.mpr"
-          },
-          {
-            "Directory": "D:\\Data\\Ryan\\Entropy CoinCells 18Aug\\"
-          },
-          {
-            "Host": "192.109.209.129"
-          }
-        ],
-        "Electrolyte": null,
-        "Initial state": null,
-        "Safety Limits": [
-          "Ecell min = 2.50 V",
-          "Ecell max = 4.35 V",
-          "for t > 10 ms"
-        ],
-        "Run on channel": "E1 (SN 0355)",
-        "Internet server": "v1.65 (firmware)",
-        "Nb header lines": 102,
-        "Battery capacity": "2.230 mA.h",
-        "Cycle Definition": "Charge/Discharge alternance",
-        "Ecell ctrl range": "min = 0.00 V, max = 9.00 V",
-        "BT-Lab for windows": "v1.65 (software)",
-        "Electrode material": null,
-        "Characteristic mass": "0.001 g",
-        "Command interpretor": "v1.65 (firmware)",
-        "Acquisition started at": "xo = 0.000",
-        "Acquisition started on": "08/19/2019 16:31:18",
-        "Electrode surface area": "0.001 cm\u00b2",
-        "Mass of active material": "0.001 mg at x = 0.000",
-        "External device configuration": {
-          "Analog OUT": {
-            "max": "5.000 at 5.000 V",
-            "min": "0.000 at 0.000 V",
-            "mode": "E/V",
-            "unit": "E/V",
-            "current": 0.0
-          },
-          "Analog IN 1": {
-            "max": "5.000 at 5.000 V",
-            "min": "0.000 at 0.000 V",
-            "unit": "E/V"
-          },
-          "device name": "Other",
-          "device type": "Other"
-        },
-        "Atomic weight of intercalated ion": "0.001 g/mol",
-        "Number of e- transfered per intercalated ion": 1,
-        "Molecular weight of active material (at x = 0)": "0.001 g/mol"
-      },
-      "misc_file_data": [
+      "file_header": [
         "BT-Lab ASCII FILE\n",
         "Nb header lines : 102                         \n",
         "\n",
@@ -2021,8 +2864,92 @@
         "Bandwidth           4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   \n",
         "\n"
       ],
+      "Dataset_Name": "BioLogic_full_dLqsqJK",
+      "dataset_size": 101861,
+      "misc_file_data": {},
+      "Device Metadata": {
+        "Mode": "Modulo Bat",
+        "User": null,
+        "DX/DQ": "for DX = 1, DQ = 26.802 mA.h",
+        "Device": "BCS-815 (SN 0455)",
+        "Record": "Analogic IN 1",
+        "Address": "192.109.209.128",
+        "Comments": null,
+        "FileType": "BT-Lab ASCII FILE",
+        "Saved on": [
+          {
+            "File": "Cathode_CE1.mpr"
+          },
+          {
+            "Directory": "D:\\Data\\Ryan\\Entropy CoinCells 18Aug\\"
+          },
+          {
+            "Host": "192.109.209.129"
+          }
+        ],
+        "Electrolyte": null,
+        "Initial state": null,
+        "Safety Limits": [
+          "Ecell min = 2.50 V",
+          "Ecell max = 4.35 V",
+          "for t > 10 ms"
+        ],
+        "Run on channel": "E1 (SN 0355)",
+        "Internet server": "v1.65 (firmware)",
+        "Nb header lines": 102,
+        "Battery capacity": "2.230 mA.h",
+        "Cycle Definition": "Charge/Discharge alternance",
+        "Ecell ctrl range": "min = 0.00 V, max = 9.00 V",
+        "BT-Lab for windows": "v1.65 (software)",
+        "Electrode material": null,
+        "Characteristic mass": "0.001 g",
+        "Command interpretor": "v1.65 (firmware)",
+        "Acquisition started at": "xo = 0.000",
+        "Acquisition started on": "08/19/2019 16:31:18",
+        "Electrode surface area": "0.001 cm\u00b2",
+        "Mass of active material": "0.001 mg at x = 0.000",
+        "External device configuration": {
+          "Analog OUT": {
+            "max": "5.000 at 5.000 V",
+            "min": "0.000 at 0.000 V",
+            "mode": "E/V",
+            "unit": "E/V",
+            "current": 0.0
+          },
+          "Analog IN 1": {
+            "max": "5.000 at 5.000 V",
+            "min": "0.000 at 0.000 V",
+            "unit": "E/V"
+          },
+          "device name": "Other",
+          "device type": "Other"
+        },
+        "Atomic weight of intercalated ion": "0.001 g/mol",
+        "Number of e- transfered per intercalated ion": 1,
+        "Molecular weight of active material (at x = 0)": "0.001 g/mol"
+      },
       "first_sample_no": 102
     },
+    "cells": [
+      1
+    ]
+  }
+},
+{
+  "model": "battDB.experiment",
+  "pk": 9,
+  "fields": {
+    "name": "fooo",
+    "owner": 1,
+    "date": "2020-08-05",
+    "status": "edit",
+    "apparatus": 1,
+    "protocol": null,
+    "parameters": {
+      "EndVoltage": null,
+      "StartVoltage": null
+    },
+    "analysis": {},
     "cells": [
       1
     ]

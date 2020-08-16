@@ -1,6 +1,8 @@
+import os
+import traceback
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.urls import reverse
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 #from jsonfield_schema import JSONSchema
@@ -70,15 +72,12 @@ class Cell(HasAttributes):
 class ExperimentalApparatus(HasAttributes):
     testEquipment = models.ManyToManyField(Equipment)
     cellConfig = models.ForeignKey(CellConfig, on_delete=models.SET_NULL,  null=True, blank=True)
-    protocol = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL,  null=True, blank=True)
     photo = models.ImageField(upload_to='apparatus_photos', null=True, blank=True)
     class Meta:
-       verbose_name_plural="ExperimentalApparatus"
+       verbose_name_plural="Experimental apparatus"
 
 def experimentParameters_schema():
     return {
-        "StartVoltage":None,
-        "EndVoltage":None,
     }
 
 def experimentAnalysis_schema():
@@ -87,14 +86,26 @@ def experimentAnalysis_schema():
         "MeasuredResistance":None,
     }
 
+def resultMetadata_schema():
+    return {
+       "Columns":{},
+       "num_rows": 0,
+    }
+
+def resultData_schema():
+    return {
+       "columns":[],
+       "rows": []
+    }
+
 class Experiment(models.Model):
     name = models.SlugField()
     owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
-    apparatus = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL,  null=True, blank=True)
-    cells = models.ManyToManyField(Cell)
-    raw_data_file = models.FileField(upload_to='raw_data_files',null=True)
-    processed_data_file = models.FileField(upload_to='processed_data_files',null=True, blank=True)
+    status = models.CharField(max_length=16, choices=[("edit", "Edit") , ("published", "Published")], default="edit")
+    apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
+    cells = models.ManyToManyField(Cell, related_name='experiments')
+    protocol = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL,  null=True, blank=True)
     parameters = JSONField(default=experimentParameters_schema, blank=True)
     analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
@@ -110,14 +121,62 @@ class Experiment(models.Model):
             models.UniqueConstraint(fields=['owner', 'name', 'date'], name='unique_slugname')
         ]
 
+class ExperimentData(models.Model):
+    raw_data_file = models.FileField(upload_to='raw_data_files',null=True)
+    metadata = JSONField(default=resultMetadata_schema, blank=True)
+    data = JSONField(default=resultData_schema, blank=True, editable=True)
+    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True, related_name='data')
+    import_columns = models.ManyToManyField(SignalType, blank=True)
+    parameters = JSONField(default=experimentParameters_schema, blank=True)
+    analysis = JSONField(default=experimentAnalysis_schema, blank=True)
+    def __str__(self):
+       return os.path.basename(self.raw_data_file.name)
+    class Meta:
+       verbose_name_plural="Experiment Data Files"
 
+class EC_Cycle(models.Model):
+    dataFile = models.ForeignKey(ExperimentData, on_delete=models.SET_NULL, null=True, blank=True, related_name='cycles')
+    cycle_num = models.PositiveIntegerField()
+    cycle_action = models.CharField(max_length=8, choices=[('chg', 'Charging'), ('dchg', 'Discharging'), ('rest', 'Rest'), (None, 'Undefined')], null=True)
+    ts_headers = ArrayField(models.CharField(max_length=32, null=True), null=True, blank=True)
+    ts_data = ArrayField(ArrayField(models.FloatField(null=True), null=True), null=True, blank=True)
+    events = JSONField(null=True, blank=True)
+    class Meta:
+       verbose_name="EChem Cycle"
+       verbose_name_plural="EChem Cycles"
 
-def experiment_pre_save(sender, instance, *args, **kwargs):
-    parser = BiologicCSVnTSVParser(instance.raw_data_file.path)
-    (instance.analysis, columns) = (parser.get_metadata())
-    instance.analysis['Columns'] = columns
+def data_pre_save(sender, instance, *args, **kwargs):
+    if not instance:
+       return
+    if hasattr(instance, '_dirty'):
+       return
+
+    try:
+       print("result_post_save: Sender: %s, Instance: %s, args: %s, kwargs: %s, base_loc: %s, dilename: %s" % (sender, instance, args, kwargs, instance.raw_data_file.storage.base_location, instance.raw_data_file.name))
+       filepath = "/".join([instance.raw_data_file.storage.base_location, instance.raw_data_file.name])
+       parser = BiologicCSVnTSVParser(filepath)
+       (instance.metadata, columns) = (parser.get_metadata())
+       instance.metadata['Columns'] = columns
+       instance.data['rows'] = [None] * instance.metadata['num_rows']
+       gen = parser.get_data_generator_for_columns(columns, 10)
+       print(gen)
+       for (idx, row) in enumerate(gen):
+          print(row)
+          instance.data['rows'][idx] = list(row.values())
+       instance.data['columns'] = list(row.keys())
+    except Exception as e:
+       print(e)
+       traceback.print_exc()
+
+    # save again after setting metadata but don't get into a recursion loop!
+    try:
+       instance._dirty = True
+       instance.save()
+    finally:
+       del instance._dirty
+
 
 
 from django.dispatch import Signal
 from django.db.models import signals
-signals.pre_save.connect(experiment_pre_save, sender=Experiment)
+signals.post_save.connect(data_pre_save, sender=ExperimentData)
