@@ -15,7 +15,7 @@ class MyAdmin(admin.ModelAdmin):
 
 admin.site.register([
     Experiment, TestProtocol, Equipment, EquipmentType, ExperimentalApparatus,
-    CellConfig, CellBatch, Cell, CellSeparator, Manufacturer, ExperimentData, EC_Cycle], MyAdmin)
+    CellConfig, CellBatch, Cell, CellType, Manufacturer, ExperimentData, EC_Cycle], MyAdmin)
 
 
 #class DataAdmin(MyAdmin):

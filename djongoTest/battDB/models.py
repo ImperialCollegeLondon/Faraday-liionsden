@@ -45,15 +45,21 @@ class Equipment(HasAttributes):
        verbose_name_plural="Equipment"
 
 def cellSeparator_schema():
+   pass
+
+def cell_schema():
     return {
-       "material":None,
-       "porosity_pct" : None
+       "Description":"Enter cell text description here - add parameters below",
+       "porosity_pct" : 10.0,
+       "separator" : "example atrtribute",
+       "electrolyte" : "example",
+       "electrode_material_pos":"example",
+       "electrode_material_neg":"example",
     }
 
-class CellSeparator(HasAttributes):
+class CellType(HasAttributes):
     pass
-CellSeparator._meta.get_field('attributes').default = cellSeparator_schema
-
+CellType._meta.get_field('attributes').default = cell_schema
 
 class CellBatch(HasAttributes):
     manufactured_on = models.DateField(null=True, blank=True)
@@ -61,23 +67,29 @@ class CellBatch(HasAttributes):
     cells_schema = JSONField(default=dict, blank=True)
     class Meta:
        verbose_name_plural="CellBatches"
-
-class CellConfig(HasAttributes):
-    pass
+CellBatch._meta.get_field('attributes').default = cell_schema
 
 class Cell(HasAttributes):
     batch = models.ForeignKey(CellBatch, on_delete=models.SET_NULL, null=True, blank=True)
-    separator = models.ForeignKey(CellSeparator, on_delete=models.SET_NULL, null=True, blank=True)
+    type = models.ForeignKey(CellType, on_delete=models.SET_NULL, null=True, blank=True)
+Cell._meta.get_field('attributes').default = cell_schema
+
+class CellConfig(HasAttributes):
+    # think about how to link cells into packs in a flexible way
+    num_cells = models.PositiveIntegerField(default=1)
 
 class ExperimentalApparatus(HasAttributes):
     testEquipment = models.ManyToManyField(Equipment)
-    cellConfig = models.ForeignKey(CellConfig, on_delete=models.SET_NULL,  null=True, blank=True)
     photo = models.ImageField(upload_to='apparatus_photos', null=True, blank=True)
     class Meta:
        verbose_name_plural="Experimental apparatus"
 
 def experimentParameters_schema():
     return {
+        "Example Parameter":"Value",
+        "NumCycles": 5,
+        "MinVoltage": 2.8,
+        "MaxVoltage": 4.2
     }
 
 def experimentAnalysis_schema():
@@ -105,6 +117,7 @@ class Experiment(models.Model):
     status = models.CharField(max_length=16, choices=[("edit", "Edit") , ("published", "Published")], default="edit")
     apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
     cells = models.ManyToManyField(Cell, related_name='experiments')
+    cellConfig = models.ForeignKey(CellConfig, on_delete=models.SET_NULL,  null=True, blank=True)
     protocol = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL,  null=True, blank=True)
     parameters = JSONField(default=experimentParameters_schema, blank=True)
     analysis = JSONField(default=experimentAnalysis_schema, blank=True)
@@ -141,6 +154,7 @@ class EC_Cycle(models.Model):
     ts_headers = ArrayField(models.CharField(max_length=32, null=True), null=True, blank=True)
     ts_data = ArrayField(ArrayField(models.FloatField(null=True), null=True), null=True, blank=True)
     events = JSONField(null=True, blank=True)
+    analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     class Meta:
        verbose_name="EChem Cycle"
        verbose_name_plural="EChem Cycles"
@@ -180,3 +194,4 @@ def data_pre_save(sender, instance, *args, **kwargs):
 from django.dispatch import Signal
 from django.db.models import signals
 signals.post_save.connect(data_pre_save, sender=ExperimentData)
+

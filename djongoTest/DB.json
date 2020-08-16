@@ -47,17 +47,6 @@
   }
 },
 {
-  "model": "battDB.cellseparator",
-  "pk": 1,
-  "fields": {
-    "name": "MyMembrane",
-    "attributes": {
-      "material": null,
-      "porosity_pct": null
-    }
-  }
-},
-{
   "model": "battDB.cellbatch",
   "pk": 1,
   "fields": {
@@ -69,21 +58,22 @@
   }
 },
 {
-  "model": "battDB.cellconfig",
-  "pk": 1,
-  "fields": {
-    "name": "4s",
-    "attributes": {}
-  }
-},
-{
   "model": "battDB.cell",
   "pk": 1,
   "fields": {
     "name": "MyLiPo",
     "attributes": {},
     "batch": 1,
-    "separator": null
+    "type": null
+  }
+},
+{
+  "model": "battDB.cellconfig",
+  "pk": 1,
+  "fields": {
+    "name": "4s",
+    "attributes": {},
+    "num_cells": 1
   }
 },
 {
@@ -92,7 +82,6 @@
   "fields": {
     "name": "Tom's Lab",
     "attributes": {},
-    "cellConfig": null,
     "photo": "",
     "testEquipment": [
       1
@@ -546,6 +535,14 @@
   "fields": {
     "app_label": "battDB",
     "model": "ec_cycle"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 21,
+  "fields": {
+    "app_label": "battDB",
+    "model": "celltype"
   }
 },
 {
@@ -1290,6 +1287,42 @@
     "name": "Can view e c_ cycle",
     "content_type": 20,
     "codename": "view_ec_cycle"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 81,
+  "fields": {
+    "name": "Can add cell type",
+    "content_type": 21,
+    "codename": "add_celltype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 82,
+  "fields": {
+    "name": "Can change cell type",
+    "content_type": 21,
+    "codename": "change_celltype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 83,
+  "fields": {
+    "name": "Can delete cell type",
+    "content_type": 21,
+    "codename": "delete_celltype"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 84,
+  "fields": {
+    "name": "Can view cell type",
+    "content_type": 21,
+    "codename": "view_celltype"
   }
 },
 {
@@ -2622,6 +2655,7 @@
     "date": "2020-08-05",
     "status": "edit",
     "apparatus": 1,
+    "cellConfig": null,
     "protocol": null,
     "parameters": {
       "EndVoltage": null,
@@ -2944,6 +2978,7 @@
     "date": "2020-08-05",
     "status": "edit",
     "apparatus": 1,
+    "cellConfig": null,
     "protocol": null,
     "parameters": {
       "EndVoltage": null,
