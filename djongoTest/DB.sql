@@ -386,29 +386,32 @@ ALTER SEQUENCE public."battDB_celltype_id_seq" OWNED BY public."battDB_celltype"
 
 
 --
--- Name: battDB_ec_cycle; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_datarange; Type: TABLE; Schema: public; Owner: tom
 --
 
-CREATE TABLE public."battDB_ec_cycle" (
+CREATE TABLE public."battDB_datarange" (
     id integer NOT NULL,
-    cycle_num integer NOT NULL,
-    cycle_action character varying(8),
-    ts_data double precision[],
+    label character varying(32),
+    protocol_step integer NOT NULL,
+    step_action character varying(8),
     ts_headers character varying(32)[],
-    "dataFile_id" integer,
+    ts_data double precision[],
     events jsonb,
     analysis jsonb NOT NULL,
-    CONSTRAINT "battDB_ec_cycle_cycle_num_check" CHECK ((cycle_num >= 0))
+    "dataFile_id" integer,
+    file_offset integer NOT NULL,
+    CONSTRAINT "battDB_datarange_file_offset_check" CHECK ((file_offset >= 0)),
+    CONSTRAINT "battDB_datarange_protocol_step_check" CHECK ((protocol_step >= 0))
 );
 
 
-ALTER TABLE public."battDB_ec_cycle" OWNER TO tom;
+ALTER TABLE public."battDB_datarange" OWNER TO tom;
 
 --
--- Name: battDB_ec_cycle_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_datarange_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
 --
 
-CREATE SEQUENCE public."battDB_ec_cycle_id_seq"
+CREATE SEQUENCE public."battDB_datarange_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -417,13 +420,13 @@ CREATE SEQUENCE public."battDB_ec_cycle_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_ec_cycle_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_datarange_id_seq" OWNER TO tom;
 
 --
--- Name: battDB_ec_cycle_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_datarange_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
 --
 
-ALTER SEQUENCE public."battDB_ec_cycle_id_seq" OWNED BY public."battDB_ec_cycle".id;
+ALTER SEQUENCE public."battDB_datarange_id_seq" OWNED BY public."battDB_datarange".id;
 
 
 --
@@ -648,27 +651,28 @@ ALTER SEQUENCE public."battDB_experimentalapparatus_testEquipment_id_seq" OWNED 
 
 
 --
--- Name: battDB_experimentdata; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile; Type: TABLE; Schema: public; Owner: tom
 --
 
-CREATE TABLE public."battDB_experimentdata" (
+CREATE TABLE public."battDB_experimentdatafile" (
     id integer NOT NULL,
     raw_data_file character varying(100),
     metadata jsonb NOT NULL,
-    experiment_id integer,
-    analysis jsonb NOT NULL,
+    data jsonb NOT NULL,
     parameters jsonb NOT NULL,
-    data jsonb NOT NULL
+    analysis jsonb NOT NULL,
+    experiment_id integer,
+    machine_id integer
 );
 
 
-ALTER TABLE public."battDB_experimentdata" OWNER TO tom;
+ALTER TABLE public."battDB_experimentdatafile" OWNER TO tom;
 
 --
--- Name: battDB_experimentdata_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
 --
 
-CREATE SEQUENCE public."battDB_experimentdata_id_seq"
+CREATE SEQUENCE public."battDB_experimentdatafile_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -677,33 +681,33 @@ CREATE SEQUENCE public."battDB_experimentdata_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_experimentdata_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_experimentdatafile_id_seq" OWNER TO tom;
 
 --
--- Name: battDB_experimentdata_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
 --
 
-ALTER SEQUENCE public."battDB_experimentdata_id_seq" OWNED BY public."battDB_experimentdata".id;
+ALTER SEQUENCE public."battDB_experimentdatafile_id_seq" OWNED BY public."battDB_experimentdatafile".id;
 
 
 --
--- Name: battDB_experimentdata_import_columns; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns; Type: TABLE; Schema: public; Owner: tom
 --
 
-CREATE TABLE public."battDB_experimentdata_import_columns" (
+CREATE TABLE public."battDB_experimentdatafile_import_columns" (
     id integer NOT NULL,
-    experimentdata_id integer NOT NULL,
+    experimentdatafile_id integer NOT NULL,
     signaltype_id integer NOT NULL
 );
 
 
-ALTER TABLE public."battDB_experimentdata_import_columns" OWNER TO tom;
+ALTER TABLE public."battDB_experimentdatafile_import_columns" OWNER TO tom;
 
 --
--- Name: battDB_experimentdata_import_columns_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
 --
 
-CREATE SEQUENCE public."battDB_experimentdata_import_columns_id_seq"
+CREATE SEQUENCE public."battDB_experimentdatafile_import_columns_id_seq"
     AS integer
     START WITH 1
     INCREMENT BY 1
@@ -712,13 +716,13 @@ CREATE SEQUENCE public."battDB_experimentdata_import_columns_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_experimentdata_import_columns_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_experimentdatafile_import_columns_id_seq" OWNER TO tom;
 
 --
--- Name: battDB_experimentdata_import_columns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
 --
 
-ALTER SEQUENCE public."battDB_experimentdata_import_columns_id_seq" OWNED BY public."battDB_experimentdata_import_columns".id;
+ALTER SEQUENCE public."battDB_experimentdatafile_import_columns_id_seq" OWNED BY public."battDB_experimentdatafile_import_columns".id;
 
 
 --
@@ -941,6 +945,81 @@ ALTER SEQUENCE public.django_migrations_id_seq OWNED BY public.django_migrations
 
 
 --
+-- Name: django_plotly_dash_dashapp; Type: TABLE; Schema: public; Owner: tom
+--
+
+CREATE TABLE public.django_plotly_dash_dashapp (
+    id integer NOT NULL,
+    instance_name character varying(100) NOT NULL,
+    slug character varying(110) NOT NULL,
+    base_state text NOT NULL,
+    creation timestamp with time zone NOT NULL,
+    update timestamp with time zone NOT NULL,
+    save_on_change boolean NOT NULL,
+    stateless_app_id integer NOT NULL
+);
+
+
+ALTER TABLE public.django_plotly_dash_dashapp OWNER TO tom;
+
+--
+-- Name: django_plotly_dash_dashapp_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+--
+
+CREATE SEQUENCE public.django_plotly_dash_dashapp_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_plotly_dash_dashapp_id_seq OWNER TO tom;
+
+--
+-- Name: django_plotly_dash_dashapp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+--
+
+ALTER SEQUENCE public.django_plotly_dash_dashapp_id_seq OWNED BY public.django_plotly_dash_dashapp.id;
+
+
+--
+-- Name: django_plotly_dash_statelessapp; Type: TABLE; Schema: public; Owner: tom
+--
+
+CREATE TABLE public.django_plotly_dash_statelessapp (
+    id integer NOT NULL,
+    app_name character varying(100) NOT NULL,
+    slug character varying(110) NOT NULL
+);
+
+
+ALTER TABLE public.django_plotly_dash_statelessapp OWNER TO tom;
+
+--
+-- Name: django_plotly_dash_statelessapp_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+--
+
+CREATE SEQUENCE public.django_plotly_dash_statelessapp_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_plotly_dash_statelessapp_id_seq OWNER TO tom;
+
+--
+-- Name: django_plotly_dash_statelessapp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+--
+
+ALTER SEQUENCE public.django_plotly_dash_statelessapp_id_seq OWNED BY public.django_plotly_dash_statelessapp.id;
+
+
+--
 -- Name: django_session; Type: TABLE; Schema: public; Owner: tom
 --
 
@@ -1024,10 +1103,10 @@ ALTER TABLE ONLY public."battDB_celltype" ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
--- Name: battDB_ec_cycle id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_datarange id; Type: DEFAULT; Schema: public; Owner: tom
 --
 
-ALTER TABLE ONLY public."battDB_ec_cycle" ALTER COLUMN id SET DEFAULT nextval('public."battDB_ec_cycle_id_seq"'::regclass);
+ALTER TABLE ONLY public."battDB_datarange" ALTER COLUMN id SET DEFAULT nextval('public."battDB_datarange_id_seq"'::regclass);
 
 
 --
@@ -1073,17 +1152,17 @@ ALTER TABLE ONLY public."battDB_experimentalapparatus_testEquipment" ALTER COLUM
 
 
 --
--- Name: battDB_experimentdata id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile id; Type: DEFAULT; Schema: public; Owner: tom
 --
 
-ALTER TABLE ONLY public."battDB_experimentdata" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experimentdata_id_seq"'::regclass);
+ALTER TABLE ONLY public."battDB_experimentdatafile" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experimentdatafile_id_seq"'::regclass);
 
 
 --
--- Name: battDB_experimentdata_import_columns id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns id; Type: DEFAULT; Schema: public; Owner: tom
 --
 
-ALTER TABLE ONLY public."battDB_experimentdata_import_columns" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experimentdata_import_columns_id_seq"'::regclass);
+ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experimentdatafile_import_columns_id_seq"'::regclass);
 
 
 --
@@ -1126,6 +1205,20 @@ ALTER TABLE ONLY public.django_content_type ALTER COLUMN id SET DEFAULT nextval(
 --
 
 ALTER TABLE ONLY public.django_migrations ALTER COLUMN id SET DEFAULT nextval('public.django_migrations_id_seq'::regclass);
+
+
+--
+-- Name: django_plotly_dash_dashapp id; Type: DEFAULT; Schema: public; Owner: tom
+--
+
+ALTER TABLE ONLY public.django_plotly_dash_dashapp ALTER COLUMN id SET DEFAULT nextval('public.django_plotly_dash_dashapp_id_seq'::regclass);
+
+
+--
+-- Name: django_plotly_dash_statelessapp id; Type: DEFAULT; Schema: public; Owner: tom
+--
+
+ALTER TABLE ONLY public.django_plotly_dash_statelessapp ALTER COLUMN id SET DEFAULT nextval('public.django_plotly_dash_statelessapp_id_seq'::regclass);
 
 
 --
@@ -1347,6 +1440,22 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 82	Can change cell type	21	change_celltype
 83	Can delete cell type	21	delete_celltype
 84	Can view cell type	21	view_celltype
+85	Can add data range	22	add_datarange
+86	Can change data range	22	change_datarange
+87	Can delete data range	22	delete_datarange
+88	Can view data range	22	view_datarange
+89	Can add experiment data file	23	add_experimentdatafile
+90	Can change experiment data file	23	change_experimentdatafile
+91	Can delete experiment data file	23	delete_experimentdatafile
+92	Can view experiment data file	23	view_experimentdatafile
+93	Can add dash app	24	add_dashapp
+94	Can change dash app	24	change_dashapp
+95	Can delete dash app	24	delete_dashapp
+96	Can view dash app	24	view_dashapp
+97	Can add stateless app	25	add_statelessapp
+98	Can change stateless app	25	change_statelessapp
+99	Can delete stateless app	25	delete_statelessapp
+100	Can view stateless app	25	view_statelessapp
 \.
 
 
@@ -1358,6 +1467,7 @@ COPY public.auth_user (id, password, last_login, is_superuser, username, first_n
 1	pbkdf2_sha256$150000$2J7Bci8oeR8W$7IUeiZavNLMqx+xLNra875eCuEbiuXxpbFniRJl3kj0=	2020-08-11 10:09:23.615492+00	t	tom				t	t	2020-08-04 18:08:06.79837+00
 2	pbkdf2_sha256$150000$xjdfdhTwRhJ2$UXRtByrTwyL9b+c/+/4ttwBrsYYx4Z3gXbi7n7MqAyo=	\N	t	jacql	Jacqueline	Edge	j.edge@imperial.ac.uk	t	t	2020-08-11 10:11:31+00
 3	pbkdf2_sha256$150000$EfLnuKoVFTo5$eI9zlUW09YuBiHiPdlpYqbf8cFyvRvTISVec8IqZaUw=	2020-08-13 09:56:28+00	t	binbin	Binbin	Chen		t	t	2020-08-13 08:53:36+00
+6	pbkdf2_sha256$150000$kEZ17iCgo0K6$V6JsLVb3AipIbYxKACRIPs68robokOFQzGHM5CeWmVs=	\N	t	rishi				t	t	2020-08-16 15:02:44+00
 \.
 
 
@@ -1482,10 +1592,10 @@ COPY public."battDB_celltype" (id, name, attributes) FROM stdin;
 
 
 --
--- Data for Name: battDB_ec_cycle; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_datarange; Type: TABLE DATA; Schema: public; Owner: tom
 --
 
-COPY public."battDB_ec_cycle" (id, cycle_num, cycle_action, ts_data, ts_headers, "dataFile_id", events, analysis) FROM stdin;
+COPY public."battDB_datarange" (id, label, protocol_step, step_action, ts_headers, ts_data, events, analysis, "dataFile_id", file_offset) FROM stdin;
 \.
 
 
@@ -1546,19 +1656,18 @@ COPY public."battDB_experimentalapparatus_testEquipment" (id, experimentalappara
 
 
 --
--- Data for Name: battDB_experimentdata; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_experimentdatafile; Type: TABLE DATA; Schema: public; Owner: tom
 --
 
-COPY public."battDB_experimentdata" (id, raw_data_file, metadata, experiment_id, analysis, parameters, data) FROM stdin;
-1	raw_data_files/200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	{"Columns": {"x": {"has_data": true, "is_numeric": true}, "Ns": {"has_data": true, "is_numeric": true}, "P/W": {"has_data": true, "is_numeric": true}, "I/mA": {"has_data": true, "is_numeric": true}, "Rec#": {"has_data": true, "is_numeric": true}, "Time": {"has_data": true, "is_numeric": true}, "mode": {"has_data": true, "is_numeric": true}, "R/Ohm": {"has_data": true, "is_numeric": true}, "error": {"has_data": true, "is_numeric": true}, "ox/red": {"has_data": true, "is_numeric": true}, "Ecell/V": {"has_data": true, "is_numeric": true}, "I Range": {"has_data": true, "is_numeric": true}, "dq/mA_h": {"has_data": true, "is_numeric": true}, "control/V": {"has_data": true, "is_numeric": true}, "Energy/W_h": {"has_data": true, "is_numeric": true}, "Ns changes": {"has_data": true, "is_numeric": true}, "control/mA": {"has_data": true, "is_numeric": true}, "half cycle": {"has_data": true, "is_numeric": true}, "(Q-Qo)/mA_h": {"has_data": true, "is_numeric": true}, "counter inc": {"has_data": true, "is_numeric": true}, "Analog OUT/V": {"has_data": true, "is_numeric": true}, "Efficiency/%": {"has_data": true, "is_numeric": true}, "control/V/mA": {"has_data": true, "is_numeric": true}, "cycle number": {"has_data": true, "is_numeric": true}, "Capacity/mA_h": {"has_data": true, "is_numeric": true}, "Q charge/mA_h": {"has_data": true, "is_numeric": true}, "control changes": {"has_data": true, "is_numeric": true}, "Q discharge/mA_h": {"has_data": true, "is_numeric": true}, "Temperature/�C": {"has_data": true, "is_numeric": true}, "Q charge/discharge/mA.h": {"has_data": true, "is_numeric": true}}, "num_rows": 10148, "warnings": [], "data_start": 92, "file_header": ["BT-Lab ASCII FILE\\n", "Nb header lines : 93                          \\n", "\\n", "Modulo Bat\\n", "\\n", "Run on channel : D1 (SN 0356)\\n", "Grouped channel(s) : D1, D2, D3, D4, E1, E2, E3, E4, E5, F2, F3, F4, F5, F6\\n", "User : \\n", "Ecell ctrl range : min = 0.00 V, max = 9.00 V\\n", "Safety Limits :\\n", "\\tEcell min = 2.45 V\\n", "\\tEcell max = 4.25 V\\n", "\\tfor t > 500 ms\\n", "\\tTemperature max = 55.00 °C\\n", "Acquisition started on : 07/20/2020 12:11:52\\n", "Saved on :\\n", "\\tFile : 200720_C-rate test Co5 cells 1-14_D128_CD1.mpr\\n", "\\tDirectory : D:\\\\Data\\\\Anisha\\\\AGM single layer cells\\\\\\n", "\\tHost : 192.109.209.129\\n", "Device : BCS-815 (SN 0455)\\n", "Address : 192.109.209.128\\n", "BT-Lab for windows v1.65 (software)\\n", "Internet server v1.65 (firmware)\\n", "Command interpretor v1.65 (firmware)\\n", "Electrode material : \\n", "Initial state : \\n", "Electrolyte : \\n", "Comments : \\n", "Mass of active material : 0.001 mg\\n", " at x = 0.000\\n", "Molecular weight of active material (at x = 0) : 0.001 g/mol\\n", "Atomic weight of intercalated ion : 0.001 g/mol\\n", "Acquisition started at : xo = 0.000\\n", "Number of e- transfered per intercalated ion : 1\\n", "for DX = 1, DQ = 26.802 mA.h\\n", "Battery capacity : 340.000 mA.h\\n", "Electrode surface area : 0.001 cm2\\n", "Characteristic mass : 0.001 g\\n", "Record Temperature\\n", "Cycle Definition : Charge/Discharge alternance\\n", "External device configuration :\\n", "   device type : Other\\n", "   device name : Other\\n", "   Analog OUT : \\n", "      mode : E/V\\n", "      unit : E/V\\n", "      max : 5.000 at 5.000 V\\n", "      min : 0.000 at 0.000 V\\n", "      current : 0.000\\n", "Ns                  0                   1                   2                   3                   4                   5                   6                   \\n", "ctrl_type           Rest                CC                  CV                  Rest                CC                  Rest                Loop                \\n", "Apply I/C           I                   C / N               C / N               C / N               C / N               C / N               C / N               \\n", "ctrl1_val                               100.000             4.200                                   100.000                                 100.000             \\n", "ctrl1_val_unit                          mA                  V                                       mA                                                          \\n", "ctrl1_val_vs                            <None>              Ref                                     <None>                                                      \\n", "ctrl2_val                                                                                                                                                       \\n", "ctrl2_val_unit                                                                                                                                                  \\n", "ctrl2_val_vs                                                                                                                                                    \\n", "ctrl3_val                                                                                                                                                       \\n", "ctrl3_val_unit                                                                                                                                                  \\n", "ctrl3_val_vs                                                                                                                                                    \\n", "N                   1.00                5.00                20.00               20.00               5.00                2.00                20.00               \\n", "charge/discharge    Charge              Charge              Charge              Charge              Discharge           Discharge           Discharge           \\n", "ctrl_seq            0                   0                   0                   0                   0                   0                   1                   \\n", "ctrl_repeat         0                   0                   0                   0                   0                   0                   4                   \\n", "ctrl_trigger        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        \\n", "ctrl_TO_t           0.000               0.000               0.000               0.000               0.000               0.000               0.000               \\n", "ctrl_TO_t_unit      d                   d                   d                   d                   d                   d                   d                   \\n", "ctrl_Nd             6                   6                   6                   6                   6                   6                   6                   \\n", "ctrl_Na             1                   1                   1                   1                   1                   1                   1                   \\n", "ctrl_corr           1                   1                   1                   1                   1                   1                   1                   \\n", "lim_nb              1                   1                   1                   1                   1                   1                   0                   \\n", "lim1_type           Time                Ecell               |I|                 Time                Ecell               Time                Ecell               \\n", "lim1_comp           >                   >                   <                   >                   <                   >                   <                   \\n", "lim1_Q              Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             \\n", "lim1_value          4.000               4.200               7.000               30.000              2.500               30.000              2.500               \\n", "lim1_value_unit     h                   V                   mA                  mn                  V                   mn                  V                   \\n", "lim1_action         Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       \\n", "lim1_seq            1                   2                   3                   4                   5                   6                   7                   \\n", "rec_nb              1                   1                   1                   1                   1                   1                   0                   \\n", "rec1_type           Time                Ecell               Time                Time                Ecell               Time                Time                \\n", "rec1_value          120.000             10.000              2.000               60.000              10.000              60.000              2.000               \\n", "rec1_value_unit     s                   mV                  s                   s                   mV                  s                   mn                  \\n", "E range min (V)     0.000               0.000               0.000               0.000               0.000               0.000               0.000               \\n", "E range max (V)     9.000               9.000               9.000               9.000               9.000               9.000               9.000               \\n", "I Range             10 mA               100 mA              Auto                100 mA              100 mA              1 A                 100 mA              \\n", "I Range min         Unset               Unset               Unset               Unset               Unset               Unset               Unset               \\n", "I Range max         Unset               Unset               Unset               Unset               Unset               Unset               Unset               \\n", "I Range init        Unset               Unset               Unset               Unset               Unset               Unset               Unset               \\n", "auto rest           0                   0                   0                   0                   0                   0                   0                   \\n", "Bandwidth           4                   4                   4                   4                   4                   4                   4                   \\n", "\\n"], "Dataset_Name": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder", "dataset_size": 4093123, "Device Metadata": {"Mode": "Modulo Bat", "User": null, "DX/DQ": "for DX = 1, DQ = 26.802 mA.h", "Device": "BCS-815 (SN 0455)", "Record": "Temperature", "Address": "192.109.209.128", "Comments": null, "FileType": "BT-Lab ASCII FILE", "Saved on": {"File": "200720_C-rate test Co5 cells 1-14_D128_CD1.mpr", "Host": "192.109.209.129", "Directory": "D:\\\\Data\\\\Anisha\\\\AGM single layer cells\\\\"}, "Electrolyte": null, "Initial state": null, "Safety Limits": "Ecell min = 2.45 V Ecell max = 4.25 V for t > 500 ms Temperature max = 55.00 °C", "Run on channel": "D1 (SN 0356)", "Internet server": "v1.65 (firmware)", "Nb header lines": 93, "Battery capacity": "340.000 mA.h", "Cycle Definition": "Charge/Discharge alternance", "Ecell ctrl range": "min = 0.00 V, max = 9.00 V", "BT-Lab for windows": "v1.65 (software)", "Electrode material": null, "Grouped channel(s)": "D1, D2, D3, D4, E1, E2, E3, E4, E5, F2, F3, F4, F5, F6", "Characteristic mass": "0.001 g", "Command interpretor": "v1.65 (firmware)", "Acquisition started at": "xo = 0.000", "Acquisition started on": "07/20/2020 12:11:52", "Electrode surface area": "0.001 cm2", "Mass of active material": "0.001 mg at x = 0.000", "External device configuration": {"Analog OUT": {"max": "5.000 at 5.000 V", "min": "0.000 at 0.000 V", "mode": "E/V", "unit": "E/V", "current": 0.0}, "device name": "Other", "device type": "Other"}, "Atomic weight of intercalated ion": "0.001 g/mol", "Number of e- transfered per intercalated ion": 1, "Molecular weight of active material (at x = 0)": "0.001 g/mol"}, "first_sample_no": 93}	\N	{"MeasuredCapacity": null, "MeasuredResistance": null}	{}	{"rows": [], "columns": []}
+COPY public."battDB_experimentdatafile" (id, raw_data_file, metadata, data, parameters, analysis, experiment_id, machine_id) FROM stdin;
 \.
 
 
 --
--- Data for Name: battDB_experimentdata_import_columns; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_experimentdatafile_import_columns; Type: TABLE DATA; Schema: public; Owner: tom
 --
 
-COPY public."battDB_experimentdata_import_columns" (id, experimentdata_id, signaltype_id) FROM stdin;
+COPY public."battDB_experimentdatafile_import_columns" (id, experimentdatafile_id, signaltype_id) FROM stdin;
 \.
 
 
@@ -1676,6 +1785,9 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 80	2020-08-15 21:05:28.350057+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
 81	2020-08-15 21:15:17.813728+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
 82	2020-08-15 21:15:35.627463+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+84	2020-08-16 15:02:44.784119+00	6	rishi	1	[{"added": {}}]	12	1
+85	2020-08-16 15:03:02.079082+00	6	rishi	2	[{"changed": {"fields": ["is_staff", "is_superuser"]}}]	12	1
+86	2020-08-17 12:09:14.120233+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
 \.
 
 
@@ -1705,6 +1817,10 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 19	battDB	experimentdata
 20	battDB	ec_cycle
 21	battDB	celltype
+22	battDB	datarange
+23	battDB	experimentdatafile
+24	django_plotly_dash	dashapp
+25	django_plotly_dash	statelessapp
 \.
 
 
@@ -1763,6 +1879,27 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 48	battDB	0030_experimentdata_data	2020-08-16 13:24:16.021639+00
 49	battDB	0031_auto_20200816_1357	2020-08-16 13:57:47.206087+00
 50	battDB	0032_auto_20200816_1432	2020-08-16 14:32:53.628752+00
+51	battDB	0033_auto_20200818_1355	2020-08-18 13:55:49.616605+00
+52	battDB	0034_experimentdatafile_machine	2020-08-18 14:33:40.748065+00
+53	battDB	0035_datarange_file_offset	2020-08-18 14:35:57.135728+00
+54	django_plotly_dash	0001_initial	2020-08-18 15:11:50.328517+00
+55	django_plotly_dash	0002_add_examples	2020-08-18 15:11:50.562766+00
+\.
+
+
+--
+-- Data for Name: django_plotly_dash_dashapp; Type: TABLE DATA; Schema: public; Owner: tom
+--
+
+COPY public.django_plotly_dash_dashapp (id, instance_name, slug, base_state, creation, update, save_on_change, stateless_app_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: django_plotly_dash_statelessapp; Type: TABLE DATA; Schema: public; Owner: tom
+--
+
+COPY public.django_plotly_dash_statelessapp (id, app_name, slug) FROM stdin;
 \.
 
 
@@ -1795,7 +1932,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 112, true);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 84, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 100, true);
 
 
 --
@@ -1809,7 +1946,7 @@ SELECT pg_catalog.setval('public.auth_user_groups_id_seq', 1, true);
 -- Name: auth_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
 --
 
-SELECT pg_catalog.setval('public.auth_user_id_seq', 3, true);
+SELECT pg_catalog.setval('public.auth_user_id_seq', 6, true);
 
 
 --
@@ -1848,10 +1985,10 @@ SELECT pg_catalog.setval('public."battDB_celltype_id_seq"', 1, false);
 
 
 --
--- Name: battDB_ec_cycle_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_datarange_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
 --
 
-SELECT pg_catalog.setval('public."battDB_ec_cycle_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_datarange_id_seq"', 1, false);
 
 
 --
@@ -1897,17 +2034,17 @@ SELECT pg_catalog.setval('public."battDB_experimentalapparatus_testEquipment_id_
 
 
 --
--- Name: battDB_experimentdata_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
 --
 
-SELECT pg_catalog.setval('public."battDB_experimentdata_id_seq"', 1, true);
+SELECT pg_catalog.setval('public."battDB_experimentdatafile_id_seq"', 1, false);
 
 
 --
--- Name: battDB_experimentdata_import_columns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
 --
 
-SELECT pg_catalog.setval('public."battDB_experimentdata_import_columns_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_experimentdatafile_import_columns_id_seq"', 1, false);
 
 
 --
@@ -1935,21 +2072,35 @@ SELECT pg_catalog.setval('public."battDB_testprotocol_id_seq"', 1, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 76, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 86, true);
 
 
 --
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 21, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 25, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 50, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 55, true);
+
+
+--
+-- Name: django_plotly_dash_dashapp_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+--
+
+SELECT pg_catalog.setval('public.django_plotly_dash_dashapp_id_seq', 1, false);
+
+
+--
+-- Name: django_plotly_dash_statelessapp_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+--
+
+SELECT pg_catalog.setval('public.django_plotly_dash_statelessapp_id_seq', 1, false);
 
 
 --
@@ -2113,11 +2264,11 @@ ALTER TABLE ONLY public."battDB_celltype"
 
 
 --
--- Name: battDB_ec_cycle battDB_ec_cycle_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_datarange battDB_datarange_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
 --
 
-ALTER TABLE ONLY public."battDB_ec_cycle"
-    ADD CONSTRAINT "battDB_ec_cycle_pkey" PRIMARY KEY (id);
+ALTER TABLE ONLY public."battDB_datarange"
+    ADD CONSTRAINT "battDB_datarange_pkey" PRIMARY KEY (id);
 
 
 --
@@ -2209,27 +2360,27 @@ ALTER TABLE ONLY public."battDB_experimentalapparatus_testEquipment"
 
 
 --
--- Name: battDB_experimentdata_import_columns battDB_experimentdata_im_experimentdata_id_signal_5c5990fb_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns battDB_experimentdatafil_experimentdatafile_id_si_4d88733a_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
 --
 
-ALTER TABLE ONLY public."battDB_experimentdata_import_columns"
-    ADD CONSTRAINT "battDB_experimentdata_im_experimentdata_id_signal_5c5990fb_uniq" UNIQUE (experimentdata_id, signaltype_id);
-
-
---
--- Name: battDB_experimentdata_import_columns battDB_experimentdata_import_columns_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
---
-
-ALTER TABLE ONLY public."battDB_experimentdata_import_columns"
-    ADD CONSTRAINT "battDB_experimentdata_import_columns_pkey" PRIMARY KEY (id);
+ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
+    ADD CONSTRAINT "battDB_experimentdatafil_experimentdatafile_id_si_4d88733a_uniq" UNIQUE (experimentdatafile_id, signaltype_id);
 
 
 --
--- Name: battDB_experimentdata battDB_experimentdata_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns battDB_experimentdatafile_import_columns_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
 --
 
-ALTER TABLE ONLY public."battDB_experimentdata"
-    ADD CONSTRAINT "battDB_experimentdata_pkey" PRIMARY KEY (id);
+ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
+    ADD CONSTRAINT "battDB_experimentdatafile_import_columns_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: battDB_experimentdatafile battDB_experimentdatafile_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+--
+
+ALTER TABLE ONLY public."battDB_experimentdatafile"
+    ADD CONSTRAINT "battDB_experimentdatafile_pkey" PRIMARY KEY (id);
 
 
 --
@@ -2310,6 +2461,54 @@ ALTER TABLE ONLY public.django_content_type
 
 ALTER TABLE ONLY public.django_migrations
     ADD CONSTRAINT django_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_plotly_dash_dashapp django_plotly_dash_dashapp_instance_name_key; Type: CONSTRAINT; Schema: public; Owner: tom
+--
+
+ALTER TABLE ONLY public.django_plotly_dash_dashapp
+    ADD CONSTRAINT django_plotly_dash_dashapp_instance_name_key UNIQUE (instance_name);
+
+
+--
+-- Name: django_plotly_dash_dashapp django_plotly_dash_dashapp_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+--
+
+ALTER TABLE ONLY public.django_plotly_dash_dashapp
+    ADD CONSTRAINT django_plotly_dash_dashapp_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_plotly_dash_dashapp django_plotly_dash_dashapp_slug_key; Type: CONSTRAINT; Schema: public; Owner: tom
+--
+
+ALTER TABLE ONLY public.django_plotly_dash_dashapp
+    ADD CONSTRAINT django_plotly_dash_dashapp_slug_key UNIQUE (slug);
+
+
+--
+-- Name: django_plotly_dash_statelessapp django_plotly_dash_statelessapp_app_name_key; Type: CONSTRAINT; Schema: public; Owner: tom
+--
+
+ALTER TABLE ONLY public.django_plotly_dash_statelessapp
+    ADD CONSTRAINT django_plotly_dash_statelessapp_app_name_key UNIQUE (app_name);
+
+
+--
+-- Name: django_plotly_dash_statelessapp django_plotly_dash_statelessapp_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+--
+
+ALTER TABLE ONLY public.django_plotly_dash_statelessapp
+    ADD CONSTRAINT django_plotly_dash_statelessapp_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_plotly_dash_statelessapp django_plotly_dash_statelessapp_slug_key; Type: CONSTRAINT; Schema: public; Owner: tom
+--
+
+ALTER TABLE ONLY public.django_plotly_dash_statelessapp
+    ADD CONSTRAINT django_plotly_dash_statelessapp_slug_key UNIQUE (slug);
 
 
 --
@@ -2441,10 +2640,10 @@ CREATE INDEX "battDB_celltype_name_7f83c1ea_like" ON public."battDB_celltype" US
 
 
 --
--- Name: battDB_ec_cycle_dataFile_id_fdec89dd; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_datarange_dataFile_id_ea79f7c6; Type: INDEX; Schema: public; Owner: tom
 --
 
-CREATE INDEX "battDB_ec_cycle_dataFile_id_fdec89dd" ON public."battDB_ec_cycle" USING btree ("dataFile_id");
+CREATE INDEX "battDB_datarange_dataFile_id_ea79f7c6" ON public."battDB_datarange" USING btree ("dataFile_id");
 
 
 --
@@ -2553,24 +2752,31 @@ CREATE INDEX "battDB_experimentalapparatus_name_fae4873b_like" ON public."battDB
 
 
 --
--- Name: battDB_experimentdata_experiment_id_1b7e0048; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile__experimentdatafile_id_315ba0e0; Type: INDEX; Schema: public; Owner: tom
 --
 
-CREATE INDEX "battDB_experimentdata_experiment_id_1b7e0048" ON public."battDB_experimentdata" USING btree (experiment_id);
-
-
---
--- Name: battDB_experimentdata_import_columns_experimentdata_id_490cead1; Type: INDEX; Schema: public; Owner: tom
---
-
-CREATE INDEX "battDB_experimentdata_import_columns_experimentdata_id_490cead1" ON public."battDB_experimentdata_import_columns" USING btree (experimentdata_id);
+CREATE INDEX "battDB_experimentdatafile__experimentdatafile_id_315ba0e0" ON public."battDB_experimentdatafile_import_columns" USING btree (experimentdatafile_id);
 
 
 --
--- Name: battDB_experimentdata_import_columns_signaltype_id_2685b1bf; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_experiment_id_de169b40; Type: INDEX; Schema: public; Owner: tom
 --
 
-CREATE INDEX "battDB_experimentdata_import_columns_signaltype_id_2685b1bf" ON public."battDB_experimentdata_import_columns" USING btree (signaltype_id);
+CREATE INDEX "battDB_experimentdatafile_experiment_id_de169b40" ON public."battDB_experimentdatafile" USING btree (experiment_id);
+
+
+--
+-- Name: battDB_experimentdatafile_import_columns_signaltype_id_b2b26ce7; Type: INDEX; Schema: public; Owner: tom
+--
+
+CREATE INDEX "battDB_experimentdatafile_import_columns_signaltype_id_b2b26ce7" ON public."battDB_experimentdatafile_import_columns" USING btree (signaltype_id);
+
+
+--
+-- Name: battDB_experimentdatafile_machine_id_383367b5; Type: INDEX; Schema: public; Owner: tom
+--
+
+CREATE INDEX "battDB_experimentdatafile_machine_id_383367b5" ON public."battDB_experimentdatafile" USING btree (machine_id);
 
 
 --
@@ -2606,6 +2812,41 @@ CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON public.django_admin_lo
 --
 
 CREATE INDEX django_admin_log_user_id_c564eba6 ON public.django_admin_log USING btree (user_id);
+
+
+--
+-- Name: django_plotly_dash_dashapp_instance_name_b5da5a90_like; Type: INDEX; Schema: public; Owner: tom
+--
+
+CREATE INDEX django_plotly_dash_dashapp_instance_name_b5da5a90_like ON public.django_plotly_dash_dashapp USING btree (instance_name varchar_pattern_ops);
+
+
+--
+-- Name: django_plotly_dash_dashapp_slug_78afbcd4_like; Type: INDEX; Schema: public; Owner: tom
+--
+
+CREATE INDEX django_plotly_dash_dashapp_slug_78afbcd4_like ON public.django_plotly_dash_dashapp USING btree (slug varchar_pattern_ops);
+
+
+--
+-- Name: django_plotly_dash_dashapp_stateless_app_id_220444de; Type: INDEX; Schema: public; Owner: tom
+--
+
+CREATE INDEX django_plotly_dash_dashapp_stateless_app_id_220444de ON public.django_plotly_dash_dashapp USING btree (stateless_app_id);
+
+
+--
+-- Name: django_plotly_dash_statelessapp_app_name_701b74bd_like; Type: INDEX; Schema: public; Owner: tom
+--
+
+CREATE INDEX django_plotly_dash_statelessapp_app_name_701b74bd_like ON public.django_plotly_dash_statelessapp USING btree (app_name varchar_pattern_ops);
+
+
+--
+-- Name: django_plotly_dash_statelessapp_slug_645fc52c_like; Type: INDEX; Schema: public; Owner: tom
+--
+
+CREATE INDEX django_plotly_dash_statelessapp_slug_645fc52c_like ON public.django_plotly_dash_statelessapp USING btree (slug varchar_pattern_ops);
 
 
 --
@@ -2703,11 +2944,11 @@ ALTER TABLE ONLY public."battDB_cellbatch"
 
 
 --
--- Name: battDB_ec_cycle battDB_ec_cycle_dataFile_id_fdec89dd_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_datarange battDB_datarange_dataFile_id_ea79f7c6_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: tom
 --
 
-ALTER TABLE ONLY public."battDB_ec_cycle"
-    ADD CONSTRAINT "battDB_ec_cycle_dataFile_id_fdec89dd_fk_battDB_ex" FOREIGN KEY ("dataFile_id") REFERENCES public."battDB_experimentdata"(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public."battDB_datarange"
+    ADD CONSTRAINT "battDB_datarange_dataFile_id_ea79f7c6_fk_battDB_ex" FOREIGN KEY ("dataFile_id") REFERENCES public."battDB_experimentdatafile"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -2791,27 +3032,35 @@ ALTER TABLE ONLY public."battDB_experimentalapparatus_testEquipment"
 
 
 --
--- Name: battDB_experimentdata battDB_experimentdat_experiment_id_1b7e0048_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile battDB_experimentdat_experiment_id_de169b40_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: tom
 --
 
-ALTER TABLE ONLY public."battDB_experimentdata"
-    ADD CONSTRAINT "battDB_experimentdat_experiment_id_1b7e0048_fk_battDB_ex" FOREIGN KEY (experiment_id) REFERENCES public."battDB_experiment"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_experimentdata_import_columns battDB_experimentdat_experimentdata_id_490cead1_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: tom
---
-
-ALTER TABLE ONLY public."battDB_experimentdata_import_columns"
-    ADD CONSTRAINT "battDB_experimentdat_experimentdata_id_490cead1_fk_battDB_ex" FOREIGN KEY (experimentdata_id) REFERENCES public."battDB_experimentdata"(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public."battDB_experimentdatafile"
+    ADD CONSTRAINT "battDB_experimentdat_experiment_id_de169b40_fk_battDB_ex" FOREIGN KEY (experiment_id) REFERENCES public."battDB_experiment"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
--- Name: battDB_experimentdata_import_columns battDB_experimentdat_signaltype_id_2685b1bf_fk_battDB_si; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns battDB_experimentdat_experimentdatafile_i_315ba0e0_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: tom
 --
 
-ALTER TABLE ONLY public."battDB_experimentdata_import_columns"
-    ADD CONSTRAINT "battDB_experimentdat_signaltype_id_2685b1bf_fk_battDB_si" FOREIGN KEY (signaltype_id) REFERENCES public."battDB_signaltype"(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
+    ADD CONSTRAINT "battDB_experimentdat_experimentdatafile_i_315ba0e0_fk_battDB_ex" FOREIGN KEY (experimentdatafile_id) REFERENCES public."battDB_experimentdatafile"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_experimentdatafile battDB_experimentdat_machine_id_383367b5_fk_battDB_eq; Type: FK CONSTRAINT; Schema: public; Owner: tom
+--
+
+ALTER TABLE ONLY public."battDB_experimentdatafile"
+    ADD CONSTRAINT "battDB_experimentdat_machine_id_383367b5_fk_battDB_eq" FOREIGN KEY (machine_id) REFERENCES public."battDB_equipment"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_experimentdatafile_import_columns battDB_experimentdat_signaltype_id_b2b26ce7_fk_battDB_si; Type: FK CONSTRAINT; Schema: public; Owner: tom
+--
+
+ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
+    ADD CONSTRAINT "battDB_experimentdat_signaltype_id_b2b26ce7_fk_battDB_si" FOREIGN KEY (signaltype_id) REFERENCES public."battDB_signaltype"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -2828,6 +3077,14 @@ ALTER TABLE ONLY public.django_admin_log
 
 ALTER TABLE ONLY public.django_admin_log
     ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_plotly_dash_dashapp django_plotly_dash_d_stateless_app_id_220444de_fk_django_pl; Type: FK CONSTRAINT; Schema: public; Owner: tom
+--
+
+ALTER TABLE ONLY public.django_plotly_dash_dashapp
+    ADD CONSTRAINT django_plotly_dash_d_stateless_app_id_220444de_fk_django_pl FOREIGN KEY (stateless_app_id) REFERENCES public.django_plotly_dash_statelessapp(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

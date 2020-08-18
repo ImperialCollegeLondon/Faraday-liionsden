@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.generic import ListView, CreateView, DetailView
 from django.urls import reverse_lazy
 from .models import *
@@ -7,7 +7,7 @@ from .forms import ExperimentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import ProcessFormView
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
-
+from .serializers import DataSerializer
 
 # Create your views here.
 
@@ -33,12 +33,14 @@ class ExperimentView(ListView):
             date=self.kwargs['date']
            )
 
+# not used - using ExperimentDataFile.post_save instead
 class ProcessExperimentView(LoginRequiredMixin, DetailView, ProcessFormView):
     model = Experiment
     template_name='experiment.html'
 
+# TODO: Make a proper view with graphs n stuff
 class ExperimentDataView(DetailView):
-    model = ExperimentData
+    model = ExperimentDataFile
     template_name='experimentData.html'
 
 
@@ -61,6 +63,10 @@ def viewdata(request):
 def uploaddata(request):
     return HttpResponse("<h3>Upload data</h3>")
 
-
+def get_data(request):
+    data = DataRange.objects.all()
+    if request.method == 'GET':
+        serializer = DataSerializer(data, many=True)
+    return JsonResponse(serializer.data, safe=False)
 
 

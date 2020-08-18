@@ -74,8 +74,17 @@ class Cell(HasAttributes):
     type = models.ForeignKey(CellType, on_delete=models.SET_NULL, null=True, blank=True)
 Cell._meta.get_field('attributes').default = cell_schema
 
+#class CellTypeConfig(models.Model):
+#    cellType=models.ForeignKey(CellType)
+#    config=models.ForeignKey('CellConfig')
+#    position_in_config = models.PositiveIntegerField()
+#    class Meta:
+#        ordering=('position_in_config',)
+
 class CellConfig(HasAttributes):
-    # think about how to link cells into packs in a flexible way
+    # TODO: think about how to link cells into packs in a flexible way - supports idea #15 (SVG Diagrams)
+    # e.g. use this
+    # cells = ManyToManyField(CellType, through=CellTypeConfig)
     num_cells = models.PositiveIntegerField(default=1)
 
 class ExperimentalApparatus(HasAttributes):
@@ -134,11 +143,12 @@ class Experiment(models.Model):
             models.UniqueConstraint(fields=['owner', 'name', 'date'], name='unique_slugname')
         ]
 
-class ExperimentData(models.Model):
+class ExperimentDataFile(models.Model):
     raw_data_file = models.FileField(upload_to='raw_data_files',null=True)
+    machine = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True, related_name='all_data')
     metadata = JSONField(default=resultMetadata_schema, blank=True)
     data = JSONField(default=resultData_schema, blank=True, editable=True)
-    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True, related_name='data')
+    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True, related_name='data_file')
     import_columns = models.ManyToManyField(SignalType, blank=True)
     parameters = JSONField(default=experimentParameters_schema, blank=True)
     analysis = JSONField(default=experimentAnalysis_schema, blank=True)
@@ -147,17 +157,24 @@ class ExperimentData(models.Model):
     class Meta:
        verbose_name_plural="Experiment Data Files"
 
-class EC_Cycle(models.Model):
-    dataFile = models.ForeignKey(ExperimentData, on_delete=models.SET_NULL, null=True, blank=True, related_name='cycles')
-    cycle_num = models.PositiveIntegerField()
-    cycle_action = models.CharField(max_length=8, choices=[('chg', 'Charging'), ('dchg', 'Discharging'), ('rest', 'Rest'), (None, 'Undefined')], null=True)
+
+# TODO: Convert this into a JSON Schema within ExperimentData - see Git issue #23
+class DataRange(models.Model):
+    dataFile = models.ForeignKey(ExperimentDataFile, on_delete=models.SET_NULL, null=True, blank=True, related_name='ranges')
+    file_offset = models.PositiveIntegerField(default=0)
+    label= models.CharField(max_length=32, null=True)
+    protocol_step = models.PositiveIntegerField()
+    step_action = models.CharField(max_length=8, choices=[('chg', 'Charging'), ('dchg', 'Discharging'), ('rest', 'Rest'), (None, 'Undefined')], null=True)
+    # TODO: Possibly split these arrays into a new object
     ts_headers = ArrayField(models.CharField(max_length=32, null=True), null=True, blank=True)
     ts_data = ArrayField(ArrayField(models.FloatField(null=True), null=True), null=True, blank=True)
+    # TODO: These need a schema
     events = JSONField(null=True, blank=True)
     analysis = JSONField(default=experimentAnalysis_schema, blank=True)
+    def __str__(self):
+       return (str(self.label))
     class Meta:
-       verbose_name="EChem Cycle"
-       verbose_name_plural="EChem Cycles"
+       verbose_name_plural="Data Ranges"
 
 def data_pre_save(sender, instance, *args, **kwargs):
     if not instance:
@@ -168,6 +185,7 @@ def data_pre_save(sender, instance, *args, **kwargs):
     try:
        print("result_post_save: Sender: %s, Instance: %s, args: %s, kwargs: %s, base_loc: %s, dilename: %s" % (sender, instance, args, kwargs, instance.raw_data_file.storage.base_location, instance.raw_data_file.name))
        filepath = "/".join([instance.raw_data_file.storage.base_location, instance.raw_data_file.name])
+       # TODO: Work out which type of file it is and call the correct parser!
        parser = BiologicCSVnTSVParser(filepath)
        (instance.metadata, columns) = (parser.get_metadata())
        instance.metadata['Columns'] = columns
@@ -193,5 +211,5 @@ def data_pre_save(sender, instance, *args, **kwargs):
 
 from django.dispatch import Signal
 from django.db.models import signals
-signals.post_save.connect(data_pre_save, sender=ExperimentData)
+signals.post_save.connect(data_pre_save, sender=ExperimentDataFile)
 

@@ -89,295 +89,6 @@
   }
 },
 {
-  "model": "battDB.experimentdata",
-  "pk": 1,
-  "fields": {
-    "raw_data_file": "raw_data_files/200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
-    "metadata": {
-      "Columns": {
-        "x": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "Ns": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "P/W": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "I/mA": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "Rec#": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "Time": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "mode": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "R/Ohm": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "error": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "ox/red": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "Ecell/V": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "I Range": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "dq/mA_h": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "control/V": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "Energy/W_h": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "Ns changes": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "control/mA": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "half cycle": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "(Q-Qo)/mA_h": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "counter inc": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "Analog OUT/V": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "Efficiency/%": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "control/V/mA": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "cycle number": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "Capacity/mA_h": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "Q charge/mA_h": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "control changes": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "Q discharge/mA_h": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "Temperature/\ufffdC": {
-          "has_data": true,
-          "is_numeric": true
-        },
-        "Q charge/discharge/mA.h": {
-          "has_data": true,
-          "is_numeric": true
-        }
-      },
-      "num_rows": 10148,
-      "warnings": [],
-      "data_start": 92,
-      "file_header": [
-        "BT-Lab ASCII FILE\n",
-        "Nb header lines : 93                          \n",
-        "\n",
-        "Modulo Bat\n",
-        "\n",
-        "Run on channel : D1 (SN 0356)\n",
-        "Grouped channel(s) : D1, D2, D3, D4, E1, E2, E3, E4, E5, F2, F3, F4, F5, F6\n",
-        "User : \n",
-        "Ecell ctrl range : min = 0.00 V, max = 9.00 V\n",
-        "Safety Limits :\n",
-        "\tEcell min = 2.45 V\n",
-        "\tEcell max = 4.25 V\n",
-        "\tfor t > 500 ms\n",
-        "\tTemperature max = 55.00 \u00b0C\n",
-        "Acquisition started on : 07/20/2020 12:11:52\n",
-        "Saved on :\n",
-        "\tFile : 200720_C-rate test Co5 cells 1-14_D128_CD1.mpr\n",
-        "\tDirectory : D:\\Data\\Anisha\\AGM single layer cells\\\n",
-        "\tHost : 192.109.209.129\n",
-        "Device : BCS-815 (SN 0455)\n",
-        "Address : 192.109.209.128\n",
-        "BT-Lab for windows v1.65 (software)\n",
-        "Internet server v1.65 (firmware)\n",
-        "Command interpretor v1.65 (firmware)\n",
-        "Electrode material : \n",
-        "Initial state : \n",
-        "Electrolyte : \n",
-        "Comments : \n",
-        "Mass of active material : 0.001 mg\n",
-        " at x = 0.000\n",
-        "Molecular weight of active material (at x = 0) : 0.001 g/mol\n",
-        "Atomic weight of intercalated ion : 0.001 g/mol\n",
-        "Acquisition started at : xo = 0.000\n",
-        "Number of e- transfered per intercalated ion : 1\n",
-        "for DX = 1, DQ = 26.802 mA.h\n",
-        "Battery capacity : 340.000 mA.h\n",
-        "Electrode surface area : 0.001 cm2\n",
-        "Characteristic mass : 0.001 g\n",
-        "Record Temperature\n",
-        "Cycle Definition : Charge/Discharge alternance\n",
-        "External device configuration :\n",
-        "   device type : Other\n",
-        "   device name : Other\n",
-        "   Analog OUT : \n",
-        "      mode : E/V\n",
-        "      unit : E/V\n",
-        "      max : 5.000 at 5.000 V\n",
-        "      min : 0.000 at 0.000 V\n",
-        "      current : 0.000\n",
-        "Ns                  0                   1                   2                   3                   4                   5                   6                   \n",
-        "ctrl_type           Rest                CC                  CV                  Rest                CC                  Rest                Loop                \n",
-        "Apply I/C           I                   C / N               C / N               C / N               C / N               C / N               C / N               \n",
-        "ctrl1_val                               100.000             4.200                                   100.000                                 100.000             \n",
-        "ctrl1_val_unit                          mA                  V                                       mA                                                          \n",
-        "ctrl1_val_vs                            <None>              Ref                                     <None>                                                      \n",
-        "ctrl2_val                                                                                                                                                       \n",
-        "ctrl2_val_unit                                                                                                                                                  \n",
-        "ctrl2_val_vs                                                                                                                                                    \n",
-        "ctrl3_val                                                                                                                                                       \n",
-        "ctrl3_val_unit                                                                                                                                                  \n",
-        "ctrl3_val_vs                                                                                                                                                    \n",
-        "N                   1.00                5.00                20.00               20.00               5.00                2.00                20.00               \n",
-        "charge/discharge    Charge              Charge              Charge              Charge              Discharge           Discharge           Discharge           \n",
-        "ctrl_seq            0                   0                   0                   0                   0                   0                   1                   \n",
-        "ctrl_repeat         0                   0                   0                   0                   0                   0                   4                   \n",
-        "ctrl_trigger        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        \n",
-        "ctrl_TO_t           0.000               0.000               0.000               0.000               0.000               0.000               0.000               \n",
-        "ctrl_TO_t_unit      d                   d                   d                   d                   d                   d                   d                   \n",
-        "ctrl_Nd             6                   6                   6                   6                   6                   6                   6                   \n",
-        "ctrl_Na             1                   1                   1                   1                   1                   1                   1                   \n",
-        "ctrl_corr           1                   1                   1                   1                   1                   1                   1                   \n",
-        "lim_nb              1                   1                   1                   1                   1                   1                   0                   \n",
-        "lim1_type           Time                Ecell               |I|                 Time                Ecell               Time                Ecell               \n",
-        "lim1_comp           >                   >                   <                   >                   <                   >                   <                   \n",
-        "lim1_Q              Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             \n",
-        "lim1_value          4.000               4.200               7.000               30.000              2.500               30.000              2.500               \n",
-        "lim1_value_unit     h                   V                   mA                  mn                  V                   mn                  V                   \n",
-        "lim1_action         Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       \n",
-        "lim1_seq            1                   2                   3                   4                   5                   6                   7                   \n",
-        "rec_nb              1                   1                   1                   1                   1                   1                   0                   \n",
-        "rec1_type           Time                Ecell               Time                Time                Ecell               Time                Time                \n",
-        "rec1_value          120.000             10.000              2.000               60.000              10.000              60.000              2.000               \n",
-        "rec1_value_unit     s                   mV                  s                   s                   mV                  s                   mn                  \n",
-        "E range min (V)     0.000               0.000               0.000               0.000               0.000               0.000               0.000               \n",
-        "E range max (V)     9.000               9.000               9.000               9.000               9.000               9.000               9.000               \n",
-        "I Range             10 mA               100 mA              Auto                100 mA              100 mA              1 A                 100 mA              \n",
-        "I Range min         Unset               Unset               Unset               Unset               Unset               Unset               Unset               \n",
-        "I Range max         Unset               Unset               Unset               Unset               Unset               Unset               Unset               \n",
-        "I Range init        Unset               Unset               Unset               Unset               Unset               Unset               Unset               \n",
-        "auto rest           0                   0                   0                   0                   0                   0                   0                   \n",
-        "Bandwidth           4                   4                   4                   4                   4                   4                   4                   \n",
-        "\n"
-      ],
-      "Dataset_Name": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder",
-      "dataset_size": 4093123,
-      "Device Metadata": {
-        "Mode": "Modulo Bat",
-        "User": null,
-        "DX/DQ": "for DX = 1, DQ = 26.802 mA.h",
-        "Device": "BCS-815 (SN 0455)",
-        "Record": "Temperature",
-        "Address": "192.109.209.128",
-        "Comments": null,
-        "FileType": "BT-Lab ASCII FILE",
-        "Saved on": {
-          "File": "200720_C-rate test Co5 cells 1-14_D128_CD1.mpr",
-          "Host": "192.109.209.129",
-          "Directory": "D:\\Data\\Anisha\\AGM single layer cells\\"
-        },
-        "Electrolyte": null,
-        "Initial state": null,
-        "Safety Limits": "Ecell min = 2.45 V Ecell max = 4.25 V for t > 500 ms Temperature max = 55.00 \u00b0C",
-        "Run on channel": "D1 (SN 0356)",
-        "Internet server": "v1.65 (firmware)",
-        "Nb header lines": 93,
-        "Battery capacity": "340.000 mA.h",
-        "Cycle Definition": "Charge/Discharge alternance",
-        "Ecell ctrl range": "min = 0.00 V, max = 9.00 V",
-        "BT-Lab for windows": "v1.65 (software)",
-        "Electrode material": null,
-        "Grouped channel(s)": "D1, D2, D3, D4, E1, E2, E3, E4, E5, F2, F3, F4, F5, F6",
-        "Characteristic mass": "0.001 g",
-        "Command interpretor": "v1.65 (firmware)",
-        "Acquisition started at": "xo = 0.000",
-        "Acquisition started on": "07/20/2020 12:11:52",
-        "Electrode surface area": "0.001 cm2",
-        "Mass of active material": "0.001 mg at x = 0.000",
-        "External device configuration": {
-          "Analog OUT": {
-            "max": "5.000 at 5.000 V",
-            "min": "0.000 at 0.000 V",
-            "mode": "E/V",
-            "unit": "E/V",
-            "current": 0.0
-          },
-          "device name": "Other",
-          "device type": "Other"
-        },
-        "Atomic weight of intercalated ion": "0.001 g/mol",
-        "Number of e- transfered per intercalated ion": 1,
-        "Molecular weight of active material (at x = 0)": "0.001 g/mol"
-      },
-      "first_sample_no": 93
-    },
-    "data": {
-      "rows": [],
-      "columns": []
-    },
-    "experiment": null,
-    "parameters": {},
-    "analysis": {
-      "MeasuredCapacity": null,
-      "MeasuredResistance": null
-    },
-    "import_columns": []
-  }
-},
-{
   "model": "contenttypes.contenttype",
   "pk": 1,
   "fields": {
@@ -543,6 +254,38 @@
   "fields": {
     "app_label": "battDB",
     "model": "celltype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 22,
+  "fields": {
+    "app_label": "battDB",
+    "model": "datarange"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 23,
+  "fields": {
+    "app_label": "battDB",
+    "model": "experimentdatafile"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 24,
+  "fields": {
+    "app_label": "django_plotly_dash",
+    "model": "dashapp"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 25,
+  "fields": {
+    "app_label": "django_plotly_dash",
+    "model": "statelessapp"
   }
 },
 {
@@ -1326,6 +1069,150 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 85,
+  "fields": {
+    "name": "Can add data range",
+    "content_type": 22,
+    "codename": "add_datarange"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 86,
+  "fields": {
+    "name": "Can change data range",
+    "content_type": 22,
+    "codename": "change_datarange"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 87,
+  "fields": {
+    "name": "Can delete data range",
+    "content_type": 22,
+    "codename": "delete_datarange"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 88,
+  "fields": {
+    "name": "Can view data range",
+    "content_type": 22,
+    "codename": "view_datarange"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 89,
+  "fields": {
+    "name": "Can add experiment data file",
+    "content_type": 23,
+    "codename": "add_experimentdatafile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 90,
+  "fields": {
+    "name": "Can change experiment data file",
+    "content_type": 23,
+    "codename": "change_experimentdatafile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 91,
+  "fields": {
+    "name": "Can delete experiment data file",
+    "content_type": 23,
+    "codename": "delete_experimentdatafile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 92,
+  "fields": {
+    "name": "Can view experiment data file",
+    "content_type": 23,
+    "codename": "view_experimentdatafile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 93,
+  "fields": {
+    "name": "Can add dash app",
+    "content_type": 24,
+    "codename": "add_dashapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 94,
+  "fields": {
+    "name": "Can change dash app",
+    "content_type": 24,
+    "codename": "change_dashapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 95,
+  "fields": {
+    "name": "Can delete dash app",
+    "content_type": 24,
+    "codename": "delete_dashapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 96,
+  "fields": {
+    "name": "Can view dash app",
+    "content_type": 24,
+    "codename": "view_dashapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 97,
+  "fields": {
+    "name": "Can add stateless app",
+    "content_type": 25,
+    "codename": "add_statelessapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 98,
+  "fields": {
+    "name": "Can change stateless app",
+    "content_type": 25,
+    "codename": "change_statelessapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 99,
+  "fields": {
+    "name": "Can delete stateless app",
+    "content_type": 25,
+    "codename": "delete_statelessapp"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 100,
+  "fields": {
+    "name": "Can view stateless app",
+    "content_type": 25,
+    "codename": "view_statelessapp"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -1577,6 +1464,24 @@
     "groups": [
       2
     ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 6,
+  "fields": {
+    "password": "pbkdf2_sha256$150000$kEZ17iCgo0K6$V6JsLVb3AipIbYxKACRIPs68robokOFQzGHM5CeWmVs=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "rishi",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2020-08-16T15:02:44Z",
+    "groups": [],
     "user_permissions": []
   }
 },
@@ -2638,6 +2543,45 @@
   "pk": 82,
   "fields": {
     "action_time": "2020-08-15T21:15:35.627Z",
+    "user": 1,
+    "content_type": 19,
+    "object_id": "1",
+    "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 84,
+  "fields": {
+    "action_time": "2020-08-16T15:02:44.784Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "6",
+    "object_repr": "rishi",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 85,
+  "fields": {
+    "action_time": "2020-08-16T15:03:02.079Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "6",
+    "object_repr": "rishi",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"is_staff\", \"is_superuser\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 86,
+  "fields": {
+    "action_time": "2020-08-17T12:09:14.120Z",
     "user": 1,
     "content_type": 19,
     "object_id": "1",

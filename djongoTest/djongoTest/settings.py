@@ -34,6 +34,9 @@ INSTALLED_APPS = [
     'jquery',
     'jsoneditor',
     'django_extensions',
+    'ipware',
+#    'djangular',
+    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'battDB.apps.BattdbConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -95,6 +98,12 @@ DATABASES = {
     }
 }
 
+
+#STATICFILES_FINDERS = {
+#      'django.contrib.staticfiles.finders.FileSystemFinder',
+#      'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#      'djangular.finders.NamespacedAngularAppDirectoriesFinder'
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
