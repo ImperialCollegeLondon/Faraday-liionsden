@@ -1,0 +1,7 @@
+{% include 'inc.html' %}
+<h1>Experiments List</h1>
+<ul>
+  {% for exp in object_list %}
+    <li><a href="{{ exp.get_absolute_url }}">{{ exp.slug }}</a></li>
+  {% endfor %}
+</ul>

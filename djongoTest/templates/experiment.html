@@ -1,0 +1,11 @@
+<!-- experiment.html -->
+<div>
+  <h2>{{ object.slug }}</h2>
+  <p><a href="{{ object.raw_data_file.url }}">{{ object.raw_data_file }}</a></p>
+
+  {% for result in object_list %}
+    <li><a href="{{ result.get_absolute_url }}">{{ result }}</a></li>
+  {% endfor %}
+
+</div>
+

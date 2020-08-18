@@ -1,0 +1,13 @@
+<!-- experimentData.html -->
+bork bork bork
+<div>
+  <h2>{{ object }}</h2>
+  <p><a href="{{ object.raw_data_file.url }}">{{ object.raw_data_file }}</a></p>
+
+  <p>{{object.metadata}}</p>
+  {% for cycle in object.get_cycles() %}
+    <li><a href="{{ result.get_absolute_url }}">{{ result }}</a></li>
+  {% endfor %}
+
+</div>
+

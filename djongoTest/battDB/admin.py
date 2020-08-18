@@ -2,9 +2,23 @@ from django.contrib import admin
 
 # Register your models here.
 
-from djongo.models import CheckConstraint, Q
-from djongo import models
-from pymongo.read_concern import ReadConcern
-from .models import Experiment, Equipment
+from .models import *
 
-admin.site.register([Experiment, Equipment])
+# see https://github.com/nnseva/django-jsoneditor
+from django.contrib.postgres.fields import JSONField
+from jsoneditor.forms import JSONEditor
+class MyAdmin(admin.ModelAdmin):
+    formfield_overrides = {
+        JSONField:{ 'widget':JSONEditor },
+    }
+
+
+admin.site.register([
+    Experiment, TestProtocol, Equipment, EquipmentType, ExperimentalApparatus,
+    CellConfig, CellBatch, Cell, CellType, Manufacturer, ExperimentDataFile, DataRange], MyAdmin)
+
+
+#class DataAdmin(MyAdmin):
+#    readonly_fields = ["data"]
+#
+#admin.site.register([ExperimentData], DataAdmin)
