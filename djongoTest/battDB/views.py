@@ -16,32 +16,36 @@ class ExperimentsView(ListView):
     model = Experiment
     template_name = 'experiments.html'
 
-class ExperimentView(ListView):
+class ExperimentView(DetailView):
     model = Experiment
     template_name='experiment.html'
     
-    def get_object(self):  # simple unique ID e.g. /exp/94
-       if('pk' in self.kwargs):
-            return get_object_or_404(Experiment, pk=self.kwargs['pk'])
-       else:  # wanted to have slugs like /exp/PolymerElectrolyteComposition-bloggs-2020-08-22 but this doesn't seem to work..
-           return get_object_or_404(
-            Experiment,
-            #slug=self.kwargs['slug']
-            #slug=str(self.kwargs['name']) + "/" + str(self.kwargs['owner']) + "/" + str(self.kwargs['date'])
-            name=self.kwargs['name'],
-            owner=self.kwargs['owner'],
-            date=self.kwargs['date']
-           )
+    #def get_object(self):  # simple unique ID e.g. /exp/94
+       #if('pk' in self.kwargs):
+    #        return get_object_or_404(ExperimentDataFile, experiment=self.kwargs['pk'])
+       #else:  # wanted to have slugs like /exp/PolymerElectrolyteComposition-bloggs-2020-08-22 but this doesn't seem to work..
+       #    return get_object_or_404(
+       #     ExperimentDataFile,
+       #     #slug=self.kwargs['slug']
+       #     #slug=str(self.kwargs['name']) + "/" + str(self.kwargs['owner']) + "/" + str(self.kwargs['date'])
+       #     name=self.kwargs['name'],
+       #     owner=self.kwargs['owner'],
+       #     date=self.kwargs['date']
+       #    )
 
 # not used - using ExperimentDataFile.post_save instead
-class ProcessExperimentView(LoginRequiredMixin, DetailView, ProcessFormView):
-    model = Experiment
-    template_name='experiment.html'
+#class ProcessExperimentView(LoginRequiredMixin, DetailView, ProcessFormView):
+#    model = Experiment
+#    template_name='experiment.html'
 
 # TODO: Make a proper view with graphs n stuff
 class ExperimentDataView(DetailView):
     model = ExperimentDataFile
     template_name='experimentData.html'
+
+class DataRangeView(DetailView):
+    model = DataRange
+    template_name='dataRange.html'
 
 
 class CreateExperimentView(LoginRequiredMixin, CreateView):

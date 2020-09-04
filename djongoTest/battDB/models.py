@@ -17,8 +17,13 @@ class HasAttributes(models.Model):
         abstract = True
 
 
-class SignalType(HasAttributes):
-    pass
+class SignalType(models.Model):
+    name = models.CharField(max_length=30)
+    symbol = models.CharField(max_length=8)
+    unit_name = models.CharField(max_length=30, default="Arb") # could be foreign key to a "SignalTypeUuits" table
+    unit_symbol = models.CharField(max_length=8, default="")
+    def __str__(self):
+       return "%s/%s" % (self.name, self.unit_symbol)
 
 class TestProtocol(HasAttributes):
     description = models.TextField()
@@ -148,7 +153,7 @@ class ExperimentDataFile(models.Model):
     machine = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True, related_name='all_data')
     metadata = JSONField(default=resultMetadata_schema, blank=True)
     data = JSONField(default=resultData_schema, blank=True, editable=True)
-    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True, related_name='data_file')
+    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True, related_name='data_files')
     import_columns = models.ManyToManyField(SignalType, blank=True)
     parameters = JSONField(default=experimentParameters_schema, blank=True)
     analysis = JSONField(default=experimentAnalysis_schema, blank=True)
@@ -156,7 +161,6 @@ class ExperimentDataFile(models.Model):
        return os.path.basename(self.raw_data_file.name)
     class Meta:
        verbose_name_plural="Experiment Data Files"
-
 
 # TODO: Convert this into a JSON Schema within ExperimentData - see Git issue #23
 class DataRange(models.Model):
@@ -172,7 +176,7 @@ class DataRange(models.Model):
     events = JSONField(null=True, blank=True)
     analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
-       return (str(self.label))
+       return ("%s/%d: %s" % (self.dataFile, self.id, self.label))
     class Meta:
        verbose_name_plural="Data Ranges"
 

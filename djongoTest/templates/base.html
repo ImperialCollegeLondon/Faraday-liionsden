@@ -1,0 +1,27 @@
+{% include 'inc.html' %}
+
+<html>
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+</style>
+</head>
+<body>
+    <div class="page-header">
+        <h1><a href="/">LiIonsDen / Galvanalyser Web App</a></h1>
+    </div>
+    <div class="content container">
+        <div class="row">
+            <div class="col-md-8">
+
+            {% block content %}
+            {% endblock %}
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,11 +1,28 @@
 <!-- experiment.html -->
-<div>
-  <h2>{{ object.slug }}</h2>
-  <p><a href="{{ object.raw_data_file.url }}">{{ object.raw_data_file }}</a></p>
 
-  {% for result in object_list %}
-    <li><a href="{{ result.get_absolute_url }}">{{ result }}</a></li>
+{% extends 'base.html' %}
+{% load tag_allfields %}
+
+{% block content %}
+
+<div>
+  <h2>View Experiment: <b>{{ object }}</b></h2>
+  <h3>Info</h3>
+  <table>
+  {% for key, val in object|get_fields %}
+    <tr><td>{{ key }}</td><td> {{ val }} </td></tr>
   {% endfor %}
+    <tr><td>data files count</td><td>{{ object.data_files.count }} </td></tr>
+  </table>
+
+  <h3>Data files:</h3>
+  <ul>
+  {% for file in object.data_files.all %}
+    <li><a href="{% url 'viewData' file.id %}">{{ file }}</a></li>
+  {% endfor %}
+    <li><a href="upload_file">Upload new data file</a>
+  </ul>
 
 </div>
 
+{% endblock %}

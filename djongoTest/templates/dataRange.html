@@ -1,0 +1,21 @@
+<!-- dataRange.html -->
+{% extends 'base.html' %}
+{% load tag_allfields %}
+
+{% block content %}
+bork bork bork
+<div>
+  <h2>DataRange: <b>{{ object }}</b></h2>
+  <table>
+  {% for key, val in object|get_fields %}
+    <tr><td>{{ key }}</td><td> {{ val }} </td></tr>
+  {% endfor %}
+    <tr><td>data files count</td><td>{{ object.data_files.count }} </td></tr>
+  </table>
+
+  <h3>Metadata JSON:</h3>
+  <p>{{object.metadata}}</p>
+
+</div>
+
+{% endblock %}

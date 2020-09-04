@@ -1,13 +1,23 @@
 <!-- experimentData.html -->
+{% extends 'base.html' %}
+{% load tag_allfields %}
+
+{% block content %}
 bork bork bork
 <div>
-  <h2>{{ object }}</h2>
+  <h2>View Data: <b>{{ object }}</b></h2>
+   <p> file contains {{ object.ranges.count }} cycles</p>
+   <h3>Cycles:</h3>
+   <ul>
+   {% for cycle in object.ranges.all %}
+    <li><a href="{% url 'viewDataRange' cycle.id %}">{{ cycle }}</a></li>
+   {% endfor %}
+   </ul>
+  <h3>Raw File</h3>
   <p><a href="{{ object.raw_data_file.url }}">{{ object.raw_data_file }}</a></p>
-
+  <h3>Metadata JSON:</h3>
   <p>{{object.metadata}}</p>
-  {% for cycle in object.get_cycles() %}
-    <li><a href="{{ result.get_absolute_url }}">{{ result }}</a></li>
-  {% endfor %}
 
 </div>
 
+{% endblock %}
