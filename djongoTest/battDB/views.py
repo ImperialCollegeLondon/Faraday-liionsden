@@ -8,13 +8,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import ProcessFormView
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 from .serializers import DataSerializer
+import matplotlib.pyplot as plt, mpld3
 
 # Create your views here.
 
 
 class ExperimentsView(ListView):
     model = Experiment
-    template_name = 'experiments.html'
+    template_name = 'generic_list.html'
+
+class AllFilesView(ListView):
+    model = ExperimentDataFile
+    template_name = 'generic_list.html'
 
 class ExperimentView(DetailView):
     model = Experiment
@@ -72,5 +77,11 @@ def get_data(request):
     if request.method == 'GET':
         serializer = DataSerializer(data, many=True)
     return JsonResponse(serializer.data, safe=False)
+
+def plotData(request):
+    fig=plt.figure()
+    plt.plot([1,2,3,4])
+    g = mpld3.fig_to_html(fig)
+    return HttpResponse(g)
 
 

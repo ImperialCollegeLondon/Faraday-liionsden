@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load tag_objname %}
+
+{% block content %}
+
+<h1>{% model_name_plural object_list %} List</h1>
+<ul>
+  {% for obj in object_list %}
+    <li><a href="{% url obj obj.id }">{{ obj }}</a></li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
+
+
+
