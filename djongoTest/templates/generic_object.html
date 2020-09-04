@@ -1,10 +1,14 @@
-<!-- dataRange.html -->
+<!-- generic_object.html -->
+
 {% extends 'base.html' %}
 {% load tag_allfields %}
+%% load tag_objname %}
 
 {% block content %}
+
 <div>
-  <h2>DataRange: <b>{{ object }}</b></h2>
+  <h2>View {{ model_name }}: <b>{{ object }}</b></h2>
+  <h3>Info</h3>
   <table>
   {% for key, val in object|get_fields %}
     <tr><td>{{ key }}</td><td> {{ val }} </td></tr>
@@ -12,15 +16,6 @@
     <tr><td>data files count</td><td>{{ object.data_files.count }} </td></tr>
   </table>
 
-   <h2>Graph:</h2>
-    {{mplot|safe}}
-
-
-  <h3>Metadata JSON:</h3>
-  <p>{{object.metadata}}</p>
-
 </div>
 
 {% endblock %}
-
-

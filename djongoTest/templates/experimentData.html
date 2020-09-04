@@ -3,11 +3,10 @@
 {% load tag_allfields %}
 
 {% block content %}
-bork bork bork
 <div>
   <h2>View Data: <b>{{ object }}</b></h2>
-   <p> file contains {{ object.ranges.count }} cycles</p>
-   <h3>Cycles:</h3>
+   <p> {{ object.ranges.count }} defined data ranges for this file</p>
+   <h3>Ranges:</h3>
    <ul>
    {% for cycle in object.ranges.all %}
     <li><a href="{% url 'viewDataRange' cycle.id %}">{{ cycle }}</a></li>
@@ -15,6 +14,8 @@ bork bork bork
    </ul>
   <h3>Raw File</h3>
   <p><a href="{{ object.raw_data_file.url }}">{{ object.raw_data_file }}</a></p>
+  <h3> Plot: </h3>
+  {{mplot|safe}}
   <h3>Metadata JSON:</h3>
   <p>{{object.metadata}}</p>
 

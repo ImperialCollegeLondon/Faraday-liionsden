@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
-from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView
+from django.views.generic.base import TemplateResponseMixin, ContextMixin, View
 from django.urls import reverse_lazy
 from .models import *
 from .forms import ExperimentForm
@@ -19,6 +20,10 @@ class ExperimentsView(ListView):
 
 class AllFilesView(ListView):
     model = ExperimentDataFile
+    template_name = 'generic_list.html'
+
+class AllRangesView(ListView):
+    model = DataRange
     template_name = 'generic_list.html'
 
 class ExperimentView(DetailView):
@@ -47,11 +52,40 @@ class ExperimentView(DetailView):
 class ExperimentDataView(DetailView):
     model = ExperimentDataFile
     template_name='experimentData.html'
+    def get_context_data(self, **kwargs):  
+        context = super(ExperimentDataView, self).get_context_data(**kwargs)
+        fig,ax=plt.subplots(figsize=(16,9))        
+        plt.plot(context['object'].data['rows'])
+        g = mpld3.fig_to_html(fig, template_type="simple")
+        context['mplot']=g
+        return context
+
+
+class ExperimentDataProcessView(UpdateView):
+    model = ExperimentDataFile
+    template_name='generic_object.html'
+
+
+#https://stackoverflow.com/questions/18232851/django-passing-variables-to-templates-from-class-based-views
+class TemplateView(TemplateResponseMixin, ContextMixin, View):
+    """
+    A view that renders a template.  This view will also pass into the context
+    any keyword arguments passed by the url conf.
+    """
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
 
 class DataRangeView(DetailView):
     model = DataRange
     template_name='dataRange.html'
-
+    def get_context_data(self, **kwargs):
+        context = super(DataRangeView, self).get_context_data(**kwargs)
+        fig,ax=plt.subplots(figsize=(16,9))
+        plt.plot(context['object'].ts_data)
+        g = mpld3.fig_to_html(fig, template_type="simple")
+        context['mplot']=g
+        return context
 
 class CreateExperimentView(LoginRequiredMixin, CreateView):
     model = Experiment
@@ -79,9 +113,9 @@ def get_data(request):
     return JsonResponse(serializer.data, safe=False)
 
 def plotData(request):
-    fig=plt.figure()
-    plt.plot([1,2,3,4])
-    g = mpld3.fig_to_html(fig)
+    fig,ax=plt.subplots(figsize=(16,9))
+    plt.plot([1,2,3,4]*4096)
+    g = mpld3.fig_to_html(fig, template_type="simple")
     return HttpResponse(g)
 
 

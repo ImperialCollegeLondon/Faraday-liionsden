@@ -11,6 +11,7 @@ urlpatterns = [
     #path('process/<int:pk>', ProcessExperimentView.as_view(), name='Process'),
     path('exps', ExperimentsView.as_view(), name='Experiments'),
     path('files', AllFilesView.as_view(), name='Files'),
+    path('ranges', AllRangesView.as_view(), name='Data Ranges'),
     path('exp/<slug:owner>/<slug:name>/<slug:date>', ExperimentView.as_view(), name='Experiment'),
     #path('exp/<slug:slug>', ExperimentView.as_view(), name='Experiment'),
     path('exp/<int:pk>', ExperimentView.as_view(), name='Experiment'),
