@@ -1598,7 +1598,7 @@ COPY public."battDB_celltype" (id, name, attributes) FROM stdin;
 --
 
 COPY public."battDB_datarange" (id, label, protocol_step, step_action, ts_headers, ts_data, events, analysis, "dataFile_id", file_offset) FROM stdin;
-1	charging	1	chg	{}	{}	\N	{"MeasuredCapacity": null, "MeasuredResistance": null}	1	0
+1	charging	1	chg	{}	{{1},{2},{3},{4},{5},{6},{7},{8}}	\N	{"MeasuredCapacity": null, "MeasuredResistance": null}	1	0
 \.
 
 
@@ -1812,6 +1812,7 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 98	2020-09-03 19:56:48.721474+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_VhdOTOf.mpt	1	[{"added": {}}]	23	1
 99	2020-09-03 23:49:08.152134+00	1	charging	1	[{"added": {}}]	22	1
 100	2020-09-03 23:51:23.68365+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_VhdOTOf.mpt/1: charging	2	[]	22	1
+101	2020-09-04 14:48:15.352707+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_VhdOTOf.mpt/1: charging	2	[{"changed": {"fields": ["ts_data"]}}]	22	1
 \.
 
 
@@ -2102,7 +2103,7 @@ SELECT pg_catalog.setval('public."battDB_testprotocol_id_seq"', 1, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 100, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 101, true);
 
 
 --

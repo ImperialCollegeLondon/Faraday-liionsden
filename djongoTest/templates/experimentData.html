@@ -16,6 +16,10 @@
   <p><a href="{{ object.raw_data_file.url }}">{{ object.raw_data_file }}</a></p>
   <h3> Plot: </h3>
   {{mplot|safe}}
+  <h3>Data</h3>
+  <pre>{{ dataHead }}</pre>
+  <table>
+  
   <h3>Metadata JSON:</h3>
   <p>{{object.metadata}}</p>
 
