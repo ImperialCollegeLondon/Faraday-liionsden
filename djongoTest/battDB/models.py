@@ -2,12 +2,14 @@ import os
 import traceback
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.contrib.postgres.fields import JSONField, ArrayField
+from django.db.models import JSONField
+from django.contrib.postgres.fields import ArrayField
 from django.urls import reverse
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 #from jsonfield_schema import JSONSchema
 
 
+# Base class for models having a name and JSON attributes.
 class HasAttributes(models.Model):
     name = models.CharField(max_length=32, unique=True)
     attributes = JSONField(default=dict, blank=True)
@@ -16,7 +18,8 @@ class HasAttributes(models.Model):
     class Meta:
         abstract = True
 
-
+# This model defines a table of signal types e.g. Cell_voltage.
+# Experiments using the same set of SignalTypes could be assumed to be comparable (issue #16).
 class SignalType(models.Model):
     name = models.CharField(max_length=30)
     symbol = models.CharField(max_length=8)
@@ -25,24 +28,27 @@ class SignalType(models.Model):
     def __str__(self):
        return "%s/%s" % (self.name, self.unit_symbol)
 
+# Experient protocol definitions
+# TODO: Harmonise with PyBaMM protocol specifications (issue #18)
 class TestProtocol(HasAttributes):
     description = models.TextField()
     parameters=JSONField(default=dict, blank=True)
 
+# Equipment/software Manufacturer table.
+# FIXME: Is this a case of over-normalisation? Could be a text field within EquipmentType.
 class Manufacturer(HasAttributes):
     pass
 
-
+# Equipment Type - e.g. model number of cycler machine
 def equipmentType_schema():
     return {
        "channels":None,
     }
-
 class EquipmentType(HasAttributes):
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, null=True, blank=True)
 EquipmentType._meta.get_field('attributes').default = equipmentType_schema
 
-
+# Equipment - e.g. Bob's cycler
 class Equipment(HasAttributes):
     type = models.ForeignKey(EquipmentType, on_delete=models.SET_NULL, null=True, blank=True)
     serialNo = models.CharField(max_length=64)
@@ -62,7 +68,9 @@ def cell_schema():
        "electrode_material_neg":"example",
     }
 
+# Cell Type - e.g. Samsung 3000mAh 18650 rev B
 class CellType(HasAttributes):
+# ParentType = CellType?
     pass
 CellType._meta.get_field('attributes').default = cell_schema
 
@@ -88,16 +96,20 @@ Cell._meta.get_field('attributes').default = cell_schema
 
 class CellConfig(HasAttributes):
     # TODO: think about how to link cells into packs in a flexible way - supports idea #15 (SVG Diagrams)
-    # e.g. use this
+    # e.g.:
     # cells = ManyToManyField(CellType, through=CellTypeConfig)
     num_cells = models.PositiveIntegerField(default=1)
 
+# Model class to represent a "system of equipment" - e.g. if more complicated than a standalone cycler machine, user can add descriptive JSON and a photo here
+# in future, this can act as a tempate to create new experiments
+# This replaces "New Sensor Configuration"
 class ExperimentalApparatus(HasAttributes):
     testEquipment = models.ManyToManyField(Equipment)
     photo = models.ImageField(upload_to='apparatus_photos', null=True, blank=True)
     class Meta:
        verbose_name_plural="Experimental apparatus"
 
+# TODO: These should be actual enforcable JSON schemas, not just a collection of default values. (Issue #23)
 def experimentParameters_schema():
     return {
         "Example Parameter":"Value",
@@ -124,6 +136,10 @@ def resultData_schema():
        "rows": []
     }
 
+# Main "Experiment" aka DataSet class.
+# Has many: data files (from cyclers)
+# Has many: cells (actual physical objects)
+# Has one: apparatus (i.e. lab)
 class Experiment(models.Model):
     name = models.SlugField()
     owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
@@ -148,6 +164,11 @@ class Experiment(models.Model):
             models.UniqueConstraint(fields=['owner', 'name', 'date'], name='unique_slugname')
         ]
 
+# FIXME: DataFile currently duplicates data. 
+# It is stored for posterity in the format in which it was uploaded.
+# It is stored again as JSON within this class
+# Each defined "range" is pulled out and stored again as an ArrayField.
+# As yet unclear to me which is the best approach.
 class ExperimentDataFile(models.Model):
     raw_data_file = models.FileField(upload_to='raw_data_files',null=True)
     machine = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True, related_name='all_data')
@@ -162,6 +183,10 @@ class ExperimentDataFile(models.Model):
     class Meta:
        verbose_name_plural="Experiment Data Files"
 
+
+# DataRange - each data file contains numerous ranges e.g. charge & discharge cycles.
+# TODO: Write (or find) code to segment data into ranges.
+# Their data might overlap.
 # TODO: Convert this into a JSON Schema within ExperimentData - see Git issue #23
 class DataRange(models.Model):
     dataFile = models.ForeignKey(ExperimentDataFile, on_delete=models.SET_NULL, null=True, blank=True, related_name='ranges')
@@ -180,6 +205,8 @@ class DataRange(models.Model):
     class Meta:
        verbose_name_plural="Data Ranges"
 
+# When saving a data file, call this to parse the data.
+# TODO, move this out of models.py
 def data_pre_save(sender, instance, *args, **kwargs):
     if not instance:
        return
