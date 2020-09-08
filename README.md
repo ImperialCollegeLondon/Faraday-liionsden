@@ -18,9 +18,6 @@ My code, documentation and agile issues board can be found at https://gitlab.com
 A log of changes and ideas can be found in (djongoTest/README.md)
 
 Ongoing plan:
-* Continue work on integrating Luke's plotly frontend for 2 more days. If no simple way is found to make use of the code, I will investigate alternatives.
-* Create a draft job advert for a student to assist with development. Buzzwords to include: { Python, Django, Web Design, Full Stack, Data Science, DevOps } etc. Student could be from Imperial or Southampton.
-* Follow up contract & invoicing with Finance
 * Create prototype pre-acceptance documentation e.g. Use Case storyboards.
 * Continue following issues board & ideas log.
 
