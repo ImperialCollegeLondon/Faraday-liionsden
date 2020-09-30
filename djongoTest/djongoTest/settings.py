@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'ipware',
 #    'djangular',
-    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
+#    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'battDB.apps.BattdbConfig',
     'django.contrib.admin',
     'django.contrib.auth',

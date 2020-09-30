@@ -16,6 +16,6 @@ urlpatterns = [
     #path('exp/<slug:slug>', ExperimentView.as_view(), name='Experiment'),
     path('exp/<int:pk>', ExperimentView.as_view(), name='Experiment'),
     path('create_exp/', CreateExperimentView.as_view(), name='add_experiment'),
-    url(r'^getData/', get_data),
+    #url(r'^getData/', get_data),
     url(r'^plotData/', plotData),
 ]

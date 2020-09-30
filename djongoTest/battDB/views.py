@@ -78,13 +78,14 @@ class ExperimentDataView(DetailView):
         plot_y1 = ('Ecell/V', 'Cell Voltage/V')
         plot_y2 = ('I/mA', 'I/mA')
 
-        fig,ax1=plt.subplots()
+        fig,ax1=plt.subplots(figsize=(20,10))
         color1 = 'tab:red'
         color2 = 'tab:blue'
         ax1.set_xlabel(plot_x[1])
         ax1.set_ylabel(plot_y1[1], color=color1)
         ax1.plot(df[plot_x[0]], df[plot_y1[0]], color=color1)
         ax1.tick_params(axis='y', labelcolor=color1)
+        #ax1.set_aspect('auto', adjustable='datalim')
 
         ax2 = ax1.twinx()
         ax2.patch.set_alpha(0.0)
@@ -103,21 +104,31 @@ class ExperimentDataView(DetailView):
     # define interactive legend
 
         handles, labels = ax1.get_legend_handles_labels() # return lines and labels
-        interactive_legend = mpld3.plugins.InteractiveLegendPlugin(zip(handles,
-                         ax1.collections),
-                         labels,
-                         alpha_unsel=0.5,
-                         alpha_over=1.5, 
-                         start_visible=True)
-        mpld3.plugins.connect(fig, interactive_legend)
+        #interactive_legend = mpld3.plugins.InteractiveLegendPlugin(zip(handles,
+        #                 ax1.collections),
+        #                 labels,
+        #                 alpha_unsel=0.5,
+        #                 alpha_over=1.5, 
+        #                 start_visible=True)
+        #mpld3.plugins.connect(fig, interactive_legend)
 
         ax1.set_title(str(context['object']), size=20)
+
+       # define interactive tooltip
+        #labels = [self.format_string.format(label=view.label)]
+        #tooltip = mpld3.plugins.LineHTMLTooltip(labels,
+        #                                  voffset=self.voffset, hoffset=self.hoffset,
+        #                                  css=self.css)
+        #mpld3.plugins.connect(fig, tooltip)
+
         #fig.tight_layout()
         #plt.show()
 
         g = mpld3.fig_to_html(fig, template_type="simple")
         context['cols'] = columns
         context['mplot']=g
+        pd.set_option('display.max_columns', 50)
+        pd.set_option('display.width', 1000)
         context['dataHead'] = str(df1)
         return context
 
@@ -161,17 +172,17 @@ def index(request):
     return redirect('/exps')
     #return HttpResponse("<h1>Hello, world.</h1>")
 
-def viewdata(request):
-    return HttpResponse("<h3>View data</h3>")
+#def viewdata(request):
+#    return HttpResponse("<h3>View data</h3>")
 
-def uploaddata(request):
-    return HttpResponse("<h3>Upload data</h3>")
+#def uploaddata(request):
+#    return HttpResponse("<h3>Upload data</h3>")
 
-def get_data(request):
-    data = DataRange.objects.all()
-    if request.method == 'GET':
-        serializer = DataSerializer(data, many=True)
-    return JsonResponse(serializer.data, safe=False)
+#def get_data(request):
+#    data = DataRange.objects.all()
+#    if request.method == 'GET':
+#        serializer = DataSerializer(data, many=True)
+#    return JsonResponse(serializer.data, safe=False)
 
 def plotData(request):
     # generate df
