@@ -11,3 +11,5 @@ djangorestframework
 preparenovonix
 PyYAML
 xlrd
+django-extensions
+django-ipware
