@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 #    'djangular',
 #    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'battDB.apps.BattdbConfig',
+    'dfndb.apps.DfndbConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -92,10 +93,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'battdb',
-        'USER': 'tom',
-        'PASSWORD': 'borkbork',
-        'HOST': 'localhost',
-        #'PORT': '<db_port>',
     }
 }
 
