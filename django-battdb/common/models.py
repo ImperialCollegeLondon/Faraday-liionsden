@@ -15,14 +15,18 @@ class Org(NamedModel):
    parent = models.ForeignKey('Org', null=True, blank=True, on_delete=models.SET_NULL, related_name='child_orgs')
    head = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL, related_name='head_of')
 
+
+# this duplicates some stuff in the User model, maybe it's not needed at all
 class Person(models.Model):
    authUser = models.OneToOneField(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
    firstName = models.CharField(max_length=40)
    lastName = models.CharField(max_length=40)
    email=models.EmailField(unique=True,blank=True,null=True)
    org = models.ForeignKey(Org, on_delete=models.SET_NULL, null=True, blank=True)
+   def __str__(self):
+       return self.firstName + " " + self.lastName
 
-
+#class UserRole
 
 # any model can inherit this one to add these columns
 class BaseModel(models.Model):
@@ -58,19 +62,27 @@ class YearField(models.IntegerField):
       super(YearField, self).__init__(*args, **kwargs)
    def validate(self, value, obj):
       super().validate(value, obj)
-      if (value < 1791 or value > datetime.date.today().year):
-         raise ValidationError("Invalid year")
-
+      if (value > datetime.date.today().year):
+         raise ValidationError("Invalid year: Cannot be in the future")
+      if (value < 1791):
+         raise ValidationError("Invalid year: Cannot predate the field of Electrochemistry!")
 
 class Paper(models.Model):
-   DOI = DOIField(unique=True)  # use our custom DOI field
-   paper_tag = models.SlugField(max_length=100, unique=True)  # SlugField is a CharField with validation, like my DOIField
+   DOI = DOIField(unique=True, blank=True, null=True)  # use our custom DOI field
+   tag = models.SlugField(max_length=100, unique=True)  # SlugField is a CharField with validation, like my DOIField
    year = YearField(default=datetime.date.today().year)
    title = models.CharField(max_length=300)
    #authors = models.ManyToManyField(Person) # no - see above
+   org_owners = models.ManyToManyField(Org, related_name='papers')
    authors = models.CharField(max_length=500)
    url = models.URLField(null=True, blank=True) # blank=true means not a required field in forms. null=True means don't set NOT NULL in SQL
    created_on = models.DateField(auto_now_add=True)
-   accepted = models.BooleanField(default=False)  
+   accepted = models.BooleanField(default=False)
    def __str__(self):
-     return self.paper_tag
+     return self.tag
+   # TODO: Validator which autogenerates 'tag' field from a 'slugification' of principal author surname + year + title
+   #def validate(self, value, obj):
+   #  if not self.tag.validate(value):
+   #    obj.tag = make_paper_tag(obj)
+   #  return super().validate(value, obj)
+
