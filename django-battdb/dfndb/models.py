@@ -1,56 +1,10 @@
 from django.db import models
-import idutils # for DOI validation: https://idutils.readthedocs.io/en/latest/
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
-import datetime
 import common.models as cm
 
 # Create your models here.
-
-class DOIField(models.CharField):
-   description = "Digital Object Identifier (DOI)"
-   def __init__(self, *args, **kwargs):
-        kwargs['max_length'] = 128;
-        super(DOIField, self).__init__(*args, **kwargs)
-   def validate(self, value, obj):
-        super().validate(value, obj)
-        if not idutils.is_doi(value):
-           raise ValidationError(
-              _('%(value)s is not a valid DOI'),
-               params={'value': value},
-           )
-   def get_url(self):
-     pass      # implement a method to resolve the URL of a DOI
-   def get_name(self):
-     pass      # implement a method to fetch the document name
-
-class YearField(models.IntegerField):
-   def __init__(self, *args, **kwargs):
-      super(YearField, self).__init__(*args, **kwargs)
-   def validate(self, value, obj):
-      super().validate(value, obj)
-      if (value < 1791 or value > datetime.date.today().year):
-         raise ValidationError("Invalid year")
-
-# I think this would be unnecessary for now - we don't need a full contact info DB!
-#class Person(models.Model):
-#   first_name = models.CharField()
-#   last_name  = models.CharField()
-#   institution = models.ForteignKey( ... )
-
-class Paper(models.Model):
-  DOI = DOIField(unique=True)  # use our custom DOI field
-  paper_tag = models.SlugField(max_length=100, unique=True)  # SlugField is a CharField with validation, like my DOIField
-  year = YearField(default=datetime.date.today().year)
-  title = models.CharField(max_length=300)
-  #authors = models.ManyToManyField(Person) # no - see above
-  authors = models.CharField(max_length=500)
-  url = models.URLField(null=True, blank=True) # blank=true means not a required field in forms. null=True means don't set NOT NULL in SQL
-  created_on = models.DateField(auto_now_add=True)
-  accepted = models.BooleanField(default=False)  
-  def __str__(self):
-    return self.paper_tag
 
 # I don't like Material having a column for each chemical compound - that seems nasty.
 # Instead I will use one of Django's special ManyToManyFields with a "Through" relationship.
@@ -114,7 +68,7 @@ class Parameter(cm.BaseModel):
     return "%s: %s"%(self.name,self.symbol)
 
 class Data(cm.BaseModel):
-  paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
+  paper = models.ForeignKey(cm.Paper, on_delete=models.CASCADE)
   parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
   material = models.ForeignKey(Material, on_delete=models.CASCADE)
   DATA_TYPE_CHOICES = [

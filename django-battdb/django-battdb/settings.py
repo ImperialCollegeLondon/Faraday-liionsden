@@ -39,6 +39,7 @@ INSTALLED_APPS = [
 #    'djangular',
 #    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
     'battDB.apps.BattdbConfig',
+    'common.apps.CommonConfig',
     'dfndb.apps.DfndbConfig',
     'django.contrib.admin',
     'django.contrib.auth',
