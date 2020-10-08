@@ -6,6 +6,8 @@ from django.db.models import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.urls import reverse
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
+import common.models as cm
+import dfndb.models as dfn
 #from jsonfield_schema import JSONSchema
 
 

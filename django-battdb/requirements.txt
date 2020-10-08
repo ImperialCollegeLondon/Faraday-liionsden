@@ -13,3 +13,4 @@ PyYAML
 xlrd
 django-extensions
 django-ipware
+pydotplus

@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 12.3 (Debian 12.3-1+b1)
--- Dumped by pg_dump version 12.3 (Debian 12.3-1+b1)
+-- Dumped from database version 13.0 (Debian 13.0-2)
+-- Dumped by pg_dump version 13.0 (Debian 13.0-2)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -21,7 +21,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: auth_group; Type: TABLE; Schema: public; Owner: tom
+-- Name: auth_group; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public.auth_group (
@@ -30,10 +30,10 @@ CREATE TABLE public.auth_group (
 );
 
 
-ALTER TABLE public.auth_group OWNER TO tom;
+ALTER TABLE public.auth_group OWNER TO towen;
 
 --
--- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public.auth_group_id_seq
@@ -45,17 +45,17 @@ CREATE SEQUENCE public.auth_group_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.auth_group_id_seq OWNER TO tom;
+ALTER TABLE public.auth_group_id_seq OWNER TO towen;
 
 --
--- Name: auth_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: auth_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public.auth_group_id_seq OWNED BY public.auth_group.id;
 
 
 --
--- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: tom
+-- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public.auth_group_permissions (
@@ -65,10 +65,10 @@ CREATE TABLE public.auth_group_permissions (
 );
 
 
-ALTER TABLE public.auth_group_permissions OWNER TO tom;
+ALTER TABLE public.auth_group_permissions OWNER TO towen;
 
 --
--- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public.auth_group_permissions_id_seq
@@ -80,17 +80,17 @@ CREATE SEQUENCE public.auth_group_permissions_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.auth_group_permissions_id_seq OWNER TO tom;
+ALTER TABLE public.auth_group_permissions_id_seq OWNER TO towen;
 
 --
--- Name: auth_group_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public.auth_group_permissions_id_seq OWNED BY public.auth_group_permissions.id;
 
 
 --
--- Name: auth_permission; Type: TABLE; Schema: public; Owner: tom
+-- Name: auth_permission; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public.auth_permission (
@@ -101,10 +101,10 @@ CREATE TABLE public.auth_permission (
 );
 
 
-ALTER TABLE public.auth_permission OWNER TO tom;
+ALTER TABLE public.auth_permission OWNER TO towen;
 
 --
--- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public.auth_permission_id_seq
@@ -116,17 +116,17 @@ CREATE SEQUENCE public.auth_permission_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.auth_permission_id_seq OWNER TO tom;
+ALTER TABLE public.auth_permission_id_seq OWNER TO towen;
 
 --
--- Name: auth_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: auth_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public.auth_permission_id_seq OWNED BY public.auth_permission.id;
 
 
 --
--- Name: auth_user; Type: TABLE; Schema: public; Owner: tom
+-- Name: auth_user; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public.auth_user (
@@ -135,7 +135,7 @@ CREATE TABLE public.auth_user (
     last_login timestamp with time zone,
     is_superuser boolean NOT NULL,
     username character varying(150) NOT NULL,
-    first_name character varying(30) NOT NULL,
+    first_name character varying(150) NOT NULL,
     last_name character varying(150) NOT NULL,
     email character varying(254) NOT NULL,
     is_staff boolean NOT NULL,
@@ -144,10 +144,10 @@ CREATE TABLE public.auth_user (
 );
 
 
-ALTER TABLE public.auth_user OWNER TO tom;
+ALTER TABLE public.auth_user OWNER TO towen;
 
 --
--- Name: auth_user_groups; Type: TABLE; Schema: public; Owner: tom
+-- Name: auth_user_groups; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public.auth_user_groups (
@@ -157,10 +157,10 @@ CREATE TABLE public.auth_user_groups (
 );
 
 
-ALTER TABLE public.auth_user_groups OWNER TO tom;
+ALTER TABLE public.auth_user_groups OWNER TO towen;
 
 --
--- Name: auth_user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public.auth_user_groups_id_seq
@@ -172,17 +172,17 @@ CREATE SEQUENCE public.auth_user_groups_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.auth_user_groups_id_seq OWNER TO tom;
+ALTER TABLE public.auth_user_groups_id_seq OWNER TO towen;
 
 --
--- Name: auth_user_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public.auth_user_groups_id_seq OWNED BY public.auth_user_groups.id;
 
 
 --
--- Name: auth_user_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: auth_user_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public.auth_user_id_seq
@@ -194,17 +194,17 @@ CREATE SEQUENCE public.auth_user_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.auth_user_id_seq OWNER TO tom;
+ALTER TABLE public.auth_user_id_seq OWNER TO towen;
 
 --
--- Name: auth_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: auth_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public.auth_user_id_seq OWNED BY public.auth_user.id;
 
 
 --
--- Name: auth_user_user_permissions; Type: TABLE; Schema: public; Owner: tom
+-- Name: auth_user_user_permissions; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public.auth_user_user_permissions (
@@ -214,10 +214,10 @@ CREATE TABLE public.auth_user_user_permissions (
 );
 
 
-ALTER TABLE public.auth_user_user_permissions OWNER TO tom;
+ALTER TABLE public.auth_user_user_permissions OWNER TO towen;
 
 --
--- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public.auth_user_user_permissions_id_seq
@@ -229,17 +229,17 @@ CREATE SEQUENCE public.auth_user_user_permissions_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.auth_user_user_permissions_id_seq OWNER TO tom;
+ALTER TABLE public.auth_user_user_permissions_id_seq OWNER TO towen;
 
 --
--- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public.auth_user_user_permissions_id_seq OWNED BY public.auth_user_user_permissions.id;
 
 
 --
--- Name: battDB_cell; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_cell; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_cell" (
@@ -251,10 +251,10 @@ CREATE TABLE public."battDB_cell" (
 );
 
 
-ALTER TABLE public."battDB_cell" OWNER TO tom;
+ALTER TABLE public."battDB_cell" OWNER TO towen;
 
 --
--- Name: battDB_cell_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_cell_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_cell_id_seq"
@@ -266,17 +266,17 @@ CREATE SEQUENCE public."battDB_cell_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_cell_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_cell_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_cell_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_cell_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_cell_id_seq" OWNED BY public."battDB_cell".id;
 
 
 --
--- Name: battDB_cellbatch; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_cellbatch; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_cellbatch" (
@@ -289,10 +289,10 @@ CREATE TABLE public."battDB_cellbatch" (
 );
 
 
-ALTER TABLE public."battDB_cellbatch" OWNER TO tom;
+ALTER TABLE public."battDB_cellbatch" OWNER TO towen;
 
 --
--- Name: battDB_cellbatch_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_cellbatch_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_cellbatch_id_seq"
@@ -304,17 +304,17 @@ CREATE SEQUENCE public."battDB_cellbatch_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_cellbatch_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_cellbatch_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_cellbatch_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_cellbatch_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_cellbatch_id_seq" OWNED BY public."battDB_cellbatch".id;
 
 
 --
--- Name: battDB_cellconfig; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_cellconfig; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_cellconfig" (
@@ -326,10 +326,10 @@ CREATE TABLE public."battDB_cellconfig" (
 );
 
 
-ALTER TABLE public."battDB_cellconfig" OWNER TO tom;
+ALTER TABLE public."battDB_cellconfig" OWNER TO towen;
 
 --
--- Name: battDB_cellconfig_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_cellconfig_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_cellconfig_id_seq"
@@ -341,17 +341,17 @@ CREATE SEQUENCE public."battDB_cellconfig_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_cellconfig_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_cellconfig_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_cellconfig_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_cellconfig_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_cellconfig_id_seq" OWNED BY public."battDB_cellconfig".id;
 
 
 --
--- Name: battDB_celltype; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_celltype; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_celltype" (
@@ -361,10 +361,10 @@ CREATE TABLE public."battDB_celltype" (
 );
 
 
-ALTER TABLE public."battDB_celltype" OWNER TO tom;
+ALTER TABLE public."battDB_celltype" OWNER TO towen;
 
 --
--- Name: battDB_celltype_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_celltype_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_celltype_id_seq"
@@ -376,17 +376,17 @@ CREATE SEQUENCE public."battDB_celltype_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_celltype_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_celltype_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_celltype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_celltype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_celltype_id_seq" OWNED BY public."battDB_celltype".id;
 
 
 --
--- Name: battDB_datarange; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_datarange; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_datarange" (
@@ -405,10 +405,10 @@ CREATE TABLE public."battDB_datarange" (
 );
 
 
-ALTER TABLE public."battDB_datarange" OWNER TO tom;
+ALTER TABLE public."battDB_datarange" OWNER TO towen;
 
 --
--- Name: battDB_datarange_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_datarange_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_datarange_id_seq"
@@ -420,17 +420,17 @@ CREATE SEQUENCE public."battDB_datarange_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_datarange_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_datarange_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_datarange_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_datarange_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_datarange_id_seq" OWNED BY public."battDB_datarange".id;
 
 
 --
--- Name: battDB_equipment; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_equipment; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_equipment" (
@@ -442,10 +442,10 @@ CREATE TABLE public."battDB_equipment" (
 );
 
 
-ALTER TABLE public."battDB_equipment" OWNER TO tom;
+ALTER TABLE public."battDB_equipment" OWNER TO towen;
 
 --
--- Name: battDB_equipment_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_equipment_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_equipment_id_seq"
@@ -457,17 +457,17 @@ CREATE SEQUENCE public."battDB_equipment_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_equipment_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_equipment_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_equipment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_equipment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_equipment_id_seq" OWNED BY public."battDB_equipment".id;
 
 
 --
--- Name: battDB_equipmenttype; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_equipmenttype; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_equipmenttype" (
@@ -478,10 +478,10 @@ CREATE TABLE public."battDB_equipmenttype" (
 );
 
 
-ALTER TABLE public."battDB_equipmenttype" OWNER TO tom;
+ALTER TABLE public."battDB_equipmenttype" OWNER TO towen;
 
 --
--- Name: battDB_equipmenttype_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_equipmenttype_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_equipmenttype_id_seq"
@@ -493,17 +493,17 @@ CREATE SEQUENCE public."battDB_equipmenttype_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_equipmenttype_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_equipmenttype_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_equipmenttype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_equipmenttype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_equipmenttype_id_seq" OWNED BY public."battDB_equipmenttype".id;
 
 
 --
--- Name: battDB_experiment; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_experiment; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_experiment" (
@@ -520,10 +520,10 @@ CREATE TABLE public."battDB_experiment" (
 );
 
 
-ALTER TABLE public."battDB_experiment" OWNER TO tom;
+ALTER TABLE public."battDB_experiment" OWNER TO towen;
 
 --
--- Name: battDB_experiment_cells; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_experiment_cells; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_experiment_cells" (
@@ -533,10 +533,10 @@ CREATE TABLE public."battDB_experiment_cells" (
 );
 
 
-ALTER TABLE public."battDB_experiment_cells" OWNER TO tom;
+ALTER TABLE public."battDB_experiment_cells" OWNER TO towen;
 
 --
--- Name: battDB_experiment_cells_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_experiment_cells_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_experiment_cells_id_seq"
@@ -548,17 +548,17 @@ CREATE SEQUENCE public."battDB_experiment_cells_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_experiment_cells_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_experiment_cells_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_experiment_cells_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_experiment_cells_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_experiment_cells_id_seq" OWNED BY public."battDB_experiment_cells".id;
 
 
 --
--- Name: battDB_experiment_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_experiment_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_experiment_id_seq"
@@ -570,17 +570,17 @@ CREATE SEQUENCE public."battDB_experiment_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_experiment_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_experiment_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_experiment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_experiment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_experiment_id_seq" OWNED BY public."battDB_experiment".id;
 
 
 --
--- Name: battDB_experimentalapparatus; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_experimentalapparatus" (
@@ -591,10 +591,10 @@ CREATE TABLE public."battDB_experimentalapparatus" (
 );
 
 
-ALTER TABLE public."battDB_experimentalapparatus" OWNER TO tom;
+ALTER TABLE public."battDB_experimentalapparatus" OWNER TO towen;
 
 --
--- Name: battDB_experimentalapparatus_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_experimentalapparatus_id_seq"
@@ -606,17 +606,17 @@ CREATE SEQUENCE public."battDB_experimentalapparatus_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_experimentalapparatus_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_experimentalapparatus_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_experimentalapparatus_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_experimentalapparatus_id_seq" OWNED BY public."battDB_experimentalapparatus".id;
 
 
 --
--- Name: battDB_experimentalapparatus_testEquipment; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus_testEquipment; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_experimentalapparatus_testEquipment" (
@@ -626,10 +626,10 @@ CREATE TABLE public."battDB_experimentalapparatus_testEquipment" (
 );
 
 
-ALTER TABLE public."battDB_experimentalapparatus_testEquipment" OWNER TO tom;
+ALTER TABLE public."battDB_experimentalapparatus_testEquipment" OWNER TO towen;
 
 --
--- Name: battDB_experimentalapparatus_testEquipment_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus_testEquipment_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_experimentalapparatus_testEquipment_id_seq"
@@ -641,17 +641,17 @@ CREATE SEQUENCE public."battDB_experimentalapparatus_testEquipment_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_experimentalapparatus_testEquipment_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_experimentalapparatus_testEquipment_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_experimentalapparatus_testEquipment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus_testEquipment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_experimentalapparatus_testEquipment_id_seq" OWNED BY public."battDB_experimentalapparatus_testEquipment".id;
 
 
 --
--- Name: battDB_experimentdatafile; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_experimentdatafile" (
@@ -666,10 +666,10 @@ CREATE TABLE public."battDB_experimentdatafile" (
 );
 
 
-ALTER TABLE public."battDB_experimentdatafile" OWNER TO tom;
+ALTER TABLE public."battDB_experimentdatafile" OWNER TO towen;
 
 --
--- Name: battDB_experimentdatafile_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_experimentdatafile_id_seq"
@@ -681,17 +681,17 @@ CREATE SEQUENCE public."battDB_experimentdatafile_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_experimentdatafile_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_experimentdatafile_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_experimentdatafile_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_experimentdatafile_id_seq" OWNED BY public."battDB_experimentdatafile".id;
 
 
 --
--- Name: battDB_experimentdatafile_import_columns; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_experimentdatafile_import_columns" (
@@ -701,10 +701,10 @@ CREATE TABLE public."battDB_experimentdatafile_import_columns" (
 );
 
 
-ALTER TABLE public."battDB_experimentdatafile_import_columns" OWNER TO tom;
+ALTER TABLE public."battDB_experimentdatafile_import_columns" OWNER TO towen;
 
 --
--- Name: battDB_experimentdatafile_import_columns_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_experimentdatafile_import_columns_id_seq"
@@ -716,17 +716,17 @@ CREATE SEQUENCE public."battDB_experimentdatafile_import_columns_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_experimentdatafile_import_columns_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_experimentdatafile_import_columns_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_experimentdatafile_import_columns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_experimentdatafile_import_columns_id_seq" OWNED BY public."battDB_experimentdatafile_import_columns".id;
 
 
 --
--- Name: battDB_manufacturer; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_manufacturer; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_manufacturer" (
@@ -736,10 +736,10 @@ CREATE TABLE public."battDB_manufacturer" (
 );
 
 
-ALTER TABLE public."battDB_manufacturer" OWNER TO tom;
+ALTER TABLE public."battDB_manufacturer" OWNER TO towen;
 
 --
--- Name: battDB_manufacturer_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_manufacturer_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_manufacturer_id_seq"
@@ -751,17 +751,17 @@ CREATE SEQUENCE public."battDB_manufacturer_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_manufacturer_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_manufacturer_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_manufacturer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_manufacturer_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_manufacturer_id_seq" OWNED BY public."battDB_manufacturer".id;
 
 
 --
--- Name: battDB_signaltype; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_signaltype; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_signaltype" (
@@ -773,10 +773,10 @@ CREATE TABLE public."battDB_signaltype" (
 );
 
 
-ALTER TABLE public."battDB_signaltype" OWNER TO tom;
+ALTER TABLE public."battDB_signaltype" OWNER TO towen;
 
 --
--- Name: battDB_signaltype_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_signaltype_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_signaltype_id_seq"
@@ -788,17 +788,17 @@ CREATE SEQUENCE public."battDB_signaltype_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_signaltype_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_signaltype_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_signaltype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_signaltype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_signaltype_id_seq" OWNED BY public."battDB_signaltype".id;
 
 
 --
--- Name: battDB_testprotocol; Type: TABLE; Schema: public; Owner: tom
+-- Name: battDB_testprotocol; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_testprotocol" (
@@ -810,10 +810,10 @@ CREATE TABLE public."battDB_testprotocol" (
 );
 
 
-ALTER TABLE public."battDB_testprotocol" OWNER TO tom;
+ALTER TABLE public."battDB_testprotocol" OWNER TO towen;
 
 --
--- Name: battDB_testprotocol_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: battDB_testprotocol_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public."battDB_testprotocol_id_seq"
@@ -825,17 +825,477 @@ CREATE SEQUENCE public."battDB_testprotocol_id_seq"
     CACHE 1;
 
 
-ALTER TABLE public."battDB_testprotocol_id_seq" OWNER TO tom;
+ALTER TABLE public."battDB_testprotocol_id_seq" OWNER TO towen;
 
 --
--- Name: battDB_testprotocol_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: battDB_testprotocol_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public."battDB_testprotocol_id_seq" OWNED BY public."battDB_testprotocol".id;
 
 
 --
--- Name: django_admin_log; Type: TABLE; Schema: public; Owner: tom
+-- Name: common_org; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.common_org (
+    id integer NOT NULL,
+    name character varying(32) NOT NULL,
+    head_id integer,
+    parent_id integer,
+    type smallint NOT NULL,
+    website character varying(200),
+    CONSTRAINT common_org_type_check CHECK ((type >= 0))
+);
+
+
+ALTER TABLE public.common_org OWNER TO towen;
+
+--
+-- Name: common_org_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.common_org_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.common_org_id_seq OWNER TO towen;
+
+--
+-- Name: common_org_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.common_org_id_seq OWNED BY public.common_org.id;
+
+
+--
+-- Name: common_paper; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.common_paper (
+    id integer NOT NULL,
+    "DOI" character varying(128),
+    tag character varying(100) NOT NULL,
+    year integer NOT NULL,
+    title character varying(300) NOT NULL,
+    authors character varying(500) NOT NULL,
+    url character varying(200),
+    created_on date NOT NULL,
+    accepted boolean NOT NULL,
+    publisher_id integer
+);
+
+
+ALTER TABLE public.common_paper OWNER TO towen;
+
+--
+-- Name: common_paper_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.common_paper_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.common_paper_id_seq OWNER TO towen;
+
+--
+-- Name: common_paper_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.common_paper_id_seq OWNED BY public.common_paper.id;
+
+
+--
+-- Name: common_paper_org_owners; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.common_paper_org_owners (
+    id integer NOT NULL,
+    paper_id integer NOT NULL,
+    org_id integer NOT NULL
+);
+
+
+ALTER TABLE public.common_paper_org_owners OWNER TO towen;
+
+--
+-- Name: common_paper_org_owners_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.common_paper_org_owners_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.common_paper_org_owners_id_seq OWNER TO towen;
+
+--
+-- Name: common_paper_org_owners_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.common_paper_org_owners_id_seq OWNED BY public.common_paper_org_owners.id;
+
+
+--
+-- Name: common_person; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.common_person (
+    id integer NOT NULL,
+    "firstName" character varying(40) NOT NULL,
+    "lastName" character varying(40) NOT NULL,
+    email character varying(254),
+    "authUser_id" integer,
+    org_id integer
+);
+
+
+ALTER TABLE public.common_person OWNER TO towen;
+
+--
+-- Name: common_person_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.common_person_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.common_person_id_seq OWNER TO towen;
+
+--
+-- Name: common_person_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.common_person_id_seq OWNED BY public.common_person.id;
+
+
+--
+-- Name: dfndb_compositionpart; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.dfndb_compositionpart (
+    id integer NOT NULL,
+    amount integer NOT NULL,
+    compound_id integer NOT NULL
+);
+
+
+ALTER TABLE public.dfndb_compositionpart OWNER TO towen;
+
+--
+-- Name: dfndb_compositionpart_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.dfndb_compositionpart_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.dfndb_compositionpart_id_seq OWNER TO towen;
+
+--
+-- Name: dfndb_compositionpart_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.dfndb_compositionpart_id_seq OWNED BY public.dfndb_compositionpart.id;
+
+
+--
+-- Name: dfndb_compound; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.dfndb_compound (
+    id integer NOT NULL,
+    formula character varying(20) NOT NULL,
+    name character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.dfndb_compound OWNER TO towen;
+
+--
+-- Name: dfndb_compound_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.dfndb_compound_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.dfndb_compound_id_seq OWNER TO towen;
+
+--
+-- Name: dfndb_compound_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.dfndb_compound_id_seq OWNED BY public.dfndb_compound.id;
+
+
+--
+-- Name: dfndb_data; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.dfndb_data (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    created_on date NOT NULL,
+    accepted boolean NOT NULL,
+    type integer NOT NULL,
+    data text NOT NULL,
+    material_id integer NOT NULL,
+    paper_id integer NOT NULL,
+    parameter_id integer NOT NULL,
+    user_owner_id integer,
+    org_owner_id integer
+);
+
+
+ALTER TABLE public.dfndb_data OWNER TO towen;
+
+--
+-- Name: dfndb_data_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.dfndb_data_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.dfndb_data_id_seq OWNER TO towen;
+
+--
+-- Name: dfndb_data_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.dfndb_data_id_seq OWNED BY public.dfndb_data.id;
+
+
+--
+-- Name: dfndb_material; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.dfndb_material (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    polymer integer NOT NULL,
+    accepted boolean NOT NULL,
+    created_on date NOT NULL,
+    user_owner_id integer,
+    type integer NOT NULL,
+    org_owner_id integer
+);
+
+
+ALTER TABLE public.dfndb_material OWNER TO towen;
+
+--
+-- Name: dfndb_material_composition; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.dfndb_material_composition (
+    id integer NOT NULL,
+    material_id integer NOT NULL,
+    compositionpart_id integer NOT NULL
+);
+
+
+ALTER TABLE public.dfndb_material_composition OWNER TO towen;
+
+--
+-- Name: dfndb_material_composition_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.dfndb_material_composition_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.dfndb_material_composition_id_seq OWNER TO towen;
+
+--
+-- Name: dfndb_material_composition_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.dfndb_material_composition_id_seq OWNED BY public.dfndb_material_composition.id;
+
+
+--
+-- Name: dfndb_material_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.dfndb_material_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.dfndb_material_id_seq OWNER TO towen;
+
+--
+-- Name: dfndb_material_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.dfndb_material_id_seq OWNED BY public.dfndb_material.id;
+
+
+--
+-- Name: dfndb_method; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.dfndb_method (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    created_on date NOT NULL,
+    accepted boolean NOT NULL,
+    type integer NOT NULL,
+    description text NOT NULL,
+    user_owner_id integer,
+    org_owner_id integer
+);
+
+
+ALTER TABLE public.dfndb_method OWNER TO towen;
+
+--
+-- Name: dfndb_method_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.dfndb_method_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.dfndb_method_id_seq OWNER TO towen;
+
+--
+-- Name: dfndb_method_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.dfndb_method_id_seq OWNED BY public.dfndb_method.id;
+
+
+--
+-- Name: dfndb_parameter; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.dfndb_parameter (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    created_on date NOT NULL,
+    accepted boolean NOT NULL,
+    symbol character varying(40) NOT NULL,
+    type integer NOT NULL,
+    notes text NOT NULL,
+    unit_id integer,
+    user_owner_id integer,
+    org_owner_id integer
+);
+
+
+ALTER TABLE public.dfndb_parameter OWNER TO towen;
+
+--
+-- Name: dfndb_parameter_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.dfndb_parameter_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.dfndb_parameter_id_seq OWNER TO towen;
+
+--
+-- Name: dfndb_parameter_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.dfndb_parameter_id_seq OWNED BY public.dfndb_parameter.id;
+
+
+--
+-- Name: dfndb_quantityunit; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.dfndb_quantityunit (
+    id integer NOT NULL,
+    name character varying(100) NOT NULL,
+    symbol character varying(40) NOT NULL,
+    "symbolName" character varying(40) NOT NULL
+);
+
+
+ALTER TABLE public.dfndb_quantityunit OWNER TO towen;
+
+--
+-- Name: dfndb_quantityunit_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.dfndb_quantityunit_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.dfndb_quantityunit_id_seq OWNER TO towen;
+
+--
+-- Name: dfndb_quantityunit_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.dfndb_quantityunit_id_seq OWNED BY public.dfndb_quantityunit.id;
+
+
+--
+-- Name: django_admin_log; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public.django_admin_log (
@@ -851,10 +1311,10 @@ CREATE TABLE public.django_admin_log (
 );
 
 
-ALTER TABLE public.django_admin_log OWNER TO tom;
+ALTER TABLE public.django_admin_log OWNER TO towen;
 
 --
--- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public.django_admin_log_id_seq
@@ -866,17 +1326,17 @@ CREATE SEQUENCE public.django_admin_log_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.django_admin_log_id_seq OWNER TO tom;
+ALTER TABLE public.django_admin_log_id_seq OWNER TO towen;
 
 --
--- Name: django_admin_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: django_admin_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public.django_admin_log_id_seq OWNED BY public.django_admin_log.id;
 
 
 --
--- Name: django_content_type; Type: TABLE; Schema: public; Owner: tom
+-- Name: django_content_type; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public.django_content_type (
@@ -886,10 +1346,10 @@ CREATE TABLE public.django_content_type (
 );
 
 
-ALTER TABLE public.django_content_type OWNER TO tom;
+ALTER TABLE public.django_content_type OWNER TO towen;
 
 --
--- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public.django_content_type_id_seq
@@ -901,17 +1361,17 @@ CREATE SEQUENCE public.django_content_type_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.django_content_type_id_seq OWNER TO tom;
+ALTER TABLE public.django_content_type_id_seq OWNER TO towen;
 
 --
--- Name: django_content_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: django_content_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public.django_content_type_id_seq OWNED BY public.django_content_type.id;
 
 
 --
--- Name: django_migrations; Type: TABLE; Schema: public; Owner: tom
+-- Name: django_migrations; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public.django_migrations (
@@ -922,10 +1382,10 @@ CREATE TABLE public.django_migrations (
 );
 
 
-ALTER TABLE public.django_migrations OWNER TO tom;
+ALTER TABLE public.django_migrations OWNER TO towen;
 
 --
--- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public.django_migrations_id_seq
@@ -937,17 +1397,17 @@ CREATE SEQUENCE public.django_migrations_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.django_migrations_id_seq OWNER TO tom;
+ALTER TABLE public.django_migrations_id_seq OWNER TO towen;
 
 --
--- Name: django_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: django_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public.django_migrations_id_seq OWNED BY public.django_migrations.id;
 
 
 --
--- Name: django_plotly_dash_dashapp; Type: TABLE; Schema: public; Owner: tom
+-- Name: django_plotly_dash_dashapp; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public.django_plotly_dash_dashapp (
@@ -962,10 +1422,10 @@ CREATE TABLE public.django_plotly_dash_dashapp (
 );
 
 
-ALTER TABLE public.django_plotly_dash_dashapp OWNER TO tom;
+ALTER TABLE public.django_plotly_dash_dashapp OWNER TO towen;
 
 --
--- Name: django_plotly_dash_dashapp_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: django_plotly_dash_dashapp_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public.django_plotly_dash_dashapp_id_seq
@@ -977,17 +1437,17 @@ CREATE SEQUENCE public.django_plotly_dash_dashapp_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.django_plotly_dash_dashapp_id_seq OWNER TO tom;
+ALTER TABLE public.django_plotly_dash_dashapp_id_seq OWNER TO towen;
 
 --
--- Name: django_plotly_dash_dashapp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: django_plotly_dash_dashapp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public.django_plotly_dash_dashapp_id_seq OWNED BY public.django_plotly_dash_dashapp.id;
 
 
 --
--- Name: django_plotly_dash_statelessapp; Type: TABLE; Schema: public; Owner: tom
+-- Name: django_plotly_dash_statelessapp; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public.django_plotly_dash_statelessapp (
@@ -997,10 +1457,10 @@ CREATE TABLE public.django_plotly_dash_statelessapp (
 );
 
 
-ALTER TABLE public.django_plotly_dash_statelessapp OWNER TO tom;
+ALTER TABLE public.django_plotly_dash_statelessapp OWNER TO towen;
 
 --
--- Name: django_plotly_dash_statelessapp_id_seq; Type: SEQUENCE; Schema: public; Owner: tom
+-- Name: django_plotly_dash_statelessapp_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
 CREATE SEQUENCE public.django_plotly_dash_statelessapp_id_seq
@@ -1012,17 +1472,17 @@ CREATE SEQUENCE public.django_plotly_dash_statelessapp_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.django_plotly_dash_statelessapp_id_seq OWNER TO tom;
+ALTER TABLE public.django_plotly_dash_statelessapp_id_seq OWNER TO towen;
 
 --
--- Name: django_plotly_dash_statelessapp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: tom
+-- Name: django_plotly_dash_statelessapp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
 --
 
 ALTER SEQUENCE public.django_plotly_dash_statelessapp_id_seq OWNED BY public.django_plotly_dash_statelessapp.id;
 
 
 --
--- Name: django_session; Type: TABLE; Schema: public; Owner: tom
+-- Name: django_session; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public.django_session (
@@ -1032,199 +1492,283 @@ CREATE TABLE public.django_session (
 );
 
 
-ALTER TABLE public.django_session OWNER TO tom;
+ALTER TABLE public.django_session OWNER TO towen;
 
 --
--- Name: auth_group id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: auth_group id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_group ALTER COLUMN id SET DEFAULT nextval('public.auth_group_id_seq'::regclass);
 
 
 --
--- Name: auth_group_permissions id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: auth_group_permissions id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_group_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_group_permissions_id_seq'::regclass);
 
 
 --
--- Name: auth_permission id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: auth_permission id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_permission ALTER COLUMN id SET DEFAULT nextval('public.auth_permission_id_seq'::regclass);
 
 
 --
--- Name: auth_user id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: auth_user id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_user ALTER COLUMN id SET DEFAULT nextval('public.auth_user_id_seq'::regclass);
 
 
 --
--- Name: auth_user_groups id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: auth_user_groups id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_user_groups ALTER COLUMN id SET DEFAULT nextval('public.auth_user_groups_id_seq'::regclass);
 
 
 --
--- Name: auth_user_user_permissions id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: auth_user_user_permissions id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_user_user_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_user_user_permissions_id_seq'::regclass);
 
 
 --
--- Name: battDB_cell id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_cell id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_cell" ALTER COLUMN id SET DEFAULT nextval('public."battDB_cell_id_seq"'::regclass);
 
 
 --
--- Name: battDB_cellbatch id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_cellbatch id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_cellbatch" ALTER COLUMN id SET DEFAULT nextval('public."battDB_cellbatch_id_seq"'::regclass);
 
 
 --
--- Name: battDB_cellconfig id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_cellconfig id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_cellconfig" ALTER COLUMN id SET DEFAULT nextval('public."battDB_cellconfig_id_seq"'::regclass);
 
 
 --
--- Name: battDB_celltype id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_celltype id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_celltype" ALTER COLUMN id SET DEFAULT nextval('public."battDB_celltype_id_seq"'::regclass);
 
 
 --
--- Name: battDB_datarange id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_datarange id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_datarange" ALTER COLUMN id SET DEFAULT nextval('public."battDB_datarange_id_seq"'::regclass);
 
 
 --
--- Name: battDB_equipment id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_equipment id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_equipment" ALTER COLUMN id SET DEFAULT nextval('public."battDB_equipment_id_seq"'::regclass);
 
 
 --
--- Name: battDB_equipmenttype id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_equipmenttype id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_equipmenttype" ALTER COLUMN id SET DEFAULT nextval('public."battDB_equipmenttype_id_seq"'::regclass);
 
 
 --
--- Name: battDB_experiment id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_experiment id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experiment" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experiment_id_seq"'::regclass);
 
 
 --
--- Name: battDB_experiment_cells id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_experiment_cells id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experiment_cells" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experiment_cells_id_seq"'::regclass);
 
 
 --
--- Name: battDB_experimentalapparatus id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentalapparatus" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experimentalapparatus_id_seq"'::regclass);
 
 
 --
--- Name: battDB_experimentalapparatus_testEquipment id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus_testEquipment id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentalapparatus_testEquipment" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experimentalapparatus_testEquipment_id_seq"'::regclass);
 
 
 --
--- Name: battDB_experimentdatafile id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentdatafile" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experimentdatafile_id_seq"'::regclass);
 
 
 --
--- Name: battDB_experimentdatafile_import_columns id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experimentdatafile_import_columns_id_seq"'::regclass);
 
 
 --
--- Name: battDB_manufacturer id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_manufacturer id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_manufacturer" ALTER COLUMN id SET DEFAULT nextval('public."battDB_manufacturer_id_seq"'::regclass);
 
 
 --
--- Name: battDB_signaltype id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_signaltype id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_signaltype" ALTER COLUMN id SET DEFAULT nextval('public."battDB_signaltype_id_seq"'::regclass);
 
 
 --
--- Name: battDB_testprotocol id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: battDB_testprotocol id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_testprotocol" ALTER COLUMN id SET DEFAULT nextval('public."battDB_testprotocol_id_seq"'::regclass);
 
 
 --
--- Name: django_admin_log id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: common_org id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_org ALTER COLUMN id SET DEFAULT nextval('public.common_org_id_seq'::regclass);
+
+
+--
+-- Name: common_paper id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_paper ALTER COLUMN id SET DEFAULT nextval('public.common_paper_id_seq'::regclass);
+
+
+--
+-- Name: common_paper_org_owners id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_paper_org_owners ALTER COLUMN id SET DEFAULT nextval('public.common_paper_org_owners_id_seq'::regclass);
+
+
+--
+-- Name: common_person id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_person ALTER COLUMN id SET DEFAULT nextval('public.common_person_id_seq'::regclass);
+
+
+--
+-- Name: dfndb_compositionpart id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_compositionpart ALTER COLUMN id SET DEFAULT nextval('public.dfndb_compositionpart_id_seq'::regclass);
+
+
+--
+-- Name: dfndb_compound id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_compound ALTER COLUMN id SET DEFAULT nextval('public.dfndb_compound_id_seq'::regclass);
+
+
+--
+-- Name: dfndb_data id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_data ALTER COLUMN id SET DEFAULT nextval('public.dfndb_data_id_seq'::regclass);
+
+
+--
+-- Name: dfndb_material id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_material ALTER COLUMN id SET DEFAULT nextval('public.dfndb_material_id_seq'::regclass);
+
+
+--
+-- Name: dfndb_material_composition id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_material_composition ALTER COLUMN id SET DEFAULT nextval('public.dfndb_material_composition_id_seq'::regclass);
+
+
+--
+-- Name: dfndb_method id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_method ALTER COLUMN id SET DEFAULT nextval('public.dfndb_method_id_seq'::regclass);
+
+
+--
+-- Name: dfndb_parameter id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_parameter ALTER COLUMN id SET DEFAULT nextval('public.dfndb_parameter_id_seq'::regclass);
+
+
+--
+-- Name: dfndb_quantityunit id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_quantityunit ALTER COLUMN id SET DEFAULT nextval('public.dfndb_quantityunit_id_seq'::regclass);
+
+
+--
+-- Name: django_admin_log id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_admin_log ALTER COLUMN id SET DEFAULT nextval('public.django_admin_log_id_seq'::regclass);
 
 
 --
--- Name: django_content_type id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: django_content_type id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_content_type ALTER COLUMN id SET DEFAULT nextval('public.django_content_type_id_seq'::regclass);
 
 
 --
--- Name: django_migrations id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: django_migrations id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_migrations ALTER COLUMN id SET DEFAULT nextval('public.django_migrations_id_seq'::regclass);
 
 
 --
--- Name: django_plotly_dash_dashapp id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: django_plotly_dash_dashapp id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_plotly_dash_dashapp ALTER COLUMN id SET DEFAULT nextval('public.django_plotly_dash_dashapp_id_seq'::regclass);
 
 
 --
--- Name: django_plotly_dash_statelessapp id; Type: DEFAULT; Schema: public; Owner: tom
+-- Name: django_plotly_dash_statelessapp id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_plotly_dash_statelessapp ALTER COLUMN id SET DEFAULT nextval('public.django_plotly_dash_statelessapp_id_seq'::regclass);
 
 
 --
--- Data for Name: auth_group; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: auth_group; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public.auth_group (id, name) FROM stdin;
@@ -1234,7 +1778,7 @@ COPY public.auth_group (id, name) FROM stdin;
 
 
 --
--- Data for Name: auth_group_permissions; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: auth_group_permissions; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
@@ -1354,7 +1898,7 @@ COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
 
 
 --
--- Data for Name: auth_permission; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: auth_permission; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
@@ -1458,23 +2002,67 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 98	Can change stateless app	25	change_statelessapp
 99	Can delete stateless app	25	delete_statelessapp
 100	Can view stateless app	25	view_statelessapp
+101	Can add paper	26	add_paper
+102	Can change paper	26	change_paper
+103	Can delete paper	26	delete_paper
+104	Can view paper	26	view_paper
+105	Can add composition part	27	add_compositionpart
+106	Can change composition part	27	change_compositionpart
+107	Can delete composition part	27	delete_compositionpart
+108	Can view composition part	27	view_compositionpart
+109	Can add compound	28	add_compound
+110	Can change compound	28	change_compound
+111	Can delete compound	28	delete_compound
+112	Can view compound	28	view_compound
+113	Can add material	29	add_material
+114	Can change material	29	change_material
+115	Can delete material	29	delete_material
+116	Can view material	29	view_material
+117	Can add method	30	add_method
+118	Can change method	30	change_method
+119	Can delete method	30	delete_method
+120	Can view method	30	view_method
+121	Can add quantity unit	31	add_quantityunit
+122	Can change quantity unit	31	change_quantityunit
+123	Can delete quantity unit	31	delete_quantityunit
+124	Can view quantity unit	31	view_quantityunit
+125	Can add parameter	32	add_parameter
+126	Can change parameter	32	change_parameter
+127	Can delete parameter	32	delete_parameter
+128	Can view parameter	32	view_parameter
+129	Can add data	33	add_data
+130	Can change data	33	change_data
+131	Can delete data	33	delete_data
+132	Can view data	33	view_data
+133	Can add org	34	add_org
+134	Can change org	34	change_org
+135	Can delete org	34	delete_org
+136	Can view org	34	view_org
+137	Can add paper	35	add_paper
+138	Can change paper	35	change_paper
+139	Can delete paper	35	delete_paper
+140	Can view paper	35	view_paper
+141	Can add person	36	add_person
+142	Can change person	36	change_person
+143	Can delete person	36	delete_person
+144	Can view person	36	view_person
 \.
 
 
 --
--- Data for Name: auth_user; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: auth_user; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
-2	pbkdf2_sha256$150000$xjdfdhTwRhJ2$UXRtByrTwyL9b+c/+/4ttwBrsYYx4Z3gXbi7n7MqAyo=	\N	t	jacql	Jacqueline	Edge	j.edge@imperial.ac.uk	t	t	2020-08-11 10:11:31+00
-3	pbkdf2_sha256$150000$EfLnuKoVFTo5$eI9zlUW09YuBiHiPdlpYqbf8cFyvRvTISVec8IqZaUw=	2020-08-13 09:56:28+00	t	binbin	Binbin	Chen		t	t	2020-08-13 08:53:36+00
-6	pbkdf2_sha256$150000$kEZ17iCgo0K6$V6JsLVb3AipIbYxKACRIPs68robokOFQzGHM5CeWmVs=	\N	t	rishi				t	t	2020-08-16 15:02:44+00
-1	pbkdf2_sha256$150000$2J7Bci8oeR8W$7IUeiZavNLMqx+xLNra875eCuEbiuXxpbFniRJl3kj0=	2020-09-03 18:02:52.197946+00	t	tom				t	t	2020-08-04 18:08:06.79837+00
+2	pbkdf2_sha256$150000$xjdfdhTwRhJ2$UXRtByrTwyL9b+c/+/4ttwBrsYYx4Z3gXbi7n7MqAyo=	\N	t	jacql	Jacqueline	Edge	j.edge@imperial.ac.uk	t	t	2020-08-11 11:11:31+01
+3	pbkdf2_sha256$150000$EfLnuKoVFTo5$eI9zlUW09YuBiHiPdlpYqbf8cFyvRvTISVec8IqZaUw=	2020-08-13 10:56:28+01	t	binbin	Binbin	Chen		t	t	2020-08-13 09:53:36+01
+7	pbkdf2_sha256$216000$Vt9WFAxpjSyE$nW6zcHd0uYfDqElZJ+RkFpcN3t9RDAPKyWGARyQdUw4=	2020-10-08 13:36:25.920895+01	f	test	Test	User		t	t	2020-10-08 13:33:36+01
+1	pbkdf2_sha256$216000$OafoLVPyzITM$orFVUO5QzVoBneWLEpu4jxz+Ucrc+DqclzTFOsJcvH4=	2020-10-08 14:20:28+01	t	tom	Tom	Owen	tom.owen@zepler.net	t	t	2020-08-04 19:08:06+01
 \.
 
 
 --
--- Data for Name: auth_user_groups; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: auth_user_groups; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public.auth_user_groups (id, user_id, group_id) FROM stdin;
@@ -1483,7 +2071,7 @@ COPY public.auth_user_groups (id, user_id, group_id) FROM stdin;
 
 
 --
--- Data for Name: auth_user_user_permissions; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: auth_user_user_permissions; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
@@ -1555,11 +2143,47 @@ COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
 66	2	66
 67	2	67
 68	2	68
+69	7	128
+70	7	4
+71	7	132
+72	7	8
+73	7	136
+74	7	12
+75	7	140
+76	7	16
+77	7	144
+78	7	20
+79	7	24
+80	7	28
+81	7	32
+82	7	36
+83	7	40
+84	7	44
+85	7	48
+86	7	52
+87	7	56
+88	7	60
+89	7	64
+90	7	68
+91	7	72
+92	7	76
+93	7	80
+94	7	84
+95	7	88
+96	7	92
+97	7	96
+98	7	100
+99	7	104
+100	7	108
+101	7	112
+102	7	116
+103	7	120
+104	7	124
 \.
 
 
 --
--- Data for Name: battDB_cell; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_cell; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_cell" (id, name, attributes, batch_id, type_id) FROM stdin;
@@ -1568,7 +2192,7 @@ COPY public."battDB_cell" (id, name, attributes, batch_id, type_id) FROM stdin;
 
 
 --
--- Data for Name: battDB_cellbatch; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_cellbatch; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_cellbatch" (id, name, attributes, manufactured_on, cells_schema, manufacturer_id) FROM stdin;
@@ -1577,7 +2201,7 @@ COPY public."battDB_cellbatch" (id, name, attributes, manufactured_on, cells_sch
 
 
 --
--- Data for Name: battDB_cellconfig; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_cellconfig; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_cellconfig" (id, name, attributes, num_cells) FROM stdin;
@@ -1586,7 +2210,7 @@ COPY public."battDB_cellconfig" (id, name, attributes, num_cells) FROM stdin;
 
 
 --
--- Data for Name: battDB_celltype; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_celltype; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_celltype" (id, name, attributes) FROM stdin;
@@ -1594,7 +2218,7 @@ COPY public."battDB_celltype" (id, name, attributes) FROM stdin;
 
 
 --
--- Data for Name: battDB_datarange; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_datarange; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_datarange" (id, label, protocol_step, step_action, ts_headers, ts_data, events, analysis, "dataFile_id", file_offset) FROM stdin;
@@ -1603,7 +2227,7 @@ COPY public."battDB_datarange" (id, label, protocol_step, step_action, ts_header
 
 
 --
--- Data for Name: battDB_equipment; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_equipment; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_equipment" (id, name, attributes, "serialNo", type_id) FROM stdin;
@@ -1612,7 +2236,7 @@ COPY public."battDB_equipment" (id, name, attributes, "serialNo", type_id) FROM 
 
 
 --
--- Data for Name: battDB_equipmenttype; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_equipmenttype; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_equipmenttype" (id, name, attributes, manufacturer_id) FROM stdin;
@@ -1621,7 +2245,7 @@ COPY public."battDB_equipmenttype" (id, name, attributes, manufacturer_id) FROM 
 
 
 --
--- Data for Name: battDB_experiment; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_experiment; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_experiment" (id, name, date, parameters, analysis, apparatus_id, owner_id, status, protocol_id, "cellConfig_id") FROM stdin;
@@ -1631,7 +2255,7 @@ COPY public."battDB_experiment" (id, name, date, parameters, analysis, apparatus
 
 
 --
--- Data for Name: battDB_experiment_cells; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_experiment_cells; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_experiment_cells" (id, experiment_id, cell_id) FROM stdin;
@@ -1641,7 +2265,7 @@ COPY public."battDB_experiment_cells" (id, experiment_id, cell_id) FROM stdin;
 
 
 --
--- Data for Name: battDB_experimentalapparatus; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_experimentalapparatus; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_experimentalapparatus" (id, name, attributes, photo) FROM stdin;
@@ -1650,7 +2274,7 @@ COPY public."battDB_experimentalapparatus" (id, name, attributes, photo) FROM st
 
 
 --
--- Data for Name: battDB_experimentalapparatus_testEquipment; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_experimentalapparatus_testEquipment; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_experimentalapparatus_testEquipment" (id, experimentalapparatus_id, equipment_id) FROM stdin;
@@ -1659,7 +2283,7 @@ COPY public."battDB_experimentalapparatus_testEquipment" (id, experimentalappara
 
 
 --
--- Data for Name: battDB_experimentdatafile; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_experimentdatafile; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_experimentdatafile" (id, raw_data_file, metadata, data, parameters, analysis, experiment_id, machine_id) FROM stdin;
@@ -1668,7 +2292,7 @@ COPY public."battDB_experimentdatafile" (id, raw_data_file, metadata, data, para
 
 
 --
--- Data for Name: battDB_experimentdatafile_import_columns; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_experimentdatafile_import_columns; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_experimentdatafile_import_columns" (id, experimentdatafile_id, signaltype_id) FROM stdin;
@@ -1677,7 +2301,7 @@ COPY public."battDB_experimentdatafile_import_columns" (id, experimentdatafile_i
 
 
 --
--- Data for Name: battDB_manufacturer; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_manufacturer; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_manufacturer" (id, name, attributes) FROM stdin;
@@ -1687,7 +2311,7 @@ COPY public."battDB_manufacturer" (id, name, attributes) FROM stdin;
 
 
 --
--- Data for Name: battDB_signaltype; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_signaltype; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_signaltype" (id, name, symbol, unit_name, unit_symbol) FROM stdin;
@@ -1700,7 +2324,7 @@ COPY public."battDB_signaltype" (id, name, symbol, unit_name, unit_symbol) FROM 
 
 
 --
--- Data for Name: battDB_testprotocol; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: battDB_testprotocol; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public."battDB_testprotocol" (id, name, attributes, description, parameters) FROM stdin;
@@ -1709,115 +2333,222 @@ COPY public."battDB_testprotocol" (id, name, attributes, description, parameters
 
 
 --
--- Data for Name: django_admin_log; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: common_org; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
-1	2020-08-04 18:13:10.226362+00	1	foo	1	[{"added": {}}]	9	1
-2	2020-08-04 18:25:35.516012+00	1	BorkCorp	1	[{"added": {}}]	4	1
-3	2020-08-04 18:26:04.905071+00	1	foo	2	[{"changed": {"fields": ["manufacturer"]}}]	9	1
-4	2020-08-04 18:27:53.921631+00	1	MyMembrane	1	[{"added": {}}]	2	1
-5	2020-08-04 18:28:19.927154+00	1	MyLiPo	1	[{"added": {}}]	1	1
-6	2020-08-04 18:41:57.989858+00	2	Maccor	1	[{"added": {}}]	4	1
-7	2020-08-04 18:42:29.857145+00	1	GalvoTron 3000	1	[{"added": {}}]	16	1
-8	2020-08-04 18:45:01.780472+00	2	GalvoTron 3000	1	[{"added": {}}]	16	1
-9	2020-08-04 18:47:34.828985+00	1	Tom's GalvoTron 3000	1	[{"added": {}}]	3	1
-10	2020-08-04 18:51:08.397906+00	1	PyBaMM example protocol	1	[{"added": {}}]	6	1
-11	2020-08-04 18:52:01.270893+00	1	Tom's Lab	1	[{"added": {}}]	7	1
-12	2020-08-04 18:52:35.233623+00	1	GalvoTron 3000	3		16	1
-13	2020-08-04 18:52:52.127136+00	1	Tom's GalvoTron 3000	2	[{"changed": {"fields": ["type"]}}]	3	1
-14	2020-08-04 18:54:28.563138+00	1	Experiment object (1)	1	[{"added": {}}]	8	1
-15	2020-08-04 19:17:17.174324+00	1	4s	1	[{"added": {}}]	17	1
-16	2020-08-04 19:26:50.203876+00	1	test test	2	[{"changed": {"fields": ["cells", "processed_data_file"]}}]	8	1
-17	2020-08-04 19:36:45.200934+00	1	test test	2	[{"changed": {"fields": ["raw_data_file", "processed_data_file"]}}]	8	1
-18	2020-08-05 12:09:30.332537+00	1	tom/test test/2020-08-04	3		8	1
-19	2020-08-05 12:09:41.169381+00	6	tom/test test/2020-08-05	3		8	1
-20	2020-08-05 12:09:41.245333+00	5	None/test test/2020-08-05	3		8	1
-21	2020-08-05 12:09:41.270701+00	4	None/test test/2020-08-05	3		8	1
-22	2020-08-05 12:15:42.946927+00	3	tom/test2/2020-08-05	2	[{"changed": {"fields": ["owner", "cells", "processed_data_file"]}}]	8	1
-23	2020-08-05 12:15:47.904397+00	3	tom/test2/2020-08-05	2	[]	8	1
-24	2020-08-05 12:17:32.85704+00	3	tom/test2/2020-08-05	3		8	1
-25	2020-08-05 12:31:33.566157+00	8	tom/experiment/2020-08-05	1	[{"added": {}}]	8	1
-26	2020-08-05 23:08:50.931818+00	9	tom/foo/2020-08-05	2	[{"changed": {"fields": ["cells"]}}]	8	1
-27	2020-08-05 23:16:01.095768+00	9	tom/foo/2020-08-05	2	[]	8	1
-28	2020-08-05 23:16:07.479654+00	9	tom/foo/2020-08-05	2	[]	8	1
-29	2020-08-05 23:33:13.820898+00	9	tom/foo/2020-08-05	2	[]	8	1
-30	2020-08-05 23:34:15.902395+00	9	tom/foo/2020-08-05	2	[{"changed": {"fields": ["analysis"]}}]	8	1
-31	2020-08-05 23:34:26.132466+00	9	tom/foo/2020-08-05	2	[{"changed": {"fields": ["analysis"]}}]	8	1
-32	2020-08-11 10:11:31.211091+00	2	jacql	1	[{"added": {}}]	12	1
-33	2020-08-11 10:12:39.09724+00	2	jacql	2	[{"changed": {"fields": ["first_name", "last_name", "email", "is_staff", "is_superuser", "user_permissions"]}}]	12	1
-34	2020-08-11 10:13:06.916932+00	1	Administrators	1	[{"added": {}}]	11	1
-35	2020-08-11 10:14:31.126915+00	2	Experimenters	1	[{"added": {}}]	11	1
-36	2020-08-12 10:25:52.862796+00	9	tom/foo/2020-08-05	2	[]	8	1
-37	2020-08-12 10:26:41.764104+00	9	tom/foo/2020-08-05	2	[]	8	1
-38	2020-08-12 14:11:16.810667+00	9	tom/foo/2020-08-05	2	[]	8	1
-39	2020-08-12 14:11:41.598585+00	9	tom/foo/2020-08-05	2	[]	8	1
-40	2020-08-12 14:11:42.044057+00	9	tom/foo/2020-08-05	2	[]	8	1
-41	2020-08-12 14:14:51.399075+00	9	tom/fooo/2020-08-05	2	[{"changed": {"fields": ["name"]}}]	8	1
-42	2020-08-12 14:15:48.104893+00	9	tom/fooo/2020-08-05	2	[]	8	1
-43	2020-08-12 14:19:51.603273+00	9	tom/fooo/2020-08-05	2	[]	8	1
-44	2020-08-12 14:25:19.660729+00	9	tom/fooo/2020-08-05	2	[]	8	1
-45	2020-08-12 14:28:15.196452+00	9	tom/fooo/2020-08-05	2	[]	8	1
-46	2020-08-12 14:34:24.734675+00	9	tom/fooo/2020-08-05	2	[]	8	1
-47	2020-08-12 14:34:28.362297+00	8	tom/experiment/2020-08-05	2	[]	8	1
-48	2020-08-13 08:53:36.7441+00	3	binbin	1	[{"added": {}}]	12	1
-49	2020-08-13 08:54:53.286908+00	3	binbin	2	[{"changed": {"fields": ["first_name", "last_name", "is_staff", "groups"]}}]	12	1
-50	2020-08-13 09:08:11.60325+00	1	BioLogic_full_u455xrV.txt	1	[{"added": {}}]	18	1
-51	2020-08-13 10:32:39.18455+00	3	binbin	2	[{"changed": {"fields": ["is_superuser"]}}]	12	1
-52	2020-08-13 10:45:05.248666+00	1	BioLogic_full_u455xrV.txt	2	[]	18	3
-53	2020-08-13 10:45:09.003282+00	1	BioLogic_full_u455xrV.txt	2	[]	18	3
-54	2020-08-13 10:45:59.648366+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	3
-55	2020-08-13 10:46:07.851905+00	1	bio-logic-data-table.tsv	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
-56	2020-08-13 10:46:37.388125+00	1	BioLogic_full_Bq7ABsZ.txt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
-57	2020-08-13 10:47:51.783604+00	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	1	[{"added": {}}]	18	3
-58	2020-08-13 12:41:16.80162+00	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	2	[]	18	1
-59	2020-08-13 12:44:28.732886+00	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	2	[]	18	1
-60	2020-08-13 12:45:10.46911+00	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	2	[]	18	1
-61	2020-08-13 13:56:13.246066+00	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	3
-62	2020-08-13 14:42:26.567344+00	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt	2	[]	18	1
-63	2020-08-13 14:43:05.748529+00	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_xETlkXH.mpt	1	[{"added": {}}]	18	1
-64	2020-08-13 14:43:11.157068+00	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt	2	[]	18	1
-65	2020-08-13 14:43:45.614216+00	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_oa7otTL.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
-66	2020-08-13 14:46:34.261891+00	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lj6rngx.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
-67	2020-08-13 14:52:59.611491+00	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lj6rngx.mpt	2	[]	18	1
-68	2020-08-13 14:53:09.682091+00	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lvMpGzm.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
-69	2020-08-13 14:54:23.605556+00	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lvMpGzm.mpt	2	[{"changed": {"fields": ["experiment"]}}]	18	1
-70	2020-08-13 14:55:13.379716+00	9	tom/fooo/2020-08-05	2	[{"changed": {"fields": ["analysis"]}}]	8	1
-71	2020-08-15 15:26:07.435613+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	1	[{"added": {}}]	19	1
-72	2020-08-15 15:26:20.330113+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-73	2020-08-15 15:27:19.328572+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-74	2020-08-15 15:29:00.149786+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-75	2020-08-15 15:35:13.104076+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-76	2020-08-15 15:44:43.695498+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-77	2020-08-15 21:01:36.300505+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-78	2020-08-15 21:02:36.949811+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-79	2020-08-15 21:04:51.218447+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-80	2020-08-15 21:05:28.350057+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-81	2020-08-15 21:15:17.813728+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-82	2020-08-15 21:15:35.627463+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-84	2020-08-16 15:02:44.784119+00	6	rishi	1	[{"added": {}}]	12	1
-85	2020-08-16 15:03:02.079082+00	6	rishi	2	[{"changed": {"fields": ["is_staff", "is_superuser"]}}]	12	1
-86	2020-08-17 12:09:14.120233+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-87	2020-09-03 18:08:40.505196+00	1	Voltage	1	[{"added": {}}]	5	1
-88	2020-09-03 18:08:49.55247+00	2	Current	1	[{"added": {}}]	5	1
-89	2020-09-03 18:09:08.482438+00	3	Temperature	1	[{"added": {}}]	5	1
-90	2020-09-03 18:09:18.249333+00	4	Time	1	[{"added": {}}]	5	1
-91	2020-09-03 18:12:30.310237+00	4	Time	2	[{"changed": {"fields": ["unit"]}}]	5	1
-92	2020-09-03 18:16:46.720441+00	4	Time/s	2	[{"changed": {"fields": ["unit_symbol"]}}]	5	1
-93	2020-09-03 18:17:17.039241+00	3	Temperature/°C	2	[{"changed": {"fields": ["unit_symbol"]}}]	5	1
-94	2020-09-03 18:17:33.724311+00	2	Current/A	2	[{"changed": {"fields": ["unit_name", "unit_symbol"]}}]	5	1
-95	2020-09-03 18:17:40.814297+00	3	Temperature/°C	2	[{"changed": {"fields": ["unit_name"]}}]	5	1
-96	2020-09-03 18:18:31.397625+00	1	Voltage/V	2	[{"changed": {"fields": ["unit_name", "unit_symbol"]}}]	5	1
-97	2020-09-03 18:18:54.762396+00	5	Power/W	1	[{"added": {}}]	5	1
-98	2020-09-03 19:56:48.721474+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_VhdOTOf.mpt	1	[{"added": {}}]	23	1
-99	2020-09-03 23:49:08.152134+00	1	charging	1	[{"added": {}}]	22	1
-100	2020-09-03 23:51:23.68365+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_VhdOTOf.mpt/1: charging	2	[]	22	1
-101	2020-09-04 14:48:15.352707+00	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_VhdOTOf.mpt/1: charging	2	[{"changed": {"fields": ["ts_data"]}}]	22	1
+COPY public.common_org (id, name, head_id, parent_id, type, website) FROM stdin;
+1	Imperial College	\N	\N	1	\N
 \.
 
 
 --
--- Data for Name: django_content_type; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: common_paper; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.common_paper (id, "DOI", tag, year, title, authors, url, created_on, accepted, publisher_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: common_paper_org_owners; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.common_paper_org_owners (id, paper_id, org_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: common_person; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.common_person (id, "firstName", "lastName", email, "authUser_id", org_id) FROM stdin;
+1	Tom	Owen	tom@localhost	1	1
+\.
+
+
+--
+-- Data for Name: dfndb_compositionpart; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.dfndb_compositionpart (id, amount, compound_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: dfndb_compound; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.dfndb_compound (id, formula, name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: dfndb_data; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.dfndb_data (id, name, created_on, accepted, type, data, material_id, paper_id, parameter_id, user_owner_id, org_owner_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: dfndb_material; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.dfndb_material (id, name, polymer, accepted, created_on, user_owner_id, type, org_owner_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: dfndb_material_composition; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.dfndb_material_composition (id, material_id, compositionpart_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: dfndb_method; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.dfndb_method (id, name, created_on, accepted, type, description, user_owner_id, org_owner_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: dfndb_parameter; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.dfndb_parameter (id, name, created_on, accepted, symbol, type, notes, unit_id, user_owner_id, org_owner_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: dfndb_quantityunit; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.dfndb_quantityunit (id, name, symbol, "symbolName") FROM stdin;
+\.
+
+
+--
+-- Data for Name: django_admin_log; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
+1	2020-08-04 19:13:10.226362+01	1	foo	1	[{"added": {}}]	9	1
+2	2020-08-04 19:25:35.516012+01	1	BorkCorp	1	[{"added": {}}]	4	1
+3	2020-08-04 19:26:04.905071+01	1	foo	2	[{"changed": {"fields": ["manufacturer"]}}]	9	1
+4	2020-08-04 19:27:53.921631+01	1	MyMembrane	1	[{"added": {}}]	2	1
+5	2020-08-04 19:28:19.927154+01	1	MyLiPo	1	[{"added": {}}]	1	1
+6	2020-08-04 19:41:57.989858+01	2	Maccor	1	[{"added": {}}]	4	1
+7	2020-08-04 19:42:29.857145+01	1	GalvoTron 3000	1	[{"added": {}}]	16	1
+8	2020-08-04 19:45:01.780472+01	2	GalvoTron 3000	1	[{"added": {}}]	16	1
+9	2020-08-04 19:47:34.828985+01	1	Tom's GalvoTron 3000	1	[{"added": {}}]	3	1
+10	2020-08-04 19:51:08.397906+01	1	PyBaMM example protocol	1	[{"added": {}}]	6	1
+11	2020-08-04 19:52:01.270893+01	1	Tom's Lab	1	[{"added": {}}]	7	1
+12	2020-08-04 19:52:35.233623+01	1	GalvoTron 3000	3		16	1
+13	2020-08-04 19:52:52.127136+01	1	Tom's GalvoTron 3000	2	[{"changed": {"fields": ["type"]}}]	3	1
+14	2020-08-04 19:54:28.563138+01	1	Experiment object (1)	1	[{"added": {}}]	8	1
+15	2020-08-04 20:17:17.174324+01	1	4s	1	[{"added": {}}]	17	1
+16	2020-08-04 20:26:50.203876+01	1	test test	2	[{"changed": {"fields": ["cells", "processed_data_file"]}}]	8	1
+17	2020-08-04 20:36:45.200934+01	1	test test	2	[{"changed": {"fields": ["raw_data_file", "processed_data_file"]}}]	8	1
+18	2020-08-05 13:09:30.332537+01	1	tom/test test/2020-08-04	3		8	1
+19	2020-08-05 13:09:41.169381+01	6	tom/test test/2020-08-05	3		8	1
+20	2020-08-05 13:09:41.245333+01	5	None/test test/2020-08-05	3		8	1
+21	2020-08-05 13:09:41.270701+01	4	None/test test/2020-08-05	3		8	1
+22	2020-08-05 13:15:42.946927+01	3	tom/test2/2020-08-05	2	[{"changed": {"fields": ["owner", "cells", "processed_data_file"]}}]	8	1
+23	2020-08-05 13:15:47.904397+01	3	tom/test2/2020-08-05	2	[]	8	1
+24	2020-08-05 13:17:32.85704+01	3	tom/test2/2020-08-05	3		8	1
+25	2020-08-05 13:31:33.566157+01	8	tom/experiment/2020-08-05	1	[{"added": {}}]	8	1
+26	2020-08-06 00:08:50.931818+01	9	tom/foo/2020-08-05	2	[{"changed": {"fields": ["cells"]}}]	8	1
+27	2020-08-06 00:16:01.095768+01	9	tom/foo/2020-08-05	2	[]	8	1
+28	2020-08-06 00:16:07.479654+01	9	tom/foo/2020-08-05	2	[]	8	1
+29	2020-08-06 00:33:13.820898+01	9	tom/foo/2020-08-05	2	[]	8	1
+30	2020-08-06 00:34:15.902395+01	9	tom/foo/2020-08-05	2	[{"changed": {"fields": ["analysis"]}}]	8	1
+31	2020-08-06 00:34:26.132466+01	9	tom/foo/2020-08-05	2	[{"changed": {"fields": ["analysis"]}}]	8	1
+32	2020-08-11 11:11:31.211091+01	2	jacql	1	[{"added": {}}]	12	1
+33	2020-08-11 11:12:39.09724+01	2	jacql	2	[{"changed": {"fields": ["first_name", "last_name", "email", "is_staff", "is_superuser", "user_permissions"]}}]	12	1
+34	2020-08-11 11:13:06.916932+01	1	Administrators	1	[{"added": {}}]	11	1
+35	2020-08-11 11:14:31.126915+01	2	Experimenters	1	[{"added": {}}]	11	1
+36	2020-08-12 11:25:52.862796+01	9	tom/foo/2020-08-05	2	[]	8	1
+37	2020-08-12 11:26:41.764104+01	9	tom/foo/2020-08-05	2	[]	8	1
+38	2020-08-12 15:11:16.810667+01	9	tom/foo/2020-08-05	2	[]	8	1
+39	2020-08-12 15:11:41.598585+01	9	tom/foo/2020-08-05	2	[]	8	1
+40	2020-08-12 15:11:42.044057+01	9	tom/foo/2020-08-05	2	[]	8	1
+41	2020-08-12 15:14:51.399075+01	9	tom/fooo/2020-08-05	2	[{"changed": {"fields": ["name"]}}]	8	1
+42	2020-08-12 15:15:48.104893+01	9	tom/fooo/2020-08-05	2	[]	8	1
+43	2020-08-12 15:19:51.603273+01	9	tom/fooo/2020-08-05	2	[]	8	1
+44	2020-08-12 15:25:19.660729+01	9	tom/fooo/2020-08-05	2	[]	8	1
+45	2020-08-12 15:28:15.196452+01	9	tom/fooo/2020-08-05	2	[]	8	1
+46	2020-08-12 15:34:24.734675+01	9	tom/fooo/2020-08-05	2	[]	8	1
+47	2020-08-12 15:34:28.362297+01	8	tom/experiment/2020-08-05	2	[]	8	1
+48	2020-08-13 09:53:36.7441+01	3	binbin	1	[{"added": {}}]	12	1
+49	2020-08-13 09:54:53.286908+01	3	binbin	2	[{"changed": {"fields": ["first_name", "last_name", "is_staff", "groups"]}}]	12	1
+50	2020-08-13 10:08:11.60325+01	1	BioLogic_full_u455xrV.txt	1	[{"added": {}}]	18	1
+51	2020-08-13 11:32:39.18455+01	3	binbin	2	[{"changed": {"fields": ["is_superuser"]}}]	12	1
+52	2020-08-13 11:45:05.248666+01	1	BioLogic_full_u455xrV.txt	2	[]	18	3
+53	2020-08-13 11:45:09.003282+01	1	BioLogic_full_u455xrV.txt	2	[]	18	3
+54	2020-08-13 11:45:59.648366+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	3
+55	2020-08-13 11:46:07.851905+01	1	bio-logic-data-table.tsv	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
+56	2020-08-13 11:46:37.388125+01	1	BioLogic_full_Bq7ABsZ.txt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
+57	2020-08-13 11:47:51.783604+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	1	[{"added": {}}]	18	3
+58	2020-08-13 13:41:16.80162+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	2	[]	18	1
+59	2020-08-13 13:44:28.732886+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	2	[]	18	1
+60	2020-08-13 13:45:10.46911+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	2	[]	18	1
+61	2020-08-13 14:56:13.246066+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	3
+62	2020-08-13 15:42:26.567344+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt	2	[]	18	1
+63	2020-08-13 15:43:05.748529+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_xETlkXH.mpt	1	[{"added": {}}]	18	1
+64	2020-08-13 15:43:11.157068+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt	2	[]	18	1
+65	2020-08-13 15:43:45.614216+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_oa7otTL.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
+66	2020-08-13 15:46:34.261891+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lj6rngx.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
+67	2020-08-13 15:52:59.611491+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lj6rngx.mpt	2	[]	18	1
+68	2020-08-13 15:53:09.682091+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lvMpGzm.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
+69	2020-08-13 15:54:23.605556+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lvMpGzm.mpt	2	[{"changed": {"fields": ["experiment"]}}]	18	1
+70	2020-08-13 15:55:13.379716+01	9	tom/fooo/2020-08-05	2	[{"changed": {"fields": ["analysis"]}}]	8	1
+71	2020-08-15 16:26:07.435613+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	1	[{"added": {}}]	19	1
+72	2020-08-15 16:26:20.330113+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+73	2020-08-15 16:27:19.328572+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+74	2020-08-15 16:29:00.149786+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+75	2020-08-15 16:35:13.104076+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+76	2020-08-15 16:44:43.695498+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+77	2020-08-15 22:01:36.300505+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+78	2020-08-15 22:02:36.949811+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+79	2020-08-15 22:04:51.218447+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+80	2020-08-15 22:05:28.350057+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+81	2020-08-15 22:15:17.813728+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+82	2020-08-15 22:15:35.627463+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+84	2020-08-16 16:02:44.784119+01	6	rishi	1	[{"added": {}}]	12	1
+85	2020-08-16 16:03:02.079082+01	6	rishi	2	[{"changed": {"fields": ["is_staff", "is_superuser"]}}]	12	1
+86	2020-08-17 13:09:14.120233+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+87	2020-09-03 19:08:40.505196+01	1	Voltage	1	[{"added": {}}]	5	1
+88	2020-09-03 19:08:49.55247+01	2	Current	1	[{"added": {}}]	5	1
+89	2020-09-03 19:09:08.482438+01	3	Temperature	1	[{"added": {}}]	5	1
+90	2020-09-03 19:09:18.249333+01	4	Time	1	[{"added": {}}]	5	1
+91	2020-09-03 19:12:30.310237+01	4	Time	2	[{"changed": {"fields": ["unit"]}}]	5	1
+92	2020-09-03 19:16:46.720441+01	4	Time/s	2	[{"changed": {"fields": ["unit_symbol"]}}]	5	1
+93	2020-09-03 19:17:17.039241+01	3	Temperature/°C	2	[{"changed": {"fields": ["unit_symbol"]}}]	5	1
+94	2020-09-03 19:17:33.724311+01	2	Current/A	2	[{"changed": {"fields": ["unit_name", "unit_symbol"]}}]	5	1
+95	2020-09-03 19:17:40.814297+01	3	Temperature/°C	2	[{"changed": {"fields": ["unit_name"]}}]	5	1
+96	2020-09-03 19:18:31.397625+01	1	Voltage/V	2	[{"changed": {"fields": ["unit_name", "unit_symbol"]}}]	5	1
+97	2020-09-03 19:18:54.762396+01	5	Power/W	1	[{"added": {}}]	5	1
+98	2020-09-03 20:56:48.721474+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_VhdOTOf.mpt	1	[{"added": {}}]	23	1
+99	2020-09-04 00:49:08.152134+01	1	charging	1	[{"added": {}}]	22	1
+100	2020-09-04 00:51:23.68365+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_VhdOTOf.mpt/1: charging	2	[]	22	1
+101	2020-09-04 15:48:15.352707+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_VhdOTOf.mpt/1: charging	2	[{"changed": {"fields": ["ts_data"]}}]	22	1
+102	2020-10-08 11:47:13.873693+01	6	rishi	3		12	1
+103	2020-10-08 12:45:34.247115+01	1	Person object (1)	1	[{"added": {}}]	36	1
+104	2020-10-08 12:55:45.05896+01	1	Imperial College	1	[{"added": {}}]	34	1
+105	2020-10-08 12:59:15.023331+01	1	Imperial College	2	[]	34	1
+106	2020-10-08 12:59:28.496262+01	1	Tom Owen	2	[{"changed": {"fields": ["Org"]}}]	36	1
+107	2020-10-08 13:33:36.151723+01	7	test	1	[{"added": {}}]	12	1
+108	2020-10-08 13:35:13.19285+01	7	test	2	[{"changed": {"fields": ["First name", "Last name", "User permissions"]}}]	12	1
+109	2020-10-08 13:36:11.969134+01	7	test	2	[{"changed": {"fields": ["Staff status"]}}]	12	1
+110	2020-10-08 14:28:58.653283+01	1	tom	2	[{"changed": {"fields": ["First name", "Last name", "Email address"]}}]	12	1
+\.
+
+
+--
+-- Data for Name: django_content_type; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public.django_content_type (id, app_label, model) FROM stdin;
@@ -1846,79 +2577,105 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 23	battDB	experimentdatafile
 24	django_plotly_dash	dashapp
 25	django_plotly_dash	statelessapp
+26	dfndb	paper
+27	dfndb	compositionpart
+28	dfndb	compound
+29	dfndb	material
+30	dfndb	method
+31	dfndb	quantityunit
+32	dfndb	parameter
+33	dfndb	data
+34	common	org
+35	common	paper
+36	common	person
 \.
 
 
 --
--- Data for Name: django_migrations; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: django_migrations; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public.django_migrations (id, app, name, applied) FROM stdin;
-1	contenttypes	0001_initial	2020-08-04 18:06:03.247234+00
-2	auth	0001_initial	2020-08-04 18:06:03.581176+00
-3	battDB	0001_initial	2020-08-04 18:06:04.868539+00
-4	admin	0001_initial	2020-08-04 18:07:21.857673+00
-5	admin	0002_logentry_remove_auto_add	2020-08-04 18:07:21.984528+00
-6	admin	0003_logentry_add_action_flag_choices	2020-08-04 18:07:22.066678+00
-7	contenttypes	0002_remove_content_type_name	2020-08-04 18:07:22.128877+00
-8	auth	0002_alter_permission_name_max_length	2020-08-04 18:07:22.180271+00
-9	auth	0003_alter_user_email_max_length	2020-08-04 18:07:22.241102+00
-10	auth	0004_alter_user_username_opts	2020-08-04 18:07:22.298791+00
-11	auth	0005_alter_user_last_login_null	2020-08-04 18:07:22.360328+00
-12	auth	0006_require_contenttypes_0002	2020-08-04 18:07:22.413536+00
-13	auth	0007_alter_validators_add_error_messages	2020-08-04 18:07:22.463504+00
-14	auth	0008_alter_user_username_max_length	2020-08-04 18:07:22.555198+00
-15	auth	0009_alter_user_last_name_max_length	2020-08-04 18:07:22.604918+00
-16	auth	0010_alter_group_name_max_length	2020-08-04 18:07:22.665178+00
-17	auth	0011_update_proxy_permissions	2020-08-04 18:07:22.755407+00
-18	sessions	0001_initial	2020-08-04 18:07:22.913476+00
-19	battDB	0002_auto_20200804_1838	2020-08-04 18:38:40.04937+00
-20	battDB	0003_equipment_type	2020-08-04 18:39:59.74901+00
-21	battDB	0004_equipmenttype_manufacturer	2020-08-04 18:41:29.155848+00
-22	battDB	0005_auto_20200804_1856	2020-08-04 18:57:00.082477+00
-23	battDB	0006_experimentalapparatus_photo	2020-08-04 19:01:27.431661+00
-24	battDB	0007_auto_20200804_1915	2020-08-04 19:15:13.651658+00
-25	battDB	0008_experimentalapparatus_cellconfig	2020-08-04 19:15:40.10692+00
-26	battDB	0009_auto_20200804_1920	2020-08-04 19:20:38.723312+00
-27	battDB	0010_experiment_processed_data_file	2020-08-04 19:21:22.617814+00
-28	battDB	0011_auto_20200804_1926	2020-08-04 19:26:18.143222+00
-29	battDB	0012_cell_separator	2020-08-05 10:58:54.136899+00
-30	battDB	0013_auto_20200805_1146	2020-08-05 11:46:57.293892+00
-31	battDB	0014_auto_20200805_1214	2020-08-05 12:15:06.796335+00
-32	battDB	0015_auto_20200812_1541	2020-08-12 15:41:42.949931+00
-33	battDB	0016_auto_20200812_1605	2020-08-13 08:31:29.775636+00
-34	battDB	0017_experiment_status	2020-08-13 08:31:29.869074+00
-35	battDB	0018_auto_20200812_1632	2020-08-13 08:31:29.927666+00
-36	battDB	0019_auto_20200812_1633	2020-08-13 08:31:30.001311+00
-37	battDB	0020_auto_20200812_1646	2020-08-13 08:31:30.051582+00
-38	battDB	0021_auto_20200813_1015	2020-08-13 10:15:17.881701+00
-39	battDB	0022_auto_20200815_1426	2020-08-15 14:26:51.57265+00
-40	battDB	0023_experimentdata_data	2020-08-15 15:24:19.638608+00
-41	battDB	0024_auto_20200815_1611	2020-08-15 16:11:53.938322+00
-42	battDB	0025_remove_experimentdata_data	2020-08-15 21:01:17.527853+00
-43	battDB	0026_experimentdata_data	2020-08-15 21:01:17.694183+00
-44	battDB	0026_ec_cycle	2020-08-16 13:22:07.595025+00
-45	battDB	0027_auto_20200816_1322	2020-08-16 13:22:33.590537+00
-46	battDB	0028_experimentdata_data	2020-08-16 13:23:43.189628+00
-47	battDB	0029_remove_experimentdata_data	2020-08-16 13:24:00.605166+00
-48	battDB	0030_experimentdata_data	2020-08-16 13:24:16.021639+00
-49	battDB	0031_auto_20200816_1357	2020-08-16 13:57:47.206087+00
-50	battDB	0032_auto_20200816_1432	2020-08-16 14:32:53.628752+00
-51	battDB	0033_auto_20200818_1355	2020-08-18 13:55:49.616605+00
-52	battDB	0034_experimentdatafile_machine	2020-08-18 14:33:40.748065+00
-53	battDB	0035_datarange_file_offset	2020-08-18 14:35:57.135728+00
-54	django_plotly_dash	0001_initial	2020-08-18 15:11:50.328517+00
-55	django_plotly_dash	0002_add_examples	2020-08-18 15:11:50.562766+00
-56	battDB	0036_auto_20200903_1753	2020-09-03 17:53:52.800881+00
-57	battDB	0037_signaltype_symbol	2020-09-03 18:08:20.783023+00
-58	battDB	0038_signaltype_unit	2020-09-03 18:12:20.35129+00
-59	battDB	0039_auto_20200903_1814	2020-09-03 18:14:18.319432+00
-60	battDB	0040_auto_20200903_1816	2020-09-03 18:16:37.671965+00
+1	contenttypes	0001_initial	2020-08-04 19:06:03.247234+01
+2	auth	0001_initial	2020-08-04 19:06:03.581176+01
+3	battDB	0001_initial	2020-08-04 19:06:04.868539+01
+4	admin	0001_initial	2020-08-04 19:07:21.857673+01
+5	admin	0002_logentry_remove_auto_add	2020-08-04 19:07:21.984528+01
+6	admin	0003_logentry_add_action_flag_choices	2020-08-04 19:07:22.066678+01
+7	contenttypes	0002_remove_content_type_name	2020-08-04 19:07:22.128877+01
+8	auth	0002_alter_permission_name_max_length	2020-08-04 19:07:22.180271+01
+9	auth	0003_alter_user_email_max_length	2020-08-04 19:07:22.241102+01
+10	auth	0004_alter_user_username_opts	2020-08-04 19:07:22.298791+01
+11	auth	0005_alter_user_last_login_null	2020-08-04 19:07:22.360328+01
+12	auth	0006_require_contenttypes_0002	2020-08-04 19:07:22.413536+01
+13	auth	0007_alter_validators_add_error_messages	2020-08-04 19:07:22.463504+01
+14	auth	0008_alter_user_username_max_length	2020-08-04 19:07:22.555198+01
+15	auth	0009_alter_user_last_name_max_length	2020-08-04 19:07:22.604918+01
+16	auth	0010_alter_group_name_max_length	2020-08-04 19:07:22.665178+01
+17	auth	0011_update_proxy_permissions	2020-08-04 19:07:22.755407+01
+18	sessions	0001_initial	2020-08-04 19:07:22.913476+01
+19	battDB	0002_auto_20200804_1838	2020-08-04 19:38:40.04937+01
+20	battDB	0003_equipment_type	2020-08-04 19:39:59.74901+01
+21	battDB	0004_equipmenttype_manufacturer	2020-08-04 19:41:29.155848+01
+22	battDB	0005_auto_20200804_1856	2020-08-04 19:57:00.082477+01
+23	battDB	0006_experimentalapparatus_photo	2020-08-04 20:01:27.431661+01
+24	battDB	0007_auto_20200804_1915	2020-08-04 20:15:13.651658+01
+25	battDB	0008_experimentalapparatus_cellconfig	2020-08-04 20:15:40.10692+01
+26	battDB	0009_auto_20200804_1920	2020-08-04 20:20:38.723312+01
+27	battDB	0010_experiment_processed_data_file	2020-08-04 20:21:22.617814+01
+28	battDB	0011_auto_20200804_1926	2020-08-04 20:26:18.143222+01
+29	battDB	0012_cell_separator	2020-08-05 11:58:54.136899+01
+30	battDB	0013_auto_20200805_1146	2020-08-05 12:46:57.293892+01
+31	battDB	0014_auto_20200805_1214	2020-08-05 13:15:06.796335+01
+32	battDB	0015_auto_20200812_1541	2020-08-12 16:41:42.949931+01
+33	battDB	0016_auto_20200812_1605	2020-08-13 09:31:29.775636+01
+34	battDB	0017_experiment_status	2020-08-13 09:31:29.869074+01
+35	battDB	0018_auto_20200812_1632	2020-08-13 09:31:29.927666+01
+36	battDB	0019_auto_20200812_1633	2020-08-13 09:31:30.001311+01
+37	battDB	0020_auto_20200812_1646	2020-08-13 09:31:30.051582+01
+38	battDB	0021_auto_20200813_1015	2020-08-13 11:15:17.881701+01
+39	battDB	0022_auto_20200815_1426	2020-08-15 15:26:51.57265+01
+40	battDB	0023_experimentdata_data	2020-08-15 16:24:19.638608+01
+41	battDB	0024_auto_20200815_1611	2020-08-15 17:11:53.938322+01
+42	battDB	0025_remove_experimentdata_data	2020-08-15 22:01:17.527853+01
+43	battDB	0026_experimentdata_data	2020-08-15 22:01:17.694183+01
+44	battDB	0026_ec_cycle	2020-08-16 14:22:07.595025+01
+45	battDB	0027_auto_20200816_1322	2020-08-16 14:22:33.590537+01
+46	battDB	0028_experimentdata_data	2020-08-16 14:23:43.189628+01
+47	battDB	0029_remove_experimentdata_data	2020-08-16 14:24:00.605166+01
+48	battDB	0030_experimentdata_data	2020-08-16 14:24:16.021639+01
+49	battDB	0031_auto_20200816_1357	2020-08-16 14:57:47.206087+01
+50	battDB	0032_auto_20200816_1432	2020-08-16 15:32:53.628752+01
+51	battDB	0033_auto_20200818_1355	2020-08-18 14:55:49.616605+01
+52	battDB	0034_experimentdatafile_machine	2020-08-18 15:33:40.748065+01
+53	battDB	0035_datarange_file_offset	2020-08-18 15:35:57.135728+01
+54	django_plotly_dash	0001_initial	2020-08-18 16:11:50.328517+01
+55	django_plotly_dash	0002_add_examples	2020-08-18 16:11:50.562766+01
+56	battDB	0036_auto_20200903_1753	2020-09-03 18:53:52.800881+01
+57	battDB	0037_signaltype_symbol	2020-09-03 19:08:20.783023+01
+58	battDB	0038_signaltype_unit	2020-09-03 19:12:20.35129+01
+59	battDB	0039_auto_20200903_1814	2020-09-03 19:14:18.319432+01
+60	battDB	0040_auto_20200903_1816	2020-09-03 19:16:37.671965+01
+61	auth	0012_alter_user_first_name_max_length	2020-10-07 13:25:56.568632+01
+62	battDB	0041_auto_20200908_1119	2020-10-07 13:25:56.683129+01
+63	dfndb	0001_initial	2020-10-08 10:26:11.274739+01
+64	dfndb	0002_auto_20201001_0930	2020-10-08 10:26:11.376124+01
+65	dfndb	0003_material_polymer	2020-10-08 10:26:11.444844+01
+66	dfndb	0004_auto_20201001_1123	2020-10-08 10:26:11.5701+01
+67	dfndb	0005_auto_20201001_1131	2020-10-08 10:26:11.738805+01
+68	dfndb	0006_auto_20201001_2335	2020-10-08 10:26:11.779157+01
+69	common	0001_initial	2020-10-08 12:32:53.147931+01
+70	dfndb	0007_auto_20201008_1132	2020-10-08 12:32:53.269593+01
+71	common	0002_paper_org_owners	2020-10-08 13:06:18.210671+01
+72	common	0003_auto_20201008_1242	2020-10-08 13:42:20.911176+01
+73	common	0004_auto_20201008_1321	2020-10-08 14:22:04.37714+01
+74	common	0005_auto_20201008_1430	2020-10-08 15:30:10.847876+01
+75	dfndb	0002_auto_20201008_1430	2020-10-08 15:30:10.927234+01
 \.
 
 
 --
--- Data for Name: django_plotly_dash_dashapp; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: django_plotly_dash_dashapp; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public.django_plotly_dash_dashapp (id, instance_name, slug, base_state, creation, update, save_on_change, stateless_app_id) FROM stdin;
@@ -1926,7 +2683,7 @@ COPY public.django_plotly_dash_dashapp (id, instance_name, slug, base_state, cre
 
 
 --
--- Data for Name: django_plotly_dash_statelessapp; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: django_plotly_dash_statelessapp; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public.django_plotly_dash_statelessapp (id, app_name, slug) FROM stdin;
@@ -1934,208 +2691,295 @@ COPY public.django_plotly_dash_statelessapp (id, app_name, slug) FROM stdin;
 
 
 --
--- Data for Name: django_session; Type: TABLE DATA; Schema: public; Owner: tom
+-- Data for Name: django_session; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
 COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
-kznm4zgwzhdw2pczzmghrq040i9bcghc	ODkzNGRjMTU3YjY1NTAxMDE2MGU5NGRmNzU3ZWQ1YjYzOGEwMGJjNTp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI4ZDc3MzRjOGIwMDg0NmM4NGU3Nzg1ZGZiZjc3ZTk4ODBhMWE3OWFiIn0=	2020-08-25 10:09:00.092024+00
-h2aulckzjnz6unc9858uvjsm0l9vkte3	ODkzNGRjMTU3YjY1NTAxMDE2MGU5NGRmNzU3ZWQ1YjYzOGEwMGJjNTp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI4ZDc3MzRjOGIwMDg0NmM4NGU3Nzg1ZGZiZjc3ZTk4ODBhMWE3OWFiIn0=	2020-08-25 10:09:23.656754+00
-gt0dz60n04ed1vrqtlexu7jdi7gptr49	YzU3OGZjOTUyOGIwMWRkNTRlNmU5YjdiMDQ2Mzk5ZGQ4ZWFmM2VlMDp7Il9hdXRoX3VzZXJfaWQiOiIzIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI4YzIxYTM2MzE3ZDI0ODU0MmMwODViZDc5NGVjYzFkMTRmMGE3NmJkIn0=	2020-08-27 09:56:28.22271+00
-bjvejex0ig5m2h3m5hr259xggqcz3who	ODkzNGRjMTU3YjY1NTAxMDE2MGU5NGRmNzU3ZWQ1YjYzOGEwMGJjNTp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI4ZDc3MzRjOGIwMDg0NmM4NGU3Nzg1ZGZiZjc3ZTk4ODBhMWE3OWFiIn0=	2020-09-17 18:02:52.232582+00
+kznm4zgwzhdw2pczzmghrq040i9bcghc	ODkzNGRjMTU3YjY1NTAxMDE2MGU5NGRmNzU3ZWQ1YjYzOGEwMGJjNTp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI4ZDc3MzRjOGIwMDg0NmM4NGU3Nzg1ZGZiZjc3ZTk4ODBhMWE3OWFiIn0=	2020-08-25 11:09:00.092024+01
+h2aulckzjnz6unc9858uvjsm0l9vkte3	ODkzNGRjMTU3YjY1NTAxMDE2MGU5NGRmNzU3ZWQ1YjYzOGEwMGJjNTp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI4ZDc3MzRjOGIwMDg0NmM4NGU3Nzg1ZGZiZjc3ZTk4ODBhMWE3OWFiIn0=	2020-08-25 11:09:23.656754+01
+gt0dz60n04ed1vrqtlexu7jdi7gptr49	YzU3OGZjOTUyOGIwMWRkNTRlNmU5YjdiMDQ2Mzk5ZGQ4ZWFmM2VlMDp7Il9hdXRoX3VzZXJfaWQiOiIzIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI4YzIxYTM2MzE3ZDI0ODU0MmMwODViZDc5NGVjYzFkMTRmMGE3NmJkIn0=	2020-08-27 10:56:28.22271+01
+bjvejex0ig5m2h3m5hr259xggqcz3who	ODkzNGRjMTU3YjY1NTAxMDE2MGU5NGRmNzU3ZWQ1YjYzOGEwMGJjNTp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI4ZDc3MzRjOGIwMDg0NmM4NGU3Nzg1ZGZiZjc3ZTk4ODBhMWE3OWFiIn0=	2020-09-17 19:02:52.232582+01
+cyyrb7merwtxo7dcsbv0cgqmwccnwh8d	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kQRx2:1XeV7lhO2h-Cmtkg1ptczSM0aWNs1M7WLEN5Tzm-pIU	2020-10-22 10:11:04.359096+01
+haqcurfqstoy8ys4evb16c4zer8xs1lc	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kQVAL:iSngFIWICRX_JMTDzaTgNLmNR4npexx4OOSyqzT0sBc	2020-10-22 13:37:01.400797+01
+9n5s8vuiaybs4f16zd2ihvnybnmmowy2	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kQVqO:20Y9Qbxw_AkXrCn32uTJZN1QvCTJsKjEpMWC-SDA4WA	2020-10-22 14:20:28.773308+01
 \.
 
 
 --
--- Name: auth_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: auth_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public.auth_group_id_seq', 2, true);
 
 
 --
--- Name: auth_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 112, true);
 
 
 --
--- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 100, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 144, true);
 
 
 --
--- Name: auth_user_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public.auth_user_groups_id_seq', 1, true);
 
 
 --
--- Name: auth_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: auth_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.auth_user_id_seq', 6, true);
-
-
---
--- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
---
-
-SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 68, true);
+SELECT pg_catalog.setval('public.auth_user_id_seq', 7, true);
 
 
 --
--- Name: battDB_cell_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 104, true);
+
+
+--
+-- Name: battDB_cell_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_cell_id_seq"', 1, true);
 
 
 --
--- Name: battDB_cellbatch_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_cellbatch_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_cellbatch_id_seq"', 1, true);
 
 
 --
--- Name: battDB_cellconfig_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_cellconfig_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_cellconfig_id_seq"', 1, true);
 
 
 --
--- Name: battDB_celltype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_celltype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_celltype_id_seq"', 1, false);
 
 
 --
--- Name: battDB_datarange_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_datarange_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_datarange_id_seq"', 1, true);
 
 
 --
--- Name: battDB_equipment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_equipment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_equipment_id_seq"', 1, true);
 
 
 --
--- Name: battDB_equipmenttype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_equipmenttype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_equipmenttype_id_seq"', 2, true);
 
 
 --
--- Name: battDB_experiment_cells_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_experiment_cells_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_experiment_cells_id_seq"', 4, true);
 
 
 --
--- Name: battDB_experiment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_experiment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_experiment_id_seq"', 9, true);
 
 
 --
--- Name: battDB_experimentalapparatus_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_experimentalapparatus_id_seq"', 1, true);
 
 
 --
--- Name: battDB_experimentalapparatus_testEquipment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus_testEquipment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_experimentalapparatus_testEquipment_id_seq"', 1, true);
 
 
 --
--- Name: battDB_experimentdatafile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_experimentdatafile_id_seq"', 1, true);
 
 
 --
--- Name: battDB_experimentdatafile_import_columns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_experimentdatafile_import_columns_id_seq"', 1, true);
 
 
 --
--- Name: battDB_manufacturer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_manufacturer_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_manufacturer_id_seq"', 2, true);
 
 
 --
--- Name: battDB_signaltype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_signaltype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_signaltype_id_seq"', 5, true);
 
 
 --
--- Name: battDB_testprotocol_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: battDB_testprotocol_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_testprotocol_id_seq"', 1, true);
 
 
 --
--- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: common_org_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 101, true);
-
-
---
--- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
---
-
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 25, true);
+SELECT pg_catalog.setval('public.common_org_id_seq', 1, true);
 
 
 --
--- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: common_paper_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 60, true);
+SELECT pg_catalog.setval('public.common_paper_id_seq', 1, false);
 
 
 --
--- Name: django_plotly_dash_dashapp_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: common_paper_org_owners_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.common_paper_org_owners_id_seq', 1, false);
+
+
+--
+-- Name: common_person_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.common_person_id_seq', 1, true);
+
+
+--
+-- Name: dfndb_compositionpart_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.dfndb_compositionpart_id_seq', 1, false);
+
+
+--
+-- Name: dfndb_compound_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.dfndb_compound_id_seq', 1, false);
+
+
+--
+-- Name: dfndb_data_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.dfndb_data_id_seq', 1, false);
+
+
+--
+-- Name: dfndb_material_composition_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.dfndb_material_composition_id_seq', 1, false);
+
+
+--
+-- Name: dfndb_material_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.dfndb_material_id_seq', 1, false);
+
+
+--
+-- Name: dfndb_method_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.dfndb_method_id_seq', 1, false);
+
+
+--
+-- Name: dfndb_parameter_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.dfndb_parameter_id_seq', 1, false);
+
+
+--
+-- Name: dfndb_quantityunit_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 1, false);
+
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 110, true);
+
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 36, true);
+
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 75, true);
+
+
+--
+-- Name: django_plotly_dash_dashapp_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public.django_plotly_dash_dashapp_id_seq', 1, false);
 
 
 --
--- Name: django_plotly_dash_statelessapp_id_seq; Type: SEQUENCE SET; Schema: public; Owner: tom
+-- Name: django_plotly_dash_statelessapp_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public.django_plotly_dash_statelessapp_id_seq', 1, false);
 
 
 --
--- Name: auth_group auth_group_name_key; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_group auth_group_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_group
@@ -2143,7 +2987,7 @@ ALTER TABLE ONLY public.auth_group
 
 
 --
--- Name: auth_group_permissions auth_group_permissions_group_id_permission_id_0cd325b0_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_group_permissions auth_group_permissions_group_id_permission_id_0cd325b0_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_group_permissions
@@ -2151,7 +2995,7 @@ ALTER TABLE ONLY public.auth_group_permissions
 
 
 --
--- Name: auth_group_permissions auth_group_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_group_permissions auth_group_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_group_permissions
@@ -2159,7 +3003,7 @@ ALTER TABLE ONLY public.auth_group_permissions
 
 
 --
--- Name: auth_group auth_group_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_group auth_group_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_group
@@ -2167,7 +3011,7 @@ ALTER TABLE ONLY public.auth_group
 
 
 --
--- Name: auth_permission auth_permission_content_type_id_codename_01ab375a_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_permission auth_permission_content_type_id_codename_01ab375a_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_permission
@@ -2175,7 +3019,7 @@ ALTER TABLE ONLY public.auth_permission
 
 
 --
--- Name: auth_permission auth_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_permission auth_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_permission
@@ -2183,7 +3027,7 @@ ALTER TABLE ONLY public.auth_permission
 
 
 --
--- Name: auth_user_groups auth_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_user_groups auth_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_user_groups
@@ -2191,7 +3035,7 @@ ALTER TABLE ONLY public.auth_user_groups
 
 
 --
--- Name: auth_user_groups auth_user_groups_user_id_group_id_94350c0c_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_user_groups auth_user_groups_user_id_group_id_94350c0c_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_user_groups
@@ -2199,7 +3043,7 @@ ALTER TABLE ONLY public.auth_user_groups
 
 
 --
--- Name: auth_user auth_user_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_user auth_user_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_user
@@ -2207,7 +3051,7 @@ ALTER TABLE ONLY public.auth_user
 
 
 --
--- Name: auth_user_user_permissions auth_user_user_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_user_user_permissions auth_user_user_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_user_user_permissions
@@ -2215,7 +3059,7 @@ ALTER TABLE ONLY public.auth_user_user_permissions
 
 
 --
--- Name: auth_user_user_permissions auth_user_user_permissions_user_id_permission_id_14a6b632_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_user_user_permissions auth_user_user_permissions_user_id_permission_id_14a6b632_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_user_user_permissions
@@ -2223,7 +3067,7 @@ ALTER TABLE ONLY public.auth_user_user_permissions
 
 
 --
--- Name: auth_user auth_user_username_key; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_user auth_user_username_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_user
@@ -2231,7 +3075,7 @@ ALTER TABLE ONLY public.auth_user
 
 
 --
--- Name: battDB_cell battDB_cell_name_a587c854_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_cell battDB_cell_name_a587c854_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_cell"
@@ -2239,7 +3083,7 @@ ALTER TABLE ONLY public."battDB_cell"
 
 
 --
--- Name: battDB_cell battDB_cell_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_cell battDB_cell_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_cell"
@@ -2247,7 +3091,7 @@ ALTER TABLE ONLY public."battDB_cell"
 
 
 --
--- Name: battDB_cellbatch battDB_cellbatch_name_28a7d909_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_cellbatch battDB_cellbatch_name_28a7d909_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_cellbatch"
@@ -2255,7 +3099,7 @@ ALTER TABLE ONLY public."battDB_cellbatch"
 
 
 --
--- Name: battDB_cellbatch battDB_cellbatch_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_cellbatch battDB_cellbatch_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_cellbatch"
@@ -2263,7 +3107,7 @@ ALTER TABLE ONLY public."battDB_cellbatch"
 
 
 --
--- Name: battDB_cellconfig battDB_cellconfig_name_key; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_cellconfig battDB_cellconfig_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_cellconfig"
@@ -2271,7 +3115,7 @@ ALTER TABLE ONLY public."battDB_cellconfig"
 
 
 --
--- Name: battDB_cellconfig battDB_cellconfig_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_cellconfig battDB_cellconfig_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_cellconfig"
@@ -2279,7 +3123,7 @@ ALTER TABLE ONLY public."battDB_cellconfig"
 
 
 --
--- Name: battDB_celltype battDB_celltype_name_key; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_celltype battDB_celltype_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_celltype"
@@ -2287,7 +3131,7 @@ ALTER TABLE ONLY public."battDB_celltype"
 
 
 --
--- Name: battDB_celltype battDB_celltype_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_celltype battDB_celltype_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_celltype"
@@ -2295,7 +3139,7 @@ ALTER TABLE ONLY public."battDB_celltype"
 
 
 --
--- Name: battDB_datarange battDB_datarange_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_datarange battDB_datarange_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_datarange"
@@ -2303,7 +3147,7 @@ ALTER TABLE ONLY public."battDB_datarange"
 
 
 --
--- Name: battDB_equipment battDB_equipment_name_85e8697e_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_equipment battDB_equipment_name_85e8697e_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_equipment"
@@ -2311,7 +3155,7 @@ ALTER TABLE ONLY public."battDB_equipment"
 
 
 --
--- Name: battDB_equipment battDB_equipment_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_equipment battDB_equipment_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_equipment"
@@ -2319,7 +3163,7 @@ ALTER TABLE ONLY public."battDB_equipment"
 
 
 --
--- Name: battDB_equipmenttype battDB_equipmenttype_name_f6eb8e24_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_equipmenttype battDB_equipmenttype_name_f6eb8e24_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_equipmenttype"
@@ -2327,7 +3171,7 @@ ALTER TABLE ONLY public."battDB_equipmenttype"
 
 
 --
--- Name: battDB_equipmenttype battDB_equipmenttype_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_equipmenttype battDB_equipmenttype_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_equipmenttype"
@@ -2335,7 +3179,7 @@ ALTER TABLE ONLY public."battDB_equipmenttype"
 
 
 --
--- Name: battDB_experiment_cells battDB_experiment_cells_experiment_id_cell_id_2ba3ed8e_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experiment_cells battDB_experiment_cells_experiment_id_cell_id_2ba3ed8e_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experiment_cells"
@@ -2343,7 +3187,7 @@ ALTER TABLE ONLY public."battDB_experiment_cells"
 
 
 --
--- Name: battDB_experiment_cells battDB_experiment_cells_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experiment_cells battDB_experiment_cells_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experiment_cells"
@@ -2351,7 +3195,7 @@ ALTER TABLE ONLY public."battDB_experiment_cells"
 
 
 --
--- Name: battDB_experiment battDB_experiment_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experiment battDB_experiment_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experiment"
@@ -2359,7 +3203,7 @@ ALTER TABLE ONLY public."battDB_experiment"
 
 
 --
--- Name: battDB_experimentalapparatus_testEquipment battDB_experimentalappar_experimentalapparatus_id_0f1ef566_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus_testEquipment battDB_experimentalappar_experimentalapparatus_id_0f1ef566_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentalapparatus_testEquipment"
@@ -2367,7 +3211,7 @@ ALTER TABLE ONLY public."battDB_experimentalapparatus_testEquipment"
 
 
 --
--- Name: battDB_experimentalapparatus battDB_experimentalapparatus_name_fae4873b_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus battDB_experimentalapparatus_name_fae4873b_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentalapparatus"
@@ -2375,7 +3219,7 @@ ALTER TABLE ONLY public."battDB_experimentalapparatus"
 
 
 --
--- Name: battDB_experimentalapparatus battDB_experimentalapparatus_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus battDB_experimentalapparatus_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentalapparatus"
@@ -2383,7 +3227,7 @@ ALTER TABLE ONLY public."battDB_experimentalapparatus"
 
 
 --
--- Name: battDB_experimentalapparatus_testEquipment battDB_experimentalapparatus_testEquipment_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus_testEquipment battDB_experimentalapparatus_testEquipment_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentalapparatus_testEquipment"
@@ -2391,7 +3235,7 @@ ALTER TABLE ONLY public."battDB_experimentalapparatus_testEquipment"
 
 
 --
--- Name: battDB_experimentdatafile_import_columns battDB_experimentdatafil_experimentdatafile_id_si_4d88733a_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns battDB_experimentdatafil_experimentdatafile_id_si_4d88733a_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
@@ -2399,7 +3243,7 @@ ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
 
 
 --
--- Name: battDB_experimentdatafile_import_columns battDB_experimentdatafile_import_columns_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns battDB_experimentdatafile_import_columns_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
@@ -2407,7 +3251,7 @@ ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
 
 
 --
--- Name: battDB_experimentdatafile battDB_experimentdatafile_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile battDB_experimentdatafile_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentdatafile"
@@ -2415,7 +3259,7 @@ ALTER TABLE ONLY public."battDB_experimentdatafile"
 
 
 --
--- Name: battDB_manufacturer battDB_manufacturer_name_df40b107_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_manufacturer battDB_manufacturer_name_df40b107_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_manufacturer"
@@ -2423,7 +3267,7 @@ ALTER TABLE ONLY public."battDB_manufacturer"
 
 
 --
--- Name: battDB_manufacturer battDB_manufacturer_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_manufacturer battDB_manufacturer_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_manufacturer"
@@ -2431,7 +3275,7 @@ ALTER TABLE ONLY public."battDB_manufacturer"
 
 
 --
--- Name: battDB_signaltype battDB_signaltype_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_signaltype battDB_signaltype_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_signaltype"
@@ -2439,7 +3283,7 @@ ALTER TABLE ONLY public."battDB_signaltype"
 
 
 --
--- Name: battDB_testprotocol battDB_testprotocol_name_62280eb8_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_testprotocol battDB_testprotocol_name_62280eb8_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_testprotocol"
@@ -2447,7 +3291,7 @@ ALTER TABLE ONLY public."battDB_testprotocol"
 
 
 --
--- Name: battDB_testprotocol battDB_testprotocol_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_testprotocol battDB_testprotocol_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_testprotocol"
@@ -2455,7 +3299,231 @@ ALTER TABLE ONLY public."battDB_testprotocol"
 
 
 --
--- Name: django_admin_log django_admin_log_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: common_org common_org_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_org
+    ADD CONSTRAINT common_org_name_key UNIQUE (name);
+
+
+--
+-- Name: common_org common_org_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_org
+    ADD CONSTRAINT common_org_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: common_paper common_paper_DOI_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_paper
+    ADD CONSTRAINT "common_paper_DOI_key" UNIQUE ("DOI");
+
+
+--
+-- Name: common_paper_org_owners common_paper_org_owners_paper_id_org_id_bc412629_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_paper_org_owners
+    ADD CONSTRAINT common_paper_org_owners_paper_id_org_id_bc412629_uniq UNIQUE (paper_id, org_id);
+
+
+--
+-- Name: common_paper_org_owners common_paper_org_owners_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_paper_org_owners
+    ADD CONSTRAINT common_paper_org_owners_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: common_paper common_paper_paper_tag_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_paper
+    ADD CONSTRAINT common_paper_paper_tag_key UNIQUE (tag);
+
+
+--
+-- Name: common_paper common_paper_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_paper
+    ADD CONSTRAINT common_paper_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: common_person common_person_authUser_id_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_person
+    ADD CONSTRAINT "common_person_authUser_id_key" UNIQUE ("authUser_id");
+
+
+--
+-- Name: common_person common_person_email_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_person
+    ADD CONSTRAINT common_person_email_key UNIQUE (email);
+
+
+--
+-- Name: common_person common_person_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_person
+    ADD CONSTRAINT common_person_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dfndb_compositionpart dfndb_compositionpart_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_compositionpart
+    ADD CONSTRAINT dfndb_compositionpart_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dfndb_compound dfndb_compound_formula_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_compound
+    ADD CONSTRAINT dfndb_compound_formula_key UNIQUE (formula);
+
+
+--
+-- Name: dfndb_compound dfndb_compound_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_compound
+    ADD CONSTRAINT dfndb_compound_name_key UNIQUE (name);
+
+
+--
+-- Name: dfndb_compound dfndb_compound_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_compound
+    ADD CONSTRAINT dfndb_compound_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dfndb_data dfndb_data_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_data
+    ADD CONSTRAINT dfndb_data_name_key UNIQUE (name);
+
+
+--
+-- Name: dfndb_data dfndb_data_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_data
+    ADD CONSTRAINT dfndb_data_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dfndb_material_composition dfndb_material_compositi_material_id_compositionp_29fffcb6_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_material_composition
+    ADD CONSTRAINT dfndb_material_compositi_material_id_compositionp_29fffcb6_uniq UNIQUE (material_id, compositionpart_id);
+
+
+--
+-- Name: dfndb_material_composition dfndb_material_composition_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_material_composition
+    ADD CONSTRAINT dfndb_material_composition_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dfndb_material dfndb_material_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_material
+    ADD CONSTRAINT dfndb_material_name_key UNIQUE (name);
+
+
+--
+-- Name: dfndb_material dfndb_material_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_material
+    ADD CONSTRAINT dfndb_material_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dfndb_method dfndb_method_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_method
+    ADD CONSTRAINT dfndb_method_name_key UNIQUE (name);
+
+
+--
+-- Name: dfndb_method dfndb_method_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_method
+    ADD CONSTRAINT dfndb_method_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dfndb_parameter dfndb_parameter_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_parameter
+    ADD CONSTRAINT dfndb_parameter_name_key UNIQUE (name);
+
+
+--
+-- Name: dfndb_parameter dfndb_parameter_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_parameter
+    ADD CONSTRAINT dfndb_parameter_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dfndb_parameter dfndb_parameter_symbol_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_parameter
+    ADD CONSTRAINT dfndb_parameter_symbol_key UNIQUE (symbol);
+
+
+--
+-- Name: dfndb_quantityunit dfndb_quantityunit_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_quantityunit
+    ADD CONSTRAINT dfndb_quantityunit_name_key UNIQUE (name);
+
+
+--
+-- Name: dfndb_quantityunit dfndb_quantityunit_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_quantityunit
+    ADD CONSTRAINT dfndb_quantityunit_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dfndb_quantityunit dfndb_quantityunit_symbol_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_quantityunit
+    ADD CONSTRAINT dfndb_quantityunit_symbol_key UNIQUE (symbol);
+
+
+--
+-- Name: django_admin_log django_admin_log_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_admin_log
@@ -2463,7 +3531,7 @@ ALTER TABLE ONLY public.django_admin_log
 
 
 --
--- Name: django_content_type django_content_type_app_label_model_76bd3d3b_uniq; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: django_content_type django_content_type_app_label_model_76bd3d3b_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_content_type
@@ -2471,7 +3539,7 @@ ALTER TABLE ONLY public.django_content_type
 
 
 --
--- Name: django_content_type django_content_type_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: django_content_type django_content_type_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_content_type
@@ -2479,7 +3547,7 @@ ALTER TABLE ONLY public.django_content_type
 
 
 --
--- Name: django_migrations django_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: django_migrations django_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_migrations
@@ -2487,7 +3555,7 @@ ALTER TABLE ONLY public.django_migrations
 
 
 --
--- Name: django_plotly_dash_dashapp django_plotly_dash_dashapp_instance_name_key; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: django_plotly_dash_dashapp django_plotly_dash_dashapp_instance_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_plotly_dash_dashapp
@@ -2495,7 +3563,7 @@ ALTER TABLE ONLY public.django_plotly_dash_dashapp
 
 
 --
--- Name: django_plotly_dash_dashapp django_plotly_dash_dashapp_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: django_plotly_dash_dashapp django_plotly_dash_dashapp_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_plotly_dash_dashapp
@@ -2503,7 +3571,7 @@ ALTER TABLE ONLY public.django_plotly_dash_dashapp
 
 
 --
--- Name: django_plotly_dash_dashapp django_plotly_dash_dashapp_slug_key; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: django_plotly_dash_dashapp django_plotly_dash_dashapp_slug_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_plotly_dash_dashapp
@@ -2511,7 +3579,7 @@ ALTER TABLE ONLY public.django_plotly_dash_dashapp
 
 
 --
--- Name: django_plotly_dash_statelessapp django_plotly_dash_statelessapp_app_name_key; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: django_plotly_dash_statelessapp django_plotly_dash_statelessapp_app_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_plotly_dash_statelessapp
@@ -2519,7 +3587,7 @@ ALTER TABLE ONLY public.django_plotly_dash_statelessapp
 
 
 --
--- Name: django_plotly_dash_statelessapp django_plotly_dash_statelessapp_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: django_plotly_dash_statelessapp django_plotly_dash_statelessapp_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_plotly_dash_statelessapp
@@ -2527,7 +3595,7 @@ ALTER TABLE ONLY public.django_plotly_dash_statelessapp
 
 
 --
--- Name: django_plotly_dash_statelessapp django_plotly_dash_statelessapp_slug_key; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: django_plotly_dash_statelessapp django_plotly_dash_statelessapp_slug_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_plotly_dash_statelessapp
@@ -2535,7 +3603,7 @@ ALTER TABLE ONLY public.django_plotly_dash_statelessapp
 
 
 --
--- Name: django_session django_session_pkey; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: django_session django_session_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_session
@@ -2543,7 +3611,7 @@ ALTER TABLE ONLY public.django_session
 
 
 --
--- Name: battDB_experiment unique_slugname; Type: CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experiment unique_slugname; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experiment"
@@ -2551,336 +3619,574 @@ ALTER TABLE ONLY public."battDB_experiment"
 
 
 --
--- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX auth_group_name_a6ea08ec_like ON public.auth_group USING btree (name varchar_pattern_ops);
 
 
 --
--- Name: auth_group_permissions_group_id_b120cbf9; Type: INDEX; Schema: public; Owner: tom
+-- Name: auth_group_permissions_group_id_b120cbf9; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX auth_group_permissions_group_id_b120cbf9 ON public.auth_group_permissions USING btree (group_id);
 
 
 --
--- Name: auth_group_permissions_permission_id_84c5c92e; Type: INDEX; Schema: public; Owner: tom
+-- Name: auth_group_permissions_permission_id_84c5c92e; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX auth_group_permissions_permission_id_84c5c92e ON public.auth_group_permissions USING btree (permission_id);
 
 
 --
--- Name: auth_permission_content_type_id_2f476e4b; Type: INDEX; Schema: public; Owner: tom
+-- Name: auth_permission_content_type_id_2f476e4b; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX auth_permission_content_type_id_2f476e4b ON public.auth_permission USING btree (content_type_id);
 
 
 --
--- Name: auth_user_groups_group_id_97559544; Type: INDEX; Schema: public; Owner: tom
+-- Name: auth_user_groups_group_id_97559544; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX auth_user_groups_group_id_97559544 ON public.auth_user_groups USING btree (group_id);
 
 
 --
--- Name: auth_user_groups_user_id_6a12ed8b; Type: INDEX; Schema: public; Owner: tom
+-- Name: auth_user_groups_user_id_6a12ed8b; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX auth_user_groups_user_id_6a12ed8b ON public.auth_user_groups USING btree (user_id);
 
 
 --
--- Name: auth_user_user_permissions_permission_id_1fbb5f2c; Type: INDEX; Schema: public; Owner: tom
+-- Name: auth_user_user_permissions_permission_id_1fbb5f2c; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX auth_user_user_permissions_permission_id_1fbb5f2c ON public.auth_user_user_permissions USING btree (permission_id);
 
 
 --
--- Name: auth_user_user_permissions_user_id_a95ead1b; Type: INDEX; Schema: public; Owner: tom
+-- Name: auth_user_user_permissions_user_id_a95ead1b; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX auth_user_user_permissions_user_id_a95ead1b ON public.auth_user_user_permissions USING btree (user_id);
 
 
 --
--- Name: auth_user_username_6821ab7c_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: auth_user_username_6821ab7c_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX auth_user_username_6821ab7c_like ON public.auth_user USING btree (username varchar_pattern_ops);
 
 
 --
--- Name: battDB_cell_batch_id_1203f48e; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_cell_batch_id_1203f48e; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_cell_batch_id_1203f48e" ON public."battDB_cell" USING btree (batch_id);
 
 
 --
--- Name: battDB_cell_name_a587c854_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_cell_name_a587c854_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_cell_name_a587c854_like" ON public."battDB_cell" USING btree (name varchar_pattern_ops);
 
 
 --
--- Name: battDB_cell_type_id_d072b74d; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_cell_type_id_d072b74d; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_cell_type_id_d072b74d" ON public."battDB_cell" USING btree (type_id);
 
 
 --
--- Name: battDB_cellbatch_manufacturer_id_49a0f329; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_cellbatch_manufacturer_id_49a0f329; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_cellbatch_manufacturer_id_49a0f329" ON public."battDB_cellbatch" USING btree (manufacturer_id);
 
 
 --
--- Name: battDB_cellbatch_name_28a7d909_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_cellbatch_name_28a7d909_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_cellbatch_name_28a7d909_like" ON public."battDB_cellbatch" USING btree (name varchar_pattern_ops);
 
 
 --
--- Name: battDB_cellconfig_name_ba125201_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_cellconfig_name_ba125201_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_cellconfig_name_ba125201_like" ON public."battDB_cellconfig" USING btree (name varchar_pattern_ops);
 
 
 --
--- Name: battDB_celltype_name_7f83c1ea_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_celltype_name_7f83c1ea_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_celltype_name_7f83c1ea_like" ON public."battDB_celltype" USING btree (name varchar_pattern_ops);
 
 
 --
--- Name: battDB_datarange_dataFile_id_ea79f7c6; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_datarange_dataFile_id_ea79f7c6; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_datarange_dataFile_id_ea79f7c6" ON public."battDB_datarange" USING btree ("dataFile_id");
 
 
 --
--- Name: battDB_equipment_name_85e8697e_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_equipment_name_85e8697e_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_equipment_name_85e8697e_like" ON public."battDB_equipment" USING btree (name varchar_pattern_ops);
 
 
 --
--- Name: battDB_equipment_type_id_92966c47; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_equipment_type_id_92966c47; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_equipment_type_id_92966c47" ON public."battDB_equipment" USING btree (type_id);
 
 
 --
--- Name: battDB_equipmenttype_manufacturer_id_35788864; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_equipmenttype_manufacturer_id_35788864; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_equipmenttype_manufacturer_id_35788864" ON public."battDB_equipmenttype" USING btree (manufacturer_id);
 
 
 --
--- Name: battDB_equipmenttype_name_f6eb8e24_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_equipmenttype_name_f6eb8e24_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_equipmenttype_name_f6eb8e24_like" ON public."battDB_equipmenttype" USING btree (name varchar_pattern_ops);
 
 
 --
--- Name: battDB_experiment_apparatus_id_5c682616; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experiment_apparatus_id_5c682616; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experiment_apparatus_id_5c682616" ON public."battDB_experiment" USING btree (apparatus_id);
 
 
 --
--- Name: battDB_experiment_cellConfig_id_2d8d4638; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experiment_cellConfig_id_2d8d4638; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experiment_cellConfig_id_2d8d4638" ON public."battDB_experiment" USING btree ("cellConfig_id");
 
 
 --
--- Name: battDB_experiment_cells_cell_id_b488e145; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experiment_cells_cell_id_b488e145; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experiment_cells_cell_id_b488e145" ON public."battDB_experiment_cells" USING btree (cell_id);
 
 
 --
--- Name: battDB_experiment_cells_experiment_id_9842179e; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experiment_cells_experiment_id_9842179e; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experiment_cells_experiment_id_9842179e" ON public."battDB_experiment_cells" USING btree (experiment_id);
 
 
 --
--- Name: battDB_experiment_name_4a1b5666; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experiment_name_4a1b5666; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experiment_name_4a1b5666" ON public."battDB_experiment" USING btree (name);
 
 
 --
--- Name: battDB_experiment_name_4a1b5666_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experiment_name_4a1b5666_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experiment_name_4a1b5666_like" ON public."battDB_experiment" USING btree (name varchar_pattern_ops);
 
 
 --
--- Name: battDB_experiment_owner_id_ebf94468; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experiment_owner_id_ebf94468; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experiment_owner_id_ebf94468" ON public."battDB_experiment" USING btree (owner_id);
 
 
 --
--- Name: battDB_experiment_protocol_id_ed0e9fcd; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experiment_protocol_id_ed0e9fcd; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experiment_protocol_id_ed0e9fcd" ON public."battDB_experiment" USING btree (protocol_id);
 
 
 --
--- Name: battDB_experimentalapparat_equipment_id_807fef97; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparat_equipment_id_807fef97; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experimentalapparat_equipment_id_807fef97" ON public."battDB_experimentalapparatus_testEquipment" USING btree (equipment_id);
 
 
 --
--- Name: battDB_experimentalapparat_experimentalapparatus_id_4d800d2c; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparat_experimentalapparatus_id_4d800d2c; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experimentalapparat_experimentalapparatus_id_4d800d2c" ON public."battDB_experimentalapparatus_testEquipment" USING btree (experimentalapparatus_id);
 
 
 --
--- Name: battDB_experimentalapparatus_name_fae4873b_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus_name_fae4873b_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experimentalapparatus_name_fae4873b_like" ON public."battDB_experimentalapparatus" USING btree (name varchar_pattern_ops);
 
 
 --
--- Name: battDB_experimentdatafile__experimentdatafile_id_315ba0e0; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile__experimentdatafile_id_315ba0e0; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experimentdatafile__experimentdatafile_id_315ba0e0" ON public."battDB_experimentdatafile_import_columns" USING btree (experimentdatafile_id);
 
 
 --
--- Name: battDB_experimentdatafile_experiment_id_de169b40; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_experiment_id_de169b40; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experimentdatafile_experiment_id_de169b40" ON public."battDB_experimentdatafile" USING btree (experiment_id);
 
 
 --
--- Name: battDB_experimentdatafile_import_columns_signaltype_id_b2b26ce7; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns_signaltype_id_b2b26ce7; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experimentdatafile_import_columns_signaltype_id_b2b26ce7" ON public."battDB_experimentdatafile_import_columns" USING btree (signaltype_id);
 
 
 --
--- Name: battDB_experimentdatafile_machine_id_383367b5; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_machine_id_383367b5; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experimentdatafile_machine_id_383367b5" ON public."battDB_experimentdatafile" USING btree (machine_id);
 
 
 --
--- Name: battDB_manufacturer_name_df40b107_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_manufacturer_name_df40b107_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_manufacturer_name_df40b107_like" ON public."battDB_manufacturer" USING btree (name varchar_pattern_ops);
 
 
 --
--- Name: battDB_testprotocol_name_62280eb8_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: battDB_testprotocol_name_62280eb8_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_testprotocol_name_62280eb8_like" ON public."battDB_testprotocol" USING btree (name varchar_pattern_ops);
 
 
 --
--- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: tom
+-- Name: common_org_head_id_b9c2d616; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_org_head_id_b9c2d616 ON public.common_org USING btree (head_id);
+
+
+--
+-- Name: common_org_name_062cae2a_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_org_name_062cae2a_like ON public.common_org USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: common_org_parent_id_134490e8; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_org_parent_id_134490e8 ON public.common_org USING btree (parent_id);
+
+
+--
+-- Name: common_paper_DOI_14ee925c_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "common_paper_DOI_14ee925c_like" ON public.common_paper USING btree ("DOI" varchar_pattern_ops);
+
+
+--
+-- Name: common_paper_org_owners_org_id_200d0834; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_paper_org_owners_org_id_200d0834 ON public.common_paper_org_owners USING btree (org_id);
+
+
+--
+-- Name: common_paper_org_owners_paper_id_bb50396c; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_paper_org_owners_paper_id_bb50396c ON public.common_paper_org_owners USING btree (paper_id);
+
+
+--
+-- Name: common_paper_paper_tag_096143a0_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_paper_paper_tag_096143a0_like ON public.common_paper USING btree (tag varchar_pattern_ops);
+
+
+--
+-- Name: common_paper_publisher_id_a70e3e7b; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_paper_publisher_id_a70e3e7b ON public.common_paper USING btree (publisher_id);
+
+
+--
+-- Name: common_person_email_6cd74e84_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_person_email_6cd74e84_like ON public.common_person USING btree (email varchar_pattern_ops);
+
+
+--
+-- Name: common_person_org_id_fa830db5; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_person_org_id_fa830db5 ON public.common_person USING btree (org_id);
+
+
+--
+-- Name: dfndb_compositionpart_compound_id_98d443d4; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_compositionpart_compound_id_98d443d4 ON public.dfndb_compositionpart USING btree (compound_id);
+
+
+--
+-- Name: dfndb_compound_formula_a96abe08_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_compound_formula_a96abe08_like ON public.dfndb_compound USING btree (formula varchar_pattern_ops);
+
+
+--
+-- Name: dfndb_compound_name_4c13306b_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_compound_name_4c13306b_like ON public.dfndb_compound USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: dfndb_data_material_id_2ecfb612; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_data_material_id_2ecfb612 ON public.dfndb_data USING btree (material_id);
+
+
+--
+-- Name: dfndb_data_name_46013f4f_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_data_name_46013f4f_like ON public.dfndb_data USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: dfndb_data_org_owner_id_896a5401; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_data_org_owner_id_896a5401 ON public.dfndb_data USING btree (org_owner_id);
+
+
+--
+-- Name: dfndb_data_owner_id_35f0946e; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_data_owner_id_35f0946e ON public.dfndb_data USING btree (user_owner_id);
+
+
+--
+-- Name: dfndb_data_paper_id_77124c38; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_data_paper_id_77124c38 ON public.dfndb_data USING btree (paper_id);
+
+
+--
+-- Name: dfndb_data_parameter_id_02919aca; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_data_parameter_id_02919aca ON public.dfndb_data USING btree (parameter_id);
+
+
+--
+-- Name: dfndb_material_composition_compositionpart_id_802a1677; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_material_composition_compositionpart_id_802a1677 ON public.dfndb_material_composition USING btree (compositionpart_id);
+
+
+--
+-- Name: dfndb_material_composition_material_id_8322ced7; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_material_composition_material_id_8322ced7 ON public.dfndb_material_composition USING btree (material_id);
+
+
+--
+-- Name: dfndb_material_name_778380d5_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_material_name_778380d5_like ON public.dfndb_material USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: dfndb_material_org_owner_id_1f616a41; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_material_org_owner_id_1f616a41 ON public.dfndb_material USING btree (org_owner_id);
+
+
+--
+-- Name: dfndb_material_owner_id_d08667ca; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_material_owner_id_d08667ca ON public.dfndb_material USING btree (user_owner_id);
+
+
+--
+-- Name: dfndb_method_name_c09971a5_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_method_name_c09971a5_like ON public.dfndb_method USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: dfndb_method_org_owner_id_9fdfc426; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_method_org_owner_id_9fdfc426 ON public.dfndb_method USING btree (org_owner_id);
+
+
+--
+-- Name: dfndb_method_owner_id_a24ddb1e; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_method_owner_id_a24ddb1e ON public.dfndb_method USING btree (user_owner_id);
+
+
+--
+-- Name: dfndb_parameter_name_601c2fdd_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_parameter_name_601c2fdd_like ON public.dfndb_parameter USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: dfndb_parameter_org_owner_id_9f83ea82; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_parameter_org_owner_id_9f83ea82 ON public.dfndb_parameter USING btree (org_owner_id);
+
+
+--
+-- Name: dfndb_parameter_owner_id_870086c2; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_parameter_owner_id_870086c2 ON public.dfndb_parameter USING btree (user_owner_id);
+
+
+--
+-- Name: dfndb_parameter_symbol_fd7c4ad6_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_parameter_symbol_fd7c4ad6_like ON public.dfndb_parameter USING btree (symbol varchar_pattern_ops);
+
+
+--
+-- Name: dfndb_parameter_unit_id_0d7cce7d; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_parameter_unit_id_0d7cce7d ON public.dfndb_parameter USING btree (unit_id);
+
+
+--
+-- Name: dfndb_quantityunit_name_62125fc1_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_quantityunit_name_62125fc1_like ON public.dfndb_quantityunit USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: dfndb_quantityunit_symbol_ae2875ca_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_quantityunit_symbol_ae2875ca_like ON public.dfndb_quantityunit USING btree (symbol varchar_pattern_ops);
+
+
+--
+-- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON public.django_admin_log USING btree (content_type_id);
 
 
 --
--- Name: django_admin_log_user_id_c564eba6; Type: INDEX; Schema: public; Owner: tom
+-- Name: django_admin_log_user_id_c564eba6; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX django_admin_log_user_id_c564eba6 ON public.django_admin_log USING btree (user_id);
 
 
 --
--- Name: django_plotly_dash_dashapp_instance_name_b5da5a90_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: django_plotly_dash_dashapp_instance_name_b5da5a90_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX django_plotly_dash_dashapp_instance_name_b5da5a90_like ON public.django_plotly_dash_dashapp USING btree (instance_name varchar_pattern_ops);
 
 
 --
--- Name: django_plotly_dash_dashapp_slug_78afbcd4_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: django_plotly_dash_dashapp_slug_78afbcd4_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX django_plotly_dash_dashapp_slug_78afbcd4_like ON public.django_plotly_dash_dashapp USING btree (slug varchar_pattern_ops);
 
 
 --
--- Name: django_plotly_dash_dashapp_stateless_app_id_220444de; Type: INDEX; Schema: public; Owner: tom
+-- Name: django_plotly_dash_dashapp_stateless_app_id_220444de; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX django_plotly_dash_dashapp_stateless_app_id_220444de ON public.django_plotly_dash_dashapp USING btree (stateless_app_id);
 
 
 --
--- Name: django_plotly_dash_statelessapp_app_name_701b74bd_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: django_plotly_dash_statelessapp_app_name_701b74bd_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX django_plotly_dash_statelessapp_app_name_701b74bd_like ON public.django_plotly_dash_statelessapp USING btree (app_name varchar_pattern_ops);
 
 
 --
--- Name: django_plotly_dash_statelessapp_slug_645fc52c_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: django_plotly_dash_statelessapp_slug_645fc52c_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX django_plotly_dash_statelessapp_slug_645fc52c_like ON public.django_plotly_dash_statelessapp USING btree (slug varchar_pattern_ops);
 
 
 --
--- Name: django_session_expire_date_a5c62663; Type: INDEX; Schema: public; Owner: tom
+-- Name: django_session_expire_date_a5c62663; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX django_session_expire_date_a5c62663 ON public.django_session USING btree (expire_date);
 
 
 --
--- Name: django_session_session_key_c0390e0f_like; Type: INDEX; Schema: public; Owner: tom
+-- Name: django_session_session_key_c0390e0f_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session USING btree (session_key varchar_pattern_ops);
 
 
 --
--- Name: auth_group_permissions auth_group_permissio_permission_id_84c5c92e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_group_permissions auth_group_permissio_permission_id_84c5c92e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_group_permissions
@@ -2888,7 +4194,7 @@ ALTER TABLE ONLY public.auth_group_permissions
 
 
 --
--- Name: auth_group_permissions auth_group_permissions_group_id_b120cbf9_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_group_permissions auth_group_permissions_group_id_b120cbf9_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_group_permissions
@@ -2896,7 +4202,7 @@ ALTER TABLE ONLY public.auth_group_permissions
 
 
 --
--- Name: auth_permission auth_permission_content_type_id_2f476e4b_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_permission auth_permission_content_type_id_2f476e4b_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_permission
@@ -2904,7 +4210,7 @@ ALTER TABLE ONLY public.auth_permission
 
 
 --
--- Name: auth_user_groups auth_user_groups_group_id_97559544_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_user_groups auth_user_groups_group_id_97559544_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_user_groups
@@ -2912,7 +4218,7 @@ ALTER TABLE ONLY public.auth_user_groups
 
 
 --
--- Name: auth_user_groups auth_user_groups_user_id_6a12ed8b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_user_groups auth_user_groups_user_id_6a12ed8b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_user_groups
@@ -2920,7 +4226,7 @@ ALTER TABLE ONLY public.auth_user_groups
 
 
 --
--- Name: auth_user_user_permissions auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_user_user_permissions auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_user_user_permissions
@@ -2928,7 +4234,7 @@ ALTER TABLE ONLY public.auth_user_user_permissions
 
 
 --
--- Name: auth_user_user_permissions auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: auth_user_user_permissions auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.auth_user_user_permissions
@@ -2936,7 +4242,7 @@ ALTER TABLE ONLY public.auth_user_user_permissions
 
 
 --
--- Name: battDB_cell battDB_cell_batch_id_1203f48e_fk_battDB_cellbatch_id; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_cell battDB_cell_batch_id_1203f48e_fk_battDB_cellbatch_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_cell"
@@ -2944,7 +4250,7 @@ ALTER TABLE ONLY public."battDB_cell"
 
 
 --
--- Name: battDB_cell battDB_cell_type_id_d072b74d_fk_battDB_celltype_id; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_cell battDB_cell_type_id_d072b74d_fk_battDB_celltype_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_cell"
@@ -2952,7 +4258,7 @@ ALTER TABLE ONLY public."battDB_cell"
 
 
 --
--- Name: battDB_cellbatch battDB_cellbatch_manufacturer_id_49a0f329_fk_battDB_ma; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_cellbatch battDB_cellbatch_manufacturer_id_49a0f329_fk_battDB_ma; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_cellbatch"
@@ -2960,7 +4266,7 @@ ALTER TABLE ONLY public."battDB_cellbatch"
 
 
 --
--- Name: battDB_datarange battDB_datarange_dataFile_id_ea79f7c6_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_datarange battDB_datarange_dataFile_id_ea79f7c6_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_datarange"
@@ -2968,7 +4274,7 @@ ALTER TABLE ONLY public."battDB_datarange"
 
 
 --
--- Name: battDB_equipment battDB_equipment_type_id_92966c47_fk_battDB_equipmenttype_id; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_equipment battDB_equipment_type_id_92966c47_fk_battDB_equipmenttype_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_equipment"
@@ -2976,7 +4282,7 @@ ALTER TABLE ONLY public."battDB_equipment"
 
 
 --
--- Name: battDB_equipmenttype battDB_equipmenttype_manufacturer_id_35788864_fk_battDB_ma; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_equipmenttype battDB_equipmenttype_manufacturer_id_35788864_fk_battDB_ma; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_equipmenttype"
@@ -2984,7 +4290,7 @@ ALTER TABLE ONLY public."battDB_equipmenttype"
 
 
 --
--- Name: battDB_experiment battDB_experiment_apparatus_id_5c682616_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experiment battDB_experiment_apparatus_id_5c682616_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experiment"
@@ -2992,7 +4298,7 @@ ALTER TABLE ONLY public."battDB_experiment"
 
 
 --
--- Name: battDB_experiment_cells battDB_experiment_ce_experiment_id_9842179e_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experiment_cells battDB_experiment_ce_experiment_id_9842179e_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experiment_cells"
@@ -3000,7 +4306,7 @@ ALTER TABLE ONLY public."battDB_experiment_cells"
 
 
 --
--- Name: battDB_experiment battDB_experiment_cellConfig_id_2d8d4638_fk_battDB_ce; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experiment battDB_experiment_cellConfig_id_2d8d4638_fk_battDB_ce; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experiment"
@@ -3008,7 +4314,7 @@ ALTER TABLE ONLY public."battDB_experiment"
 
 
 --
--- Name: battDB_experiment_cells battDB_experiment_cells_cell_id_b488e145_fk_battDB_cell_id; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experiment_cells battDB_experiment_cells_cell_id_b488e145_fk_battDB_cell_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experiment_cells"
@@ -3016,7 +4322,7 @@ ALTER TABLE ONLY public."battDB_experiment_cells"
 
 
 --
--- Name: battDB_experiment battDB_experiment_owner_id_ebf94468_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experiment battDB_experiment_owner_id_ebf94468_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experiment"
@@ -3024,7 +4330,7 @@ ALTER TABLE ONLY public."battDB_experiment"
 
 
 --
--- Name: battDB_experiment battDB_experiment_protocol_id_ed0e9fcd_fk_battDB_te; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experiment battDB_experiment_protocol_id_ed0e9fcd_fk_battDB_te; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experiment"
@@ -3032,7 +4338,7 @@ ALTER TABLE ONLY public."battDB_experiment"
 
 
 --
--- Name: battDB_experimentalapparatus_testEquipment battDB_experimentala_equipment_id_807fef97_fk_battDB_eq; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus_testEquipment battDB_experimentala_equipment_id_807fef97_fk_battDB_eq; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentalapparatus_testEquipment"
@@ -3040,7 +4346,7 @@ ALTER TABLE ONLY public."battDB_experimentalapparatus_testEquipment"
 
 
 --
--- Name: battDB_experimentalapparatus_testEquipment battDB_experimentala_experimentalapparatu_4d800d2c_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentalapparatus_testEquipment battDB_experimentala_experimentalapparatu_4d800d2c_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentalapparatus_testEquipment"
@@ -3048,7 +4354,7 @@ ALTER TABLE ONLY public."battDB_experimentalapparatus_testEquipment"
 
 
 --
--- Name: battDB_experimentdatafile battDB_experimentdat_experiment_id_de169b40_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile battDB_experimentdat_experiment_id_de169b40_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentdatafile"
@@ -3056,7 +4362,7 @@ ALTER TABLE ONLY public."battDB_experimentdatafile"
 
 
 --
--- Name: battDB_experimentdatafile_import_columns battDB_experimentdat_experimentdatafile_i_315ba0e0_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns battDB_experimentdat_experimentdatafile_i_315ba0e0_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
@@ -3064,7 +4370,7 @@ ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
 
 
 --
--- Name: battDB_experimentdatafile battDB_experimentdat_machine_id_383367b5_fk_battDB_eq; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile battDB_experimentdat_machine_id_383367b5_fk_battDB_eq; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentdatafile"
@@ -3072,7 +4378,7 @@ ALTER TABLE ONLY public."battDB_experimentdatafile"
 
 
 --
--- Name: battDB_experimentdatafile_import_columns battDB_experimentdat_signaltype_id_b2b26ce7_fk_battDB_si; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: battDB_experimentdatafile_import_columns battDB_experimentdat_signaltype_id_b2b26ce7_fk_battDB_si; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
@@ -3080,7 +4386,183 @@ ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
 
 
 --
--- Name: django_admin_log django_admin_log_content_type_id_c4bce8eb_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: common_org common_org_head_id_b9c2d616_fk_common_person_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_org
+    ADD CONSTRAINT common_org_head_id_b9c2d616_fk_common_person_id FOREIGN KEY (head_id) REFERENCES public.common_person(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_org common_org_parent_id_134490e8_fk_common_org_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_org
+    ADD CONSTRAINT common_org_parent_id_134490e8_fk_common_org_id FOREIGN KEY (parent_id) REFERENCES public.common_org(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_paper_org_owners common_paper_org_owners_org_id_200d0834_fk_common_org_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_paper_org_owners
+    ADD CONSTRAINT common_paper_org_owners_org_id_200d0834_fk_common_org_id FOREIGN KEY (org_id) REFERENCES public.common_org(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_paper_org_owners common_paper_org_owners_paper_id_bb50396c_fk_common_paper_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_paper_org_owners
+    ADD CONSTRAINT common_paper_org_owners_paper_id_bb50396c_fk_common_paper_id FOREIGN KEY (paper_id) REFERENCES public.common_paper(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_paper common_paper_publisher_id_a70e3e7b_fk_common_org_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_paper
+    ADD CONSTRAINT common_paper_publisher_id_a70e3e7b_fk_common_org_id FOREIGN KEY (publisher_id) REFERENCES public.common_org(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_person common_person_authUser_id_234da49e_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_person
+    ADD CONSTRAINT "common_person_authUser_id_234da49e_fk_auth_user_id" FOREIGN KEY ("authUser_id") REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_person common_person_org_id_fa830db5_fk_common_org_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_person
+    ADD CONSTRAINT common_person_org_id_fa830db5_fk_common_org_id FOREIGN KEY (org_id) REFERENCES public.common_org(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_compositionpart dfndb_compositionpart_compound_id_98d443d4_fk_dfndb_compound_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_compositionpart
+    ADD CONSTRAINT dfndb_compositionpart_compound_id_98d443d4_fk_dfndb_compound_id FOREIGN KEY (compound_id) REFERENCES public.dfndb_compound(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_data dfndb_data_material_id_2ecfb612_fk_dfndb_material_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_data
+    ADD CONSTRAINT dfndb_data_material_id_2ecfb612_fk_dfndb_material_id FOREIGN KEY (material_id) REFERENCES public.dfndb_material(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_data dfndb_data_org_owner_id_896a5401_fk_common_org_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_data
+    ADD CONSTRAINT dfndb_data_org_owner_id_896a5401_fk_common_org_id FOREIGN KEY (org_owner_id) REFERENCES public.common_org(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_data dfndb_data_paper_id_77124c38_fk_common_paper_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_data
+    ADD CONSTRAINT dfndb_data_paper_id_77124c38_fk_common_paper_id FOREIGN KEY (paper_id) REFERENCES public.common_paper(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_data dfndb_data_parameter_id_02919aca_fk_dfndb_parameter_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_data
+    ADD CONSTRAINT dfndb_data_parameter_id_02919aca_fk_dfndb_parameter_id FOREIGN KEY (parameter_id) REFERENCES public.dfndb_parameter(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_data dfndb_data_user_owner_id_e6c8f500_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_data
+    ADD CONSTRAINT dfndb_data_user_owner_id_e6c8f500_fk_auth_user_id FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_material_composition dfndb_material_compo_compositionpart_id_802a1677_fk_dfndb_com; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_material_composition
+    ADD CONSTRAINT dfndb_material_compo_compositionpart_id_802a1677_fk_dfndb_com FOREIGN KEY (compositionpart_id) REFERENCES public.dfndb_compositionpart(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_material_composition dfndb_material_compo_material_id_8322ced7_fk_dfndb_mat; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_material_composition
+    ADD CONSTRAINT dfndb_material_compo_material_id_8322ced7_fk_dfndb_mat FOREIGN KEY (material_id) REFERENCES public.dfndb_material(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_material dfndb_material_org_owner_id_1f616a41_fk_common_org_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_material
+    ADD CONSTRAINT dfndb_material_org_owner_id_1f616a41_fk_common_org_id FOREIGN KEY (org_owner_id) REFERENCES public.common_org(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_material dfndb_material_user_owner_id_a8f132d3_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_material
+    ADD CONSTRAINT dfndb_material_user_owner_id_a8f132d3_fk_auth_user_id FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_method dfndb_method_org_owner_id_9fdfc426_fk_common_org_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_method
+    ADD CONSTRAINT dfndb_method_org_owner_id_9fdfc426_fk_common_org_id FOREIGN KEY (org_owner_id) REFERENCES public.common_org(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_method dfndb_method_user_owner_id_7e4e586f_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_method
+    ADD CONSTRAINT dfndb_method_user_owner_id_7e4e586f_fk_auth_user_id FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_parameter dfndb_parameter_org_owner_id_9f83ea82_fk_common_org_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_parameter
+    ADD CONSTRAINT dfndb_parameter_org_owner_id_9f83ea82_fk_common_org_id FOREIGN KEY (org_owner_id) REFERENCES public.common_org(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_parameter dfndb_parameter_unit_id_0d7cce7d_fk_dfndb_quantityunit_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_parameter
+    ADD CONSTRAINT dfndb_parameter_unit_id_0d7cce7d_fk_dfndb_quantityunit_id FOREIGN KEY (unit_id) REFERENCES public.dfndb_quantityunit(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_parameter dfndb_parameter_user_owner_id_18c94c30_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_parameter
+    ADD CONSTRAINT dfndb_parameter_user_owner_id_18c94c30_fk_auth_user_id FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_admin_log django_admin_log_content_type_id_c4bce8eb_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_admin_log
@@ -3088,7 +4570,7 @@ ALTER TABLE ONLY public.django_admin_log
 
 
 --
--- Name: django_admin_log django_admin_log_user_id_c564eba6_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: django_admin_log django_admin_log_user_id_c564eba6_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_admin_log
@@ -3096,7 +4578,7 @@ ALTER TABLE ONLY public.django_admin_log
 
 
 --
--- Name: django_plotly_dash_dashapp django_plotly_dash_d_stateless_app_id_220444de_fk_django_pl; Type: FK CONSTRAINT; Schema: public; Owner: tom
+-- Name: django_plotly_dash_dashapp django_plotly_dash_d_stateless_app_id_220444de_fk_django_pl; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.django_plotly_dash_dashapp
