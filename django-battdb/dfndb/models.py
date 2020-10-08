@@ -3,21 +3,10 @@ import idutils # for DOI validation: https://idutils.readthedocs.io/en/latest/
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.contrib.auth import get_user_model
 import datetime
+import common.models as cm
 
 # Create your models here.
-
-# any model can inherit this one to add these columns
-class BaseModel(models.Model):
-   name =  models.CharField(max_length=100, unique=True)
-   owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
-   created_on = models.DateField(auto_now_add=True)
-   accepted = models.BooleanField(default=False)
-   class Meta:
-      abstract=True  # this tells Django not to create a table for this model - it's an abstract base class
-   def __str__(self):
-      return self.name
 
 class DOIField(models.CharField):
    description = "Digital Object Identifier (DOI)"
@@ -80,7 +69,7 @@ class CompositionPart(models.Model):
   def __str__(self):
     return "%s%d"%(self.compound.formula,self.amount)
 
-class Material(BaseModel):
+class Material(cm.BaseModel):
   composition = models.ManyToManyField(CompositionPart)
   MATERIAL_TYPE_CHOICES = [
      (1, 'Anode'),
@@ -93,7 +82,7 @@ class Material(BaseModel):
   def __str__(self):
     return self.name
 
-class Method(BaseModel):
+class Method(cm.BaseModel):
   # what does the 'method class' do??
   # in any case it's a bad idea to have something called class, it gets confusing
   # Using 'choices' will cause Django to use multiple choice validators & drop down menus
@@ -112,7 +101,7 @@ class QuantityUnit(models.Model):
   def __str__(self):
     return "%s/%s"%(self.name,self.symbol)
 
-class Parameter(BaseModel):
+class Parameter(cm.BaseModel):
   symbol = models.CharField(max_length=40, unique=True)
   PARAM_TYPE_CHOICES = [
     (1, 'ParamType1'),
@@ -124,7 +113,7 @@ class Parameter(BaseModel):
   def __str__(self):
     return "%s: %s"%(self.name,self.symbol)
 
-class Data(BaseModel):
+class Data(cm.BaseModel):
   paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
   parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
   material = models.ForeignKey(Material, on_delete=models.CASCADE)
