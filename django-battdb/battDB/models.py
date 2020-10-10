@@ -36,10 +36,6 @@ class TestProtocol(HasAttributes):
     description = models.TextField()
     parameters=JSONField(default=dict, blank=True)
 
-# Equipment/software Manufacturer table.
-# FIXME: Is this a case of over-normalisation? Could be a text field within EquipmentType.
-class Manufacturer(HasAttributes):
-    pass
 
 # Equipment Type - e.g. model number of cycler machine
 def equipmentType_schema():
@@ -47,7 +43,7 @@ def equipmentType_schema():
        "channels":None,
     }
 class EquipmentType(HasAttributes):
-    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, null=True, blank=True)
+    manufacturer = models.ForeignKey(cm.Org, on_delete=models.SET_NULL, null=True, blank=True)
 EquipmentType._meta.get_field('attributes').default = equipmentType_schema
 
 # Equipment - e.g. Bob's cycler
@@ -78,7 +74,7 @@ CellType._meta.get_field('attributes').default = cell_schema
 
 class CellBatch(HasAttributes):
     manufactured_on = models.DateField(null=True, blank=True)
-    manufacturer    = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, null=True, blank=True)
+    manufacturer    = models.ForeignKey(cm.Org, on_delete=models.SET_NULL, null=True, blank=True)
     cells_schema = JSONField(default=dict, blank=True)
     class Meta:
        verbose_name_plural="CellBatches"
