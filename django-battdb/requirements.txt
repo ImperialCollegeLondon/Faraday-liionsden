@@ -14,3 +14,4 @@ xlrd
 django-extensions
 django-ipware
 pydotplus
+coreapi-cli

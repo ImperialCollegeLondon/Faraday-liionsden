@@ -13,6 +13,8 @@ class NamedModel(models.Model):
        return self.name
     class Meta:
       abstract=True  # this tells Django not to create a table for this model - it's an abstract base class
+      
+# base class for any model having a user owner
 
 ORG_TYPE_UNI = 1
 ORG_TYPE_PUB = 2
@@ -100,3 +102,4 @@ class Paper(models.Model):
 #     self.tag = slugify(self.authors + self.year + self.title)
 #     super().save(*args,**kwargs)
   # TODO: ModelForm paper.publisher = filter on Org where Org.type = PUBLISHER
+
