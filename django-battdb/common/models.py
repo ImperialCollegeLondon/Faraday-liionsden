@@ -1,59 +1,78 @@
 from django.db import models
+from django.db.models import JSONField
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
 import idutils # for DOI validation: https://idutils.readthedocs.io/en/latest/
 import datetime
 
-#TODOnt: Add localised strings (l10n) using django_gettext
+#TODOnt: Add localised strings (l10n) using django_gettext for all string literals in this file
 
 # base class for any model having a unique name
-class NamedModel(models.Model):
-    name = models.CharField(max_length=32, unique=True)
+class HasName(models.Model):
+    name = models.CharField(max_length=128, unique=True, help_text="Unique name for this object")
     def __str__(self):
        return self.name
     class Meta:
       abstract=True  # this tells Django not to create a table for this model - it's an abstract base class
+
+
+# base for any model having a common object status field
+OBJ_STATUS_DRAFT = 10  # editable by user
+OBJ_STATUS_SUBMITTED = 20 # viewable by others
+OBJ_STATUS_ACCEPTED = 30 # status can be modified
+OBJ_STATUS_PUBLISHED = 40 # cannot be modified except by admin
+OBJ_STATUS_DELETED = 50 # hidden to all except admin
+
+class HasStatus(models.Model):
+   created_on = models.DateField(auto_now_add=True)
+   OBJ_STATUS = [
+            (OBJ_STATUS_DRAFT, 'Draft'),
+            (OBJ_STATUS_SUBMITTED, 'Submitted'),
+            (OBJ_STATUS_ACCEPTED, 'Accepted'),
+            (OBJ_STATUS_PUBLISHED, 'Published'),
+            (OBJ_STATUS_DELETED, 'Deleted'),
+       ]
+   status = models.PositiveSmallIntegerField(default=OBJ_STATUS_SUBMITTED, choices=OBJ_STATUS)
+   class Meta:
+      abstract=True    
+
+# base for any model whose objects belong to user and group objects
+class HasOwner(models.Model):
+   user_owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
+   #org_owner = models.ForeignKey('Org', on_delete=models.SET_NULL, null=True, blank=True)
+   class Meta:
+      abstract=True
+
+# base having JSON attributes
+class HasAttributes(models.Model):
+   attributes = JSONField(default=dict, blank=True, help_text="Optional metadata")
+   class Meta:
+      abstract=True
       
-# base class for any model having a user owner
+# inherit all the bases
+class BaseModel(HasName, HasStatus, HasOwner, HasAttributes):
+   class Meta:
+      abstract=True
 
-ORG_TYPE_UNI = 1
-ORG_TYPE_PUB = 2
-
+# describesd a person
+class Person(BaseModel):
+    pass
+ 
 # TODO: ModelForm Org.head = filter on Person WHERE Person.org = this
-class Org(NamedModel):
-   parent = models.ForeignKey('Org', null=True, blank=True, on_delete=models.SET_NULL, related_name='child_orgs')
-   head = models.ForeignKey('Person', null=True, blank=True, on_delete=models.SET_NULL, related_name='head_of')
-   ORG_TYPES = [
-     (ORG_TYPE_UNI, 'University'),
-     (ORG_TYPE_PUB, 'Publisher'),
-   ]
-   type = models.PositiveSmallIntegerField(choices=ORG_TYPES)
+class Org(BaseModel):
+   is_research = models.BooleanField(default=False)
+   is_publisher = models.BooleanField(default=False)
+   is_mfg_cells = models.BooleanField(default=False)
+   is_mfg_equip = models.BooleanField(default=False)
    website = models.URLField(null=True, blank=True)
 
 
-# this duplicates some stuff in the User model, maybe it's not needed at all
-class Person(models.Model):
-   authUser = models.OneToOneField(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
-   firstName = models.CharField(max_length=40)
-   lastName = models.CharField(max_length=40)
-   email=models.EmailField(unique=True,blank=True,null=True)
-   org = models.ForeignKey(Org, on_delete=models.SET_NULL, null=True, blank=True)
-   def __str__(self):
-       return self.firstName + " " + self.lastName
 
 #class UserRole
 
-# any model can inherit this one to add these columns
-class BaseModel(models.Model):
-   name =  models.CharField(max_length=100, unique=True)
-   user_owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
-   org_owner = models.ForeignKey(Org, on_delete=models.SET_NULL, null=True, blank=True)
-   created_on = models.DateField(auto_now_add=True)
-   accepted = models.BooleanField(default=False)
-   class Meta:
-      abstract=True
-   def __str__(self):
-      return self.name
+
+
 
 
 class DOIField(models.CharField):
@@ -81,7 +100,7 @@ class YearField(models.IntegerField):
       if (value > datetime.date.today().year):
          raise ValidationError("Invalid year: Cannot be in the future")
       if (value < 1791):
-         raise ValidationError("Invalid year: Cannot predate the field of Electrochemistry!")
+         raise ValidationError("Invalid year: Cannot pre-date the field of Electrochemistry!")
 
 class Paper(models.Model):
    DOI = DOIField(unique=True, blank=True, null=True, help_text="Paper DOI. In future, this could populate the other fields automatically.")

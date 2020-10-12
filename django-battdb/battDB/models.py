@@ -1,24 +1,15 @@
 import os
 import traceback
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import JSONField
 from django.contrib.postgres.fields import ArrayField
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 import common.models as cm
 import dfndb.models as dfn
 #from jsonfield_schema import JSONSchema
 
-
-# Base class for models having a name and JSON attributes.
-class HasAttributes(models.Model):
-    name = models.CharField(max_length=32, unique=True)
-    attributes = JSONField(default=dict, blank=True)
-    def __str__(self):
-       return self.name
-    class Meta:
-        abstract = True
 
 # This model defines a table of signal types e.g. Cell_voltage.
 # Experiments using the same set of SignalTypes could be assumed to be comparable (issue #16).
@@ -32,7 +23,7 @@ class SignalType(models.Model):
 
 # Experient protocol definitions
 # TODO: Harmonise with PyBaMM protocol specifications (issue #18)
-class TestProtocol(HasAttributes):
+class TestProtocol(cm.BaseModel):
     description = models.TextField()
     parameters=JSONField(default=dict, blank=True)
 
@@ -42,20 +33,18 @@ def equipmentType_schema():
     return {
        "channels":None,
     }
-class EquipmentType(HasAttributes):
+class EquipmentType(cm.BaseModel):
     manufacturer = models.ForeignKey(cm.Org, on_delete=models.SET_NULL, null=True, blank=True)
-EquipmentType._meta.get_field('attributes').default = equipmentType_schema
+#EquipmentType._meta.get_field('attributes').default = equipmentType_schema
 
 # Equipment - e.g. Bob's cycler
-class Equipment(HasAttributes):
+class Equipment(cm.BaseModel):
     type = models.ForeignKey(EquipmentType, on_delete=models.SET_NULL, null=True, blank=True)
     serialNo = models.CharField(max_length=64)
     class Meta:
        verbose_name_plural="Equipment"
 
-def cellSeparator_schema():
-   pass
-
+# TODO: These should be actual enforcable JSON schemas, not just a collection of default values. (Issue #23)
 def cell_schema():
     return {
        "Description":"Enter cell text description here - add parameters below",
@@ -66,24 +55,26 @@ def cell_schema():
        "electrode_material_neg":"example",
     }
 
-# Cell Type - e.g. Samsung 3000mAh 18650 rev B
-class CellType(HasAttributes):
-# ParentType = CellType?
+def cellSeparator_schema():
     pass
-CellType._meta.get_field('attributes').default = cell_schema
 
-class CellBatch(HasAttributes):
+# Cell Type - e.g. Samsung 3000mAh 18650 rev B
+class CellType(cm.BaseModel):
+    pass
+#CellType._meta.get_field('attributes').default = cell_schema
+
+class CellBatch(cm.BaseModel):
     manufactured_on = models.DateField(null=True, blank=True)
     manufacturer    = models.ForeignKey(cm.Org, on_delete=models.SET_NULL, null=True, blank=True)
     cells_schema = JSONField(default=dict, blank=True)
     class Meta:
        verbose_name_plural="CellBatches"
-CellBatch._meta.get_field('attributes').default = cell_schema
+#CellBatch._meta.get_field('attributes').default = cell_schema
 
-class Cell(HasAttributes):
+class Cell(cm.BaseModel):
     batch = models.ForeignKey(CellBatch, on_delete=models.SET_NULL, null=True, blank=True)
     type = models.ForeignKey(CellType, on_delete=models.SET_NULL, null=True, blank=True)
-Cell._meta.get_field('attributes').default = cell_schema
+#Cell._meta.get_field('attributes').default = cell_schema
 
 #class CellTypeConfig(models.Model):
 #    cellType=models.ForeignKey(CellType)
@@ -92,7 +83,7 @@ Cell._meta.get_field('attributes').default = cell_schema
 #    class Meta:
 #        ordering=('position_in_config',)
 
-class CellConfig(HasAttributes):
+class CellConfig(cm.BaseModel):
     # TODO: think about how to link cells into packs in a flexible way - supports idea #15 (SVG Diagrams)
     # e.g.:
     # cells = ManyToManyField(CellType, through=CellTypeConfig)
@@ -101,7 +92,7 @@ class CellConfig(HasAttributes):
 # Model class to represent a "system of equipment" - e.g. if more complicated than a standalone cycler machine, user can add descriptive JSON and a photo here
 # in future, this can act as a tempate to create new experiments
 # This replaces "New Sensor Configuration"
-class ExperimentalApparatus(HasAttributes):
+class ExperimentalApparatus(cm.BaseModel):
     testEquipment = models.ManyToManyField(Equipment)
     photo = models.ImageField(upload_to='apparatus_photos', null=True, blank=True)
     class Meta:

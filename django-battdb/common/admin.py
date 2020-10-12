@@ -9,12 +9,12 @@ from .models import *
 #    ], admin.ModelAdmin)
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = (["authUser", "firstName", "lastName", "email", "org"])
+    list_display = (["username", "first_name", "last_name", "email", "org"])
     list_filter = (["org"])
 
-admin.site.register([
-    Person,
-    ], PersonAdmin)
+#admin.site.register([
+  #  User,
+   # ], PersonAdmin)
 
 
 class OrgAdmin(admin.ModelAdmin):
