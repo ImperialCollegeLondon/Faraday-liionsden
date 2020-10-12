@@ -8,6 +8,7 @@ from django.urls import reverse
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 import common.models as cm
 import dfndb.models as dfn
+from .migration_dummy import *
 #from jsonfield_schema import JSONSchema
 
 
@@ -29,12 +30,27 @@ class TestProtocol(cm.BaseModel):
 
 
 # Equipment Type - e.g. model number of cycler machine
-def equipmentType_schema():
-    return {
-       "channels":None,
-    }
+#def equipmentType_schema():
+    #return {
+       #"channels":None,
+    #}
+
+# a physical thing
+class Device(cm.BaseModel):
+    pass
+
+# a type of thing
+class DeviceType(cm.BaseModel):
+    # validate: my manufacturer is an org with mfg_devices=True
+    pass
+
+# a batch of things produced to the same type specification
+class DeviceBatch(cm.BaseModel):
+    pass
+
 class EquipmentType(cm.BaseModel):
-    manufacturer = models.ForeignKey(cm.Org, on_delete=models.SET_NULL, null=True, blank=True)
+   # validate: my manufacturer is an org with mfg_equip=True
+   pass
 #EquipmentType._meta.get_field('attributes').default = equipmentType_schema
 
 # Equipment - e.g. Bob's cycler
@@ -55,8 +71,7 @@ def cell_schema():
        "electrode_material_neg":"example",
     }
 
-def cellSeparator_schema():
-    pass
+
 
 # Cell Type - e.g. Samsung 3000mAh 18650 rev B
 class CellType(cm.BaseModel):
@@ -93,10 +108,17 @@ class CellConfig(cm.BaseModel):
 # in future, this can act as a tempate to create new experiments
 # This replaces "New Sensor Configuration"
 class ExperimentalApparatus(cm.BaseModel):
-    testEquipment = models.ManyToManyField(Equipment)
+    testEquipment = models.ManyToManyField(Equipment, through='ApparatusEquipment')
     photo = models.ImageField(upload_to='apparatus_photos', null=True, blank=True)
     class Meta:
        verbose_name_plural="Experimental apparatus"
+       
+class ApparatusEquipment(models.Model):
+    name=models.CharField(max_length=80,blank=True)
+    Apparatus=models.ForeignKey(ExperimentalApparatus, on_delete=models.CASCADE)
+    Equipment=models.ForeignKey(Equipment, on_delete=models.CASCADE)
+    
+    
 
 # TODO: These should be actual enforcable JSON schemas, not just a collection of default values. (Issue #23)
 def experimentParameters_schema():
@@ -158,11 +180,14 @@ class Experiment(models.Model):
 # It is stored again as JSON within this class
 # Each defined "range" is pulled out and stored again as an ArrayField.
 # As yet unclear to me which is the best approach.
-class ExperimentDataFile(models.Model):
+
+class RawDataFile(cm.BaseModel):
     raw_data_file = models.FileField(upload_to='raw_data_files',null=True)
+
+class ExperimentDataFile(cm.BaseModel):
+    raw_data_file = models.OneToOneField(RawDataFile, on_delete=models.CASCADE)
     machine = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True, related_name='all_data')
     metadata = JSONField(default=resultMetadata_schema, blank=True)
-    data = JSONField(default=resultData_schema, blank=True, editable=True)
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True, related_name='data_files')
     import_columns = models.ManyToManyField(SignalType, blank=True)
     parameters = JSONField(default=experimentParameters_schema, blank=True)
@@ -177,7 +202,7 @@ class ExperimentDataFile(models.Model):
 # TODO: Write (or find) code to segment data into ranges.
 # Their data might overlap.
 # TODO: Convert this into a JSON Schema within ExperimentData - see Git issue #23
-class DataRange(models.Model):
+class DataRange(cm.BaseModel):
     dataFile = models.ForeignKey(ExperimentDataFile, on_delete=models.SET_NULL, null=True, blank=True, related_name='ranges')
     file_offset = models.PositiveIntegerField(default=0)
     label= models.CharField(max_length=32, null=True)

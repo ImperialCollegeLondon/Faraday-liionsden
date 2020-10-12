@@ -8,7 +8,7 @@ from .forms import ExperimentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import ProcessFormView
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
-from .serializers import DataSerializer
+from .serializers import *
 import matplotlib.pyplot as plt, mpld3
 import numpy as np
 import pandas as pd
@@ -17,6 +17,10 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.exceptions import ParseError
+from rest_framework.parsers import FileUploadParser
+from rest_framework import authentication, permissions
+from rest_framework.generics import CreateAPIView, GenericAPIView
 
 np.random.seed(9615)
 
@@ -226,3 +230,21 @@ def plotData(request):
     return HttpResponse(g)
 
 
+
+class UploadFileView(GenericAPIView):
+    model = RawDataFile
+    parser_class = (FileUploadParser,)
+    serializer_class=DataFileSerializer
+    #authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAdminUser]
+
+    def put(self, request, format=None):
+        if 'raw_data_file' not in request.data:
+            raise ParseError("Empty content")
+
+        f = request.data['raw_data_file']
+
+        RawDataFile.raw_data_file.save(f.name, f, save=True)
+        return Response(status=status.HTTP_201_CREATED)
+    def get(self, request, format=None):
+        return Response(status=status.HTTP_200_OK) 

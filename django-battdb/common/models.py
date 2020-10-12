@@ -10,17 +10,17 @@ import datetime
 
 # base class for any model having a unique name
 class HasName(models.Model):
-    name = models.CharField(max_length=128, unique=True, help_text="Unique name for this object")
+    name = models.CharField(max_length=128, unique=True, blank=True, null=True, help_text="Unique name for this object")
     def __str__(self):
-       return self.name
+       return str(self.name)
     class Meta:
       abstract=True  # this tells Django not to create a table for this model - it's an abstract base class
 
 
 # base for any model having a common object status field
-OBJ_STATUS_DRAFT = 10  # editable by user
-OBJ_STATUS_SUBMITTED = 20 # viewable by others
-OBJ_STATUS_ACCEPTED = 30 # status can be modified
+OBJ_STATUS_DRAFT = 10  # viewable and editable only by owner
+OBJ_STATUS_SUBMITTED = 20 # viewable by others, modifiable by owner
+OBJ_STATUS_ACCEPTED = 30 # cannot be modified by owner, except to return status to draft
 OBJ_STATUS_PUBLISHED = 40 # cannot be modified except by admin
 OBJ_STATUS_DELETED = 50 # hidden to all except admin
 
@@ -33,7 +33,7 @@ class HasStatus(models.Model):
             (OBJ_STATUS_PUBLISHED, 'Published'),
             (OBJ_STATUS_DELETED, 'Deleted'),
        ]
-   status = models.PositiveSmallIntegerField(default=OBJ_STATUS_SUBMITTED, choices=OBJ_STATUS)
+   status = models.PositiveSmallIntegerField(default=OBJ_STATUS_DRAFT, choices=OBJ_STATUS)
    class Meta:
       abstract=True    
 
@@ -51,7 +51,7 @@ class HasAttributes(models.Model):
       abstract=True
       
 # inherit all the bases
-class BaseModel(HasName, HasStatus, HasOwner, HasAttributes):
+class BaseModel(HasName,HasStatus, HasOwner, HasAttributes):
    class Meta:
       abstract=True
 
@@ -59,7 +59,7 @@ class BaseModel(HasName, HasStatus, HasOwner, HasAttributes):
 class Person(BaseModel):
     pass
  
-# TODO: ModelForm Org.head = filter on Person WHERE Person.org = this
+ # TODO: ModelForm Org.head = filter on Person WHERE Person.org = this
 class Org(BaseModel):
    is_research = models.BooleanField(default=False)
    is_publisher = models.BooleanField(default=False)
@@ -102,7 +102,7 @@ class YearField(models.IntegerField):
       if (value < 1791):
          raise ValidationError("Invalid year: Cannot pre-date the field of Electrochemistry!")
 
-class Paper(models.Model):
+class Paper(BaseModel):
    DOI = DOIField(unique=True, blank=True, null=True, help_text="Paper DOI. In future, this could populate the other fields automatically.")
    tag = models.SlugField(max_length=100, unique=True, help_text="Tag or 'slug' used to uniquely identify this paper. This will be auto-generated in future versions.")
    year = YearField(default=datetime.date.today().year)
@@ -112,9 +112,7 @@ class Paper(models.Model):
    publisher = models.ForeignKey(Org, on_delete=models.SET_NULL, null=True, blank=True)
    authors = models.CharField(max_length=500)
    url = models.URLField(null=True, blank=True) # blank=true means not a required field in forms. null=True means don't set NOT NULL in SQL
-   created_on = models.DateField(auto_now_add=True)
-   accepted = models.BooleanField(default=False, help_text="Has this paper been accepted for publication?")
-   def __str__(self):
+   def __unicode__(self):
      return self.tag
    # TODO: Validator which autogenerates 'tag' field from a 'slugification' of principal author surname + year + title
 #   def save(self, *args, **kwargs):

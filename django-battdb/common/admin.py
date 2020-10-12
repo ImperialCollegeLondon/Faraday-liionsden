@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django.contrib.postgres.fields import JSONField
+from jsoneditor.forms import JSONEditor
 
-# Register your models here.
 
 from .models import *
 
@@ -21,16 +22,29 @@ class OrgAdmin(admin.ModelAdmin):
     list_display = (["name"])
     list_filter = (["name"])
 
-admin.site.register([
-    Org,
-    ], OrgAdmin)
+#admin.site.register([
+#    Org,
+#    ], OrgAdmin)
 
-class PaperAdmin(admin.ModelAdmin):
+
+
+class BaseAdmin(admin.ModelAdmin):
+  #  list_display = (["name", "user_owner", "status",])
+#    list_filter = (["status", "user_owner"])
+
+    def get_changeform_initial_data(self, request):
+        get_data = super().get_changeform_initial_data(request)
+        get_data['user_owner'] = request.user.pk
+        return get_data
+  #  formfield_overrides = {
+   #     JSONField:{ 'widget':JSONEditor },
+    #}
+        
+        
+class PaperAdmin(BaseAdmin):
     list_display = (["title", "DOI", "year",])
     list_filter = (["year", "org_owners"])
 
 admin.site.register([
     Paper,
     ], PaperAdmin)
-
-
