@@ -6,6 +6,6 @@ from jsoneditor.forms import JSONEditor
 class ExperimentForm(forms.ModelForm):
     class Meta:
         model = Experiment
-        fields = ['name', 'date', 'apparatus', 'parameters']
-        widgets = {'date':AdminDateWidget(), 'parameters':JSONEditor()}
+        fields = ['name', 'date']
+#       widgets = {'date':AdminDateWidget(), 'parameters':JSONEditor()}
 

@@ -7,3 +7,17 @@ def cellSeparator_schema():
 def equipmentType_schema():
     pass
 
+def cell_schema():
+    pass
+
+def experimentAnalysis_schema():
+    pass
+
+def experimentParameters_schema():
+    pass
+
+def resultMetadata_schema():
+    pass
+
+def resultData_schema():
+    pass

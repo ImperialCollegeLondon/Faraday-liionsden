@@ -1,0 +1,7 @@
+ 
+{% extends 'admin/change_list.html' %}
+{% load templatetags %}
+
+{# block.super will print the "Select <Model> to change" h1 title #}
+{# The model_desc template tag is the one you created and prints the docstring of the given model #}
+{% block content_title %}{{ block.super }}<br>{% model_desc cl.model %}{% endblock %}

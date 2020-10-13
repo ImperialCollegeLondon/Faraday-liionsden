@@ -29,9 +29,13 @@ class OrgAdmin(admin.ModelAdmin):
 
 
 class BaseAdmin(admin.ModelAdmin):
-  #  list_display = (["name", "user_owner", "status",])
-#    list_filter = (["status", "user_owner"])
-
+    list_display = (["name", "user_owner", "status","created_on"])
+    list_filter = (["status", "user_owner"])
+    fieldsets = (
+        ('Generic Object fields', {
+            'fields': ('name', 'notes', 'status', 'user_owner', 'created_on', 'attributes')
+        }),
+    )
     def get_changeform_initial_data(self, request):
         get_data = super().get_changeform_initial_data(request)
         get_data['user_owner'] = request.user.pk

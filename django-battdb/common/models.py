@@ -8,8 +8,10 @@ import datetime
 
 #TODOnt: Add localised strings (l10n) using django_gettext for all string literals in this file
 
-# base class for any model having a unique name
 class HasName(models.Model):
+    """
+    Abstract base class for any model having a unique name
+    """
     name = models.CharField(max_length=128, unique=True, blank=True, null=True, help_text="Unique name for this object")
     def __str__(self):
        return str(self.name)
@@ -17,7 +19,6 @@ class HasName(models.Model):
       abstract=True  # this tells Django not to create a table for this model - it's an abstract base class
 
 
-# base for any model having a common object status field
 OBJ_STATUS_DRAFT = 10  # viewable and editable only by owner
 OBJ_STATUS_SUBMITTED = 20 # viewable by others, modifiable by owner
 OBJ_STATUS_ACCEPTED = 30 # cannot be modified by owner, except to return status to draft
@@ -25,6 +26,9 @@ OBJ_STATUS_PUBLISHED = 40 # cannot be modified except by admin
 OBJ_STATUS_DELETED = 50 # hidden to all except admin
 
 class HasStatus(models.Model):
+   """
+   Abstract base for any model having a common object status field
+   """
    created_on = models.DateField(auto_now_add=True)
    OBJ_STATUS = [
             (OBJ_STATUS_DRAFT, 'Draft'),
@@ -37,30 +41,53 @@ class HasStatus(models.Model):
    class Meta:
       abstract=True    
 
-# base for any model whose objects belong to user and group objects
+
 class HasOwner(models.Model):
+   """
+   Abstract base for any model whose objects belong to user and group objects
+   """
    user_owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
    #org_owner = models.ForeignKey('Org', on_delete=models.SET_NULL, null=True, blank=True)
    class Meta:
       abstract=True
 
-# base having JSON attributes
+
 class HasAttributes(models.Model):
-   attributes = JSONField(default=dict, blank=True, help_text="Optional metadata")
+   """
+   Abstract base having JSON attributes
+   """
+   attributes = JSONField(default=dict, blank=True, help_text="Optional machine-readable JSON metadata")
    class Meta:
       abstract=True
       
-# inherit all the bases
-class BaseModel(HasName,HasStatus, HasOwner, HasAttributes):
+class HasNotes(models.Model):
+   """
+   Abstract base having textual notes
+   """
+   notes = models.TextField(null=True, blank=True, help_text="Optional human-readable notes")
+   class Meta:
+      abstract=True
+      
+
+class BaseModel(HasName, HasStatus, HasOwner, HasAttributes, HasNotes):
+   """
+   Abstract base Inheriting all the common bases as mixins:
+   HasName, HasStatus, HasOwner, HasAttributes, HasNotes
+   """
    class Meta:
       abstract=True
 
-# describesd a person
 class Person(BaseModel):
+    """
+    describes a person in or outside the system e.g. an author on a paper
+    """
     pass
  
  # TODO: ModelForm Org.head = filter on Person WHERE Person.org = this
 class Org(BaseModel):
+   """
+   Organisation e.g. publisher, manufacturer or institution 
+   """
    is_research = models.BooleanField(default=False)
    is_publisher = models.BooleanField(default=False)
    is_mfg_cells = models.BooleanField(default=False)
@@ -68,10 +95,29 @@ class Org(BaseModel):
    website = models.URLField(null=True, blank=True)
 
 
-
 #class UserRole
 
 
+
+
+class DeviceType(BaseModel):
+    """
+    A type of thing, or specification. Provides default metadata for objects referencing this type
+    """
+    pass
+
+
+class Batch(BaseModel):
+    """  
+    Describes a batch of things produced to the same type specification 
+    """
+    manufacturer = models.ForeignKey(Org, null=True, blank=True, on_delete=models.SET_NULL)
+    device_type = models.ForeignKey(DeviceType, null=True, blank=True, on_delete=models.SET_NULL)
+    # validate: my manufacturer is an org with mfg_devices=True
+    
+# a physical thing
+class Device(BaseModel):
+    pass
 
 
 

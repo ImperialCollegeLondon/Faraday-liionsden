@@ -239,42 +239,6 @@ ALTER SEQUENCE public.auth_user_user_permissions_id_seq OWNED BY public.auth_use
 
 
 --
--- Name: battDB_apparatusequipment; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public."battDB_apparatusequipment" (
-    id integer NOT NULL,
-    name character varying(80) NOT NULL,
-    "Apparatus_id" integer NOT NULL,
-    "Equipment_id" integer NOT NULL
-);
-
-
-ALTER TABLE public."battDB_apparatusequipment" OWNER TO towen;
-
---
--- Name: battDB_apparatusequipment_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
---
-
-CREATE SEQUENCE public."battDB_apparatusequipment_id_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."battDB_apparatusequipment_id_seq" OWNER TO towen;
-
---
--- Name: battDB_apparatusequipment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
---
-
-ALTER SEQUENCE public."battDB_apparatusequipment_id_seq" OWNED BY public."battDB_apparatusequipment".id;
-
-
---
 -- Name: battDB_cell; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -287,6 +251,7 @@ CREATE TABLE public."battDB_cell" (
     status smallint NOT NULL,
     user_owner_id integer,
     name character varying(128),
+    notes text,
     CONSTRAINT "battDB_cell_status_check" CHECK ((status >= 0))
 );
 
@@ -329,6 +294,7 @@ CREATE TABLE public."battDB_cellbatch" (
     status smallint NOT NULL,
     user_owner_id integer,
     name character varying(128),
+    notes text,
     CONSTRAINT "battDB_cellbatch_status_check" CHECK ((status >= 0))
 );
 
@@ -369,6 +335,7 @@ CREATE TABLE public."battDB_cellconfig" (
     status smallint NOT NULL,
     user_owner_id integer,
     name character varying(128),
+    notes text,
     CONSTRAINT "battDB_cellconfig_num_cells_check" CHECK ((num_cells >= 0)),
     CONSTRAINT "battDB_cellconfig_status_check" CHECK ((status >= 0))
 );
@@ -409,6 +376,7 @@ CREATE TABLE public."battDB_celltype" (
     status smallint NOT NULL,
     user_owner_id integer,
     name character varying(128),
+    notes text,
     CONSTRAINT "battDB_celltype_status_check" CHECK ((status >= 0))
 );
 
@@ -448,8 +416,6 @@ CREATE TABLE public."battDB_datarange" (
     step_action character varying(8),
     ts_headers character varying(32)[],
     ts_data double precision[],
-    events jsonb,
-    analysis jsonb NOT NULL,
     "dataFile_id" integer,
     file_offset integer NOT NULL,
     attributes jsonb NOT NULL,
@@ -457,6 +423,7 @@ CREATE TABLE public."battDB_datarange" (
     name character varying(128),
     status smallint NOT NULL,
     user_owner_id integer,
+    notes text,
     CONSTRAINT "battDB_datarange_file_offset_check" CHECK ((file_offset >= 0)),
     CONSTRAINT "battDB_datarange_protocol_step_check" CHECK ((protocol_step >= 0)),
     CONSTRAINT "battDB_datarange_status_check" CHECK ((status >= 0))
@@ -488,123 +455,6 @@ ALTER SEQUENCE public."battDB_datarange_id_seq" OWNED BY public."battDB_datarang
 
 
 --
--- Name: battDB_device; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public."battDB_device" (
-    id integer NOT NULL,
-    created_on date NOT NULL,
-    status smallint NOT NULL,
-    attributes jsonb NOT NULL,
-    user_owner_id integer,
-    name character varying(128),
-    CONSTRAINT "battDB_device_status_check" CHECK ((status >= 0))
-);
-
-
-ALTER TABLE public."battDB_device" OWNER TO towen;
-
---
--- Name: battDB_device_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
---
-
-CREATE SEQUENCE public."battDB_device_id_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."battDB_device_id_seq" OWNER TO towen;
-
---
--- Name: battDB_device_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
---
-
-ALTER SEQUENCE public."battDB_device_id_seq" OWNED BY public."battDB_device".id;
-
-
---
--- Name: battDB_devicebatch; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public."battDB_devicebatch" (
-    id integer NOT NULL,
-    created_on date NOT NULL,
-    status smallint NOT NULL,
-    attributes jsonb NOT NULL,
-    user_owner_id integer,
-    name character varying(128),
-    CONSTRAINT "battDB_devicebatch_status_check" CHECK ((status >= 0))
-);
-
-
-ALTER TABLE public."battDB_devicebatch" OWNER TO towen;
-
---
--- Name: battDB_devicebatch_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
---
-
-CREATE SEQUENCE public."battDB_devicebatch_id_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."battDB_devicebatch_id_seq" OWNER TO towen;
-
---
--- Name: battDB_devicebatch_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
---
-
-ALTER SEQUENCE public."battDB_devicebatch_id_seq" OWNED BY public."battDB_devicebatch".id;
-
-
---
--- Name: battDB_devicetype; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public."battDB_devicetype" (
-    id integer NOT NULL,
-    created_on date NOT NULL,
-    status smallint NOT NULL,
-    attributes jsonb NOT NULL,
-    user_owner_id integer,
-    name character varying(128),
-    CONSTRAINT "battDB_devicetype_status_check" CHECK ((status >= 0))
-);
-
-
-ALTER TABLE public."battDB_devicetype" OWNER TO towen;
-
---
--- Name: battDB_devicetype_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
---
-
-CREATE SEQUENCE public."battDB_devicetype_id_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."battDB_devicetype_id_seq" OWNER TO towen;
-
---
--- Name: battDB_devicetype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
---
-
-ALTER SEQUENCE public."battDB_devicetype_id_seq" OWNED BY public."battDB_devicetype".id;
-
-
---
 -- Name: battDB_equipment; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -617,6 +467,7 @@ CREATE TABLE public."battDB_equipment" (
     status smallint NOT NULL,
     user_owner_id integer,
     name character varying(128),
+    notes text,
     CONSTRAINT "battDB_equipment_status_check" CHECK ((status >= 0))
 );
 
@@ -656,6 +507,7 @@ CREATE TABLE public."battDB_equipmenttype" (
     status smallint NOT NULL,
     user_owner_id integer,
     name character varying(128),
+    notes text,
     CONSTRAINT "battDB_equipmenttype_status_check" CHECK ((status >= 0))
 );
 
@@ -692,13 +544,13 @@ CREATE TABLE public."battDB_experiment" (
     id integer NOT NULL,
     name character varying(50) NOT NULL,
     date date NOT NULL,
-    parameters jsonb NOT NULL,
-    analysis jsonb NOT NULL,
-    apparatus_id integer,
-    owner_id integer,
+    user_owner_id integer,
     status character varying(16) NOT NULL,
     protocol_id integer,
-    "cellConfig_id" integer
+    "cellConfig_id" integer,
+    attributes jsonb NOT NULL,
+    created_on date NOT NULL,
+    notes text
 );
 
 
@@ -762,55 +614,12 @@ ALTER SEQUENCE public."battDB_experiment_id_seq" OWNED BY public."battDB_experim
 
 
 --
--- Name: battDB_experimentalapparatus; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public."battDB_experimentalapparatus" (
-    id integer NOT NULL,
-    attributes jsonb NOT NULL,
-    photo character varying(100),
-    created_on date NOT NULL,
-    status smallint NOT NULL,
-    user_owner_id integer,
-    name character varying(128),
-    CONSTRAINT "battDB_experimentalapparatus_status_check" CHECK ((status >= 0))
-);
-
-
-ALTER TABLE public."battDB_experimentalapparatus" OWNER TO towen;
-
---
--- Name: battDB_experimentalapparatus_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
---
-
-CREATE SEQUENCE public."battDB_experimentalapparatus_id_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."battDB_experimentalapparatus_id_seq" OWNER TO towen;
-
---
--- Name: battDB_experimentalapparatus_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
---
-
-ALTER SEQUENCE public."battDB_experimentalapparatus_id_seq" OWNED BY public."battDB_experimentalapparatus".id;
-
-
---
 -- Name: battDB_experimentdatafile; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_experimentdatafile" (
     id integer NOT NULL,
     raw_data_file_id integer NOT NULL,
-    metadata jsonb NOT NULL,
-    parameters jsonb NOT NULL,
-    analysis jsonb NOT NULL,
     experiment_id integer,
     machine_id integer,
     created_on date NOT NULL,
@@ -818,6 +627,7 @@ CREATE TABLE public."battDB_experimentdatafile" (
     user_owner_id integer,
     attributes jsonb NOT NULL,
     name character varying(128),
+    notes text,
     CONSTRAINT "battDB_experimentdatafile_status_check" CHECK ((status >= 0))
 );
 
@@ -847,41 +657,6 @@ ALTER SEQUENCE public."battDB_experimentdatafile_id_seq" OWNED BY public."battDB
 
 
 --
--- Name: battDB_experimentdatafile_import_columns; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public."battDB_experimentdatafile_import_columns" (
-    id integer NOT NULL,
-    experimentdatafile_id integer NOT NULL,
-    signaltype_id integer NOT NULL
-);
-
-
-ALTER TABLE public."battDB_experimentdatafile_import_columns" OWNER TO towen;
-
---
--- Name: battDB_experimentdatafile_import_columns_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
---
-
-CREATE SEQUENCE public."battDB_experimentdatafile_import_columns_id_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."battDB_experimentdatafile_import_columns_id_seq" OWNER TO towen;
-
---
--- Name: battDB_experimentdatafile_import_columns_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
---
-
-ALTER SEQUENCE public."battDB_experimentdatafile_import_columns_id_seq" OWNED BY public."battDB_experimentdatafile_import_columns".id;
-
-
---
 -- Name: battDB_rawdatafile; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -893,6 +668,7 @@ CREATE TABLE public."battDB_rawdatafile" (
     raw_data_file character varying(100),
     user_owner_id integer,
     name character varying(128),
+    notes text,
     CONSTRAINT "battDB_rawdatafile_status_check" CHECK ((status >= 0))
 );
 
@@ -922,43 +698,6 @@ ALTER SEQUENCE public."battDB_rawdatafile_id_seq" OWNED BY public."battDB_rawdat
 
 
 --
--- Name: battDB_signaltype; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public."battDB_signaltype" (
-    id integer NOT NULL,
-    name character varying(30) NOT NULL,
-    symbol character varying(8) NOT NULL,
-    unit_name character varying(30) NOT NULL,
-    unit_symbol character varying(8) NOT NULL
-);
-
-
-ALTER TABLE public."battDB_signaltype" OWNER TO towen;
-
---
--- Name: battDB_signaltype_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
---
-
-CREATE SEQUENCE public."battDB_signaltype_id_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."battDB_signaltype_id_seq" OWNER TO towen;
-
---
--- Name: battDB_signaltype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
---
-
-ALTER SEQUENCE public."battDB_signaltype_id_seq" OWNED BY public."battDB_signaltype".id;
-
-
---
 -- Name: battDB_testprotocol; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -971,6 +710,7 @@ CREATE TABLE public."battDB_testprotocol" (
     status smallint NOT NULL,
     user_owner_id integer,
     name character varying(128),
+    notes text,
     CONSTRAINT "battDB_testprotocol_status_check" CHECK ((status >= 0))
 );
 
@@ -1000,6 +740,128 @@ ALTER SEQUENCE public."battDB_testprotocol_id_seq" OWNED BY public."battDB_testp
 
 
 --
+-- Name: common_batch; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.common_batch (
+    id integer NOT NULL,
+    name character varying(128),
+    created_on date NOT NULL,
+    status smallint NOT NULL,
+    attributes jsonb NOT NULL,
+    notes text,
+    device_type_id integer,
+    manufacturer_id integer,
+    user_owner_id integer,
+    CONSTRAINT common_batch_status_check CHECK ((status >= 0))
+);
+
+
+ALTER TABLE public.common_batch OWNER TO towen;
+
+--
+-- Name: common_batch_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.common_batch_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.common_batch_id_seq OWNER TO towen;
+
+--
+-- Name: common_batch_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.common_batch_id_seq OWNED BY public.common_batch.id;
+
+
+--
+-- Name: common_device; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.common_device (
+    id integer NOT NULL,
+    name character varying(128),
+    created_on date NOT NULL,
+    status smallint NOT NULL,
+    attributes jsonb NOT NULL,
+    notes text,
+    user_owner_id integer,
+    CONSTRAINT common_device_status_check CHECK ((status >= 0))
+);
+
+
+ALTER TABLE public.common_device OWNER TO towen;
+
+--
+-- Name: common_device_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.common_device_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.common_device_id_seq OWNER TO towen;
+
+--
+-- Name: common_device_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.common_device_id_seq OWNED BY public.common_device.id;
+
+
+--
+-- Name: common_devicetype; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.common_devicetype (
+    id integer NOT NULL,
+    name character varying(128),
+    created_on date NOT NULL,
+    status smallint NOT NULL,
+    attributes jsonb NOT NULL,
+    notes text,
+    user_owner_id integer,
+    CONSTRAINT common_devicetype_status_check CHECK ((status >= 0))
+);
+
+
+ALTER TABLE public.common_devicetype OWNER TO towen;
+
+--
+-- Name: common_devicetype_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.common_devicetype_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.common_devicetype_id_seq OWNER TO towen;
+
+--
+-- Name: common_devicetype_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.common_devicetype_id_seq OWNED BY public.common_devicetype.id;
+
+
+--
 -- Name: common_org; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -1015,6 +877,7 @@ CREATE TABLE public.common_org (
     status smallint NOT NULL,
     user_owner_id integer,
     name character varying(128),
+    notes text,
     CONSTRAINT common_org_status_check CHECK ((status >= 0))
 );
 
@@ -1061,6 +924,7 @@ CREATE TABLE public.common_paper (
     status smallint NOT NULL,
     user_owner_id integer,
     name character varying(128),
+    notes text,
     CONSTRAINT common_paper_status_check CHECK ((status >= 0))
 );
 
@@ -1135,6 +999,7 @@ CREATE TABLE public.common_person (
     status smallint NOT NULL,
     user_owner_id integer,
     name character varying(128),
+    notes text,
     CONSTRAINT common_person_status_check CHECK ((status >= 0))
 );
 
@@ -1249,6 +1114,7 @@ CREATE TABLE public.dfndb_data (
     attributes jsonb NOT NULL,
     status smallint NOT NULL,
     name character varying(128),
+    notes text,
     CONSTRAINT dfndb_data_status_check CHECK ((status >= 0))
 );
 
@@ -1290,6 +1156,7 @@ CREATE TABLE public.dfndb_material (
     attributes jsonb NOT NULL,
     status smallint NOT NULL,
     name character varying(128),
+    notes text,
     CONSTRAINT dfndb_material_status_check CHECK ((status >= 0))
 );
 
@@ -1366,6 +1233,7 @@ CREATE TABLE public.dfndb_method (
     attributes jsonb NOT NULL,
     status smallint NOT NULL,
     name character varying(128),
+    notes text,
     CONSTRAINT dfndb_method_status_check CHECK ((status >= 0))
 );
 
@@ -1641,13 +1509,6 @@ ALTER TABLE ONLY public.auth_user_user_permissions ALTER COLUMN id SET DEFAULT n
 
 
 --
--- Name: battDB_apparatusequipment id; Type: DEFAULT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_apparatusequipment" ALTER COLUMN id SET DEFAULT nextval('public."battDB_apparatusequipment_id_seq"'::regclass);
-
-
---
 -- Name: battDB_cell id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
@@ -1683,27 +1544,6 @@ ALTER TABLE ONLY public."battDB_datarange" ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
--- Name: battDB_device id; Type: DEFAULT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_device" ALTER COLUMN id SET DEFAULT nextval('public."battDB_device_id_seq"'::regclass);
-
-
---
--- Name: battDB_devicebatch id; Type: DEFAULT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_devicebatch" ALTER COLUMN id SET DEFAULT nextval('public."battDB_devicebatch_id_seq"'::regclass);
-
-
---
--- Name: battDB_devicetype id; Type: DEFAULT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_devicetype" ALTER COLUMN id SET DEFAULT nextval('public."battDB_devicetype_id_seq"'::regclass);
-
-
---
 -- Name: battDB_equipment id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
@@ -1732,24 +1572,10 @@ ALTER TABLE ONLY public."battDB_experiment_cells" ALTER COLUMN id SET DEFAULT ne
 
 
 --
--- Name: battDB_experimentalapparatus id; Type: DEFAULT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experimentalapparatus" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experimentalapparatus_id_seq"'::regclass);
-
-
---
 -- Name: battDB_experimentdatafile id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentdatafile" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experimentdatafile_id_seq"'::regclass);
-
-
---
--- Name: battDB_experimentdatafile_import_columns id; Type: DEFAULT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experimentdatafile_import_columns_id_seq"'::regclass);
 
 
 --
@@ -1760,17 +1586,31 @@ ALTER TABLE ONLY public."battDB_rawdatafile" ALTER COLUMN id SET DEFAULT nextval
 
 
 --
--- Name: battDB_signaltype id; Type: DEFAULT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_signaltype" ALTER COLUMN id SET DEFAULT nextval('public."battDB_signaltype_id_seq"'::regclass);
-
-
---
 -- Name: battDB_testprotocol id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_testprotocol" ALTER COLUMN id SET DEFAULT nextval('public."battDB_testprotocol_id_seq"'::regclass);
+
+
+--
+-- Name: common_batch id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_batch ALTER COLUMN id SET DEFAULT nextval('public.common_batch_id_seq'::regclass);
+
+
+--
+-- Name: common_device id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_device ALTER COLUMN id SET DEFAULT nextval('public.common_device_id_seq'::regclass);
+
+
+--
+-- Name: common_devicetype id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_devicetype ALTER COLUMN id SET DEFAULT nextval('public.common_devicetype_id_seq'::regclass);
 
 
 --
@@ -2177,6 +2017,18 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 162	Can change apparatus equipment	41	change_apparatusequipment
 163	Can delete apparatus equipment	41	delete_apparatusequipment
 164	Can view apparatus equipment	41	view_apparatusequipment
+165	Can add device type	42	add_devicetype
+166	Can change device type	42	change_devicetype
+167	Can delete device type	42	delete_devicetype
+168	Can view device type	42	view_devicetype
+169	Can add device	43	add_device
+170	Can change device	43	change_device
+171	Can delete device	43	delete_device
+172	Can view device	43	view_device
+173	Can add batch	44	add_batch
+174	Can change batch	44	change_batch
+175	Can delete batch	44	delete_batch
+176	Can view batch	44	view_batch
 \.
 
 
@@ -2188,7 +2040,7 @@ COPY public.auth_user (id, password, last_login, is_superuser, username, first_n
 2	pbkdf2_sha256$150000$xjdfdhTwRhJ2$UXRtByrTwyL9b+c/+/4ttwBrsYYx4Z3gXbi7n7MqAyo=	\N	t	jacql	Jacqueline	Edge	j.edge@imperial.ac.uk	t	t	2020-08-11 11:11:31+01
 3	pbkdf2_sha256$150000$EfLnuKoVFTo5$eI9zlUW09YuBiHiPdlpYqbf8cFyvRvTISVec8IqZaUw=	2020-08-13 10:56:28+01	t	binbin	Binbin	Chen		t	t	2020-08-13 09:53:36+01
 7	pbkdf2_sha256$216000$Vt9WFAxpjSyE$nW6zcHd0uYfDqElZJ+RkFpcN3t9RDAPKyWGARyQdUw4=	2020-10-08 13:36:25.920895+01	f	test	Test	User		t	t	2020-10-08 13:33:36+01
-1	pbkdf2_sha256$216000$OafoLVPyzITM$orFVUO5QzVoBneWLEpu4jxz+Ucrc+DqclzTFOsJcvH4=	2020-10-11 14:12:42.126849+01	t	tom	Tom	Owen	tom.owen@zepler.net	t	t	2020-08-04 19:08:06+01
+1	pbkdf2_sha256$216000$OafoLVPyzITM$orFVUO5QzVoBneWLEpu4jxz+Ucrc+DqclzTFOsJcvH4=	2020-10-13 10:54:08.868973+01	t	tom	Tom	Owen	tom.owen@zepler.net	t	t	2020-08-04 19:08:06+01
 \.
 
 
@@ -2314,19 +2166,11 @@ COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
 
 
 --
--- Data for Name: battDB_apparatusequipment; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public."battDB_apparatusequipment" (id, name, "Apparatus_id", "Equipment_id") FROM stdin;
-\.
-
-
---
 -- Data for Name: battDB_cell; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_cell" (id, attributes, batch_id, type_id, created_on, status, user_owner_id, name) FROM stdin;
-1	{}	1	\N	2020-10-12	20	\N	\N
+COPY public."battDB_cell" (id, attributes, batch_id, type_id, created_on, status, user_owner_id, name, notes) FROM stdin;
+1	{}	1	\N	2020-10-12	20	\N	\N	\N
 \.
 
 
@@ -2334,8 +2178,8 @@ COPY public."battDB_cell" (id, attributes, batch_id, type_id, created_on, status
 -- Data for Name: battDB_cellbatch; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_cellbatch" (id, attributes, manufactured_on, cells_schema, manufacturer_id, created_on, status, user_owner_id, name) FROM stdin;
-1	{}	2020-08-04	{}	1	2020-10-12	20	\N	\N
+COPY public."battDB_cellbatch" (id, attributes, manufactured_on, cells_schema, manufacturer_id, created_on, status, user_owner_id, name, notes) FROM stdin;
+1	{}	2020-08-04	{}	1	2020-10-12	20	\N	\N	\N
 \.
 
 
@@ -2343,8 +2187,8 @@ COPY public."battDB_cellbatch" (id, attributes, manufactured_on, cells_schema, m
 -- Data for Name: battDB_cellconfig; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_cellconfig" (id, attributes, num_cells, created_on, status, user_owner_id, name) FROM stdin;
-1	{}	1	2020-10-12	20	\N	\N
+COPY public."battDB_cellconfig" (id, attributes, num_cells, created_on, status, user_owner_id, name, notes) FROM stdin;
+1	{}	1	2020-10-12	20	\N	\N	\N
 \.
 
 
@@ -2352,7 +2196,7 @@ COPY public."battDB_cellconfig" (id, attributes, num_cells, created_on, status, 
 -- Data for Name: battDB_celltype; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_celltype" (id, attributes, created_on, status, user_owner_id, name) FROM stdin;
+COPY public."battDB_celltype" (id, attributes, created_on, status, user_owner_id, name, notes) FROM stdin;
 \.
 
 
@@ -2360,32 +2204,8 @@ COPY public."battDB_celltype" (id, attributes, created_on, status, user_owner_id
 -- Data for Name: battDB_datarange; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_datarange" (id, label, protocol_step, step_action, ts_headers, ts_data, events, analysis, "dataFile_id", file_offset, attributes, created_on, name, status, user_owner_id) FROM stdin;
-1	charging	1	chg	{}	{{1},{2},{3},{4},{5},{6},{7},{8}}	\N	{"MeasuredCapacity": null, "MeasuredResistance": null}	\N	0	{}	2020-10-12	\N	10	\N
-\.
-
-
---
--- Data for Name: battDB_device; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public."battDB_device" (id, created_on, status, attributes, user_owner_id, name) FROM stdin;
-\.
-
-
---
--- Data for Name: battDB_devicebatch; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public."battDB_devicebatch" (id, created_on, status, attributes, user_owner_id, name) FROM stdin;
-\.
-
-
---
--- Data for Name: battDB_devicetype; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public."battDB_devicetype" (id, created_on, status, attributes, user_owner_id, name) FROM stdin;
+COPY public."battDB_datarange" (id, label, protocol_step, step_action, ts_headers, ts_data, "dataFile_id", file_offset, attributes, created_on, name, status, user_owner_id, notes) FROM stdin;
+1	charging	1	chg	{}	{{1},{2},{3},{4},{5},{6},{7},{8}}	\N	0	{}	2020-10-12	\N	10	\N	\N
 \.
 
 
@@ -2393,8 +2213,8 @@ COPY public."battDB_devicetype" (id, created_on, status, attributes, user_owner_
 -- Data for Name: battDB_equipment; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_equipment" (id, attributes, "serialNo", type_id, created_on, status, user_owner_id, name) FROM stdin;
-1	{}	1234	2	2020-10-12	20	\N	\N
+COPY public."battDB_equipment" (id, attributes, "serialNo", type_id, created_on, status, user_owner_id, name, notes) FROM stdin;
+1	{}	1234	2	2020-10-12	20	\N	\N	\N
 \.
 
 
@@ -2402,8 +2222,8 @@ COPY public."battDB_equipment" (id, attributes, "serialNo", type_id, created_on,
 -- Data for Name: battDB_equipmenttype; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_equipmenttype" (id, attributes, created_on, status, user_owner_id, name) FROM stdin;
-2	{"channels": 10}	2020-10-12	20	\N	\N
+COPY public."battDB_equipmenttype" (id, attributes, created_on, status, user_owner_id, name, notes) FROM stdin;
+2	{"channels": 10}	2020-10-12	20	\N	\N	\N
 \.
 
 
@@ -2411,9 +2231,9 @@ COPY public."battDB_equipmenttype" (id, attributes, created_on, status, user_own
 -- Data for Name: battDB_experiment; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_experiment" (id, name, date, parameters, analysis, apparatus_id, owner_id, status, protocol_id, "cellConfig_id") FROM stdin;
-8	experiment	2020-08-05	{"EndVoltage": null, "StartVoltage": null}	{"Columns": {"x": {"has_data": true, "is_numeric": true}, "Ns": {"has_data": true, "is_numeric": true}, "P/W": {"has_data": true, "is_numeric": true}, "I/mA": {"has_data": true, "is_numeric": true}, "Rec#": {"has_data": true, "is_numeric": true}, "Time": {"has_data": true, "is_numeric": true}, "mode": {"has_data": true, "is_numeric": true}, "R/Ohm": {"has_data": true, "is_numeric": true}, "error": {"has_data": true, "is_numeric": true}, "ox/red": {"has_data": true, "is_numeric": true}, "Ecell/V": {"has_data": true, "is_numeric": true}, "I Range": {"has_data": true, "is_numeric": true}, "dq/mA_h": {"has_data": true, "is_numeric": true}, "control/V": {"has_data": true, "is_numeric": true}, "Energy/W_h": {"has_data": true, "is_numeric": true}, "Ns changes": {"has_data": true, "is_numeric": true}, "control/mA": {"has_data": true, "is_numeric": true}, "(Q-Qo)/mA_h": {"has_data": true, "is_numeric": true}, "counter inc": {"has_data": true, "is_numeric": true}, "Analog OUT/V": {"has_data": true, "is_numeric": true}, "Efficiency/%": {"has_data": true, "is_numeric": true}, "control/V/mA": {"has_data": true, "is_numeric": true}, "cycle number": {"has_data": true, "is_numeric": true}, "Analog IN 1/V": {"has_data": true, "is_numeric": true}, "Capacity/mA_h": {"has_data": true, "is_numeric": true}, "Q charge/mA_h": {"has_data": true, "is_numeric": true}, "control changes": {"has_data": true, "is_numeric": true}, "Q discharge/mA_h": {"has_data": true, "is_numeric": true}, "Energy charge/W_h": {"has_data": true, "is_numeric": true}, "Energy discharge/W_h": {"has_data": true, "is_numeric": true}, "Capacitance charge/�F": {"has_data": true, "is_numeric": true}, "Capacitance discharge/�F": {"has_data": true, "is_numeric": true}}, "num_rows": 149, "warnings": [], "data_start": 101, "file_header": ["BT-Lab ASCII FILE\\n", "Nb header lines : 102                         \\n", "\\n", "Modulo Bat\\n", "\\n", "Run on channel : E1 (SN 0355)\\n", "User : \\n", "Ecell ctrl range : min = 0.00 V, max = 9.00 V\\n", "Safety Limits :\\n", "\\tEcell min = 2.50 V\\n", "\\tEcell max = 4.35 V\\n", "\\tfor t > 10 ms\\n", "Acquisition started on : 08/19/2019 16:31:18\\n", "Saved on :\\n", "\\tFile : Cathode_CE1.mpr\\n", "\\tDirectory : D:\\\\Data\\\\Ryan\\\\Entropy CoinCells 18Aug\\\\\\n", "\\tHost : 192.109.209.129\\n", "Device : BCS-815 (SN 0455)\\n", "Address : 192.109.209.128\\n", "BT-Lab for windows v1.65 (software)\\n", "Internet server v1.65 (firmware)\\n", "Command interpretor v1.65 (firmware)\\n", "Electrode material : \\n", "Initial state : \\n", "Electrolyte : \\n", "Comments : \\n", "Mass of active material : 0.001 mg\\n", " at x = 0.000\\n", "Molecular weight of active material (at x = 0) : 0.001 g/mol\\n", "Atomic weight of intercalated ion : 0.001 g/mol\\n", "Acquisition started at : xo = 0.000\\n", "Number of e- transfered per intercalated ion : 1\\n", "for DX = 1, DQ = 26.802 mA.h\\n", "Battery capacity : 2.230 mA.h\\n", "Electrode surface area : 0.001 cm²\\n", "Characteristic mass : 0.001 g\\n", "Record Analogic IN 1\\n", "Cycle Definition : Charge/Discharge alternance\\n", "External device configuration :\\n", "   device type : Other\\n", "   device name : Other\\n", "   Analog OUT : \\n", "      mode : E/V\\n", "      unit : E/V\\n", "      max : 5.000 at 5.000 V\\n", "      min : 0.000 at 0.000 V\\n", "      current : 0.000\\n", "   Analog IN 1 : \\n", "      unit : E/V\\n", "      max : 5.000 at 5.000 V\\n", "      min : 0.000 at 0.000 V\\n", "Ns                  0                   1                   2                   3                   4                   5                   6                   7                   8                   9                   10                  11                  12                  13                  14                  15                  16                  17                  18                  19                  20                  21                  22                  23                  24                  25                  26                  27                  28                  29                  \\n", "ctrl_type           Rest                Rest                CC                  CV                  Rest                TO                  Rest                Rest                Rest                Rest                Rest                Rest                CC                  Rest                TO                  Rest                Rest                Rest                Rest                Rest                Rest                Loop                CV                  TO                  Rest                Rest                Rest                Rest                Rest                Rest                \\n", "Apply I/C           I                   I                   C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               \\n", "ctrl1_val                                                   0.000               4.300                                   2.700                                                                                                                                       100.000                                 100.000                                                                                                                                     100.000             2.700               4.300                                                                                                                                       \\n", "ctrl1_val_unit                                              mA                  V                                                                                                                                                                                   mA                                                                                                                                                                                                      V                                                                                                                                                               \\n", "ctrl1_val_vs                                                <None>              Ref                                                                                                                                                                                 <None>                                                                                                                                                                                                  Ref                                                                                                                                                             \\n", "ctrl2_val                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   \\n", "ctrl2_val_unit                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              \\n", "ctrl2_val_vs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \\n", "ctrl3_val                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   \\n", "ctrl3_val_unit                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              \\n", "ctrl3_val_vs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \\n", "N                   1.00                1.00                1.00                3.00                3.00                3.00                3.00                3.00                3.00                3.00                3.00                3.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                \\n", "charge/discharge    Charge              Charge              Charge              Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              \\n", "ctrl_seq            0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   12                  12                  12                  0                   0                   0                   0                   0                   0                   \\n", "ctrl_repeat         0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   60                  60                  60                  0                   0                   0                   0                   0                   0                   \\n", "ctrl_trigger        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Rising Edge         Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Rising Edge         Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Rising Edge         Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        \\n", "ctrl_TO_t           0.000               0.000               0.000               0.000               0.000               2.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               2.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               2.000               0.000               0.000               0.000               0.000               0.000               0.000               \\n", "ctrl_TO_t_unit      d                   d                   d                   d                   d                   s                   d                   d                   d                   d                   d                   d                   d                   d                   s                   d                   d                   d                   d                   d                   d                   d                   d                   s                   d                   d                   d                   d                   d                   d                   \\n", "ctrl_Nd             6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   \\n", "ctrl_Na             1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   \\n", "ctrl_corr           1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   \\n", "lim_nb              1                   1                   1                   1                   1                   0                   1                   1                   1                   1                   1                   1                   2                   1                   0                   1                   1                   1                   1                   1                   1                   0                   1                   0                   1                   1                   1                   1                   1                   1                   \\n", "lim1_type           Time                Time                Time                Ecell               |I|                 Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                |I|                 \\n", "lim1_comp           >                   >                   >                   <                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   <                   <                   >                   >                   >                   >                   >                   >                   \\n", "lim1_Q              Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             \\n", "lim1_value          3.000               3.000               4.300               23.000              90.000              90.000              3.000               3.000               3.000               3.000               3.000               10.000              6.000               90.000              90.000              3.000               3.000               3.000               3.000               3.000               10.000              10.000              23.000              23.000              3.000               3.000               3.000               3.000               3.000               10.000              \\n", "lim1_value_unit     d                   s                   s                   V                   mA                  mn                  d                   s                   d                   s                   d                   mn                  mn                  mn                  mn                  d                   s                   d                   s                   d                   mn                  mn                  s                   s                   d                   s                   d                   s                   d                   mA                  \\n", "lim1_action         Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       \\n", "lim1_seq            1                   2                   3                   4                   5                   6                   7                   8                   9                   10                  11                  12                  13                  14                  15                  16                  17                  18                  19                  20                  21                  22                  23                  24                  25                  26                  27                  28                  29                  30                  \\n", "lim2_type           Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Ecell               Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                \\n", "lim2_comp           <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   \\n", "lim2_Q              Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             \\n", "lim2_value          0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               2.700               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               \\n", "lim2_value_unit     s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   V                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   \\n", "lim2_action         Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Goto sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       \\n", "lim2_seq            1                   2                   3                   4                   5                   6                   7                   8                   9                   10                  11                  12                  22                  14                  15                  16                  17                  18                  19                  20                  21                  22                  23                  24                  25                  26                  27                  28                  29                  30                  \\n", "rec_nb              0                   0                   1                   1                   1                   0                   1                   1                   1                   1                   1                   1                   1                   1                   0                   1                   1                   1                   1                   1                   1                   0                   1                   0                   1                   1                   1                   1                   1                   1                   \\n", "rec1_type           Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                \\n", "rec1_value          1.000               1.000               1.000               1.000               10.000              10.000              1.000               1.000               1.000               1.000               1.000               1.000               1.000               10.000              10.000              1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               \\n", "rec1_value_unit     s                   s                   s                   mn                  s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   \\n", "E range min (V)     0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               \\n", "E range max (V)     9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               \\n", "I Range             10 mA               10 mA               1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                \\n", "I Range min         Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \\n", "I Range max         Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \\n", "I Range init        Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \\n", "auto rest           0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   \\n", "Bandwidth           4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   \\n", "\\n"], "Dataset_Name": "BioLogic_full_dLqsqJK", "dataset_size": 101861, "misc_file_data": {}, "Device Metadata": {"Mode": "Modulo Bat", "User": null, "DX/DQ": "for DX = 1, DQ = 26.802 mA.h", "Device": "BCS-815 (SN 0455)", "Record": "Analogic IN 1", "Address": "192.109.209.128", "Comments": null, "FileType": "BT-Lab ASCII FILE", "Saved on": [{"File": "Cathode_CE1.mpr"}, {"Directory": "D:\\\\Data\\\\Ryan\\\\Entropy CoinCells 18Aug\\\\"}, {"Host": "192.109.209.129"}], "Electrolyte": null, "Initial state": null, "Safety Limits": ["Ecell min = 2.50 V", "Ecell max = 4.35 V", "for t > 10 ms"], "Run on channel": "E1 (SN 0355)", "Internet server": "v1.65 (firmware)", "Nb header lines": 102, "Battery capacity": "2.230 mA.h", "Cycle Definition": "Charge/Discharge alternance", "Ecell ctrl range": "min = 0.00 V, max = 9.00 V", "BT-Lab for windows": "v1.65 (software)", "Electrode material": null, "Characteristic mass": "0.001 g", "Command interpretor": "v1.65 (firmware)", "Acquisition started at": "xo = 0.000", "Acquisition started on": "08/19/2019 16:31:18", "Electrode surface area": "0.001 cm²", "Mass of active material": "0.001 mg at x = 0.000", "External device configuration": {"Analog OUT": {"max": "5.000 at 5.000 V", "min": "0.000 at 0.000 V", "mode": "E/V", "unit": "E/V", "current": 0.0}, "Analog IN 1": {"max": "5.000 at 5.000 V", "min": "0.000 at 0.000 V", "unit": "E/V"}, "device name": "Other", "device type": "Other"}, "Atomic weight of intercalated ion": "0.001 g/mol", "Number of e- transfered per intercalated ion": 1, "Molecular weight of active material (at x = 0)": "0.001 g/mol"}, "first_sample_no": 102}	1	1	edit	\N	\N
-9	fooo	2020-08-05	{"EndVoltage": null, "StartVoltage": null}	{}	1	1	edit	\N	\N
+COPY public."battDB_experiment" (id, name, date, user_owner_id, status, protocol_id, "cellConfig_id", attributes, created_on, notes) FROM stdin;
+8	experiment	2020-08-05	1	edit	\N	\N	{}	2020-10-13	\N
+9	fooo	2020-08-05	1	edit	\N	\N	{}	2020-10-13	\N
 \.
 
 
@@ -2428,27 +2248,10 @@ COPY public."battDB_experiment_cells" (id, experiment_id, cell_id) FROM stdin;
 
 
 --
--- Data for Name: battDB_experimentalapparatus; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public."battDB_experimentalapparatus" (id, attributes, photo, created_on, status, user_owner_id, name) FROM stdin;
-1	{}		2020-10-12	20	\N	\N
-\.
-
-
---
 -- Data for Name: battDB_experimentdatafile; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_experimentdatafile" (id, raw_data_file_id, metadata, parameters, analysis, experiment_id, machine_id, created_on, status, user_owner_id, attributes, name) FROM stdin;
-\.
-
-
---
--- Data for Name: battDB_experimentdatafile_import_columns; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public."battDB_experimentdatafile_import_columns" (id, experimentdatafile_id, signaltype_id) FROM stdin;
+COPY public."battDB_experimentdatafile" (id, raw_data_file_id, experiment_id, machine_id, created_on, status, user_owner_id, attributes, name, notes) FROM stdin;
 \.
 
 
@@ -2456,20 +2259,7 @@ COPY public."battDB_experimentdatafile_import_columns" (id, experimentdatafile_i
 -- Data for Name: battDB_rawdatafile; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_rawdatafile" (id, created_on, status, attributes, raw_data_file, user_owner_id, name) FROM stdin;
-\.
-
-
---
--- Data for Name: battDB_signaltype; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public."battDB_signaltype" (id, name, symbol, unit_name, unit_symbol) FROM stdin;
-4	Time	t	seconds	s
-2	Current	I	Amperes	A
-3	Temperature	T	Celsius	°C
-1	Voltage	V	Volts	V
-5	Power	P	Watts	W
+COPY public."battDB_rawdatafile" (id, created_on, status, attributes, raw_data_file, user_owner_id, name, notes) FROM stdin;
 \.
 
 
@@ -2477,8 +2267,32 @@ COPY public."battDB_signaltype" (id, name, symbol, unit_name, unit_symbol) FROM 
 -- Data for Name: battDB_testprotocol; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_testprotocol" (id, attributes, description, parameters, created_on, status, user_owner_id, name) FROM stdin;
-1	{}	pybamm.Experiment(\r\n    [\r\n        "Discharge at C/10 for 10 hours or until 3.3 V",\r\n        "Rest for 1 hour",\r\n        "Charge at 1 A until 4.1 V",\r\n        "Hold at 4.1 V until 50 mA",\r\n        "Rest for 1 hour",\r\n    ]\r\n    * 3,	{}	2020-10-12	20	\N	\N
+COPY public."battDB_testprotocol" (id, attributes, description, parameters, created_on, status, user_owner_id, name, notes) FROM stdin;
+1	{}	pybamm.Experiment(\r\n    [\r\n        "Discharge at C/10 for 10 hours or until 3.3 V",\r\n        "Rest for 1 hour",\r\n        "Charge at 1 A until 4.1 V",\r\n        "Hold at 4.1 V until 50 mA",\r\n        "Rest for 1 hour",\r\n    ]\r\n    * 3,	{}	2020-10-12	20	\N	\N	\N
+\.
+
+
+--
+-- Data for Name: common_batch; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.common_batch (id, name, created_on, status, attributes, notes, device_type_id, manufacturer_id, user_owner_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: common_device; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.common_device (id, name, created_on, status, attributes, notes, user_owner_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: common_devicetype; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.common_devicetype (id, name, created_on, status, attributes, notes, user_owner_id) FROM stdin;
 \.
 
 
@@ -2486,8 +2300,8 @@ COPY public."battDB_testprotocol" (id, attributes, description, parameters, crea
 -- Data for Name: common_org; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.common_org (id, website, attributes, created_on, is_mfg_cells, is_mfg_equip, is_publisher, is_research, status, user_owner_id, name) FROM stdin;
-1	\N	{}	2020-10-12	f	f	f	f	20	\N	\N
+COPY public.common_org (id, website, attributes, created_on, is_mfg_cells, is_mfg_equip, is_publisher, is_research, status, user_owner_id, name, notes) FROM stdin;
+1	\N	{}	2020-10-12	f	f	f	f	20	\N	\N	\N
 \.
 
 
@@ -2495,8 +2309,8 @@ COPY public.common_org (id, website, attributes, created_on, is_mfg_cells, is_mf
 -- Data for Name: common_paper; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.common_paper (id, "DOI", tag, year, title, authors, url, created_on, publisher_id, attributes, status, user_owner_id, name) FROM stdin;
-1	https://doi.org/10.1109/5.771073	foo-bar	2020	Toward unique identifiers	N.Paskin	https://ieeexplore.ieee.org/document/771073	2020-10-12	1	{}	10	\N	\N
+COPY public.common_paper (id, "DOI", tag, year, title, authors, url, created_on, publisher_id, attributes, status, user_owner_id, name, notes) FROM stdin;
+1	https://doi.org/10.1109/5.771073	foo-bar	2020	Toward unique identifiers	N.Paskin	https://ieeexplore.ieee.org/document/771073	2020-10-12	1	{}	10	\N	\N	\N
 \.
 
 
@@ -2513,8 +2327,8 @@ COPY public.common_paper_org_owners (id, paper_id, org_id) FROM stdin;
 -- Data for Name: common_person; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.common_person (id, attributes, created_on, status, user_owner_id, name) FROM stdin;
-1	{}	2020-10-12	20	\N	\N
+COPY public.common_person (id, attributes, created_on, status, user_owner_id, name, notes) FROM stdin;
+1	{}	2020-10-12	20	\N	\N	\N
 \.
 
 
@@ -2538,7 +2352,7 @@ COPY public.dfndb_compound (id, formula, name) FROM stdin;
 -- Data for Name: dfndb_data; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_data (id, created_on, type, data, material_id, paper_id, parameter_id, user_owner_id, attributes, status, name) FROM stdin;
+COPY public.dfndb_data (id, created_on, type, data, material_id, paper_id, parameter_id, user_owner_id, attributes, status, name, notes) FROM stdin;
 \.
 
 
@@ -2546,7 +2360,7 @@ COPY public.dfndb_data (id, created_on, type, data, material_id, paper_id, param
 -- Data for Name: dfndb_material; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_material (id, polymer, created_on, user_owner_id, type, attributes, status, name) FROM stdin;
+COPY public.dfndb_material (id, polymer, created_on, user_owner_id, type, attributes, status, name, notes) FROM stdin;
 \.
 
 
@@ -2562,7 +2376,7 @@ COPY public.dfndb_material_composition (id, material_id, compositionpart_id) FRO
 -- Data for Name: dfndb_method; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_method (id, created_on, type, description, user_owner_id, attributes, status, name) FROM stdin;
+COPY public.dfndb_method (id, created_on, type, description, user_owner_id, attributes, status, name, notes) FROM stdin;
 \.
 
 
@@ -2753,6 +2567,9 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 39	battDB	device
 40	battDB	rawdatafile
 41	battDB	apparatusequipment
+42	common	devicetype
+43	common	device
+44	common	batch
 \.
 
 
@@ -2855,6 +2672,9 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 94	common	0010_auto_20201012_2225	2020-10-12 23:25:25.943231+01
 95	dfndb	0007_auto_20201012_2225	2020-10-12 23:25:26.102311+01
 96	battDB	0052_auto_20201012_2229	2020-10-12 23:29:58.35459+01
+97	battDB	0053_auto_20201013_2250	2020-10-13 23:51:16.733107+01
+98	common	0011_auto_20201013_2250	2020-10-13 23:51:16.981289+01
+99	dfndb	0008_auto_20201013_2250	2020-10-13 23:51:17.183785+01
 \.
 
 
@@ -2871,6 +2691,7 @@ cyyrb7merwtxo7dcsbv0cgqmwccnwh8d	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNut
 haqcurfqstoy8ys4evb16c4zer8xs1lc	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kQVAL:iSngFIWICRX_JMTDzaTgNLmNR4npexx4OOSyqzT0sBc	2020-10-22 13:37:01.400797+01
 9n5s8vuiaybs4f16zd2ihvnybnmmowy2	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kQVqO:20Y9Qbxw_AkXrCn32uTJZN1QvCTJsKjEpMWC-SDA4WA	2020-10-22 14:20:28.773308+01
 q9avywvdm0hqnyxnd71cf15khj1f23dk	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kRb9W:KueNOMangHXfaAINnKiYugVGf3zjBpSz8Fg9KXljp5Y	2020-10-25 13:12:42.132228+00
+ec6pd3vza131tw3s8hdhrtbact9c39od	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kSH0S:YMIC2rs4Cs26Vsvb4iamHDpi6h85vKutEpU3Qhs0MXE	2020-10-27 09:54:08.874351+00
 \.
 
 
@@ -2892,7 +2713,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 112, true);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 164, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 176, true);
 
 
 --
@@ -2914,13 +2735,6 @@ SELECT pg_catalog.setval('public.auth_user_id_seq', 7, true);
 --
 
 SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 104, true);
-
-
---
--- Name: battDB_apparatusequipment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
---
-
-SELECT pg_catalog.setval('public."battDB_apparatusequipment_id_seq"', 1, false);
 
 
 --
@@ -2959,27 +2773,6 @@ SELECT pg_catalog.setval('public."battDB_datarange_id_seq"', 1, true);
 
 
 --
--- Name: battDB_device_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
---
-
-SELECT pg_catalog.setval('public."battDB_device_id_seq"', 1, false);
-
-
---
--- Name: battDB_devicebatch_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
---
-
-SELECT pg_catalog.setval('public."battDB_devicebatch_id_seq"', 1, false);
-
-
---
--- Name: battDB_devicetype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
---
-
-SELECT pg_catalog.setval('public."battDB_devicetype_id_seq"', 1, false);
-
-
---
 -- Name: battDB_equipment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
@@ -3008,24 +2801,10 @@ SELECT pg_catalog.setval('public."battDB_experiment_id_seq"', 9, true);
 
 
 --
--- Name: battDB_experimentalapparatus_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
---
-
-SELECT pg_catalog.setval('public."battDB_experimentalapparatus_id_seq"', 1, true);
-
-
---
 -- Name: battDB_experimentdatafile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_experimentdatafile_id_seq"', 3, true);
-
-
---
--- Name: battDB_experimentdatafile_import_columns_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
---
-
-SELECT pg_catalog.setval('public."battDB_experimentdatafile_import_columns_id_seq"', 2, true);
 
 
 --
@@ -3036,17 +2815,31 @@ SELECT pg_catalog.setval('public."battDB_rawdatafile_id_seq"', 1, false);
 
 
 --
--- Name: battDB_signaltype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
---
-
-SELECT pg_catalog.setval('public."battDB_signaltype_id_seq"', 5, true);
-
-
---
 -- Name: battDB_testprotocol_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public."battDB_testprotocol_id_seq"', 1, true);
+
+
+--
+-- Name: common_batch_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.common_batch_id_seq', 1, false);
+
+
+--
+-- Name: common_device_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.common_device_id_seq', 1, false);
+
+
+--
+-- Name: common_devicetype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.common_devicetype_id_seq', 1, false);
 
 
 --
@@ -3144,14 +2937,14 @@ SELECT pg_catalog.setval('public.django_admin_log_id_seq', 118, true);
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 41, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 44, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 96, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 99, true);
 
 
 --
@@ -3251,14 +3044,6 @@ ALTER TABLE ONLY public.auth_user
 
 
 --
--- Name: battDB_apparatusequipment battDB_apparatusequipment_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_apparatusequipment"
-    ADD CONSTRAINT "battDB_apparatusequipment_pkey" PRIMARY KEY (id);
-
-
---
 -- Name: battDB_cell battDB_cell_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -3339,54 +3124,6 @@ ALTER TABLE ONLY public."battDB_datarange"
 
 
 --
--- Name: battDB_device battDB_device_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_device"
-    ADD CONSTRAINT "battDB_device_name_key" UNIQUE (name);
-
-
---
--- Name: battDB_device battDB_device_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_device"
-    ADD CONSTRAINT "battDB_device_pkey" PRIMARY KEY (id);
-
-
---
--- Name: battDB_devicebatch battDB_devicebatch_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_devicebatch"
-    ADD CONSTRAINT "battDB_devicebatch_name_key" UNIQUE (name);
-
-
---
--- Name: battDB_devicebatch battDB_devicebatch_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_devicebatch"
-    ADD CONSTRAINT "battDB_devicebatch_pkey" PRIMARY KEY (id);
-
-
---
--- Name: battDB_devicetype battDB_devicetype_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_devicetype"
-    ADD CONSTRAINT "battDB_devicetype_name_key" UNIQUE (name);
-
-
---
--- Name: battDB_devicetype battDB_devicetype_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_devicetype"
-    ADD CONSTRAINT "battDB_devicetype_pkey" PRIMARY KEY (id);
-
-
---
 -- Name: battDB_equipment battDB_equipment_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -3443,38 +3180,6 @@ ALTER TABLE ONLY public."battDB_experiment"
 
 
 --
--- Name: battDB_experimentalapparatus battDB_experimentalapparatus_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experimentalapparatus"
-    ADD CONSTRAINT "battDB_experimentalapparatus_name_key" UNIQUE (name);
-
-
---
--- Name: battDB_experimentalapparatus battDB_experimentalapparatus_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experimentalapparatus"
-    ADD CONSTRAINT "battDB_experimentalapparatus_pkey" PRIMARY KEY (id);
-
-
---
--- Name: battDB_experimentdatafile_import_columns battDB_experimentdatafil_experimentdatafile_id_si_4d88733a_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
-    ADD CONSTRAINT "battDB_experimentdatafil_experimentdatafile_id_si_4d88733a_uniq" UNIQUE (experimentdatafile_id, signaltype_id);
-
-
---
--- Name: battDB_experimentdatafile_import_columns battDB_experimentdatafile_import_columns_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
-    ADD CONSTRAINT "battDB_experimentdatafile_import_columns_pkey" PRIMARY KEY (id);
-
-
---
 -- Name: battDB_experimentdatafile battDB_experimentdatafile_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -3515,14 +3220,6 @@ ALTER TABLE ONLY public."battDB_rawdatafile"
 
 
 --
--- Name: battDB_signaltype battDB_signaltype_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_signaltype"
-    ADD CONSTRAINT "battDB_signaltype_pkey" PRIMARY KEY (id);
-
-
---
 -- Name: battDB_testprotocol battDB_testprotocol_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -3536,6 +3233,54 @@ ALTER TABLE ONLY public."battDB_testprotocol"
 
 ALTER TABLE ONLY public."battDB_testprotocol"
     ADD CONSTRAINT "battDB_testprotocol_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: common_batch common_batch_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_batch
+    ADD CONSTRAINT common_batch_name_key UNIQUE (name);
+
+
+--
+-- Name: common_batch common_batch_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_batch
+    ADD CONSTRAINT common_batch_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: common_device common_device_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_device
+    ADD CONSTRAINT common_device_name_key UNIQUE (name);
+
+
+--
+-- Name: common_device common_device_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_device
+    ADD CONSTRAINT common_device_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: common_devicetype common_devicetype_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_devicetype
+    ADD CONSTRAINT common_devicetype_name_key UNIQUE (name);
+
+
+--
+-- Name: common_devicetype common_devicetype_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_devicetype
+    ADD CONSTRAINT common_devicetype_pkey PRIMARY KEY (id);
 
 
 --
@@ -3807,7 +3552,7 @@ ALTER TABLE ONLY public.django_session
 --
 
 ALTER TABLE ONLY public."battDB_experiment"
-    ADD CONSTRAINT unique_slugname UNIQUE (owner_id, name, date);
+    ADD CONSTRAINT unique_slugname UNIQUE (user_owner_id, name, date);
 
 
 --
@@ -3871,20 +3616,6 @@ CREATE INDEX auth_user_user_permissions_user_id_a95ead1b ON public.auth_user_use
 --
 
 CREATE INDEX auth_user_username_6821ab7c_like ON public.auth_user USING btree (username varchar_pattern_ops);
-
-
---
--- Name: battDB_apparatusequipment_Apparatus_id_8c13712d; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_apparatusequipment_Apparatus_id_8c13712d" ON public."battDB_apparatusequipment" USING btree ("Apparatus_id");
-
-
---
--- Name: battDB_apparatusequipment_Equipment_id_8473824c; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_apparatusequipment_Equipment_id_8473824c" ON public."battDB_apparatusequipment" USING btree ("Equipment_id");
 
 
 --
@@ -3986,48 +3717,6 @@ CREATE INDEX "battDB_datarange_user_owner_id_a458c111" ON public."battDB_dataran
 
 
 --
--- Name: battDB_device_name_2273cb20_like; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_device_name_2273cb20_like" ON public."battDB_device" USING btree (name varchar_pattern_ops);
-
-
---
--- Name: battDB_device_user_owner_id_b85fcf7d; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_device_user_owner_id_b85fcf7d" ON public."battDB_device" USING btree (user_owner_id);
-
-
---
--- Name: battDB_devicebatch_name_92e40735_like; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_devicebatch_name_92e40735_like" ON public."battDB_devicebatch" USING btree (name varchar_pattern_ops);
-
-
---
--- Name: battDB_devicebatch_user_owner_id_a17097e8; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_devicebatch_user_owner_id_a17097e8" ON public."battDB_devicebatch" USING btree (user_owner_id);
-
-
---
--- Name: battDB_devicetype_name_93364099_like; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_devicetype_name_93364099_like" ON public."battDB_devicetype" USING btree (name varchar_pattern_ops);
-
-
---
--- Name: battDB_devicetype_user_owner_id_e20a07ac; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_devicetype_user_owner_id_e20a07ac" ON public."battDB_devicetype" USING btree (user_owner_id);
-
-
---
 -- Name: battDB_equipment_name_85e8697e_like; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -4060,13 +3749,6 @@ CREATE INDEX "battDB_equipmenttype_name_f6eb8e24_like" ON public."battDB_equipme
 --
 
 CREATE INDEX "battDB_equipmenttype_user_owner_id_366e387f" ON public."battDB_equipmenttype" USING btree (user_owner_id);
-
-
---
--- Name: battDB_experiment_apparatus_id_5c682616; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_experiment_apparatus_id_5c682616" ON public."battDB_experiment" USING btree (apparatus_id);
 
 
 --
@@ -4108,7 +3790,7 @@ CREATE INDEX "battDB_experiment_name_4a1b5666_like" ON public."battDB_experiment
 -- Name: battDB_experiment_owner_id_ebf94468; Type: INDEX; Schema: public; Owner: towen
 --
 
-CREATE INDEX "battDB_experiment_owner_id_ebf94468" ON public."battDB_experiment" USING btree (owner_id);
+CREATE INDEX "battDB_experiment_owner_id_ebf94468" ON public."battDB_experiment" USING btree (user_owner_id);
 
 
 --
@@ -4119,38 +3801,10 @@ CREATE INDEX "battDB_experiment_protocol_id_ed0e9fcd" ON public."battDB_experime
 
 
 --
--- Name: battDB_experimentalapparatus_name_fae4873b_like; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_experimentalapparatus_name_fae4873b_like" ON public."battDB_experimentalapparatus" USING btree (name varchar_pattern_ops);
-
-
---
--- Name: battDB_experimentalapparatus_user_owner_id_9b746bc9; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_experimentalapparatus_user_owner_id_9b746bc9" ON public."battDB_experimentalapparatus" USING btree (user_owner_id);
-
-
---
--- Name: battDB_experimentdatafile__experimentdatafile_id_315ba0e0; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_experimentdatafile__experimentdatafile_id_315ba0e0" ON public."battDB_experimentdatafile_import_columns" USING btree (experimentdatafile_id);
-
-
---
 -- Name: battDB_experimentdatafile_experiment_id_de169b40; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experimentdatafile_experiment_id_de169b40" ON public."battDB_experimentdatafile" USING btree (experiment_id);
-
-
---
--- Name: battDB_experimentdatafile_import_columns_signaltype_id_b2b26ce7; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_experimentdatafile_import_columns_signaltype_id_b2b26ce7" ON public."battDB_experimentdatafile_import_columns" USING btree (signaltype_id);
 
 
 --
@@ -4200,6 +3854,62 @@ CREATE INDEX "battDB_testprotocol_name_62280eb8_like" ON public."battDB_testprot
 --
 
 CREATE INDEX "battDB_testprotocol_user_owner_id_e0385b26" ON public."battDB_testprotocol" USING btree (user_owner_id);
+
+
+--
+-- Name: common_batch_device_type_id_c16548b2; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_batch_device_type_id_c16548b2 ON public.common_batch USING btree (device_type_id);
+
+
+--
+-- Name: common_batch_manufacturer_id_1ce4ccc4; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_batch_manufacturer_id_1ce4ccc4 ON public.common_batch USING btree (manufacturer_id);
+
+
+--
+-- Name: common_batch_name_e028696f_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_batch_name_e028696f_like ON public.common_batch USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: common_batch_user_owner_id_5f72642b; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_batch_user_owner_id_5f72642b ON public.common_batch USING btree (user_owner_id);
+
+
+--
+-- Name: common_device_name_11943495_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_device_name_11943495_like ON public.common_device USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: common_device_user_owner_id_e18e9ee3; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_device_user_owner_id_e18e9ee3 ON public.common_device USING btree (user_owner_id);
+
+
+--
+-- Name: common_devicetype_name_f0143ac0_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_devicetype_name_f0143ac0_like ON public.common_devicetype USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: common_devicetype_user_owner_id_9c7b4e5b; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_devicetype_user_owner_id_9c7b4e5b ON public.common_devicetype USING btree (user_owner_id);
 
 
 --
@@ -4504,22 +4214,6 @@ ALTER TABLE ONLY public.auth_user_user_permissions
 
 
 --
--- Name: battDB_apparatusequipment battDB_apparatusequi_Apparatus_id_8c13712d_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_apparatusequipment"
-    ADD CONSTRAINT "battDB_apparatusequi_Apparatus_id_8c13712d_fk_battDB_ex" FOREIGN KEY ("Apparatus_id") REFERENCES public."battDB_experimentalapparatus"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_apparatusequipment battDB_apparatusequi_Equipment_id_8473824c_fk_battDB_eq; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_apparatusequipment"
-    ADD CONSTRAINT "battDB_apparatusequi_Equipment_id_8473824c_fk_battDB_eq" FOREIGN KEY ("Equipment_id") REFERENCES public."battDB_equipment"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: battDB_cell battDB_cell_batch_id_1203f48e_fk_battDB_cellbatch_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -4592,30 +4286,6 @@ ALTER TABLE ONLY public."battDB_datarange"
 
 
 --
--- Name: battDB_device battDB_device_user_owner_id_b85fcf7d_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_device"
-    ADD CONSTRAINT "battDB_device_user_owner_id_b85fcf7d_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_devicebatch battDB_devicebatch_user_owner_id_a17097e8_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_devicebatch"
-    ADD CONSTRAINT "battDB_devicebatch_user_owner_id_a17097e8_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_devicetype battDB_devicetype_user_owner_id_e20a07ac_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_devicetype"
-    ADD CONSTRAINT "battDB_devicetype_user_owner_id_e20a07ac_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: battDB_equipment battDB_equipment_type_id_92966c47_fk_battDB_equipmenttype_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -4637,14 +4307,6 @@ ALTER TABLE ONLY public."battDB_equipment"
 
 ALTER TABLE ONLY public."battDB_equipmenttype"
     ADD CONSTRAINT "battDB_equipmenttype_user_owner_id_366e387f_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_experiment battDB_experiment_apparatus_id_5c682616_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experiment"
-    ADD CONSTRAINT "battDB_experiment_apparatus_id_5c682616_fk_battDB_ex" FOREIGN KEY (apparatus_id) REFERENCES public."battDB_experimentalapparatus"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -4672,14 +4334,6 @@ ALTER TABLE ONLY public."battDB_experiment_cells"
 
 
 --
--- Name: battDB_experiment battDB_experiment_owner_id_ebf94468_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experiment"
-    ADD CONSTRAINT "battDB_experiment_owner_id_ebf94468_fk_auth_user_id" FOREIGN KEY (owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: battDB_experiment battDB_experiment_protocol_id_ed0e9fcd_fk_battDB_te; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -4688,11 +4342,11 @@ ALTER TABLE ONLY public."battDB_experiment"
 
 
 --
--- Name: battDB_experimentalapparatus battDB_experimentala_user_owner_id_9b746bc9_fk_auth_user; Type: FK CONSTRAINT; Schema: public; Owner: towen
+-- Name: battDB_experiment battDB_experiment_user_owner_id_3a1061fa_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
-ALTER TABLE ONLY public."battDB_experimentalapparatus"
-    ADD CONSTRAINT "battDB_experimentala_user_owner_id_9b746bc9_fk_auth_user" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public."battDB_experiment"
+    ADD CONSTRAINT "battDB_experiment_user_owner_id_3a1061fa_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -4701,14 +4355,6 @@ ALTER TABLE ONLY public."battDB_experimentalapparatus"
 
 ALTER TABLE ONLY public."battDB_experimentdatafile"
     ADD CONSTRAINT "battDB_experimentdat_experiment_id_de169b40_fk_battDB_ex" FOREIGN KEY (experiment_id) REFERENCES public."battDB_experiment"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_experimentdatafile_import_columns battDB_experimentdat_experimentdatafile_i_315ba0e0_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
-    ADD CONSTRAINT "battDB_experimentdat_experimentdatafile_i_315ba0e0_fk_battDB_ex" FOREIGN KEY (experimentdatafile_id) REFERENCES public."battDB_experimentdatafile"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -4725,14 +4371,6 @@ ALTER TABLE ONLY public."battDB_experimentdatafile"
 
 ALTER TABLE ONLY public."battDB_experimentdatafile"
     ADD CONSTRAINT "battDB_experimentdat_raw_data_file_id_91752398_fk_battDB_ra" FOREIGN KEY (raw_data_file_id) REFERENCES public."battDB_rawdatafile"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_experimentdatafile_import_columns battDB_experimentdat_signaltype_id_b2b26ce7_fk_battDB_si; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experimentdatafile_import_columns"
-    ADD CONSTRAINT "battDB_experimentdat_signaltype_id_b2b26ce7_fk_battDB_si" FOREIGN KEY (signaltype_id) REFERENCES public."battDB_signaltype"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -4757,6 +4395,46 @@ ALTER TABLE ONLY public."battDB_rawdatafile"
 
 ALTER TABLE ONLY public."battDB_testprotocol"
     ADD CONSTRAINT "battDB_testprotocol_user_owner_id_e0385b26_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_batch common_batch_device_type_id_c16548b2_fk_common_devicetype_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_batch
+    ADD CONSTRAINT common_batch_device_type_id_c16548b2_fk_common_devicetype_id FOREIGN KEY (device_type_id) REFERENCES public.common_devicetype(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_batch common_batch_manufacturer_id_1ce4ccc4_fk_common_org_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_batch
+    ADD CONSTRAINT common_batch_manufacturer_id_1ce4ccc4_fk_common_org_id FOREIGN KEY (manufacturer_id) REFERENCES public.common_org(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_batch common_batch_user_owner_id_5f72642b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_batch
+    ADD CONSTRAINT common_batch_user_owner_id_5f72642b_fk_auth_user_id FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_device common_device_user_owner_id_e18e9ee3_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_device
+    ADD CONSTRAINT common_device_user_owner_id_e18e9ee3_fk_auth_user_id FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_devicetype common_devicetype_user_owner_id_9c7b4e5b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_devicetype
+    ADD CONSTRAINT common_devicetype_user_owner_id_9c7b4e5b_fk_auth_user_id FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

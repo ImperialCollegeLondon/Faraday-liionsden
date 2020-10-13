@@ -14,13 +14,13 @@ from .migration_dummy import *
 
 # This model defines a table of signal types e.g. Cell_voltage.
 # Experiments using the same set of SignalTypes could be assumed to be comparable (issue #16).
-class SignalType(models.Model):
-    name = models.CharField(max_length=30)
-    symbol = models.CharField(max_length=8)
-    unit_name = models.CharField(max_length=30, default="Arb") # could be foreign key to a "SignalTypeUuits" table
-    unit_symbol = models.CharField(max_length=8, default="")
-    def __str__(self):
-       return "%s/%s" % (self.name, self.unit_symbol)
+#class SignalType(models.Model):
+    #name = models.CharField(max_length=30)
+    #symbol = models.CharField(max_length=8)
+    #unit_name = models.CharField(max_length=30, default="Arb") # could be foreign key to a "SignalTypeUuits" table
+    #unit_symbol = models.CharField(max_length=8, default="")
+    #def __str__(self):
+       #return "%s/%s" % (self.name, self.unit_symbol)
 
 # Experient protocol definitions
 # TODO: Harmonise with PyBaMM protocol specifications (issue #18)
@@ -35,18 +35,7 @@ class TestProtocol(cm.BaseModel):
        #"channels":None,
     #}
 
-# a physical thing
-class Device(cm.BaseModel):
-    pass
 
-# a type of thing
-class DeviceType(cm.BaseModel):
-    # validate: my manufacturer is an org with mfg_devices=True
-    pass
-
-# a batch of things produced to the same type specification
-class DeviceBatch(cm.BaseModel):
-    pass
 
 class EquipmentType(cm.BaseModel):
    # validate: my manufacturer is an org with mfg_equip=True
@@ -61,15 +50,15 @@ class Equipment(cm.BaseModel):
        verbose_name_plural="Equipment"
 
 # TODO: These should be actual enforcable JSON schemas, not just a collection of default values. (Issue #23)
-def cell_schema():
-    return {
-       "Description":"Enter cell text description here - add parameters below",
-       "porosity_pct" : 10.0,
-       "separator" : "example atrtribute",
-       "electrolyte" : "example",
-       "electrode_material_pos":"example",
-       "electrode_material_neg":"example",
-    }
+#def cell_schema():
+    #return {
+       #"Description":"Enter cell text description here - add parameters below",
+       #"porosity_pct" : 10.0,
+       #"separator" : "example atrtribute",
+       #"electrolyte" : "example",
+       #"electrode_material_pos":"example",
+       #"electrode_material_neg":"example",
+    #}
 
 
 
@@ -107,61 +96,61 @@ class CellConfig(cm.BaseModel):
 # Model class to represent a "system of equipment" - e.g. if more complicated than a standalone cycler machine, user can add descriptive JSON and a photo here
 # in future, this can act as a tempate to create new experiments
 # This replaces "New Sensor Configuration"
-class ExperimentalApparatus(cm.BaseModel):
-    testEquipment = models.ManyToManyField(Equipment, through='ApparatusEquipment')
-    photo = models.ImageField(upload_to='apparatus_photos', null=True, blank=True)
-    class Meta:
-       verbose_name_plural="Experimental apparatus"
+#class ExperimentalApparatus(cm.BaseModel):
+    #testEquipment = models.ManyToManyField(Equipment, through='ApparatusEquipment')
+    #photo = models.ImageField(upload_to='apparatus_photos', null=True, blank=True)
+    #class Meta:
+       #verbose_name_plural="Experimental apparatus"
        
-class ApparatusEquipment(models.Model):
-    name=models.CharField(max_length=80,blank=True)
-    Apparatus=models.ForeignKey(ExperimentalApparatus, on_delete=models.CASCADE)
-    Equipment=models.ForeignKey(Equipment, on_delete=models.CASCADE)
+#class ApparatusEquipment(models.Model):
+    #name=models.CharField(max_length=80,blank=True)
+    #Apparatus=models.ForeignKey(ExperimentalApparatus, on_delete=models.CASCADE)
+    #Equipment=models.ForeignKey(Equipment, on_delete=models.CASCADE)
     
     
 
-# TODO: These should be actual enforcable JSON schemas, not just a collection of default values. (Issue #23)
-def experimentParameters_schema():
-    return {
-        "Example Parameter":"Value",
-        "NumCycles": 5,
-        "MinVoltage": 2.8,
-        "MaxVoltage": 4.2
-    }
+#TODO: These should be actual enforcable JSON schemas, not just a collection of default values. (Issue #23)
+#def experimentParameters_schema():
+    #return {
+        #"Example Parameter":"Value",
+        #"NumCycles": 5,
+        #"MinVoltage": 2.8,
+        #"MaxVoltage": 4.2
+    #}
 
-def experimentAnalysis_schema():
-    return {
-        "MeasuredCapacity":None,
-        "MeasuredResistance":None,
-    }
+#def experimentAnalysis_schema():
+    #return {
+        #"MeasuredCapacity":None,
+        #"MeasuredResistance":None,
+    #}
 
-def resultMetadata_schema():
-    return {
-       "Columns":{},
-       "num_rows": 0,
-    }
+#def resultMetadata_schema():
+    #return {
+       #"Columns":{},
+       #"num_rows": 0,
+    #}
 
-def resultData_schema():
-    return {
-       "columns":[],
-       "rows": []
-    }
+#def resultData_schema():
+    #return {
+       #"columns":[],
+       #"rows": []
+    #}
 
 # Main "Experiment" aka DataSet class.
 # Has many: data files (from cyclers)
 # Has many: cells (actual physical objects)
 # Has one: apparatus (i.e. lab)
-class Experiment(models.Model):
+class Experiment(cm.BaseModel):
     name = models.SlugField()
-    owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
+    #owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
     status = models.CharField(max_length=16, choices=[("edit", "Edit") , ("published", "Published")], default="edit")
-    apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
+    #apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
     cells = models.ManyToManyField(Cell, related_name='experiments')
     cellConfig = models.ForeignKey(CellConfig, on_delete=models.SET_NULL,  null=True, blank=True)
     protocol = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL,  null=True, blank=True)
-    parameters = JSONField(default=experimentParameters_schema, blank=True)
-    analysis = JSONField(default=experimentAnalysis_schema, blank=True)
+    #parameters = JSONField(default=experimentParameters_schema, blank=True)
+    #analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
         return str(self.owner) + "/" + str(self.name) + "/" + str(self.date)
     @property
@@ -187,11 +176,11 @@ class RawDataFile(cm.BaseModel):
 class ExperimentDataFile(cm.BaseModel):
     raw_data_file = models.OneToOneField(RawDataFile, on_delete=models.CASCADE)
     machine = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True, related_name='all_data')
-    metadata = JSONField(default=resultMetadata_schema, blank=True)
+    #metadata = JSONField(default=resultMetadata_schema, blank=True)
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True, related_name='data_files')
-    import_columns = models.ManyToManyField(SignalType, blank=True)
-    parameters = JSONField(default=experimentParameters_schema, blank=True)
-    analysis = JSONField(default=experimentAnalysis_schema, blank=True)
+    #import_columns = models.ManyToManyField(SignalType, blank=True)
+    #parameters = JSONField(default=experimentParameters_schema, blank=True)
+    #analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
        return os.path.basename(self.raw_data_file.name)
     class Meta:
@@ -212,8 +201,8 @@ class DataRange(cm.BaseModel):
     ts_headers = ArrayField(models.CharField(max_length=32, null=True), null=True, blank=True)
     ts_data = ArrayField(ArrayField(models.FloatField(null=True), null=True), null=True, blank=True)
     # TODO: These need a schema
-    events = JSONField(null=True, blank=True)
-    analysis = JSONField(default=experimentAnalysis_schema, blank=True)
+    #events = JSONField(null=True, blank=True)
+    #analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
        return ("%s/%d: %s" % (self.dataFile, self.id, self.label))
     class Meta:

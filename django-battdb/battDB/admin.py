@@ -9,7 +9,7 @@ from .models import *
 
 
 admin.site.register([
-    Experiment, TestProtocol, Equipment, EquipmentType, ExperimentalApparatus, SignalType,
+    Experiment, TestProtocol, Equipment, EquipmentType, 
     CellConfig, CellBatch, Cell, CellType, ExperimentDataFile, DataRange, RawDataFile], BaseAdmin)
 
 
