@@ -149,6 +149,9 @@ class YearField(models.IntegerField):
          raise ValidationError("Invalid year: Cannot pre-date the field of Electrochemistry!")
 
 class Paper(BaseModel):
+   """
+    An academic paper
+   """
    DOI = DOIField(unique=True, blank=True, null=True, help_text="Paper DOI. In future, this could populate the other fields automatically.")
    tag = models.SlugField(max_length=100, unique=True, help_text="Tag or 'slug' used to uniquely identify this paper. This will be auto-generated in future versions.")
    year = YearField(default=datetime.date.today().year)
@@ -158,6 +161,9 @@ class Paper(BaseModel):
    publisher = models.ForeignKey(Org, on_delete=models.SET_NULL, null=True, blank=True)
    authors = models.CharField(max_length=500)
    url = models.URLField(null=True, blank=True) # blank=true means not a required field in forms. null=True means don't set NOT NULL in SQL
+   PDF = models.FileField(null=True, blank=True, help_text="Optional PDF copy")
+   def has_pdf(self):
+       return self.PDF is not None
    def __unicode__(self):
      return self.tag
    # TODO: Validator which autogenerates 'tag' field from a 'slugification' of principal author surname + year + title

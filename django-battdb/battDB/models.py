@@ -159,10 +159,10 @@ class Experiment(cm.BaseModel):
     def get_absolute_url(self):
         #return reverse('Experiment', kwargs={'slug': self.slug})
         return reverse('Experiment', kwargs={'pk': self.pk})
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['owner', 'name', 'date'], name='unique_slugname')
-        ]
+    #class Meta:
+        #constraints = [
+            #models.UniqueConstraint(fields=['owner', 'name', 'date'], name='unique_slugname')
+        #]
 
 # FIXME: DataFile currently duplicates data. 
 # It is stored for posterity in the format in which it was uploaded.

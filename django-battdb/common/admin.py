@@ -31,11 +31,14 @@ class OrgAdmin(admin.ModelAdmin):
 class BaseAdmin(admin.ModelAdmin):
     list_display = (["name", "user_owner", "status","created_on"])
     list_filter = (["status", "user_owner"])
-    fieldsets = (
-        ('Generic Object fields', {
-            'fields': ('name', 'notes', 'status', 'user_owner', 'created_on', 'attributes')
-        }),
-    )
+    #fieldsets = (
+        #('Model Fields', {
+            #'fields': ([])
+        #}),
+        #('Generic Object fields', {
+            #'fields': ('name', 'notes', 'status', 'user_owner', 'attributes')
+        #}),
+    #)
     def get_changeform_initial_data(self, request):
         get_data = super().get_changeform_initial_data(request)
         get_data['user_owner'] = request.user.pk
@@ -46,7 +49,7 @@ class BaseAdmin(admin.ModelAdmin):
         
         
 class PaperAdmin(BaseAdmin):
-    list_display = (["title", "DOI", "year",])
+    list_display = (["title", "DOI", "year","has_pdf"])
     list_filter = (["year", "org_owners"])
 
 admin.site.register([
