@@ -129,40 +129,6 @@ class Person(models.Model):
 # class UserRole
 
 
-class DeviceType(BaseModel):
-    """
-    A type of thing, or specification. Provides default metadata for objects referencing this type
-    """
-    DEVICE_TYPE_NONE = 1
-    DEVICE_TYPE_CYCLER = 10
-    DEVICE_TYPE_CELL = 20
-    DEVICE_TYPE_MODULE = 30
-    DEVICE_TYPE_SENSOR = 40
-
-    DEVICE_TYPE = (
-        (DEVICE_TYPE_CELL, 'Cell'),
-        (DEVICE_TYPE_CYCLER, 'Cycler'),
-        (DEVICE_TYPE_MODULE, 'Module'),
-        (DEVICE_TYPE_SENSOR, 'Sensor')
-    )
-
-    type = models.PositiveSmallIntegerField(default=DEVICE_TYPE_NONE, choices=DEVICE_TYPE)
-
-
-class Batch(BaseModel):
-    """  
-    Describes a batch of things produced to the same type specification 
-    """
-    manufacturer = models.ForeignKey(Org, null=True, blank=True, on_delete=models.SET_NULL,
-                                     limit_choices_to={'is_mfg_cells': True})
-    device_type = models.ForeignKey(DeviceType, null=True, blank=True, on_delete=models.SET_NULL)
-
-
-# a physical thing
-class Device(BaseModel):
-    batch = models.ForeignKey(Batch, null=True, blank=True, on_delete=models.SET_NULL)
-
-
 class DOIField(models.CharField):
     description = "Digital Object Identifier (DOI)"
 

@@ -28,12 +28,50 @@ class SignalType(models.Model):
         return "%s/%s" % (self.name, self.unit_symbol)
 
 
+class DeviceType(cm.BaseModel):
+    """
+    A type of thing, or specification. Provides default metadata for objects referencing this type
+    """
+    DEVICE_TYPE_NONE = 1
+    DEVICE_TYPE_CYCLER = 10
+    DEVICE_TYPE_CELL = 20
+    DEVICE_TYPE_MODULE = 30
+    DEVICE_TYPE_SENSOR = 40
+
+    DEVICE_TYPE = (
+        (DEVICE_TYPE_CELL, 'Cell'),
+        (DEVICE_TYPE_CYCLER, 'Cycler'),
+        (DEVICE_TYPE_MODULE, 'Module'),
+        (DEVICE_TYPE_SENSOR, 'Sensor')
+    )
+
+    type = models.PositiveSmallIntegerField(default=DEVICE_TYPE_NONE, choices=DEVICE_TYPE)
+
+
+class DeviceBatch(cm.BaseModel):
+    """
+    Describes a batch of things produced to the same type specification
+    """
+    manufacturer = models.ForeignKey(cm.Org, null=True, blank=True, on_delete=models.SET_NULL,
+                                     limit_choices_to={'is_mfg_cells': True})
+    manufactured_on = models.DateField(null=True, blank=True)
+    device_type = models.ForeignKey(DeviceType, null=True, blank=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        verbose_name_plural = "Device Batches"
+
+
+# a physical thing
+class Device(cm.BaseModel):
+    batch = models.ForeignKey(DeviceBatch, null=True, blank=True, on_delete=models.SET_NULL)
+
+
 class TestProtocol(cm.BaseModel):
     """
     Test Protocol description.
     TODO: Harmonise with PyBaMM protocol specifications (issue #18)
     """
-    description = models.TextField()
+    description = models.TextField(help_text="Protocol description, ideally in PyBaMM format")
     parameters = JSONField(default=dict, blank=True)
 
 
@@ -60,7 +98,7 @@ class Equipment(cm.BaseModel):
         verbose_name_plural = "Equipment"
 
 
-# TODO: These should be actual enforcable JSON schemas, not just a collection of default values. (Issue #23)
+# TODO: These should be actual enforceable JSON schemas, not just a collection of default values. (Issue #23)
 # def cell_schema():
 # return {
 # "Description":"Enter cell text description here - add parameters below",
@@ -72,27 +110,8 @@ class Equipment(cm.BaseModel):
 # }
 
 
-# Cell Type - e.g. Samsung 3000mAh 18650 rev B
-class CellType(cm.BaseModel):
+class Cell(Device):
     pass
-
-
-# CellType._meta.get_field('attributes').default = cell_schema
-
-class CellBatch(cm.BaseModel):
-    manufactured_on = models.DateField(null=True, blank=True)
-    manufacturer = models.ForeignKey(cm.Org, on_delete=models.SET_NULL, null=True, blank=True)
-    cells_schema = JSONField(default=dict, blank=True)
-
-    class Meta:
-        verbose_name_plural = "CellBatches"
-
-
-# CellBatch._meta.get_field('attributes').default = cell_schema
-
-class Cell(cm.BaseModel):
-    batch = models.ForeignKey(CellBatch, on_delete=models.SET_NULL, null=True, blank=True)
-    type = models.ForeignKey(CellType, on_delete=models.SET_NULL, null=True, blank=True)
 
 
 # Cell._meta.get_field('attributes').default = cell_schema
@@ -242,7 +261,7 @@ class DataRange(cm.BaseModel):
     # events = JSONField(null=True, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
-        return ("%s/%d: %s" % (self.dataFile, self.id, self.label))
+        return "%s/%d: %s" % (self.dataFile, self.id, self.label)
 
     class Meta:
         verbose_name_plural = "Data Ranges"
@@ -257,8 +276,8 @@ def data_pre_save(sender, instance, *args, **kwargs):
         return
 
     try:
-        print("result_post_save: Sender: %s, Instance: %s, args: %s, kwargs: %s, base_loc: %s, dilename: %s" % (
-        sender, instance, args, kwargs, instance.raw_data_file.storage.base_location, instance.raw_data_file.name))
+        print("result_post_save: Sender: %s, Instance: %s, args: %s, kwargs: %s, base_loc: %s, Filename: %s" % (
+            sender, instance, args, kwargs, instance.raw_data_file.storage.base_location, instance.raw_data_file.name))
         filepath = "/".join([instance.raw_data_file.storage.base_location, instance.raw_data_file.name])
         # TODO: Work out which type of file it is and call the correct parser!
         parser = BiologicCSVnTSVParser(filepath)
