@@ -3,13 +3,13 @@ import traceback
 from django.db import models
 from django.db.models import JSONField
 from django.contrib.postgres.fields import ArrayField
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 import common.models as cm
+from .utils import hash_file
 import dfndb.models as dfn
 from .migration_dummy import *
-
+import hashlib
 
 # from jsonfield_schema import JSONSchema
 
@@ -164,7 +164,7 @@ class Experiment(cm.BaseModel):
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
-        return str(self.owner) + "/" + str(self.name) + "/" + str(self.date)
+        return str(self.user_owner) + "/" + str(self.name) + "/" + str(self.date)
 
     @property
     def slug(self):
@@ -186,11 +186,20 @@ class Experiment(cm.BaseModel):
 # As yet unclear to me which is the best approach.
 
 class RawDataFile(cm.BaseModel):
+    """
+
+    """
+
     raw_data_file = models.FileField(upload_to='raw_data_files', null=True)
+    file_hash = models.CharField(max_length=64, unique=True)
+
+    def clean(self):
+        self.file_hash = hash_file(self.raw_data_file)
+        return super().clean()
 
 
 class ExperimentDataFile(cm.BaseModel):
-    raw_data_file = models.OneToOneField(RawDataFile, on_delete=models.CASCADE)
+    raw_data_file = models.OneToOneField(RawDataFile, on_delete=models.CASCADE, related_name="ExperimentData")
     machine = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True, related_name='all_data')
     # metadata = JSONField(default=resultMetadata_schema, blank=True)
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True,

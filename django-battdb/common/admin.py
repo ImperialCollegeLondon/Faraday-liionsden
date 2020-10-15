@@ -32,7 +32,9 @@ class OrgAdmin(admin.ModelAdmin):
 class BaseAdmin(admin.ModelAdmin):
     list_display = (["name", "user_owner", "status", "created_on"])
     list_filter = (["status", "user_owner"])
+    readonly_fields = ['created_on']
 
+    # can't group fields, because it hides all other fields.
     # fieldsets = (
     # ('Model Fields', {
     # 'fields': ([])
