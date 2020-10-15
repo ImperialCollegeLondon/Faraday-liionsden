@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
 import idutils  # for DOI validation: https://idutils.readthedocs.io/en/latest/
 import datetime
+from django.utils import timezone
 
 
 # TODOnt: Add localised strings (l10n) using django_gettext for all string literals in this file
@@ -34,7 +35,6 @@ class HasStatus(models.Model):
     """
    Abstract base for any model having a common object status field
    """
-    created_on = models.DateField(auto_now_add=True)
     OBJ_STATUS = [
         (OBJ_STATUS_DRAFT, 'Draft'),
         (OBJ_STATUS_SUBMITTED, 'Submitted'),
@@ -59,6 +59,13 @@ class HasOwner(models.Model):
         abstract = True
 
 
+class HasCreatedModifiedDates(models.Model):
+    created_on = models.DateTimeField(auto_now_add=True)
+    modified_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
 class HasAttributes(models.Model):
     """
    Abstract base having JSON attributes
@@ -79,10 +86,10 @@ class HasNotes(models.Model):
         abstract = True
 
 
-class BaseModel(HasName, HasStatus, HasOwner, HasAttributes, HasNotes):
+class BaseModel(HasName, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates):
     """
    Abstract base Inheriting all the common bases as mixins:
-   HasName, HasStatus, HasOwner, HasAttributes, HasNotes
+   HasName, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
    """
     class Meta:
         abstract = True
@@ -175,7 +182,22 @@ class YearField(models.IntegerField):
             raise ValidationError("Invalid year: Cannot pre-date the field of Electrochemistry!")
 
 
-class Paper(BaseModel):
+
+    def clean(self, *args, **kwargs):
+        data = super(ContentTypeRestrictedFileField, self).clean(*args, **kwargs)
+
+        file = data.file
+        content_type = file.content_type
+
+        if content_type in self.content_types:
+            if file._size > self.max_upload_size:
+                raise forms.ValidationError(_('Please keep filesize under %s. Current filesize %s') % (filesizeformat(self.max_upload_size), filesizeformat(file._size)))
+        else:
+            raise forms.ValidationError(_('Filetype not supported.'))
+
+        return data
+
+class Paper(HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates):
     """
     An academic paper
    """
@@ -195,9 +217,9 @@ class Paper(BaseModel):
     def has_pdf(self):
         return self.PDF is not None
 
-    def validate(self, value, obj):
-        tag = slugify(str(self.title) + str(self.year))
-        return super().validate(value, obj)
+    def save(self, *args, **kwargs):
+        self.tag = slugify(str(self.title) + str(self.year))
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return str(self.tag)

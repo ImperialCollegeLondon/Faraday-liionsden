@@ -20,9 +20,9 @@ class PersonAdmin(admin.ModelAdmin):
 
 
 class BaseAdmin(admin.ModelAdmin):
-    list_display = (["name", "user_owner", "status", "created_on"])
+    list_display = (["name", "user_owner", "status", "created_on", "modified_on"])
     list_filter = (["status"])
-    readonly_fields = ['created_on']
+    readonly_fields = ['created_on', 'modified_on']
 
     # can't group fields, because it hides all other fields.
     # fieldsets = (
