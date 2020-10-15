@@ -4,6 +4,9 @@ from django.db.models import JSONField
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
+from django.forms import forms
+from django.template.defaultfilters import filesizeformat
+from django.utils.translation import ugettext_lazy as _
 import idutils  # for DOI validation: https://idutils.readthedocs.io/en/latest/
 import datetime
 from django.utils import timezone
@@ -24,17 +27,16 @@ class HasName(models.Model):
         abstract = True  # this tells Django not to create a table for this model - it's an abstract base class
 
 
-OBJ_STATUS_DRAFT = 10  # viewable and editable only by owner
-OBJ_STATUS_SUBMITTED = 20  # viewable by others, modifiable by owner
-OBJ_STATUS_ACCEPTED = 30  # cannot be modified by owner, except to return status to draft
-OBJ_STATUS_PUBLISHED = 40  # cannot be modified except by admin
-OBJ_STATUS_DELETED = 50  # hidden to all except admin
-
-
 class HasStatus(models.Model):
     """
    Abstract base for any model having a common object status field
    """
+    OBJ_STATUS_DRAFT = 10  # viewable and editable only by owner
+    OBJ_STATUS_SUBMITTED = 20  # viewable by others, modifiable by owner
+    OBJ_STATUS_ACCEPTED = 30  # cannot be modified by owner, except to return status to draft
+    OBJ_STATUS_PUBLISHED = 40  # cannot be modified except by admin
+    OBJ_STATUS_DELETED = 50  # hidden to all except admin
+
     OBJ_STATUS = [
         (OBJ_STATUS_DRAFT, 'Draft'),
         (OBJ_STATUS_SUBMITTED, 'Submitted'),
@@ -131,21 +133,34 @@ class DeviceType(BaseModel):
     """
     A type of thing, or specification. Provides default metadata for objects referencing this type
     """
-    pass
+    DEVICE_TYPE_NONE = 1
+    DEVICE_TYPE_CYCLER = 10
+    DEVICE_TYPE_CELL = 20
+    DEVICE_TYPE_MODULE = 30
+    DEVICE_TYPE_SENSOR = 40
+
+    DEVICE_TYPE = (
+        (DEVICE_TYPE_CELL, 'Cell'),
+        (DEVICE_TYPE_CYCLER, 'Cycler'),
+        (DEVICE_TYPE_MODULE, 'Module'),
+        (DEVICE_TYPE_SENSOR, 'Sensor')
+    )
+
+    type = models.PositiveSmallIntegerField(default=DEVICE_TYPE_NONE, choices=DEVICE_TYPE)
 
 
 class Batch(BaseModel):
     """  
     Describes a batch of things produced to the same type specification 
     """
-    manufacturer = models.ForeignKey(Org, null=True, blank=True, on_delete=models.SET_NULL)
+    manufacturer = models.ForeignKey(Org, null=True, blank=True, on_delete=models.SET_NULL,
+                                     limit_choices_to={'is_mfg_cells': True})
     device_type = models.ForeignKey(DeviceType, null=True, blank=True, on_delete=models.SET_NULL)
-    # validate: my manufacturer is an org with mfg_devices=True
 
 
 # a physical thing
 class Device(BaseModel):
-    pass
+    batch = models.ForeignKey(Batch, null=True, blank=True, on_delete=models.SET_NULL)
 
 
 class DOIField(models.CharField):
@@ -181,7 +196,26 @@ class YearField(models.IntegerField):
         if (value < 1791):
             raise ValidationError("Invalid year: Cannot pre-date the field of Electrochemistry!")
 
+# https://djangosnippets.org/snippets/2206/
+class ContentTypeRestrictedFileField(models.FileField):
+    """
+    Same as FileField, but you can specify:
+        * content_types - list containing allowed content_types. Example: ['application/pdf', 'image/jpeg']
+        * max_upload_size - a number indicating the maximum file size allowed for upload.
+            2.5MB - 2621440
+            5MB - 5242880
+            10MB - 10485760
+            20MB - 20971520
+            50MB - 5242880
+            100MB 104857600
+            250MB - 214958080
+            500MB - 429916160
+    """
+    def __init__(self, *args, **kwargs):
+        self.content_types = kwargs.pop("content_types")
+        self.max_upload_size = kwargs.pop("max_upload_size")
 
+        super(ContentTypeRestrictedFileField, self).__init__(*args, **kwargs)
 
     def clean(self, *args, **kwargs):
         data = super(ContentTypeRestrictedFileField, self).clean(*args, **kwargs)

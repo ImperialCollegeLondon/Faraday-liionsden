@@ -14,19 +14,25 @@ import hashlib
 # from jsonfield_schema import JSONSchema
 
 
-# This model defines a table of signal types e.g. Cell_voltage.
-# Experiments using the same set of SignalTypes could be assumed to be comparable (issue #16).
-# class SignalType(models.Model):
-# name = models.CharField(max_length=30)
-# symbol = models.CharField(max_length=8)
-# unit_name = models.CharField(max_length=30, default="Arb") # could be foreign key to a "SignalTypeUuits" table
-# unit_symbol = models.CharField(max_length=8, default="")
-# def __str__(self):
-# return "%s/%s" % (self.name, self.unit_symbol)
+class SignalType(models.Model):
+    """
+    This model defines a table of signal types e.g. Cell_voltage.
+    Experiments using the same set of SignalTypes could be assumed to be comparable (issue #16).
+    """
+    name = models.CharField(max_length=30)
+    symbol = models.CharField(max_length=8)
+    unit_name = models.CharField(max_length=30, default="Arb") # could be foreign key to a "SignalTypeUuits" table
+    unit_symbol = models.CharField(max_length=8, default="")
 
-# Experient protocol definitions
-# TODO: Harmonise with PyBaMM protocol specifications (issue #18)
+    def __str__(self):
+        return "%s/%s" % (self.name, self.unit_symbol)
+
+
 class TestProtocol(cm.BaseModel):
+    """
+    Test Protocol description.
+    TODO: Harmonise with PyBaMM protocol specifications (issue #18)
+    """
     description = models.TextField()
     parameters = JSONField(default=dict, blank=True)
 
