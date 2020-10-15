@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.postgres.fields import JSONField
-from jsoneditor.forms import JSONEditor
+#from jsoneditor.forms import JSONEditor
 
 from .models import *
 
@@ -19,19 +19,9 @@ class PersonAdmin(admin.ModelAdmin):
 # ], PersonAdmin)
 
 
-class OrgAdmin(admin.ModelAdmin):
-    list_display = (["name"])
-    list_filter = (["name"])
-
-
-# admin.site.register([
-#    Org,
-#    ], OrgAdmin)
-
-
 class BaseAdmin(admin.ModelAdmin):
     list_display = (["name", "user_owner", "status", "created_on"])
-    list_filter = (["status", "user_owner"])
+    list_filter = (["status"])
     readonly_fields = ['created_on']
 
     # can't group fields, because it hides all other fields.
@@ -54,11 +44,32 @@ class BaseAdmin(admin.ModelAdmin):
 # }
 
 
+class OrgAdmin(admin.ModelAdmin):
+    list_display = (["name", "manager", "website", "is_research", "is_publisher", "is_mfg_cells", "is_mfg_equip"])
+    list_filter = (["is_research", "is_publisher", "is_mfg_cells", "is_mfg_equip"])
+
+
+admin.site.register([
+   Org,
+   ], OrgAdmin)
+
+
 class PaperAdmin(BaseAdmin):
     list_display = (["title", "DOI", "year", "has_pdf"])
-    list_filter = (["year", "org_owners"])
+    list_filter = (["year", "publisher", "authors"])
+    readonly_fields = ['created_on', 'tag']
 
 
 admin.site.register([
     Paper,
 ], PaperAdmin)
+
+
+class PersonAdmin(admin.ModelAdmin):
+    list_display = (["name", "user", "org"])
+    list_filter = (["org"])
+
+
+admin.site.register([
+    Person,
+], PersonAdmin)

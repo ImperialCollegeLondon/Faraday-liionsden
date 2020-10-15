@@ -84,30 +84,39 @@ class BaseModel(HasName, HasStatus, HasOwner, HasAttributes, HasNotes):
    Abstract base Inheriting all the common bases as mixins:
    HasName, HasStatus, HasOwner, HasAttributes, HasNotes
    """
-
     class Meta:
         abstract = True
 
 
-class Person(BaseModel):
-    """
-    describes a person in or outside the system e.g. an author on a paper
-    """
-    pass
-
-
 # TODO: ModelForm Org.head = filter on Person WHERE Person.org = this
-class Org(BaseModel):
+class Org(models.Model):
     """
-   Organisation e.g. publisher, manufacturer or institution 
+   Organisation, e.g. publisher, manufacturer or institution
    """
+    name = models.CharField(max_length=128, unique=True, help_text="Organisation name")
+    manager = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
     is_research = models.BooleanField(default=False)
     is_publisher = models.BooleanField(default=False)
     is_mfg_cells = models.BooleanField(default=False)
     is_mfg_equip = models.BooleanField(default=False)
     website = models.URLField(null=True, blank=True)
+    def __str__(self):
+        return str(self.name)
 
 
+class Person(models.Model):
+    """
+    describes a person who can be outside the system e.g. an author on a paper
+    """
+    name = models.CharField(max_length=128, unique=True,
+                            help_text="Person's shortened name (must be unique) e.g. 'D.W. Jones'")
+    user = models.OneToOneField(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True,
+                                related_name="person",
+                                help_text="User account in the system")
+    org = models.ForeignKey(Org, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.name)
 # class UserRole
 
 
@@ -140,12 +149,12 @@ class DOIField(models.CharField):
         super(DOIField, self).__init__(*args, **kwargs)
 
     def validate(self, value, obj):
-        super().validate(value, obj)
         if not idutils.is_doi(value):
             raise ValidationError(
                 _('%(value)s is not a valid DOI'),
                 params={'value': value},
             )
+        return super().validate(value, obj)
 
     def get_url(self):
         pass  # TODO: implement a method to resolve the URL of a DOI
@@ -177,18 +186,21 @@ class Paper(BaseModel):
     year = YearField(default=datetime.date.today().year)
     title = models.CharField(max_length=300)
     # authors = models.ManyToManyField(Person) # no - see above
-    org_owners = models.ManyToManyField(Org, related_name='papers', help_text="Contributing Organisations.")
-    publisher = models.ForeignKey(Org, on_delete=models.SET_NULL, null=True, blank=True)
-    authors = models.CharField(max_length=500)
-    url = models.URLField(null=True,
-                          blank=True)  # blank=true means not a required field in forms. null=True means don't set NOT NULL in SQL
+    publisher = models.ForeignKey(Org, on_delete=models.SET_NULL, null=True, blank=True,
+                                  limit_choices_to={'is_publisher': True})
+    authors = models.ManyToManyField(Person, related_name='papers', help_text="Contributing Persons.")
+    url = models.URLField(null=True, blank=True)
     PDF = models.FileField(null=True, blank=True, help_text="Optional PDF copy")
 
     def has_pdf(self):
         return self.PDF is not None
 
-    def __unicode__(self):
-        return self.tag
+    def validate(self, value, obj):
+        tag = slugify(str(self.title) + str(self.year))
+        return super().validate(value, obj)
+
+    def __str__(self):
+        return str(self.tag)
     # TODO: Validator which autogenerates 'tag' field from a 'slugification' of principal author surname + year + title
 #   def save(self, *args, **kwargs):
 #     self.tag = slugify(self.authors + self.year + self.title)

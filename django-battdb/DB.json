@@ -1,5 +1,13 @@
 [
 {
+  "model": "authtoken.token",
+  "pk": "52f1021a6e32e4202acab1c5c19f0067cc1ce38a",
+  "fields": {
+    "user": 1,
+    "created": "2020-10-14T14:46:13.411Z"
+  }
+},
+{
   "model": "battDB.testprotocol",
   "pk": 1,
   "fields": {
@@ -120,6 +128,45 @@
   }
 },
 {
+  "model": "battDB.rawdatafile",
+  "pk": 1,
+  "fields": {
+    "name": null,
+    "created_on": "2020-10-14",
+    "status": 10,
+    "user_owner": null,
+    "attributes": {},
+    "notes": null,
+    "raw_data_file": "raw_data_files/BioLogic_full_0KI55Qn.txt"
+  }
+},
+{
+  "model": "battDB.rawdatafile",
+  "pk": 2,
+  "fields": {
+    "name": null,
+    "created_on": "2020-10-14",
+    "status": 10,
+    "user_owner": null,
+    "attributes": {},
+    "notes": null,
+    "raw_data_file": "raw_data_files/200720_C-rate_test_Co5_cells_1-14_D128_CD1_Xx0u55w.mpt"
+  }
+},
+{
+  "model": "battDB.rawdatafile",
+  "pk": 3,
+  "fields": {
+    "name": null,
+    "created_on": "2020-10-14",
+    "status": 10,
+    "user_owner": 1,
+    "attributes": {},
+    "notes": null,
+    "raw_data_file": "raw_data_files/BioLogic_full_0KI55Qn_rC1bORI.txt"
+  }
+},
+{
   "model": "battDB.datarange",
   "pk": 1,
   "fields": {
@@ -176,7 +223,7 @@
     "status": 10,
     "user_owner": null,
     "attributes": {},
-    "notes": null,
+    "notes": "",
     "DOI": "https://doi.org/10.1109/5.771073",
     "tag": "foo-bar",
     "year": 2020,
@@ -184,6 +231,7 @@
     "publisher": 1,
     "authors": "N.Paskin",
     "url": "https://ieeexplore.ieee.org/document/771073",
+    "PDF": "",
     "org_owners": [
       1
     ]
@@ -1708,6 +1756,32 @@
     "object_repr": "None",
     "action_flag": 2,
     "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 119,
+  "fields": {
+    "action_time": "2020-10-14T13:47:38.831Z",
+    "user": 1,
+    "content_type": 35,
+    "object_id": "1",
+    "object_repr": "None",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 120,
+  "fields": {
+    "action_time": "2020-10-14T14:46:13.419Z",
+    "user": 1,
+    "content_type": 46,
+    "object_id": "1",
+    "object_repr": "52f1021a6e32e4202acab1c5c19f0067cc1ce38a",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
   }
 },
 {
@@ -3295,6 +3369,78 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 177,
+  "fields": {
+    "name": "Can add Token",
+    "content_type": 45,
+    "codename": "add_token"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 178,
+  "fields": {
+    "name": "Can change Token",
+    "content_type": 45,
+    "codename": "change_token"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 179,
+  "fields": {
+    "name": "Can delete Token",
+    "content_type": 45,
+    "codename": "delete_token"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 180,
+  "fields": {
+    "name": "Can view Token",
+    "content_type": 45,
+    "codename": "view_token"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 181,
+  "fields": {
+    "name": "Can add token",
+    "content_type": 46,
+    "codename": "add_tokenproxy"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 182,
+  "fields": {
+    "name": "Can change token",
+    "content_type": 46,
+    "codename": "change_tokenproxy"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 183,
+  "fields": {
+    "name": "Can delete token",
+    "content_type": 46,
+    "codename": "delete_tokenproxy"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 184,
+  "fields": {
+    "name": "Can view token",
+    "content_type": 46,
+    "codename": "view_tokenproxy"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -3954,6 +4100,22 @@
   "fields": {
     "app_label": "common",
     "model": "batch"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 45,
+  "fields": {
+    "app_label": "authtoken",
+    "model": "token"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 46,
+  "fields": {
+    "app_label": "authtoken",
+    "model": "tokenproxy"
   }
 },
 {

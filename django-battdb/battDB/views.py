@@ -9,7 +9,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import ProcessFormView
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 from .serializers import *
-import matplotlib.pyplot as plt, mpld3
+import matplotlib.pyplot as plt
+import mpld3
 import numpy as np
 import pandas as pd
 

@@ -239,6 +239,19 @@ ALTER SEQUENCE public.auth_user_user_permissions_id_seq OWNED BY public.auth_use
 
 
 --
+-- Name: authtoken_token; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.authtoken_token (
+    key character varying(40) NOT NULL,
+    created timestamp with time zone NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE public.authtoken_token OWNER TO towen;
+
+--
 -- Name: battDB_cell; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -925,6 +938,7 @@ CREATE TABLE public.common_paper (
     user_owner_id integer,
     name character varying(128),
     notes text,
+    "PDF" character varying(100),
     CONSTRAINT common_paper_status_check CHECK ((status >= 0))
 );
 
@@ -2029,6 +2043,14 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 174	Can change batch	44	change_batch
 175	Can delete batch	44	delete_batch
 176	Can view batch	44	view_batch
+177	Can add Token	45	add_token
+178	Can change Token	45	change_token
+179	Can delete Token	45	delete_token
+180	Can view Token	45	view_token
+181	Can add token	46	add_tokenproxy
+182	Can change token	46	change_tokenproxy
+183	Can delete token	46	delete_tokenproxy
+184	Can view token	46	view_tokenproxy
 \.
 
 
@@ -2166,6 +2188,15 @@ COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
 
 
 --
+-- Data for Name: authtoken_token; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.authtoken_token (key, created, user_id) FROM stdin;
+52f1021a6e32e4202acab1c5c19f0067cc1ce38a	2020-10-14 15:46:13.411002+01	1
+\.
+
+
+--
 -- Data for Name: battDB_cell; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
@@ -2260,6 +2291,9 @@ COPY public."battDB_experimentdatafile" (id, raw_data_file_id, experiment_id, ma
 --
 
 COPY public."battDB_rawdatafile" (id, created_on, status, attributes, raw_data_file, user_owner_id, name, notes) FROM stdin;
+1	2020-10-14	10	{}	raw_data_files/BioLogic_full_0KI55Qn.txt	\N	\N	\N
+2	2020-10-14	10	{}	raw_data_files/200720_C-rate_test_Co5_cells_1-14_D128_CD1_Xx0u55w.mpt	\N	\N	\N
+3	2020-10-14	10	{}	raw_data_files/BioLogic_full_0KI55Qn_rC1bORI.txt	1	\N	\N
 \.
 
 
@@ -2309,8 +2343,8 @@ COPY public.common_org (id, website, attributes, created_on, is_mfg_cells, is_mf
 -- Data for Name: common_paper; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.common_paper (id, "DOI", tag, year, title, authors, url, created_on, publisher_id, attributes, status, user_owner_id, name, notes) FROM stdin;
-1	https://doi.org/10.1109/5.771073	foo-bar	2020	Toward unique identifiers	N.Paskin	https://ieeexplore.ieee.org/document/771073	2020-10-12	1	{}	10	\N	\N	\N
+COPY public.common_paper (id, "DOI", tag, year, title, authors, url, created_on, publisher_id, attributes, status, user_owner_id, name, notes, "PDF") FROM stdin;
+1	https://doi.org/10.1109/5.771073	foo-bar	2020	Toward unique identifiers	N.Paskin	https://ieeexplore.ieee.org/document/771073	2020-10-12	1	{}	10	\N	\N		
 \.
 
 
@@ -2518,6 +2552,8 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 116	2020-10-12 22:00:22.900391+01	1	ExperimentalApparatus object (1)	2	[]	7	1
 117	2020-10-12 23:22:21.079795+01	1	ExperimentalApparatus object (1)	2	[{"changed": {"fields": ["Attributes"]}}]	7	1
 118	2020-10-12 23:26:31.741966+01	1	None	2	[]	7	1
+119	2020-10-14 14:47:38.831365+01	1	None	2	[]	35	1
+120	2020-10-14 15:46:13.419807+01	1	52f1021a6e32e4202acab1c5c19f0067cc1ce38a	1	[{"added": {}}]	46	1
 \.
 
 
@@ -2570,6 +2606,8 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 42	common	devicetype
 43	common	device
 44	common	batch
+45	authtoken	token
+46	authtoken	tokenproxy
 \.
 
 
@@ -2675,6 +2713,11 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 97	battDB	0053_auto_20201013_2250	2020-10-13 23:51:16.733107+01
 98	common	0011_auto_20201013_2250	2020-10-13 23:51:16.981289+01
 99	dfndb	0008_auto_20201013_2250	2020-10-13 23:51:17.183785+01
+100	battDB	0054_auto_20201014_1344	2020-10-14 14:44:46.791122+01
+101	common	0012_paper_pdf	2020-10-14 14:44:46.819836+01
+102	authtoken	0001_initial	2020-10-14 15:45:36.759056+01
+103	authtoken	0002_auto_20160226_1747	2020-10-14 15:45:36.895847+01
+104	authtoken	0003_tokenproxy	2020-10-14 15:45:36.901198+01
 \.
 
 
@@ -2713,7 +2756,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 112, true);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 176, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 184, true);
 
 
 --
@@ -2811,7 +2854,7 @@ SELECT pg_catalog.setval('public."battDB_experimentdatafile_id_seq"', 3, true);
 -- Name: battDB_rawdatafile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_rawdatafile_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_rawdatafile_id_seq"', 3, true);
 
 
 --
@@ -2930,21 +2973,21 @@ SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 1, false);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 118, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 120, true);
 
 
 --
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 44, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 46, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 99, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 104, true);
 
 
 --
@@ -3041,6 +3084,22 @@ ALTER TABLE ONLY public.auth_user_user_permissions
 
 ALTER TABLE ONLY public.auth_user
     ADD CONSTRAINT auth_user_username_key UNIQUE (username);
+
+
+--
+-- Name: authtoken_token authtoken_token_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.authtoken_token
+    ADD CONSTRAINT authtoken_token_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: authtoken_token authtoken_token_user_id_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.authtoken_token
+    ADD CONSTRAINT authtoken_token_user_id_key UNIQUE (user_id);
 
 
 --
@@ -3548,14 +3607,6 @@ ALTER TABLE ONLY public.django_session
 
 
 --
--- Name: battDB_experiment unique_slugname; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experiment"
-    ADD CONSTRAINT unique_slugname UNIQUE (user_owner_id, name, date);
-
-
---
 -- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -3616,6 +3667,13 @@ CREATE INDEX auth_user_user_permissions_user_id_a95ead1b ON public.auth_user_use
 --
 
 CREATE INDEX auth_user_username_6821ab7c_like ON public.auth_user USING btree (username varchar_pattern_ops);
+
+
+--
+-- Name: authtoken_token_key_10f0b77e_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX authtoken_token_key_10f0b77e_like ON public.authtoken_token USING btree (key varchar_pattern_ops);
 
 
 --
@@ -4211,6 +4269,14 @@ ALTER TABLE ONLY public.auth_user_user_permissions
 
 ALTER TABLE ONLY public.auth_user_user_permissions
     ADD CONSTRAINT auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: authtoken_token authtoken_token_user_id_35299eff_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.authtoken_token
+    ADD CONSTRAINT authtoken_token_user_id_35299eff_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
