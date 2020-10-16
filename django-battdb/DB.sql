@@ -1052,10 +1052,8 @@ ALTER SEQUENCE public.dfndb_compound_id_seq OWNED BY public.dfndb_compound.id;
 
 CREATE TABLE public.dfndb_data (
     id integer NOT NULL,
-    type integer NOT NULL,
-    data text NOT NULL,
-    material_id integer NOT NULL,
-    paper_id integer NOT NULL,
+    data jsonb NOT NULL,
+    paper_id integer,
     user_owner_id integer,
     attributes jsonb NOT NULL,
     status smallint NOT NULL,
@@ -1097,10 +1095,11 @@ ALTER SEQUENCE public.dfndb_data_id_seq OWNED BY public.dfndb_data.id;
 
 CREATE TABLE public.dfndb_dataparameter (
     id integer NOT NULL,
-    amount smallint NOT NULL,
     data_id integer NOT NULL,
     parameter_id integer NOT NULL,
-    CONSTRAINT dfndb_dataparameter_amount_check CHECK ((amount >= 0))
+    material_id integer,
+    type smallint NOT NULL,
+    CONSTRAINT dfndb_dataparameter_type_check CHECK ((type >= 0))
 );
 
 
@@ -1221,7 +1220,6 @@ ALTER SEQUENCE public.dfndb_method_id_seq OWNED BY public.dfndb_method.id;
 CREATE TABLE public.dfndb_parameter (
     id integer NOT NULL,
     symbol character varying(40) NOT NULL,
-    type integer NOT NULL,
     notes text NOT NULL,
     unit_id integer,
     user_owner_id integer,
@@ -1267,7 +1265,10 @@ CREATE TABLE public.dfndb_quantityunit (
     "quantityName" character varying(100) NOT NULL,
     "quantitySymbol" character varying(40) NOT NULL,
     "unitName" character varying(40) NOT NULL,
-    "unitSymbol" character varying(40) NOT NULL
+    "unitSymbol" character varying(40) NOT NULL,
+    "is_SI_unit" boolean NOT NULL,
+    related_scale double precision,
+    related_unit_id integer
 );
 
 
@@ -2319,7 +2320,7 @@ COPY public.dfndb_compound (id, formula, name, mass) FROM stdin;
 -- Data for Name: dfndb_data; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_data (id, type, data, material_id, paper_id, user_owner_id, attributes, status, name, notes, modified_on, created_on) FROM stdin;
+COPY public.dfndb_data (id, data, paper_id, user_owner_id, attributes, status, name, notes, modified_on, created_on) FROM stdin;
 \.
 
 
@@ -2327,7 +2328,7 @@ COPY public.dfndb_data (id, type, data, material_id, paper_id, user_owner_id, at
 -- Data for Name: dfndb_dataparameter; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_dataparameter (id, amount, data_id, parameter_id) FROM stdin;
+COPY public.dfndb_dataparameter (id, data_id, parameter_id, material_id, type) FROM stdin;
 \.
 
 
@@ -2345,6 +2346,8 @@ COPY public.dfndb_material (id, polymer, user_owner_id, type, attributes, status
 --
 
 COPY public.dfndb_method (id, type, description, user_owner_id, attributes, status, name, notes, modified_on, created_on) FROM stdin;
+1	2		1	{}	10	DFN		2020-10-16	2020-10-16 14:09:50.498057+01
+2	1		1	{}	10	GITT		2020-10-16	2020-10-16 14:10:00.357987+01
 \.
 
 
@@ -2352,8 +2355,10 @@ COPY public.dfndb_method (id, type, description, user_owner_id, attributes, stat
 -- Data for Name: dfndb_parameter; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_parameter (id, symbol, type, notes, unit_id, user_owner_id, attributes, status, name, modified_on, created_on) FROM stdin;
-1	rP	1		6	\N	{}	10	particle radius	2020-10-16	2020-10-16 13:02:34.855802+01
+COPY public.dfndb_parameter (id, symbol, notes, unit_id, user_owner_id, attributes, status, name, modified_on, created_on) FROM stdin;
+1	rP		6	\N	{}	10	particle radius	2020-10-16	2020-10-16 13:02:34.855802+01
+2	t		6	1	{}	10	Thickness	2020-10-16	2020-10-16 13:36:29.748252+01
+3	C		9	1	{}	10	Capacity	2020-10-16	2020-10-16 13:51:37.090972+01
 \.
 
 
@@ -2361,12 +2366,15 @@ COPY public.dfndb_parameter (id, symbol, type, notes, unit_id, user_owner_id, at
 -- Data for Name: dfndb_quantityunit; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_quantityunit (id, "quantityName", "quantitySymbol", "unitName", "unitSymbol") FROM stdin;
-1	Voltage	V	Volts	V
-3	Charge	Q	Coulombs	C
-4	Power	P	Watts	W
-5	Current	I	Amps	A
-6	Distance	d	metres	m
+COPY public.dfndb_quantityunit (id, "quantityName", "quantitySymbol", "unitName", "unitSymbol", "is_SI_unit", related_scale, related_unit_id) FROM stdin;
+6	Distance	d	metres	m	t	\N	\N
+5	Current	I	Amps	A	t	\N	\N
+4	Power	P	Watts	W	t	\N	\N
+7	Distance	d	millimetres	mm	f	0.001	6
+1	Voltage	V	Volts	V	t	\N	\N
+3	Charge	Q	Coulombs	C	t	\N	\N
+8	Energy	E	Joules	J	t	\N	\N
+9	Capacity	C	Watt Hours	Wh	f	3600	8
 \.
 
 
@@ -2534,6 +2542,18 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 158	2020-10-16 12:55:00.733173+01	1	NMC622	2	[{"changed": {"name": "composition part", "object": "Ni6", "fields": ["Amount"]}}]	29	1
 159	2020-10-16 13:02:19.57821+01	6	Distance (d) / m	1	[{"added": {}}]	31	1
 160	2020-10-16 13:02:34.85802+01	1	particle radius: rP	1	[{"added": {}}]	32	1
+161	2020-10-16 13:36:29.749178+01	2	Thickness: t	1	[{"added": {}}]	32	1
+162	2020-10-16 13:43:10.094636+01	6	Distance (d) / m	2	[{"changed": {"fields": ["Is SI unit"]}}]	31	1
+163	2020-10-16 13:43:16.5572+01	5	Current (I) / A	2	[{"changed": {"fields": ["Is SI unit"]}}]	31	1
+164	2020-10-16 13:43:22.847922+01	4	Power (P) / W	2	[{"changed": {"fields": ["Is SI unit"]}}]	31	1
+165	2020-10-16 13:45:42.452603+01	7	Distance (d) / mm	1	[{"added": {}}]	31	1
+166	2020-10-16 13:46:01.828867+01	1	Voltage (V) / V	2	[{"changed": {"fields": ["Is SI unit"]}}]	31	1
+167	2020-10-16 13:46:11.210912+01	3	Charge (Q) / C	2	[{"changed": {"fields": ["Is SI unit"]}}]	31	1
+168	2020-10-16 13:50:43.775177+01	8	Energy (E) / J	1	[{"added": {}}]	31	1
+169	2020-10-16 13:51:23.525296+01	9	Capacity (C) / Wh	1	[{"added": {}}]	31	1
+170	2020-10-16 13:51:37.092029+01	3	Capacity: C / Wh	1	[{"added": {}}]	32	1
+171	2020-10-16 14:09:50.499189+01	1	DFN	1	[{"added": {}}]	30	1
+172	2020-10-16 14:10:00.35893+01	2	GITT	1	[{"added": {}}]	30	1
 \.
 
 
@@ -2742,6 +2762,9 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 143	dfndb	0020_auto_20201016_1211	2020-10-16 13:11:28.311338+01
 144	common	0022_remove_paper_authors	2020-10-16 13:16:23.050458+01
 145	common	0023_auto_20201016_1219	2020-10-16 13:19:09.07709+01
+146	dfndb	0021_auto_20201016_1234	2020-10-16 13:34:51.343923+01
+147	dfndb	0022_auto_20201016_1242	2020-10-16 13:42:34.407659+01
+148	dfndb	0023_auto_20201016_1245	2020-10-16 13:45:39.468389+01
 \.
 
 
@@ -2962,28 +2985,28 @@ SELECT pg_catalog.setval('public.dfndb_material_id_seq', 1, true);
 -- Name: dfndb_method_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_method_id_seq', 1, false);
+SELECT pg_catalog.setval('public.dfndb_method_id_seq', 2, true);
 
 
 --
 -- Name: dfndb_parameter_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_parameter_id_seq', 1, true);
+SELECT pg_catalog.setval('public.dfndb_parameter_id_seq', 3, true);
 
 
 --
 -- Name: dfndb_quantityunit_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 6, true);
+SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 9, true);
 
 
 --
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 160, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 172, true);
 
 
 --
@@ -2997,7 +3020,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 49, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 145, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 148, true);
 
 
 --
@@ -3513,14 +3536,6 @@ ALTER TABLE ONLY public.dfndb_parameter
 
 
 --
--- Name: dfndb_quantityunit dfndb_quantityunit_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.dfndb_quantityunit
-    ADD CONSTRAINT dfndb_quantityunit_name_key UNIQUE ("quantityName");
-
-
---
 -- Name: dfndb_quantityunit dfndb_quantityunit_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -3529,19 +3544,11 @@ ALTER TABLE ONLY public.dfndb_quantityunit
 
 
 --
--- Name: dfndb_quantityunit dfndb_quantityunit_symbol_key; Type: CONSTRAINT; Schema: public; Owner: towen
+-- Name: dfndb_quantityunit dfndb_quantityunit_quantityName_unitSymbol_770a6f9f_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.dfndb_quantityunit
-    ADD CONSTRAINT dfndb_quantityunit_symbol_key UNIQUE ("quantitySymbol");
-
-
---
--- Name: dfndb_quantityunit dfndb_quantityunit_unitSymbol_key; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.dfndb_quantityunit
-    ADD CONSTRAINT "dfndb_quantityunit_unitSymbol_key" UNIQUE ("unitSymbol");
+    ADD CONSTRAINT "dfndb_quantityunit_quantityName_unitSymbol_770a6f9f_uniq" UNIQUE ("quantityName", "unitSymbol");
 
 
 --
@@ -3984,13 +3991,6 @@ CREATE INDEX dfndb_compositionpart_material_id_c402ab5c ON public.dfndb_composit
 
 
 --
--- Name: dfndb_data_material_id_2ecfb612; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX dfndb_data_material_id_2ecfb612 ON public.dfndb_data USING btree (material_id);
-
-
---
 -- Name: dfndb_data_name_46013f4f_like; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -4016,6 +4016,13 @@ CREATE INDEX dfndb_data_paper_id_77124c38 ON public.dfndb_data USING btree (pape
 --
 
 CREATE INDEX dfndb_dataparameter_data_id_fd4b0c14 ON public.dfndb_dataparameter USING btree (data_id);
+
+
+--
+-- Name: dfndb_dataparameter_material_id_d751afed; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_dataparameter_material_id_d751afed ON public.dfndb_dataparameter USING btree (material_id);
 
 
 --
@@ -4089,17 +4096,17 @@ CREATE INDEX dfndb_quantityunit_name_62125fc1_like ON public.dfndb_quantityunit 
 
 
 --
+-- Name: dfndb_quantityunit_related_unit_id_2a09ab35; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_quantityunit_related_unit_id_2a09ab35 ON public.dfndb_quantityunit USING btree (related_unit_id);
+
+
+--
 -- Name: dfndb_quantityunit_symbol_ae2875ca_like; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX dfndb_quantityunit_symbol_ae2875ca_like ON public.dfndb_quantityunit USING btree ("quantitySymbol" varchar_pattern_ops);
-
-
---
--- Name: dfndb_quantityunit_unitSymbol_d648d83b_like; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "dfndb_quantityunit_unitSymbol_d648d83b_like" ON public.dfndb_quantityunit USING btree ("unitSymbol" varchar_pattern_ops);
 
 
 --
@@ -4459,14 +4466,6 @@ ALTER TABLE ONLY public.dfndb_compositionpart
 
 
 --
--- Name: dfndb_data dfndb_data_material_id_2ecfb612_fk_dfndb_material_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.dfndb_data
-    ADD CONSTRAINT dfndb_data_material_id_2ecfb612_fk_dfndb_material_id FOREIGN KEY (material_id) REFERENCES public.dfndb_material(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: dfndb_data dfndb_data_paper_id_77124c38_fk_common_paper_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -4488,6 +4487,14 @@ ALTER TABLE ONLY public.dfndb_data
 
 ALTER TABLE ONLY public.dfndb_dataparameter
     ADD CONSTRAINT dfndb_dataparameter_data_id_fd4b0c14_fk_dfndb_data_id FOREIGN KEY (data_id) REFERENCES public.dfndb_data(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_dataparameter dfndb_dataparameter_material_id_d751afed_fk_dfndb_material_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_dataparameter
+    ADD CONSTRAINT dfndb_dataparameter_material_id_d751afed_fk_dfndb_material_id FOREIGN KEY (material_id) REFERENCES public.dfndb_material(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -4528,6 +4535,14 @@ ALTER TABLE ONLY public.dfndb_parameter
 
 ALTER TABLE ONLY public.dfndb_parameter
     ADD CONSTRAINT dfndb_parameter_user_owner_id_18c94c30_fk_auth_user_id FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: dfndb_quantityunit dfndb_quantityunit_related_unit_id_2a09ab35_fk_dfndb_qua; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_quantityunit
+    ADD CONSTRAINT dfndb_quantityunit_related_unit_id_2a09ab35_fk_dfndb_qua FOREIGN KEY (related_unit_id) REFERENCES public.dfndb_quantityunit(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

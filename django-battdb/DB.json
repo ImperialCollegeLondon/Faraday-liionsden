@@ -294,13 +294,46 @@
   }
 },
 {
+  "model": "dfndb.method",
+  "pk": 1,
+  "fields": {
+    "name": "DFN",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-16T13:09:50.498Z",
+    "modified_on": "2020-10-16",
+    "attributes": {},
+    "notes": "",
+    "type": 2,
+    "description": ""
+  }
+},
+{
+  "model": "dfndb.method",
+  "pk": 2,
+  "fields": {
+    "name": "GITT",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-16T13:10:00.357Z",
+    "modified_on": "2020-10-16",
+    "attributes": {},
+    "notes": "",
+    "type": 1,
+    "description": ""
+  }
+},
+{
   "model": "dfndb.quantityunit",
   "pk": 1,
   "fields": {
     "quantityName": "Voltage",
     "quantitySymbol": "V",
     "unitName": "Volts",
-    "unitSymbol": "V"
+    "unitSymbol": "V",
+    "is_SI_unit": true,
+    "related_unit": null,
+    "related_scale": null
   }
 },
 {
@@ -310,7 +343,10 @@
     "quantityName": "Charge",
     "quantitySymbol": "Q",
     "unitName": "Coulombs",
-    "unitSymbol": "C"
+    "unitSymbol": "C",
+    "is_SI_unit": true,
+    "related_unit": null,
+    "related_scale": null
   }
 },
 {
@@ -320,7 +356,10 @@
     "quantityName": "Power",
     "quantitySymbol": "P",
     "unitName": "Watts",
-    "unitSymbol": "W"
+    "unitSymbol": "W",
+    "is_SI_unit": true,
+    "related_unit": null,
+    "related_scale": null
   }
 },
 {
@@ -330,7 +369,10 @@
     "quantityName": "Current",
     "quantitySymbol": "I",
     "unitName": "Amps",
-    "unitSymbol": "A"
+    "unitSymbol": "A",
+    "is_SI_unit": true,
+    "related_unit": null,
+    "related_scale": null
   }
 },
 {
@@ -340,7 +382,49 @@
     "quantityName": "Distance",
     "quantitySymbol": "d",
     "unitName": "metres",
-    "unitSymbol": "m"
+    "unitSymbol": "m",
+    "is_SI_unit": true,
+    "related_unit": null,
+    "related_scale": null
+  }
+},
+{
+  "model": "dfndb.quantityunit",
+  "pk": 7,
+  "fields": {
+    "quantityName": "Distance",
+    "quantitySymbol": "d",
+    "unitName": "millimetres",
+    "unitSymbol": "mm",
+    "is_SI_unit": false,
+    "related_unit": 6,
+    "related_scale": 0.001
+  }
+},
+{
+  "model": "dfndb.quantityunit",
+  "pk": 8,
+  "fields": {
+    "quantityName": "Energy",
+    "quantitySymbol": "E",
+    "unitName": "Joules",
+    "unitSymbol": "J",
+    "is_SI_unit": true,
+    "related_unit": null,
+    "related_scale": null
+  }
+},
+{
+  "model": "dfndb.quantityunit",
+  "pk": 9,
+  "fields": {
+    "quantityName": "Capacity",
+    "quantitySymbol": "C",
+    "unitName": "Watt Hours",
+    "unitSymbol": "Wh",
+    "is_SI_unit": false,
+    "related_unit": 8,
+    "related_scale": 3600.0
   }
 },
 {
@@ -354,8 +438,37 @@
     "modified_on": "2020-10-16",
     "attributes": {},
     "symbol": "rP",
-    "type": 1,
     "unit": 6,
+    "notes": ""
+  }
+},
+{
+  "model": "dfndb.parameter",
+  "pk": 2,
+  "fields": {
+    "name": "Thickness",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-16T12:36:29.748Z",
+    "modified_on": "2020-10-16",
+    "attributes": {},
+    "symbol": "t",
+    "unit": 6,
+    "notes": ""
+  }
+},
+{
+  "model": "dfndb.parameter",
+  "pk": 3,
+  "fields": {
+    "name": "Capacity",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-16T12:51:37.090Z",
+    "modified_on": "2020-10-16",
+    "attributes": {},
+    "symbol": "C",
+    "unit": 9,
     "notes": ""
   }
 },
@@ -2422,6 +2535,162 @@
     "content_type": 32,
     "object_id": "1",
     "object_repr": "particle radius: rP",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 161,
+  "fields": {
+    "action_time": "2020-10-16T12:36:29.749Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "2",
+    "object_repr": "Thickness: t",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 162,
+  "fields": {
+    "action_time": "2020-10-16T12:43:10.094Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "6",
+    "object_repr": "Distance (d) / m",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is SI unit\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 163,
+  "fields": {
+    "action_time": "2020-10-16T12:43:16.557Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "5",
+    "object_repr": "Current (I) / A",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is SI unit\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 164,
+  "fields": {
+    "action_time": "2020-10-16T12:43:22.847Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "4",
+    "object_repr": "Power (P) / W",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is SI unit\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 165,
+  "fields": {
+    "action_time": "2020-10-16T12:45:42.452Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "7",
+    "object_repr": "Distance (d) / mm",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 166,
+  "fields": {
+    "action_time": "2020-10-16T12:46:01.828Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "1",
+    "object_repr": "Voltage (V) / V",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is SI unit\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 167,
+  "fields": {
+    "action_time": "2020-10-16T12:46:11.210Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "3",
+    "object_repr": "Charge (Q) / C",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is SI unit\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 168,
+  "fields": {
+    "action_time": "2020-10-16T12:50:43.775Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "8",
+    "object_repr": "Energy (E) / J",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 169,
+  "fields": {
+    "action_time": "2020-10-16T12:51:23.525Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "9",
+    "object_repr": "Capacity (C) / Wh",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 170,
+  "fields": {
+    "action_time": "2020-10-16T12:51:37.092Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "3",
+    "object_repr": "Capacity: C / Wh",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 171,
+  "fields": {
+    "action_time": "2020-10-16T13:09:50.499Z",
+    "user": 1,
+    "content_type": 30,
+    "object_id": "1",
+    "object_repr": "DFN",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 172,
+  "fields": {
+    "action_time": "2020-10-16T13:10:00.358Z",
+    "user": 1,
+    "content_type": 30,
+    "object_id": "2",
+    "object_repr": "GITT",
     "action_flag": 1,
     "change_message": "[{\"added\": {}}]"
   }
