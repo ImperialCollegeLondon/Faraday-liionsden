@@ -70,6 +70,9 @@ class CompositionPart(models.Model):
 
 
 class Method(cm.BaseModel):
+    """
+    A
+    """
     # what does the 'method class' do??
     # in any case it's a bad idea to have something called class, it gets confusing
     # Using 'choices' will cause Django to use multiple choice validators & drop down menus
@@ -79,7 +82,7 @@ class Method(cm.BaseModel):
         (2, 'Modelling'),
     ]
     type = models.IntegerField(choices=METHOD_TYPE_CHOICES)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, help_text="Method description in PyBaMM format")
 
 
 class QuantityUnit(models.Model):

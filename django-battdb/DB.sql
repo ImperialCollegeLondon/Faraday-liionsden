@@ -942,9 +942,10 @@ ALTER SEQUENCE public.common_paperauthor_id_seq OWNED BY public.common_paperauth
 
 CREATE TABLE public.common_person (
     id integer NOT NULL,
-    name character varying(128) NOT NULL,
     org_id integer,
-    user_id integer
+    user_id integer,
+    "longName" character varying(128) NOT NULL,
+    "shortName" character varying(128) NOT NULL
 );
 
 
@@ -1135,14 +1136,16 @@ CREATE TABLE public.dfndb_material (
     id integer NOT NULL,
     polymer integer NOT NULL,
     user_owner_id integer,
-    type integer NOT NULL,
+    type smallint NOT NULL,
     attributes jsonb NOT NULL,
     status smallint NOT NULL,
     name character varying(128),
     notes text,
     modified_on date NOT NULL,
     created_on timestamp with time zone NOT NULL,
-    CONSTRAINT dfndb_material_status_check CHECK ((status >= 0))
+    CONSTRAINT dfndb_material_polymer_cda0da24_check CHECK ((polymer >= 0)),
+    CONSTRAINT dfndb_material_status_check CHECK ((status >= 0)),
+    CONSTRAINT dfndb_material_type_19d56e15_check CHECK ((type >= 0))
 );
 
 
@@ -2287,8 +2290,8 @@ COPY public.common_paperauthor (id, is_principal, author_id, paper_id) FROM stdi
 -- Data for Name: common_person; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.common_person (id, name, org_id, user_id) FROM stdin;
-1	T. Owen	1	1
+COPY public.common_person (id, org_id, user_id, "longName", "shortName") FROM stdin;
+1	1	1	Tom Owen	T.Owen
 \.
 
 
@@ -2300,6 +2303,8 @@ COPY public.dfndb_compositionpart (id, amount, compound_id, material_id) FROM st
 2	2	3	1
 3	2	4	1
 1	6	5	1
+4	1	2	2
+5	1	1	3
 \.
 
 
@@ -2337,7 +2342,9 @@ COPY public.dfndb_dataparameter (id, data_id, parameter_id, material_id, type) F
 --
 
 COPY public.dfndb_material (id, polymer, user_owner_id, type, attributes, status, name, notes, modified_on, created_on) FROM stdin;
-1	0	\N	1	{}	10	NMC622		2020-10-16	2020-10-16 12:16:10.333468+01
+2	1	1	1	{}	10	Graphite		2020-10-16	2020-10-16 15:05:13.815326+01
+1	0	1	1	{}	10	NMC622		2020-10-16	2020-10-16 12:16:10.333468+01
+3	0	1	2	{}	10	Lithium Metal		2020-10-16	2020-10-16 15:06:34.982964+01
 \.
 
 
@@ -2554,6 +2561,11 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 170	2020-10-16 13:51:37.092029+01	3	Capacity: C / Wh	1	[{"added": {}}]	32	1
 171	2020-10-16 14:09:50.499189+01	1	DFN	1	[{"added": {}}]	30	1
 172	2020-10-16 14:10:00.35893+01	2	GITT	1	[{"added": {}}]	30	1
+173	2020-10-16 14:56:03.399756+01	1	n	2	[{"changed": {"fields": ["User"]}}]	36	1
+174	2020-10-16 14:59:39.38667+01	1	T.Owen	2	[{"changed": {"fields": ["LongName", "ShortName", "User"]}}]	36	1
+175	2020-10-16 15:05:13.819015+01	2	Graphite	1	[{"added": {}}, {"added": {"name": "composition part", "object": "C1"}}]	29	1
+176	2020-10-16 15:05:36.225971+01	1	NMC622	2	[{"changed": {"fields": ["User owner"]}}]	29	1
+177	2020-10-16 15:06:34.98439+01	3	Lithium Metal	1	[{"added": {}}, {"added": {"name": "composition part", "object": "Li1"}}]	29	1
 \.
 
 
@@ -2765,6 +2777,10 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 146	dfndb	0021_auto_20201016_1234	2020-10-16 13:34:51.343923+01
 147	dfndb	0022_auto_20201016_1242	2020-10-16 13:42:34.407659+01
 148	dfndb	0023_auto_20201016_1245	2020-10-16 13:45:39.468389+01
+149	common	0024_auto_20201016_1354	2020-10-16 14:54:54.508138+01
+150	dfndb	0024_auto_20201016_1354	2020-10-16 14:54:54.547899+01
+151	common	0025_auto_20201016_1404	2020-10-16 15:07:48.463978+01
+152	dfndb	0025_auto_20201016_1404	2020-10-16 15:07:48.541286+01
 \.
 
 
@@ -2950,7 +2966,7 @@ SELECT pg_catalog.setval('public.common_person_id_seq', 1, true);
 -- Name: dfndb_compositionpart_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_compositionpart_id_seq', 3, true);
+SELECT pg_catalog.setval('public.dfndb_compositionpart_id_seq', 5, true);
 
 
 --
@@ -2978,7 +2994,7 @@ SELECT pg_catalog.setval('public.dfndb_dataparameter_id_seq', 1, false);
 -- Name: dfndb_material_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_material_id_seq', 1, true);
+SELECT pg_catalog.setval('public.dfndb_material_id_seq', 3, true);
 
 
 --
@@ -3006,7 +3022,7 @@ SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 9, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 172, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 177, true);
 
 
 --
@@ -3020,7 +3036,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 49, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 148, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 152, true);
 
 
 --
@@ -3400,11 +3416,11 @@ ALTER TABLE ONLY public.common_paperauthor
 
 
 --
--- Name: common_person common_person_name_key; Type: CONSTRAINT; Schema: public; Owner: towen
+-- Name: common_person common_person_longName_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.common_person
-    ADD CONSTRAINT common_person_name_key UNIQUE (name);
+    ADD CONSTRAINT "common_person_longName_key" UNIQUE ("longName");
 
 
 --
@@ -3413,6 +3429,14 @@ ALTER TABLE ONLY public.common_person
 
 ALTER TABLE ONLY public.common_person
     ADD CONSTRAINT common_person_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: common_person common_person_shortName_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_person
+    ADD CONSTRAINT "common_person_shortName_key" UNIQUE ("shortName");
 
 
 --
@@ -3963,10 +3987,10 @@ CREATE INDEX common_paperauthor_paper_id_53f7190d ON public.common_paperauthor U
 
 
 --
--- Name: common_person_name_2db9e918_like; Type: INDEX; Schema: public; Owner: towen
+-- Name: common_person_longName_613e60b4_like; Type: INDEX; Schema: public; Owner: towen
 --
 
-CREATE INDEX common_person_name_2db9e918_like ON public.common_person USING btree (name varchar_pattern_ops);
+CREATE INDEX "common_person_longName_613e60b4_like" ON public.common_person USING btree ("longName" varchar_pattern_ops);
 
 
 --
@@ -3974,6 +3998,13 @@ CREATE INDEX common_person_name_2db9e918_like ON public.common_person USING btre
 --
 
 CREATE INDEX common_person_org_id_fa830db5 ON public.common_person USING btree (org_id);
+
+
+--
+-- Name: common_person_shortName_7a8b3bab_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "common_person_shortName_7a8b3bab_like" ON public.common_person USING btree ("shortName" varchar_pattern_ops);
 
 
 --

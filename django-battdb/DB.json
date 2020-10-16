@@ -182,7 +182,8 @@
   "model": "common.person",
   "pk": 1,
   "fields": {
-    "name": "T. Owen",
+    "longName": "Tom Owen",
+    "shortName": "T.Owen",
     "user": 1,
     "org": 1
   }
@@ -257,12 +258,42 @@
   "fields": {
     "name": "NMC622",
     "status": 10,
-    "user_owner": null,
+    "user_owner": 1,
     "created_on": "2020-10-16T11:16:10.333Z",
     "modified_on": "2020-10-16",
     "attributes": {},
     "notes": "",
     "type": 1,
+    "polymer": 0
+  }
+},
+{
+  "model": "dfndb.material",
+  "pk": 2,
+  "fields": {
+    "name": "Graphite",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-16T14:05:13.815Z",
+    "modified_on": "2020-10-16",
+    "attributes": {},
+    "notes": "",
+    "type": 1,
+    "polymer": 1
+  }
+},
+{
+  "model": "dfndb.material",
+  "pk": 3,
+  "fields": {
+    "name": "Lithium Metal",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-16T14:06:34.982Z",
+    "modified_on": "2020-10-16",
+    "attributes": {},
+    "notes": "",
+    "type": 2,
     "polymer": 0
   }
 },
@@ -291,6 +322,24 @@
     "compound": 4,
     "material": 1,
     "amount": 2
+  }
+},
+{
+  "model": "dfndb.compositionpart",
+  "pk": 4,
+  "fields": {
+    "compound": 2,
+    "material": 2,
+    "amount": 1
+  }
+},
+{
+  "model": "dfndb.compositionpart",
+  "pk": 5,
+  "fields": {
+    "compound": 1,
+    "material": 3,
+    "amount": 1
   }
 },
 {
@@ -2693,6 +2742,71 @@
     "object_repr": "GITT",
     "action_flag": 1,
     "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 173,
+  "fields": {
+    "action_time": "2020-10-16T13:56:03.399Z",
+    "user": 1,
+    "content_type": 36,
+    "object_id": "1",
+    "object_repr": "n",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"User\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 174,
+  "fields": {
+    "action_time": "2020-10-16T13:59:39.386Z",
+    "user": 1,
+    "content_type": 36,
+    "object_id": "1",
+    "object_repr": "T.Owen",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"LongName\", \"ShortName\", \"User\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 175,
+  "fields": {
+    "action_time": "2020-10-16T14:05:13.819Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "2",
+    "object_repr": "Graphite",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"composition part\", \"object\": \"C1\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 176,
+  "fields": {
+    "action_time": "2020-10-16T14:05:36.225Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "1",
+    "object_repr": "NMC622",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"User owner\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 177,
+  "fields": {
+    "action_time": "2020-10-16T14:06:34.984Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "3",
+    "object_repr": "Lithium Metal",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"composition part\", \"object\": \"Li1\"}}]"
   }
 },
 {
