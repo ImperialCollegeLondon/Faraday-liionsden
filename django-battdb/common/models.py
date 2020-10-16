@@ -68,6 +68,7 @@ class HasCreatedModifiedDates(models.Model):
     class Meta:
         abstract = True
 
+
 class HasAttributes(models.Model):
     """
    Abstract base having JSON attributes
@@ -109,6 +110,7 @@ class Org(models.Model):
     is_mfg_cells = models.BooleanField(default=False)
     is_mfg_equip = models.BooleanField(default=False)
     website = models.URLField(null=True, blank=True)
+
     def __str__(self):
         return str(self.name)
 
@@ -117,15 +119,24 @@ class Person(models.Model):
     """
     describes a person who can be outside the system e.g. an author on a paper
     """
-    name = models.CharField(max_length=128, unique=True,
-                            help_text="Person's shortened name (must be unique) e.g. 'D.W. Jones'")
+    longName = models.CharField(max_length=128, unique=True,
+                                help_text="Person's full name e.g. David Wallace Jones")
+    shortName = models.CharField(max_length=128, unique=True,
+                                 help_text="Person's shortened name e.g. 'D.W. Jones'")
     user = models.OneToOneField(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True,
                                 related_name="person",
                                 help_text="User account in the system")
-    org = models.ForeignKey(Org, on_delete=models.SET_NULL, null=True, blank=True)
+    org = models.ForeignKey(Org, on_delete=models.SET_NULL, null=True, blank=True,
+                            help_text="Organisation that this person belongs to")
 
     def __str__(self):
-        return str(self.name)
+        return str(self.shortName)
+
+    def user_firstname(self):
+        return self.user.first_name or "borked"
+
+    def user_lastname(self):
+        return self.user.last_name or "borked"
 # class UserRole
 
 
@@ -157,10 +168,11 @@ class YearField(models.IntegerField):
 
     def validate(self, value, obj):
         super().validate(value, obj)
-        if (value > datetime.date.today().year):
+        if value > datetime.date.today().year:
             raise ValidationError("Invalid year: Cannot be in the future")
-        if (value < 1791):
+        if value < 1791:
             raise ValidationError("Invalid year: Cannot pre-date the field of Electrochemistry!")
+
 
 # https://djangosnippets.org/snippets/2206/
 class ContentTypeRestrictedFileField(models.FileField):
@@ -197,6 +209,7 @@ class ContentTypeRestrictedFileField(models.FileField):
 
         return data
 
+
 class Paper(HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates):
     """
     An academic paper
@@ -220,7 +233,7 @@ class Paper(HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDate
         return self.PDF is not None
 
     def save(self, *args, **kwargs):
-        self.tag = slugify(str(self.title) + str(self.year))
+        self.tag = slugify(str(self.title) + "-" + str(self.year))
         return super().save(*args, **kwargs)
 
     def __str__(self):

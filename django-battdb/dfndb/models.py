@@ -32,7 +32,7 @@ class Compound(models.Model):
 
 class Material(cm.BaseModel):
     """
-    A material specification used as part of an electrochemical cell, e.g. NMC622. <br>
+    A material specification used as part of an electrochemical cell specification, e.g. NMC622. <br>
     Make use of the 'notes' field for additional explanation
     """
     composition = models.ManyToManyField(
@@ -45,10 +45,10 @@ class Material(cm.BaseModel):
         (3, 'Electrolyte'),
         (4, 'Separator'),
     ]
-    type = models.IntegerField(choices=MATERIAL_TYPE_CHOICES)
-    polymer = models.IntegerField(default=0,
-                                  validators=[MinValueValidator(0)],
-                                  help_text="If this material is a polymer, enter degree of polymerization")
+    type = models.PositiveSmallIntegerField(choices=MATERIAL_TYPE_CHOICES)
+    polymer = models.PositiveIntegerField(
+                                           default=0,
+                                           help_text="If this material is a polymer, enter degree of polymerization")
 
     def __str__(self):
         return self.name
@@ -93,8 +93,9 @@ class QuantityUnit(models.Model):
     is_SI_unit = models.BooleanField(default=False)
     related_unit = models.ForeignKey('QuantityUnit',
                                      null=True, blank=True, on_delete=models.SET_NULL,
-                                     limit_choices_to={'is_SI_unit': True})
-    related_scale = models.FloatField(blank=True, null=True)
+                                     limit_choices_to={'is_SI_unit': True},
+                                     help_text="If this unit is NOT an SI unit, it should relate to one")
+    related_scale = models.FloatField(blank=True, null=True, help_text="Scaling of this unit from the SI unit")
 
     def __str__(self):
         return "%s (%s) / %s" % (self.quantityName, self.quantitySymbol, self.unitSymbol)
