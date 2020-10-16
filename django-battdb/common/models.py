@@ -90,7 +90,7 @@ class HasNotes(models.Model):
 
 class BaseModel(HasName, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates):
     """
-   Abstract base Inheriting all the common bases as mixins:
+   Abstract base Inheriting all the common bases as mixins:<br>
    HasName, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
    """
     class Meta:
@@ -210,7 +210,9 @@ class Paper(HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDate
     # authors = models.ManyToManyField(Person) # no - see above
     publisher = models.ForeignKey(Org, on_delete=models.SET_NULL, null=True, blank=True,
                                   limit_choices_to={'is_publisher': True})
-    authors = models.ManyToManyField(Person, related_name='papers', help_text="Contributing Persons.")
+    authors = models.ManyToManyField(Person,
+                                     through='PaperAuthor',
+                                     related_name='papers', help_text="Contributing Persons.")
     url = models.URLField(null=True, blank=True)
     PDF = models.FileField(null=True, blank=True, help_text="Optional PDF copy")
 
@@ -228,3 +230,18 @@ class Paper(HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDate
 #     self.tag = slugify(self.authors + self.year + self.title)
 #     super().save(*args,**kwargs)
 # TODO: ModelForm paper.publisher = filter on Org where Org.type = PUBLISHER
+
+
+class PaperAuthor(models.Model):
+    """
+    Author on paper
+    """
+    paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
+    author = models.ForeignKey(Person, on_delete=models.CASCADE)
+    is_principal = models.BooleanField(default=False)
+
+    # def __str__(self):
+    #     return "%s%d" % (self.compound.formula, self.amount)
+
+    # class Meta:
+    #     unique_together = ('data', 'parameter')

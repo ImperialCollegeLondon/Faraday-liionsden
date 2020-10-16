@@ -879,41 +879,6 @@ CREATE TABLE public.common_paper (
 ALTER TABLE public.common_paper OWNER TO towen;
 
 --
--- Name: common_paper_authors; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public.common_paper_authors (
-    id integer NOT NULL,
-    paper_id integer NOT NULL,
-    person_id integer NOT NULL
-);
-
-
-ALTER TABLE public.common_paper_authors OWNER TO towen;
-
---
--- Name: common_paper_authors_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
---
-
-CREATE SEQUENCE public.common_paper_authors_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.common_paper_authors_id_seq OWNER TO towen;
-
---
--- Name: common_paper_authors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
---
-
-ALTER SEQUENCE public.common_paper_authors_id_seq OWNED BY public.common_paper_authors.id;
-
-
---
 -- Name: common_paper_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
 --
 
@@ -933,6 +898,42 @@ ALTER TABLE public.common_paper_id_seq OWNER TO towen;
 --
 
 ALTER SEQUENCE public.common_paper_id_seq OWNED BY public.common_paper.id;
+
+
+--
+-- Name: common_paperauthor; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.common_paperauthor (
+    id integer NOT NULL,
+    is_principal boolean NOT NULL,
+    author_id integer NOT NULL,
+    paper_id integer NOT NULL
+);
+
+
+ALTER TABLE public.common_paperauthor OWNER TO towen;
+
+--
+-- Name: common_paperauthor_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.common_paperauthor_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.common_paperauthor_id_seq OWNER TO towen;
+
+--
+-- Name: common_paperauthor_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.common_paperauthor_id_seq OWNED BY public.common_paperauthor.id;
 
 
 --
@@ -977,8 +978,10 @@ ALTER SEQUENCE public.common_person_id_seq OWNED BY public.common_person.id;
 
 CREATE TABLE public.dfndb_compositionpart (
     id integer NOT NULL,
-    amount integer NOT NULL,
-    compound_id integer NOT NULL
+    amount smallint NOT NULL,
+    compound_id integer NOT NULL,
+    material_id integer NOT NULL,
+    CONSTRAINT dfndb_compositionpart_amount_28a98350_check CHECK ((amount >= 0))
 );
 
 
@@ -1053,7 +1056,6 @@ CREATE TABLE public.dfndb_data (
     data text NOT NULL,
     material_id integer NOT NULL,
     paper_id integer NOT NULL,
-    parameter_id integer NOT NULL,
     user_owner_id integer,
     attributes jsonb NOT NULL,
     status smallint NOT NULL,
@@ -1090,6 +1092,43 @@ ALTER SEQUENCE public.dfndb_data_id_seq OWNED BY public.dfndb_data.id;
 
 
 --
+-- Name: dfndb_dataparameter; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.dfndb_dataparameter (
+    id integer NOT NULL,
+    amount smallint NOT NULL,
+    data_id integer NOT NULL,
+    parameter_id integer NOT NULL,
+    CONSTRAINT dfndb_dataparameter_amount_check CHECK ((amount >= 0))
+);
+
+
+ALTER TABLE public.dfndb_dataparameter OWNER TO towen;
+
+--
+-- Name: dfndb_dataparameter_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.dfndb_dataparameter_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.dfndb_dataparameter_id_seq OWNER TO towen;
+
+--
+-- Name: dfndb_dataparameter_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.dfndb_dataparameter_id_seq OWNED BY public.dfndb_dataparameter.id;
+
+
+--
 -- Name: dfndb_material; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -1109,41 +1148,6 @@ CREATE TABLE public.dfndb_material (
 
 
 ALTER TABLE public.dfndb_material OWNER TO towen;
-
---
--- Name: dfndb_material_composition; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public.dfndb_material_composition (
-    id integer NOT NULL,
-    material_id integer NOT NULL,
-    compositionpart_id integer NOT NULL
-);
-
-
-ALTER TABLE public.dfndb_material_composition OWNER TO towen;
-
---
--- Name: dfndb_material_composition_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
---
-
-CREATE SEQUENCE public.dfndb_material_composition_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.dfndb_material_composition_id_seq OWNER TO towen;
-
---
--- Name: dfndb_material_composition_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
---
-
-ALTER SEQUENCE public.dfndb_material_composition_id_seq OWNED BY public.dfndb_material_composition.id;
-
 
 --
 -- Name: dfndb_material_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
@@ -1260,8 +1264,8 @@ ALTER SEQUENCE public.dfndb_parameter_id_seq OWNED BY public.dfndb_parameter.id;
 
 CREATE TABLE public.dfndb_quantityunit (
     id integer NOT NULL,
-    name character varying(100) NOT NULL,
-    symbol character varying(40) NOT NULL,
+    "quantityName" character varying(100) NOT NULL,
+    "quantitySymbol" character varying(40) NOT NULL,
     "unitName" character varying(40) NOT NULL,
     "unitSymbol" character varying(40) NOT NULL
 );
@@ -1564,10 +1568,10 @@ ALTER TABLE ONLY public.common_paper ALTER COLUMN id SET DEFAULT nextval('public
 
 
 --
--- Name: common_paper_authors id; Type: DEFAULT; Schema: public; Owner: towen
+-- Name: common_paperauthor id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
-ALTER TABLE ONLY public.common_paper_authors ALTER COLUMN id SET DEFAULT nextval('public.common_paper_authors_id_seq'::regclass);
+ALTER TABLE ONLY public.common_paperauthor ALTER COLUMN id SET DEFAULT nextval('public.common_paperauthor_id_seq'::regclass);
 
 
 --
@@ -1599,17 +1603,17 @@ ALTER TABLE ONLY public.dfndb_data ALTER COLUMN id SET DEFAULT nextval('public.d
 
 
 --
+-- Name: dfndb_dataparameter id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_dataparameter ALTER COLUMN id SET DEFAULT nextval('public.dfndb_dataparameter_id_seq'::regclass);
+
+
+--
 -- Name: dfndb_material id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.dfndb_material ALTER COLUMN id SET DEFAULT nextval('public.dfndb_material_id_seq'::regclass);
-
-
---
--- Name: dfndb_material_composition id; Type: DEFAULT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.dfndb_material_composition ALTER COLUMN id SET DEFAULT nextval('public.dfndb_material_composition_id_seq'::regclass);
 
 
 --
@@ -1977,6 +1981,14 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 186	Can change batch	47	change_batch
 187	Can delete batch	47	delete_batch
 188	Can view batch	47	view_batch
+189	Can add data parameter	48	add_dataparameter
+190	Can change data parameter	48	change_dataparameter
+191	Can delete data parameter	48	delete_dataparameter
+192	Can view data parameter	48	view_dataparameter
+193	Can add paper author	49	add_paperauthor
+194	Can change paper author	49	change_paperauthor
+195	Can delete paper author	49	delete_paperauthor
+196	Can view paper author	49	view_paperauthor
 \.
 
 
@@ -2263,11 +2275,10 @@ COPY public.common_paper (id, "DOI", tag, year, title, url, publisher_id, attrib
 
 
 --
--- Data for Name: common_paper_authors; Type: TABLE DATA; Schema: public; Owner: towen
+-- Data for Name: common_paperauthor; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.common_paper_authors (id, paper_id, person_id) FROM stdin;
-1	1	1
+COPY public.common_paperauthor (id, is_principal, author_id, paper_id) FROM stdin;
 \.
 
 
@@ -2284,11 +2295,10 @@ COPY public.common_person (id, name, org_id, user_id) FROM stdin;
 -- Data for Name: dfndb_compositionpart; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_compositionpart (id, amount, compound_id) FROM stdin;
-1	6	1
-2	2	3
-3	2	4
-4	6	5
+COPY public.dfndb_compositionpart (id, amount, compound_id, material_id) FROM stdin;
+2	2	3	1
+3	2	4	1
+1	6	5	1
 \.
 
 
@@ -2309,7 +2319,15 @@ COPY public.dfndb_compound (id, formula, name, mass) FROM stdin;
 -- Data for Name: dfndb_data; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_data (id, type, data, material_id, paper_id, parameter_id, user_owner_id, attributes, status, name, notes, modified_on, created_on) FROM stdin;
+COPY public.dfndb_data (id, type, data, material_id, paper_id, user_owner_id, attributes, status, name, notes, modified_on, created_on) FROM stdin;
+\.
+
+
+--
+-- Data for Name: dfndb_dataparameter; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.dfndb_dataparameter (id, amount, data_id, parameter_id) FROM stdin;
 \.
 
 
@@ -2319,17 +2337,6 @@ COPY public.dfndb_data (id, type, data, material_id, paper_id, parameter_id, use
 
 COPY public.dfndb_material (id, polymer, user_owner_id, type, attributes, status, name, notes, modified_on, created_on) FROM stdin;
 1	0	\N	1	{}	10	NMC622		2020-10-16	2020-10-16 12:16:10.333468+01
-\.
-
-
---
--- Data for Name: dfndb_material_composition; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public.dfndb_material_composition (id, material_id, compositionpart_id) FROM stdin;
-1	1	2
-2	1	3
-3	1	4
 \.
 
 
@@ -2346,6 +2353,7 @@ COPY public.dfndb_method (id, type, description, user_owner_id, attributes, stat
 --
 
 COPY public.dfndb_parameter (id, symbol, type, notes, unit_id, user_owner_id, attributes, status, name, modified_on, created_on) FROM stdin;
+1	rP	1		6	\N	{}	10	particle radius	2020-10-16	2020-10-16 13:02:34.855802+01
 \.
 
 
@@ -2353,11 +2361,12 @@ COPY public.dfndb_parameter (id, symbol, type, notes, unit_id, user_owner_id, at
 -- Data for Name: dfndb_quantityunit; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_quantityunit (id, name, symbol, "unitName", "unitSymbol") FROM stdin;
+COPY public.dfndb_quantityunit (id, "quantityName", "quantitySymbol", "unitName", "unitSymbol") FROM stdin;
 1	Voltage	V	Volts	V
 3	Charge	Q	Coulombs	C
 4	Power	P	Watts	W
 5	Current	I	Amps	A
+6	Distance	d	metres	m
 \.
 
 
@@ -2519,6 +2528,12 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 152	2020-10-16 12:14:55.181487+01	5	Nickel (Ni)	1	[{"added": {}}]	28	1
 153	2020-10-16 12:15:01.631788+01	4	Ni6	1	[{"added": {}}]	27	1
 154	2020-10-16 12:16:10.339922+01	1	NMC622	1	[{"added": {}}]	29	1
+155	2020-10-16 12:44:34.907919+01	1	NMC622	2	[{"added": {"name": "composition part", "object": "Li0"}}]	29	1
+156	2020-10-16 12:45:00.824275+01	1	NMC622	2	[{"added": {"name": "composition part", "object": "Mg2"}}, {"added": {"name": "composition part", "object": "Co2"}}, {"changed": {"name": "composition part", "object": "Ni6", "fields": ["Compound", "Amount"]}}]	29	1
+157	2020-10-16 12:54:56.11646+01	1	NMC622	2	[{"changed": {"name": "composition part", "object": "Ni7", "fields": ["Amount"]}}]	29	1
+158	2020-10-16 12:55:00.733173+01	1	NMC622	2	[{"changed": {"name": "composition part", "object": "Ni6", "fields": ["Amount"]}}]	29	1
+159	2020-10-16 13:02:19.57821+01	6	Distance (d) / m	1	[{"added": {}}]	31	1
+160	2020-10-16 13:02:34.85802+01	1	particle radius: rP	1	[{"added": {}}]	32	1
 \.
 
 
@@ -2574,6 +2589,8 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 45	authtoken	token
 46	authtoken	tokenproxy
 47	battDB	batch
+48	dfndb	dataparameter
+49	common	paperauthor
 \.
 
 
@@ -2718,6 +2735,13 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 136	dfndb	0013_auto_20201016_1054	2020-10-16 11:54:07.156866+01
 137	dfndb	0014_auto_20201016_1109	2020-10-16 12:09:55.976777+01
 138	dfndb	0015_auto_20201016_1116	2020-10-16 12:16:59.203382+01
+139	dfndb	0016_auto_20201016_1132	2020-10-16 12:32:26.010252+01
+140	dfndb	0017_auto_20201016_1136	2020-10-16 12:36:24.479414+01
+141	dfndb	0018_auto_20201016_1201	2020-10-16 13:01:19.484117+01
+142	dfndb	0019_remove_data_parameter	2020-10-16 13:06:29.293922+01
+143	dfndb	0020_auto_20201016_1211	2020-10-16 13:11:28.311338+01
+144	common	0022_remove_paper_authors	2020-10-16 13:16:23.050458+01
+145	common	0023_auto_20201016_1219	2020-10-16 13:19:09.07709+01
 \.
 
 
@@ -2756,7 +2780,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 112, true);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 188, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 196, true);
 
 
 --
@@ -2879,17 +2903,17 @@ SELECT pg_catalog.setval('public.common_org_id_seq', 1, true);
 
 
 --
--- Name: common_paper_authors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
---
-
-SELECT pg_catalog.setval('public.common_paper_authors_id_seq', 1, true);
-
-
---
 -- Name: common_paper_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
 SELECT pg_catalog.setval('public.common_paper_id_seq', 1, true);
+
+
+--
+-- Name: common_paperauthor_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.common_paperauthor_id_seq', 1, false);
 
 
 --
@@ -2903,7 +2927,7 @@ SELECT pg_catalog.setval('public.common_person_id_seq', 1, true);
 -- Name: dfndb_compositionpart_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_compositionpart_id_seq', 4, true);
+SELECT pg_catalog.setval('public.dfndb_compositionpart_id_seq', 3, true);
 
 
 --
@@ -2921,10 +2945,10 @@ SELECT pg_catalog.setval('public.dfndb_data_id_seq', 1, false);
 
 
 --
--- Name: dfndb_material_composition_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+-- Name: dfndb_dataparameter_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_material_composition_id_seq', 3, true);
+SELECT pg_catalog.setval('public.dfndb_dataparameter_id_seq', 1, false);
 
 
 --
@@ -2945,35 +2969,35 @@ SELECT pg_catalog.setval('public.dfndb_method_id_seq', 1, false);
 -- Name: dfndb_parameter_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_parameter_id_seq', 1, false);
+SELECT pg_catalog.setval('public.dfndb_parameter_id_seq', 1, true);
 
 
 --
 -- Name: dfndb_quantityunit_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 5, true);
+SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 6, true);
 
 
 --
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 154, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 160, true);
 
 
 --
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 47, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 49, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 138, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 145, true);
 
 
 --
@@ -3329,22 +3353,6 @@ ALTER TABLE ONLY public.common_paper
 
 
 --
--- Name: common_paper_authors common_paper_authors_paper_id_person_id_9d73cdca_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.common_paper_authors
-    ADD CONSTRAINT common_paper_authors_paper_id_person_id_9d73cdca_uniq UNIQUE (paper_id, person_id);
-
-
---
--- Name: common_paper_authors common_paper_authors_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.common_paper_authors
-    ADD CONSTRAINT common_paper_authors_pkey PRIMARY KEY (id);
-
-
---
 -- Name: common_paper common_paper_paper_tag_key; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -3358,6 +3366,14 @@ ALTER TABLE ONLY public.common_paper
 
 ALTER TABLE ONLY public.common_paper
     ADD CONSTRAINT common_paper_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: common_paperauthor common_paperauthor_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_paperauthor
+    ADD CONSTRAINT common_paperauthor_pkey PRIMARY KEY (id);
 
 
 --
@@ -3385,11 +3401,11 @@ ALTER TABLE ONLY public.common_person
 
 
 --
--- Name: dfndb_compositionpart dfndb_compositionpart_compound_id_amount_d38515e3_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
+-- Name: dfndb_compositionpart dfndb_compositionpart_compound_id_amount_mater_69ebccd8_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.dfndb_compositionpart
-    ADD CONSTRAINT dfndb_compositionpart_compound_id_amount_d38515e3_uniq UNIQUE (compound_id, amount);
+    ADD CONSTRAINT dfndb_compositionpart_compound_id_amount_mater_69ebccd8_uniq UNIQUE (compound_id, amount, material_id);
 
 
 --
@@ -3433,19 +3449,11 @@ ALTER TABLE ONLY public.dfndb_data
 
 
 --
--- Name: dfndb_material_composition dfndb_material_compositi_material_id_compositionp_29fffcb6_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
+-- Name: dfndb_dataparameter dfndb_dataparameter_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
-ALTER TABLE ONLY public.dfndb_material_composition
-    ADD CONSTRAINT dfndb_material_compositi_material_id_compositionp_29fffcb6_uniq UNIQUE (material_id, compositionpart_id);
-
-
---
--- Name: dfndb_material_composition dfndb_material_composition_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.dfndb_material_composition
-    ADD CONSTRAINT dfndb_material_composition_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.dfndb_dataparameter
+    ADD CONSTRAINT dfndb_dataparameter_pkey PRIMARY KEY (id);
 
 
 --
@@ -3509,7 +3517,7 @@ ALTER TABLE ONLY public.dfndb_parameter
 --
 
 ALTER TABLE ONLY public.dfndb_quantityunit
-    ADD CONSTRAINT dfndb_quantityunit_name_key UNIQUE (name);
+    ADD CONSTRAINT dfndb_quantityunit_name_key UNIQUE ("quantityName");
 
 
 --
@@ -3525,7 +3533,7 @@ ALTER TABLE ONLY public.dfndb_quantityunit
 --
 
 ALTER TABLE ONLY public.dfndb_quantityunit
-    ADD CONSTRAINT dfndb_quantityunit_symbol_key UNIQUE (symbol);
+    ADD CONSTRAINT dfndb_quantityunit_symbol_key UNIQUE ("quantitySymbol");
 
 
 --
@@ -3913,20 +3921,6 @@ CREATE INDEX "common_paper_DOI_14ee925c_like" ON public.common_paper USING btree
 
 
 --
--- Name: common_paper_authors_paper_id_e5664b86; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX common_paper_authors_paper_id_e5664b86 ON public.common_paper_authors USING btree (paper_id);
-
-
---
--- Name: common_paper_authors_person_id_54a54043; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX common_paper_authors_person_id_54a54043 ON public.common_paper_authors USING btree (person_id);
-
-
---
 -- Name: common_paper_paper_tag_096143a0_like; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -3948,6 +3942,20 @@ CREATE INDEX common_paper_user_owner_id_ea0784cc ON public.common_paper USING bt
 
 
 --
+-- Name: common_paperauthor_author_id_2b56138f; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_paperauthor_author_id_2b56138f ON public.common_paperauthor USING btree (author_id);
+
+
+--
+-- Name: common_paperauthor_paper_id_53f7190d; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_paperauthor_paper_id_53f7190d ON public.common_paperauthor USING btree (paper_id);
+
+
+--
 -- Name: common_person_name_2db9e918_like; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -3966,6 +3974,13 @@ CREATE INDEX common_person_org_id_fa830db5 ON public.common_person USING btree (
 --
 
 CREATE INDEX dfndb_compositionpart_compound_id_98d443d4 ON public.dfndb_compositionpart USING btree (compound_id);
+
+
+--
+-- Name: dfndb_compositionpart_material_id_c402ab5c; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX dfndb_compositionpart_material_id_c402ab5c ON public.dfndb_compositionpart USING btree (material_id);
 
 
 --
@@ -3997,24 +4012,17 @@ CREATE INDEX dfndb_data_paper_id_77124c38 ON public.dfndb_data USING btree (pape
 
 
 --
--- Name: dfndb_data_parameter_id_02919aca; Type: INDEX; Schema: public; Owner: towen
+-- Name: dfndb_dataparameter_data_id_fd4b0c14; Type: INDEX; Schema: public; Owner: towen
 --
 
-CREATE INDEX dfndb_data_parameter_id_02919aca ON public.dfndb_data USING btree (parameter_id);
-
-
---
--- Name: dfndb_material_composition_compositionpart_id_802a1677; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX dfndb_material_composition_compositionpart_id_802a1677 ON public.dfndb_material_composition USING btree (compositionpart_id);
+CREATE INDEX dfndb_dataparameter_data_id_fd4b0c14 ON public.dfndb_dataparameter USING btree (data_id);
 
 
 --
--- Name: dfndb_material_composition_material_id_8322ced7; Type: INDEX; Schema: public; Owner: towen
+-- Name: dfndb_dataparameter_parameter_id_90d736ce; Type: INDEX; Schema: public; Owner: towen
 --
 
-CREATE INDEX dfndb_material_composition_material_id_8322ced7 ON public.dfndb_material_composition USING btree (material_id);
+CREATE INDEX dfndb_dataparameter_parameter_id_90d736ce ON public.dfndb_dataparameter USING btree (parameter_id);
 
 
 --
@@ -4077,14 +4085,14 @@ CREATE INDEX dfndb_parameter_unit_id_0d7cce7d ON public.dfndb_parameter USING bt
 -- Name: dfndb_quantityunit_name_62125fc1_like; Type: INDEX; Schema: public; Owner: towen
 --
 
-CREATE INDEX dfndb_quantityunit_name_62125fc1_like ON public.dfndb_quantityunit USING btree (name varchar_pattern_ops);
+CREATE INDEX dfndb_quantityunit_name_62125fc1_like ON public.dfndb_quantityunit USING btree ("quantityName" varchar_pattern_ops);
 
 
 --
 -- Name: dfndb_quantityunit_symbol_ae2875ca_like; Type: INDEX; Schema: public; Owner: towen
 --
 
-CREATE INDEX dfndb_quantityunit_symbol_ae2875ca_like ON public.dfndb_quantityunit USING btree (symbol varchar_pattern_ops);
+CREATE INDEX dfndb_quantityunit_symbol_ae2875ca_like ON public.dfndb_quantityunit USING btree ("quantitySymbol" varchar_pattern_ops);
 
 
 --
@@ -4387,22 +4395,6 @@ ALTER TABLE ONLY public.common_org
 
 
 --
--- Name: common_paper_authors common_paper_authors_paper_id_e5664b86_fk_common_paper_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.common_paper_authors
-    ADD CONSTRAINT common_paper_authors_paper_id_e5664b86_fk_common_paper_id FOREIGN KEY (paper_id) REFERENCES public.common_paper(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: common_paper_authors common_paper_authors_person_id_54a54043_fk_common_person_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.common_paper_authors
-    ADD CONSTRAINT common_paper_authors_person_id_54a54043_fk_common_person_id FOREIGN KEY (person_id) REFERENCES public.common_person(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: common_paper common_paper_publisher_id_a70e3e7b_fk_common_org_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -4416,6 +4408,22 @@ ALTER TABLE ONLY public.common_paper
 
 ALTER TABLE ONLY public.common_paper
     ADD CONSTRAINT common_paper_user_owner_id_ea0784cc_fk_auth_user_id FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_paperauthor common_paperauthor_author_id_2b56138f_fk_common_person_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_paperauthor
+    ADD CONSTRAINT common_paperauthor_author_id_2b56138f_fk_common_person_id FOREIGN KEY (author_id) REFERENCES public.common_person(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_paperauthor common_paperauthor_paper_id_53f7190d_fk_common_paper_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_paperauthor
+    ADD CONSTRAINT common_paperauthor_paper_id_53f7190d_fk_common_paper_id FOREIGN KEY (paper_id) REFERENCES public.common_paper(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -4443,6 +4451,14 @@ ALTER TABLE ONLY public.dfndb_compositionpart
 
 
 --
+-- Name: dfndb_compositionpart dfndb_compositionpart_material_id_c402ab5c_fk_dfndb_material_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.dfndb_compositionpart
+    ADD CONSTRAINT dfndb_compositionpart_material_id_c402ab5c_fk_dfndb_material_id FOREIGN KEY (material_id) REFERENCES public.dfndb_material(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
 -- Name: dfndb_data dfndb_data_material_id_2ecfb612_fk_dfndb_material_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -4459,14 +4475,6 @@ ALTER TABLE ONLY public.dfndb_data
 
 
 --
--- Name: dfndb_data dfndb_data_parameter_id_02919aca_fk_dfndb_parameter_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.dfndb_data
-    ADD CONSTRAINT dfndb_data_parameter_id_02919aca_fk_dfndb_parameter_id FOREIGN KEY (parameter_id) REFERENCES public.dfndb_parameter(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: dfndb_data dfndb_data_user_owner_id_e6c8f500_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -4475,19 +4483,19 @@ ALTER TABLE ONLY public.dfndb_data
 
 
 --
--- Name: dfndb_material_composition dfndb_material_compo_compositionpart_id_802a1677_fk_dfndb_com; Type: FK CONSTRAINT; Schema: public; Owner: towen
+-- Name: dfndb_dataparameter dfndb_dataparameter_data_id_fd4b0c14_fk_dfndb_data_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
-ALTER TABLE ONLY public.dfndb_material_composition
-    ADD CONSTRAINT dfndb_material_compo_compositionpart_id_802a1677_fk_dfndb_com FOREIGN KEY (compositionpart_id) REFERENCES public.dfndb_compositionpart(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.dfndb_dataparameter
+    ADD CONSTRAINT dfndb_dataparameter_data_id_fd4b0c14_fk_dfndb_data_id FOREIGN KEY (data_id) REFERENCES public.dfndb_data(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
--- Name: dfndb_material_composition dfndb_material_compo_material_id_8322ced7_fk_dfndb_mat; Type: FK CONSTRAINT; Schema: public; Owner: towen
+-- Name: dfndb_dataparameter dfndb_dataparameter_parameter_id_90d736ce_fk_dfndb_parameter_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
-ALTER TABLE ONLY public.dfndb_material_composition
-    ADD CONSTRAINT dfndb_material_compo_material_id_8322ced7_fk_dfndb_mat FOREIGN KEY (material_id) REFERENCES public.dfndb_material(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public.dfndb_dataparameter
+    ADD CONSTRAINT dfndb_dataparameter_parameter_id_90d736ce_fk_dfndb_parameter_id FOREIGN KEY (parameter_id) REFERENCES public.dfndb_parameter(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

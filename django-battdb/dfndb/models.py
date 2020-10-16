@@ -27,28 +27,18 @@ class Compound(models.Model):
         unique_together = ('name', 'formula',)
 
 
-class CompositionPart(models.Model):
-    """
-    Compound amounts for use in materials
-    """
-    compound = models.ForeignKey(Compound, on_delete=models.CASCADE)
-    amount = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)])
 
-    def __str__(self):
-        return "%s%d" % (self.compound.formula, self.amount)
-
-    class Meta:
-        unique_together = ('compound', 'amount',)
 
 
 class Material(cm.BaseModel):
     """
-    A material specification used as part of an electrochemical cell, e.g. NMC622
+    A material specification used as part of an electrochemical cell, e.g. NMC622. <br>
     Make use of the 'notes' field for additional explanation
     """
     composition = models.ManyToManyField(
-        CompositionPart,
-        help_text="e.g. NMC 622 would have 3 CompositionParts, Ni 6, Manganese 2, Cobalt 2")
+         Compound,
+         through='CompositionPart',
+         help_text="e.g. NMC 622 would have 3 Compounds, Nickel 6, Manganese 2, Cobalt 2")
     MATERIAL_TYPE_CHOICES = [
         (1, 'Anode'),
         (2, 'Cathode'),
@@ -62,6 +52,21 @@ class Material(cm.BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class CompositionPart(models.Model):
+    """
+    Compound amounts for use in materials
+    """
+    compound = models.ForeignKey(Compound, on_delete=models.CASCADE)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE)
+    amount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(100)])
+
+    def __str__(self):
+        return "%s%d" % (self.compound.formula, self.amount)
+
+    class Meta:
+        unique_together = ('compound', 'amount', 'material')
 
 
 class Method(cm.BaseModel):
@@ -81,13 +86,13 @@ class QuantityUnit(models.Model):
     """
     Quantity Units e.g. Volts, Amps, Watts
     """
-    name = models.CharField(max_length=100, unique=True, help_text="Readable name e.g. 'Charge'")
-    symbol = models.CharField(max_length=40, unique=True, help_text="e.g. 'Q', Will be decoded as LaTeX")
+    quantityName = models.CharField(max_length=100, unique=True, help_text="Readable name e.g. 'Charge'")
+    quantitySymbol = models.CharField(max_length=40, unique=True, help_text="e.g. 'Q', Will be decoded as LaTeX")
     unitName = models.CharField(max_length=40, blank=True, help_text="e.g. 'Coulombs'")
     unitSymbol = models.CharField(max_length=40, unique=True, help_text="e.g. 'C'")
 
     def __str__(self):
-        return "%s (%s) / %s" % (self.name, self.symbol, self.unitSymbol)
+        return "%s (%s) / %s" % (self.quantityName, self.quantitySymbol, self.unitSymbol)
 
 
 class Parameter(cm.BaseModel):
@@ -106,7 +111,7 @@ class Parameter(cm.BaseModel):
 
 class Data(cm.BaseModel):
     paper = models.ForeignKey(cm.Paper, on_delete=models.CASCADE)
-    parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
+    parameter = models.ManyToManyField(Parameter, through='DataParameter')
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
     DATA_TYPE_CHOICES = [
         (1, 'DataType1'),
@@ -118,3 +123,18 @@ class Data(cm.BaseModel):
     # other fields to be added... I'm not sure what the numrange fields are for?
     class Meta:
         verbose_name_plural = "Data"  # don't pluralise to "Datas"
+
+
+class DataParameter(models.Model):
+    """
+    Parameters on data
+    """
+    data = models.ForeignKey(Data, on_delete=models.CASCADE)
+    parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
+    amount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(100)])
+
+    def __str__(self):
+        return "%s%d" % (self.compound.formula, self.amount)
+
+    # class Meta:
+    #     unique_together = ('data', 'parameter')

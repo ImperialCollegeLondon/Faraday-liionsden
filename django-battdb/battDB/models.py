@@ -16,7 +16,7 @@ import hashlib
 
 class SignalType(models.Model):
     """
-    This model defines a table of signal types e.g. Cell_voltage.
+    This model defines a table of signal types e.g. Cell_voltage.<br>
     Experiments using the same set of SignalTypes could be assumed to be comparable (issue #16).
     """
     name = models.CharField(max_length=30)
@@ -68,7 +68,7 @@ class Device(cm.BaseModel):
 
 class TestProtocol(cm.BaseModel):
     """
-    Test Protocol description.
+    Test Protocol description.<br>
     TODO: Harmonise with PyBaMM protocol specifications (issue #18)
     """
     description = models.TextField(help_text="Protocol description, ideally in PyBaMM format")

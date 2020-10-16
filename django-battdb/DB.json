@@ -203,10 +203,7 @@
     "title": "Toward unique identifiers",
     "publisher": null,
     "url": "https://ieeexplore.ieee.org/document/771073",
-    "PDF": "",
-    "authors": [
-      1
-    ]
+    "PDF": ""
   }
 },
 {
@@ -255,38 +252,6 @@
   }
 },
 {
-  "model": "dfndb.compositionpart",
-  "pk": 1,
-  "fields": {
-    "compound": 1,
-    "amount": 6
-  }
-},
-{
-  "model": "dfndb.compositionpart",
-  "pk": 2,
-  "fields": {
-    "compound": 3,
-    "amount": 2
-  }
-},
-{
-  "model": "dfndb.compositionpart",
-  "pk": 3,
-  "fields": {
-    "compound": 4,
-    "amount": 2
-  }
-},
-{
-  "model": "dfndb.compositionpart",
-  "pk": 4,
-  "fields": {
-    "compound": 5,
-    "amount": 6
-  }
-},
-{
   "model": "dfndb.material",
   "pk": 1,
   "fields": {
@@ -298,20 +263,42 @@
     "attributes": {},
     "notes": "",
     "type": 1,
-    "polymer": 0,
-    "composition": [
-      2,
-      3,
-      4
-    ]
+    "polymer": 0
+  }
+},
+{
+  "model": "dfndb.compositionpart",
+  "pk": 1,
+  "fields": {
+    "compound": 5,
+    "material": 1,
+    "amount": 6
+  }
+},
+{
+  "model": "dfndb.compositionpart",
+  "pk": 2,
+  "fields": {
+    "compound": 3,
+    "material": 1,
+    "amount": 2
+  }
+},
+{
+  "model": "dfndb.compositionpart",
+  "pk": 3,
+  "fields": {
+    "compound": 4,
+    "material": 1,
+    "amount": 2
   }
 },
 {
   "model": "dfndb.quantityunit",
   "pk": 1,
   "fields": {
-    "name": "Voltage",
-    "symbol": "V",
+    "quantityName": "Voltage",
+    "quantitySymbol": "V",
     "unitName": "Volts",
     "unitSymbol": "V"
   }
@@ -320,8 +307,8 @@
   "model": "dfndb.quantityunit",
   "pk": 3,
   "fields": {
-    "name": "Charge",
-    "symbol": "Q",
+    "quantityName": "Charge",
+    "quantitySymbol": "Q",
     "unitName": "Coulombs",
     "unitSymbol": "C"
   }
@@ -330,8 +317,8 @@
   "model": "dfndb.quantityunit",
   "pk": 4,
   "fields": {
-    "name": "Power",
-    "symbol": "P",
+    "quantityName": "Power",
+    "quantitySymbol": "P",
     "unitName": "Watts",
     "unitSymbol": "W"
   }
@@ -340,10 +327,36 @@
   "model": "dfndb.quantityunit",
   "pk": 5,
   "fields": {
-    "name": "Current",
-    "symbol": "I",
+    "quantityName": "Current",
+    "quantitySymbol": "I",
     "unitName": "Amps",
     "unitSymbol": "A"
+  }
+},
+{
+  "model": "dfndb.quantityunit",
+  "pk": 6,
+  "fields": {
+    "quantityName": "Distance",
+    "quantitySymbol": "d",
+    "unitName": "metres",
+    "unitSymbol": "m"
+  }
+},
+{
+  "model": "dfndb.parameter",
+  "pk": 1,
+  "fields": {
+    "name": "particle radius",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-16T12:02:34.855Z",
+    "modified_on": "2020-10-16",
+    "attributes": {},
+    "symbol": "rP",
+    "type": 1,
+    "unit": 6,
+    "notes": ""
   }
 },
 {
@@ -2336,6 +2349,84 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 155,
+  "fields": {
+    "action_time": "2020-10-16T11:44:34.907Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "1",
+    "object_repr": "NMC622",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"composition part\", \"object\": \"Li0\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 156,
+  "fields": {
+    "action_time": "2020-10-16T11:45:00.824Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "1",
+    "object_repr": "NMC622",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"composition part\", \"object\": \"Mg2\"}}, {\"added\": {\"name\": \"composition part\", \"object\": \"Co2\"}}, {\"changed\": {\"name\": \"composition part\", \"object\": \"Ni6\", \"fields\": [\"Compound\", \"Amount\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 157,
+  "fields": {
+    "action_time": "2020-10-16T11:54:56.116Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "1",
+    "object_repr": "NMC622",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"composition part\", \"object\": \"Ni7\", \"fields\": [\"Amount\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 158,
+  "fields": {
+    "action_time": "2020-10-16T11:55:00.733Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "1",
+    "object_repr": "NMC622",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"composition part\", \"object\": \"Ni6\", \"fields\": [\"Amount\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 159,
+  "fields": {
+    "action_time": "2020-10-16T12:02:19.578Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "6",
+    "object_repr": "Distance (d) / m",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 160,
+  "fields": {
+    "action_time": "2020-10-16T12:02:34.858Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "1",
+    "object_repr": "particle radius: rP",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -4028,6 +4119,78 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 189,
+  "fields": {
+    "name": "Can add data parameter",
+    "content_type": 48,
+    "codename": "add_dataparameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 190,
+  "fields": {
+    "name": "Can change data parameter",
+    "content_type": 48,
+    "codename": "change_dataparameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 191,
+  "fields": {
+    "name": "Can delete data parameter",
+    "content_type": 48,
+    "codename": "delete_dataparameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 192,
+  "fields": {
+    "name": "Can view data parameter",
+    "content_type": 48,
+    "codename": "view_dataparameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 193,
+  "fields": {
+    "name": "Can add paper author",
+    "content_type": 49,
+    "codename": "add_paperauthor"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 194,
+  "fields": {
+    "name": "Can change paper author",
+    "content_type": 49,
+    "codename": "change_paperauthor"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 195,
+  "fields": {
+    "name": "Can delete paper author",
+    "content_type": 49,
+    "codename": "delete_paperauthor"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 196,
+  "fields": {
+    "name": "Can view paper author",
+    "content_type": 49,
+    "codename": "view_paperauthor"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -4711,6 +4874,22 @@
   "fields": {
     "app_label": "battDB",
     "model": "batch"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 48,
+  "fields": {
+    "app_label": "dfndb",
+    "model": "dataparameter"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 49,
+  "fields": {
+    "app_label": "common",
+    "model": "paperauthor"
   }
 },
 {
