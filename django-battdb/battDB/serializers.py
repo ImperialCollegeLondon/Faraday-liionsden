@@ -10,3 +10,4 @@ class DataFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = RawDataFile
         exclude=[]
+

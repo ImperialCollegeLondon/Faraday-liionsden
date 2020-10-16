@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
 #    'jsoneditor',
-#    'django_extensions',
+    'django_extensions',
 #    'ipware',
 #    'djangular',
 #    'django_plotly_dash.apps.DjangoPlotlyDashConfig',

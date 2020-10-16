@@ -13,23 +13,42 @@ import common.models as cm
 # actually, don't even need a "through" for this.
 
 class Compound(models.Model):
-    formula = models.CharField(max_length=20, unique=True)  # "Li"
-    name = models.CharField(max_length=100, unique=True)  # "Lithium"
+    """
+    Chemical Compound or Element, e.g. Lithium, Graphite
+    """
+    name = models.CharField(max_length=100)  # "Lithium"
+    formula = models.CharField(max_length=20)  # "Li"
+    mass = models.PositiveIntegerField(default=0, help_text="optional molar mass")
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.formula)
 
+    class Meta:
+        unique_together = ('name', 'formula',)
+
 
 class CompositionPart(models.Model):
+    """
+    Compound amounts for use in materials
+    """
     compound = models.ForeignKey(Compound, on_delete=models.CASCADE)
     amount = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)])
 
     def __str__(self):
         return "%s%d" % (self.compound.formula, self.amount)
 
+    class Meta:
+        unique_together = ('compound', 'amount',)
+
 
 class Material(cm.BaseModel):
-    composition = models.ManyToManyField(CompositionPart)
+    """
+    A material specification used as part of an electrochemical cell, e.g. NMC622
+    Make use of the 'notes' field for additional explanation
+    """
+    composition = models.ManyToManyField(
+        CompositionPart,
+        help_text="e.g. NMC 622 would have 3 CompositionParts, Ni 6, Manganese 2, Cobalt 2")
     MATERIAL_TYPE_CHOICES = [
         (1, 'Anode'),
         (2, 'Cathode'),
@@ -37,7 +56,9 @@ class Material(cm.BaseModel):
         (4, 'Separator'),
     ]
     type = models.IntegerField(choices=MATERIAL_TYPE_CHOICES)
-    polymer = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+    polymer = models.IntegerField(default=0,
+                                  validators=[MinValueValidator(0)],
+                                  help_text="If this material is a polymer, enter degree of polymerization")
 
     def __str__(self):
         return self.name
@@ -57,12 +78,16 @@ class Method(cm.BaseModel):
 
 
 class QuantityUnit(models.Model):
-    name = name = models.CharField(max_length=100, unique=True)  # Voltage
-    symbol = models.CharField(max_length=40, unique=True)  # V
-    symbolName = models.CharField(max_length=40, blank=True)  # Volts
+    """
+    Quantity Units e.g. Volts, Amps, Watts
+    """
+    name = models.CharField(max_length=100, unique=True, help_text="Readable name e.g. 'Charge'")
+    symbol = models.CharField(max_length=40, unique=True, help_text="e.g. 'Q', Will be decoded as LaTeX")
+    unitName = models.CharField(max_length=40, blank=True, help_text="e.g. 'Coulombs'")
+    unitSymbol = models.CharField(max_length=40, unique=True, help_text="e.g. 'C'")
 
     def __str__(self):
-        return "%s/%s" % (self.name, self.symbol)
+        return "%s (%s) / %s" % (self.name, self.symbol, self.unitSymbol)
 
 
 class Parameter(cm.BaseModel):

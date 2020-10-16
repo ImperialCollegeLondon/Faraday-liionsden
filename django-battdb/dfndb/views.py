@@ -4,7 +4,10 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
+from rest_framework.generics import CreateAPIView, GenericAPIView, ListCreateAPIView
+
 from .models import *
+from .serializers import *
 
 # Create your views here.
 
@@ -20,3 +23,8 @@ class DataListView(ListView):
 
 def index(request):
    return HttpResponse("<h1>Hello, world.</h1>")
+
+
+class ParametersAPIView(ListCreateAPIView):
+    queryset = Parameter.objects.all()
+    serializer_class = ParameterSerializer

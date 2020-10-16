@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', include('battDB.urls'), name="root"),
     path('battDB/', include('battDB.urls')),
+    path('dfndb/', include('dfndb.urls')),
     path('admin/', admin.site.urls),
 ]
 

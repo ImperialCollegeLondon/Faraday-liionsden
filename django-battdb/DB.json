@@ -12,9 +12,10 @@
   "pk": 1,
   "fields": {
     "name": null,
-    "created_on": "2020-10-12",
     "status": 20,
     "user_owner": null,
+    "created_on": "2020-10-15T17:18:04.965Z",
+    "modified_on": "2020-10-15T17:13:05.815Z",
     "attributes": {},
     "notes": null,
     "description": "pybamm.Experiment(\r\n    [\r\n        \"Discharge at C/10 for 10 hours or until 3.3 V\",\r\n        \"Rest for 1 hour\",\r\n        \"Charge at 1 A until 4.1 V\",\r\n        \"Hold at 4.1 V until 50 mA\",\r\n        \"Rest for 1 hour\",\r\n    ]\r\n    * 3,",
@@ -26,9 +27,10 @@
   "pk": 2,
   "fields": {
     "name": null,
-    "created_on": "2020-10-12",
     "status": 20,
     "user_owner": null,
+    "created_on": "2020-10-15T17:18:04.884Z",
+    "modified_on": "2020-10-15T17:13:05.616Z",
     "attributes": {
       "channels": 10
     },
@@ -39,43 +41,15 @@
   "model": "battDB.equipment",
   "pk": 1,
   "fields": {
-    "name": null,
-    "created_on": "2020-10-12",
+    "name": "Tom's GalvoTron 5000",
     "status": 20,
     "user_owner": null,
+    "created_on": "2020-10-15T17:18:04.864Z",
+    "modified_on": "2020-10-15T17:13:05.577Z",
     "attributes": {},
-    "notes": null,
+    "notes": "",
     "type": 2,
     "serialNo": "1234"
-  }
-},
-{
-  "model": "battDB.cellbatch",
-  "pk": 1,
-  "fields": {
-    "name": null,
-    "created_on": "2020-10-12",
-    "status": 20,
-    "user_owner": null,
-    "attributes": {},
-    "notes": null,
-    "manufactured_on": "2020-08-04",
-    "manufacturer": 1,
-    "cells_schema": {}
-  }
-},
-{
-  "model": "battDB.cell",
-  "pk": 1,
-  "fields": {
-    "name": null,
-    "created_on": "2020-10-12",
-    "status": 20,
-    "user_owner": null,
-    "attributes": {},
-    "notes": null,
-    "batch": 1,
-    "type": null
   }
 },
 {
@@ -83,9 +57,10 @@
   "pk": 1,
   "fields": {
     "name": null,
-    "created_on": "2020-10-12",
     "status": 20,
     "user_owner": null,
+    "created_on": "2020-10-15T17:18:04.803Z",
+    "modified_on": "2020-10-15T17:13:05.465Z",
     "attributes": {},
     "notes": null,
     "num_cells": 1
@@ -95,8 +70,9 @@
   "model": "battDB.experiment",
   "pk": 8,
   "fields": {
-    "created_on": "2020-10-13",
     "user_owner": 1,
+    "created_on": "2020-10-15T17:18:04.905Z",
+    "modified_on": "2020-10-15T17:13:05.703Z",
     "attributes": {},
     "notes": null,
     "name": "experiment",
@@ -104,17 +80,16 @@
     "status": "edit",
     "cellConfig": null,
     "protocol": null,
-    "cells": [
-      1
-    ]
+    "cells": []
   }
 },
 {
   "model": "battDB.experiment",
   "pk": 9,
   "fields": {
-    "created_on": "2020-10-13",
     "user_owner": 1,
+    "created_on": "2020-10-15T17:18:04.905Z",
+    "modified_on": "2020-10-15T17:13:05.703Z",
     "attributes": {},
     "notes": null,
     "name": "fooo",
@@ -122,48 +97,52 @@
     "status": "edit",
     "cellConfig": null,
     "protocol": null,
-    "cells": [
-      1
-    ]
+    "cells": []
   }
 },
 {
   "model": "battDB.rawdatafile",
-  "pk": 1,
+  "pk": 4,
   "fields": {
-    "name": null,
-    "created_on": "2020-10-14",
-    "status": 10,
-    "user_owner": null,
-    "attributes": {},
-    "notes": null,
-    "raw_data_file": "raw_data_files/BioLogic_full_0KI55Qn.txt"
-  }
-},
-{
-  "model": "battDB.rawdatafile",
-  "pk": 2,
-  "fields": {
-    "name": null,
-    "created_on": "2020-10-14",
-    "status": 10,
-    "user_owner": null,
-    "attributes": {},
-    "notes": null,
-    "raw_data_file": "raw_data_files/200720_C-rate_test_Co5_cells_1-14_D128_CD1_Xx0u55w.mpt"
-  }
-},
-{
-  "model": "battDB.rawdatafile",
-  "pk": 3,
-  "fields": {
-    "name": null,
-    "created_on": "2020-10-14",
+    "name": "foo",
     "status": 10,
     "user_owner": 1,
+    "created_on": "2020-10-15T17:18:04.945Z",
+    "modified_on": "2020-10-15T17:13:05.777Z",
+    "attributes": {},
+    "notes": "",
+    "raw_data_file": "raw_data_files/BioLogic_full_ozX9y9o.txt",
+    "file_hash": "abf6e42283668f8ba9094a0f85411f64"
+  }
+},
+{
+  "model": "battDB.rawdatafile",
+  "pk": 6,
+  "fields": {
+    "name": null,
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-15T17:18:04.945Z",
+    "modified_on": "2020-10-15T17:13:05.777Z",
+    "attributes": {},
+    "notes": "",
+    "raw_data_file": "raw_data_files/200720_C-rate_test_Co5_cells_1-14_D128_CD1_VveSlEO.mpt",
+    "file_hash": "5e68eaf524a479e401facdd53a22dc5a"
+  }
+},
+{
+  "model": "battDB.rawdatafile",
+  "pk": 8,
+  "fields": {
+    "name": null,
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-15T17:18:04.945Z",
+    "modified_on": "2020-10-15T17:13:05.777Z",
     "attributes": {},
     "notes": null,
-    "raw_data_file": "raw_data_files/BioLogic_full_0KI55Qn_rC1bORI.txt"
+    "raw_data_file": "raw_data_files/mug.jpeg",
+    "file_hash": ""
   }
 },
 {
@@ -171,9 +150,10 @@
   "pk": 1,
   "fields": {
     "name": null,
-    "created_on": "2020-10-12",
     "status": 10,
     "user_owner": null,
+    "created_on": "2020-10-15T17:18:04.843Z",
+    "modified_on": "2020-10-15T17:13:05.539Z",
     "attributes": {},
     "notes": null,
     "dataFile": null,
@@ -186,55 +166,184 @@
   }
 },
 {
-  "model": "common.person",
-  "pk": 1,
-  "fields": {
-    "name": null,
-    "created_on": "2020-10-12",
-    "status": 20,
-    "user_owner": null,
-    "attributes": {},
-    "notes": null
-  }
-},
-{
   "model": "common.org",
   "pk": 1,
   "fields": {
-    "name": null,
-    "created_on": "2020-10-12",
-    "status": 20,
-    "user_owner": null,
-    "attributes": {},
-    "notes": null,
-    "is_research": false,
+    "name": "Imperial College",
+    "manager": null,
+    "is_research": true,
     "is_publisher": false,
-    "is_mfg_cells": false,
+    "is_mfg_cells": true,
     "is_mfg_equip": false,
-    "website": null
+    "website": "http://imperial.ac.uk"
+  }
+},
+{
+  "model": "common.person",
+  "pk": 1,
+  "fields": {
+    "name": "T. Owen",
+    "user": 1,
+    "org": 1
   }
 },
 {
   "model": "common.paper",
   "pk": 1,
   "fields": {
-    "name": null,
-    "created_on": "2020-10-12",
     "status": 10,
     "user_owner": null,
+    "created_on": "2020-10-15T17:18:05.103Z",
+    "modified_on": "2020-10-15T17:23:51.976Z",
     "attributes": {},
     "notes": "",
     "DOI": "https://doi.org/10.1109/5.771073",
-    "tag": "foo-bar",
+    "tag": "toward-unique-identifiers2020",
     "year": 2020,
     "title": "Toward unique identifiers",
-    "publisher": 1,
-    "authors": "N.Paskin",
+    "publisher": null,
     "url": "https://ieeexplore.ieee.org/document/771073",
     "PDF": "",
-    "org_owners": [
+    "authors": [
       1
     ]
+  }
+},
+{
+  "model": "dfndb.compound",
+  "pk": 1,
+  "fields": {
+    "name": "Lithium",
+    "formula": "Li",
+    "mass": 0
+  }
+},
+{
+  "model": "dfndb.compound",
+  "pk": 2,
+  "fields": {
+    "name": "Carbon",
+    "formula": "C",
+    "mass": 0
+  }
+},
+{
+  "model": "dfndb.compound",
+  "pk": 3,
+  "fields": {
+    "name": "Manganese",
+    "formula": "Mg",
+    "mass": 0
+  }
+},
+{
+  "model": "dfndb.compound",
+  "pk": 4,
+  "fields": {
+    "name": "Cobalt",
+    "formula": "Co",
+    "mass": 0
+  }
+},
+{
+  "model": "dfndb.compound",
+  "pk": 5,
+  "fields": {
+    "name": "Nickel",
+    "formula": "Ni",
+    "mass": 0
+  }
+},
+{
+  "model": "dfndb.compositionpart",
+  "pk": 1,
+  "fields": {
+    "compound": 1,
+    "amount": 6
+  }
+},
+{
+  "model": "dfndb.compositionpart",
+  "pk": 2,
+  "fields": {
+    "compound": 3,
+    "amount": 2
+  }
+},
+{
+  "model": "dfndb.compositionpart",
+  "pk": 3,
+  "fields": {
+    "compound": 4,
+    "amount": 2
+  }
+},
+{
+  "model": "dfndb.compositionpart",
+  "pk": 4,
+  "fields": {
+    "compound": 5,
+    "amount": 6
+  }
+},
+{
+  "model": "dfndb.material",
+  "pk": 1,
+  "fields": {
+    "name": "NMC622",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-16T11:16:10.333Z",
+    "modified_on": "2020-10-16",
+    "attributes": {},
+    "notes": "",
+    "type": 1,
+    "polymer": 0,
+    "composition": [
+      2,
+      3,
+      4
+    ]
+  }
+},
+{
+  "model": "dfndb.quantityunit",
+  "pk": 1,
+  "fields": {
+    "name": "Voltage",
+    "symbol": "V",
+    "unitName": "Volts",
+    "unitSymbol": "V"
+  }
+},
+{
+  "model": "dfndb.quantityunit",
+  "pk": 3,
+  "fields": {
+    "name": "Charge",
+    "symbol": "Q",
+    "unitName": "Coulombs",
+    "unitSymbol": "C"
+  }
+},
+{
+  "model": "dfndb.quantityunit",
+  "pk": 4,
+  "fields": {
+    "name": "Power",
+    "symbol": "P",
+    "unitName": "Watts",
+    "unitSymbol": "W"
+  }
+},
+{
+  "model": "dfndb.quantityunit",
+  "pk": 5,
+  "fields": {
+    "name": "Current",
+    "symbol": "I",
+    "unitName": "Amps",
+    "unitSymbol": "A"
   }
 },
 {
@@ -1780,6 +1889,448 @@
     "content_type": 46,
     "object_id": "1",
     "object_repr": "52f1021a6e32e4202acab1c5c19f0067cc1ce38a",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 121,
+  "fields": {
+    "action_time": "2020-10-15T11:49:42.377Z",
+    "user": 1,
+    "content_type": 40,
+    "object_id": "3",
+    "object_repr": "None",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 122,
+  "fields": {
+    "action_time": "2020-10-15T11:49:57.048Z",
+    "user": 1,
+    "content_type": 40,
+    "object_id": "2",
+    "object_repr": "None",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 123,
+  "fields": {
+    "action_time": "2020-10-15T11:49:57.053Z",
+    "user": 1,
+    "content_type": 40,
+    "object_id": "1",
+    "object_repr": "None",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 124,
+  "fields": {
+    "action_time": "2020-10-15T12:04:19.151Z",
+    "user": 1,
+    "content_type": 40,
+    "object_id": "4",
+    "object_repr": "foo",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 125,
+  "fields": {
+    "action_time": "2020-10-15T12:04:57.852Z",
+    "user": 1,
+    "content_type": 40,
+    "object_id": "4",
+    "object_repr": "foo",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Raw data file\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 126,
+  "fields": {
+    "action_time": "2020-10-15T12:05:13.279Z",
+    "user": 1,
+    "content_type": 40,
+    "object_id": "4",
+    "object_repr": "foo",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Raw data file\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 127,
+  "fields": {
+    "action_time": "2020-10-15T12:09:03.892Z",
+    "user": 1,
+    "content_type": 40,
+    "object_id": "6",
+    "object_repr": "None",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 128,
+  "fields": {
+    "action_time": "2020-10-15T12:09:19.458Z",
+    "user": 1,
+    "content_type": 40,
+    "object_id": "6",
+    "object_repr": "None",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Raw data file\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 129,
+  "fields": {
+    "action_time": "2020-10-15T12:12:07.300Z",
+    "user": 1,
+    "content_type": 40,
+    "object_id": "6",
+    "object_repr": "None",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Raw data file\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 130,
+  "fields": {
+    "action_time": "2020-10-15T15:41:04.557Z",
+    "user": 1,
+    "content_type": 34,
+    "object_id": "1",
+    "object_repr": "Imperial College",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\", \"Status\", \"Notes\", \"Is research\", \"Is mfg cells\", \"Website\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 131,
+  "fields": {
+    "action_time": "2020-10-15T16:38:59.894Z",
+    "user": 1,
+    "content_type": 36,
+    "object_id": "1",
+    "object_repr": "Person object (1)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\", \"User\", \"Org\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 132,
+  "fields": {
+    "action_time": "2020-10-15T16:55:03.068Z",
+    "user": 1,
+    "content_type": 3,
+    "object_id": "1",
+    "object_repr": "Tom's GalvoTron 5000",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 133,
+  "fields": {
+    "action_time": "2020-10-15T17:20:08.939Z",
+    "user": 1,
+    "content_type": 35,
+    "object_id": "1",
+    "object_repr": "foo-bar",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Publisher\", \"Authors\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 134,
+  "fields": {
+    "action_time": "2020-10-15T17:20:45.594Z",
+    "user": 1,
+    "content_type": 35,
+    "object_id": "1",
+    "object_repr": "foo-bar",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 135,
+  "fields": {
+    "action_time": "2020-10-15T17:21:05.262Z",
+    "user": 1,
+    "content_type": 35,
+    "object_id": "1",
+    "object_repr": "foo-bar",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 136,
+  "fields": {
+    "action_time": "2020-10-15T17:23:51.978Z",
+    "user": 1,
+    "content_type": 35,
+    "object_id": "1",
+    "object_repr": "toward-unique-identifiers2020",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 137,
+  "fields": {
+    "action_time": "2020-10-16T10:48:58.132Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "1",
+    "object_repr": "Voltage/V",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 138,
+  "fields": {
+    "action_time": "2020-10-16T10:49:10.766Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "2",
+    "object_repr": "Current/I",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 139,
+  "fields": {
+    "action_time": "2020-10-16T10:53:48.556Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "2",
+    "object_repr": "QuantityUnit object (2)",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 140,
+  "fields": {
+    "action_time": "2020-10-16T10:54:25.884Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "1",
+    "object_repr": "Voltage/V",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"UnitName\", \"UnitSymbol\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 141,
+  "fields": {
+    "action_time": "2020-10-16T10:54:43.876Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "3",
+    "object_repr": "Charge/C",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 142,
+  "fields": {
+    "action_time": "2020-10-16T10:56:30.363Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "4",
+    "object_repr": "Power(P)/W",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 143,
+  "fields": {
+    "action_time": "2020-10-16T10:56:50.860Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "5",
+    "object_repr": "Current(I)/A",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 144,
+  "fields": {
+    "action_time": "2020-10-16T11:01:35.832Z",
+    "user": 1,
+    "content_type": 28,
+    "object_id": "1",
+    "object_repr": "Lithium (Li)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 145,
+  "fields": {
+    "action_time": "2020-10-16T11:01:55.313Z",
+    "user": 1,
+    "content_type": 28,
+    "object_id": "2",
+    "object_repr": "Graphite (C)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 146,
+  "fields": {
+    "action_time": "2020-10-16T11:12:07.269Z",
+    "user": 1,
+    "content_type": 27,
+    "object_id": "1",
+    "object_repr": "Li6",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 147,
+  "fields": {
+    "action_time": "2020-10-16T11:12:49.265Z",
+    "user": 1,
+    "content_type": 28,
+    "object_id": "3",
+    "object_repr": "Manganese (Mg)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 148,
+  "fields": {
+    "action_time": "2020-10-16T11:13:17.567Z",
+    "user": 1,
+    "content_type": 28,
+    "object_id": "4",
+    "object_repr": "Cobalt (Co)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 149,
+  "fields": {
+    "action_time": "2020-10-16T11:13:24.694Z",
+    "user": 1,
+    "content_type": 28,
+    "object_id": "2",
+    "object_repr": "Carbon (C)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 150,
+  "fields": {
+    "action_time": "2020-10-16T11:13:54.865Z",
+    "user": 1,
+    "content_type": 27,
+    "object_id": "2",
+    "object_repr": "Mg2",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 151,
+  "fields": {
+    "action_time": "2020-10-16T11:14:08.519Z",
+    "user": 1,
+    "content_type": 27,
+    "object_id": "3",
+    "object_repr": "Co2",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 152,
+  "fields": {
+    "action_time": "2020-10-16T11:14:55.181Z",
+    "user": 1,
+    "content_type": 28,
+    "object_id": "5",
+    "object_repr": "Nickel (Ni)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 153,
+  "fields": {
+    "action_time": "2020-10-16T11:15:01.631Z",
+    "user": 1,
+    "content_type": 27,
+    "object_id": "4",
+    "object_repr": "Ni6",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 154,
+  "fields": {
+    "action_time": "2020-10-16T11:16:10.339Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "1",
+    "object_repr": "NMC622",
     "action_flag": 1,
     "change_message": "[{\"added\": {}}]"
   }
@@ -3441,6 +3992,42 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 185,
+  "fields": {
+    "name": "Can add batch",
+    "content_type": 47,
+    "codename": "add_batch"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 186,
+  "fields": {
+    "name": "Can change batch",
+    "content_type": 47,
+    "codename": "change_batch"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 187,
+  "fields": {
+    "name": "Can delete batch",
+    "content_type": 47,
+    "codename": "delete_batch"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 188,
+  "fields": {
+    "name": "Can view batch",
+    "content_type": 47,
+    "codename": "view_batch"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -4116,6 +4703,14 @@
   "fields": {
     "app_label": "authtoken",
     "model": "tokenproxy"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 47,
+  "fields": {
+    "app_label": "battDB",
+    "model": "batch"
   }
 },
 {
