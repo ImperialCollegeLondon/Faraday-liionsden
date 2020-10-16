@@ -86,39 +86,36 @@ class QuantityUnit(models.Model):
     """
     Quantity Units e.g. Volts, Amps, Watts
     """
-    quantityName = models.CharField(max_length=100, unique=True, help_text="Readable name e.g. 'Charge'")
-    quantitySymbol = models.CharField(max_length=40, unique=True, help_text="e.g. 'Q', Will be decoded as LaTeX")
+    quantityName = models.CharField(max_length=100, help_text="Readable name e.g. 'Charge'")
+    quantitySymbol = models.CharField(max_length=40, help_text="e.g. 'Q', Will be decoded as LaTeX")
     unitName = models.CharField(max_length=40, blank=True, help_text="e.g. 'Coulombs'")
-    unitSymbol = models.CharField(max_length=40, unique=True, help_text="e.g. 'C'")
+    unitSymbol = models.CharField(max_length=40, help_text="e.g. 'C'")
+    is_SI_unit = models.BooleanField(default=False)
+    related_unit = models.ForeignKey('QuantityUnit',
+                                     null=True, blank=True, on_delete=models.SET_NULL,
+                                     limit_choices_to={'is_SI_unit': True})
+    related_scale = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return "%s (%s) / %s" % (self.quantityName, self.quantitySymbol, self.unitSymbol)
 
+    class Meta:
+        unique_together = ('quantityName', 'unitSymbol')
+
 
 class Parameter(cm.BaseModel):
     symbol = models.CharField(max_length=40, unique=True)
-    PARAM_TYPE_CHOICES = [
-        (1, 'ParamType1'),
-        (2, 'ParamType2'),
-    ]
-    type = models.IntegerField(choices=PARAM_TYPE_CHOICES)
     unit = models.ForeignKey(QuantityUnit, blank=True, null=True, on_delete=models.SET_NULL)
     notes = models.TextField(blank=True)
 
     def __str__(self):
-        return "%s: %s" % (self.name, self.symbol)
+        return "%s: %s / %s" % (self.name, self.symbol, self.unit.unitSymbol)
 
 
 class Data(cm.BaseModel):
-    paper = models.ForeignKey(cm.Paper, on_delete=models.CASCADE)
+    paper = models.ForeignKey(cm.Paper, on_delete=models.CASCADE, null=True, blank=True)
     parameter = models.ManyToManyField(Parameter, through='DataParameter')
-    material = models.ForeignKey(Material, on_delete=models.CASCADE)
-    DATA_TYPE_CHOICES = [
-        (1, 'DataType1'),
-        (2, 'DataType2'),
-    ]
-    type = models.IntegerField(choices=DATA_TYPE_CHOICES)
-    data = models.TextField()
+    data = models.JSONField()
 
     # other fields to be added... I'm not sure what the numrange fields are for?
     class Meta:
@@ -129,12 +126,23 @@ class DataParameter(models.Model):
     """
     Parameters on data
     """
+    PARAM_TYPE_NONE = 10
+    PARAM_TYPE_INPUT = 20
+    PARAM_TYPE_OUTPUT = 30
+
+    PARAM_TYPE = (
+        (PARAM_TYPE_NONE, 'None'),
+        (PARAM_TYPE_INPUT, 'Input'),
+        (PARAM_TYPE_OUTPUT, 'Output'),
+    )
+
     data = models.ForeignKey(Data, on_delete=models.CASCADE)
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
-    amount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(100)])
+    type = models.PositiveSmallIntegerField(choices=PARAM_TYPE, default=PARAM_TYPE_NONE)
+    material = models.ForeignKey(Material, on_delete=models.CASCADE, blank=True, null=True)
 
-    def __str__(self):
-        return "%s%d" % (self.compound.formula, self.amount)
+    # def __str__(self):
+    #     return "%s%d" % (self.compound.formula, self.amount)
 
     # class Meta:
     #     unique_together = ('data', 'parameter')
