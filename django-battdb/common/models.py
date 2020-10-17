@@ -140,7 +140,7 @@ class Person(models.Model):
 # class UserRole
 
 
-class DOIField(models.CharField):
+class DOIField(models.URLField):
     description = "Digital Object Identifier (DOI)"
 
     def __init__(self, *args, **kwargs):

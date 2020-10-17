@@ -20,7 +20,7 @@ class PersonAdmin(admin.ModelAdmin):
 
 
 class BaseAdmin(admin.ModelAdmin):
-    list_display = (["name", "user_owner", "status", "created_on", "modified_on"])
+    list_display = (["__str__", "user_owner", "status", "created_on", "modified_on"])
     list_filter = (["status"])
     readonly_fields = ['created_on', 'modified_on']
     generic_fields = {'name', 'notes', 'status', 'user_owner', 'attributes'}
@@ -63,7 +63,7 @@ class PaperAuthorInline(admin.TabularInline):
 
 class PaperAdmin(BaseAdmin):
     inlines = (PaperAuthorInline,)
-    list_display = ["title", "DOI", "year", "has_pdf"]
+    list_display = ["title", "tag", "DOI", "year", "has_pdf"]
     list_filter = ["year", "publisher", "authors"]
     readonly_fields = ['created_on', 'tag']
 
