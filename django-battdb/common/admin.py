@@ -4,6 +4,9 @@ from django.contrib.postgres.fields import JSONField
 
 from .models import *
 
+admin.site.site_header = 'The Faraday Institution - Liionsden Electrochemistry Database'
+admin.site.site_title = 'Liionsden Admin'
+admin.site.index_title = 'Liionsden Admin'
 
 # admin.site.register([
 #    Paper,
