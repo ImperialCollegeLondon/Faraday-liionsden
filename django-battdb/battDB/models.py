@@ -14,18 +14,18 @@ import hashlib
 # from jsonfield_schema import JSONSchema
 
 
-class SignalType(models.Model):
-    """
-    This model defines a table of signal types e.g. Cell_voltage.<br>
-    Experiments using the same set of SignalTypes could be assumed to be comparable (issue #16).
-    """
-    name = models.CharField(max_length=30)
-    symbol = models.CharField(max_length=8)
-    unit_name = models.CharField(max_length=30, default="Arb") # could be foreign key to a "SignalTypeUuits" table
-    unit_symbol = models.CharField(max_length=8, default="")
-
-    def __str__(self):
-        return "%s/%s" % (self.name, self.unit_symbol)
+# class SignalType(models.Model):
+#     """
+#     This model defines a table of signal types e.g. Cell_voltage.<br>
+#     Experiments using the same set of SignalTypes could be assumed to be comparable (issue #16).
+#     """
+#     name = models.CharField(max_length=30)
+#     symbol = models.CharField(max_length=8)
+#     unit_name = models.CharField(max_length=30, default="Arb") # could be foreign key to a "SignalTypeUuits" table
+#     unit_symbol = models.CharField(max_length=8, default="")
+#
+#     def __str__(self):
+#         return "%s/%s" % (self.name, self.unit_symbol)
 
 
 class DeviceType(cm.BaseModel):
@@ -63,7 +63,10 @@ class DeviceBatch(cm.BaseModel):
 
 # a physical thing
 class Device(cm.BaseModel):
-    batch = models.ForeignKey(DeviceBatch, null=True, blank=True, on_delete=models.SET_NULL)
+
+
+    class Meta:
+        abstract = True
 
 
 class TestProtocol(cm.BaseModel):
@@ -82,6 +85,10 @@ class TestProtocol(cm.BaseModel):
 # }
 
 
+class DeviceConfigNode(cm.BaseModel):
+    type = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
+
+
 class EquipmentType(cm.BaseModel):
     # validate: my manufacturer is an org with mfg_equip=True
     pass
@@ -91,6 +98,9 @@ class EquipmentType(cm.BaseModel):
 
 # Equipment - e.g. Bob's cycler
 class Equipment(cm.BaseModel):
+    """
+    Equipment e.g. cycler machines, etc.
+    """
     type = models.ForeignKey(EquipmentType, on_delete=models.SET_NULL, null=True, blank=True)
     serialNo = models.CharField(max_length=64)
 
@@ -109,9 +119,19 @@ class Equipment(cm.BaseModel):
 # "electrode_material_neg":"example",
 # }
 
+#class Cell(Device):
+#    pass
 
-class Cell(Device):
-    pass
+#class CellBatch(DeviceBatch):
+#    materials = models.ManyToManyField(dfn.Material, through=)
+#    pass
+
+
+#class Module(Device):
+#    pass
+
+#class Pack(Device):
+#    pass
 
 
 # Cell._meta.get_field('attributes').default = cell_schema
@@ -182,7 +202,7 @@ class Experiment(cm.BaseModel):
     date = models.DateField()
     status = models.CharField(max_length=16, choices=[("edit", "Edit"), ("published", "Published")], default="edit")
     # apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
-    cells = models.ManyToManyField(Cell, related_name='experiments')
+    #cells = models.ManyToManyField(Cell, related_name='experiments')
     cellConfig = models.ForeignKey(CellConfig, on_delete=models.SET_NULL, null=True, blank=True)
     protocol = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -204,15 +224,15 @@ class Experiment(cm.BaseModel):
     # ]
 
 
-# FIXME: DataFile currently duplicates data.
-# It is stored for posterity in the format in which it was uploaded.
-# It is stored again as JSON within this class
-# Each defined "range" is pulled out and stored again as an ArrayField.
-# As yet unclear to me which is the best approach.
+
 
 class RawDataFile(cm.BaseModel):
     """
-
+        # FIXME: DataFile currently duplicates data. <br>
+        # It is stored for posterity in the format in which it was uploaded. <br>
+        # It is stored again as JSON within this class <br>
+        # Each defined "range" is pulled out and stored again as an ArrayField. <br>
+        # As yet unclear to me which is the best approach.
     """
 
     raw_data_file = models.FileField(upload_to='raw_data_files', null=True)

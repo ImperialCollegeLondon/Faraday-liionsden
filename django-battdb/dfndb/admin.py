@@ -13,7 +13,7 @@ class MaterialCompositionInline(admin.TabularInline):
 
 class DataParameterInline(admin.TabularInline):
     model = DataParameter
-    extra = 2
+    extra = 1
 
 
 class MaterialAdmin(BaseAdmin):

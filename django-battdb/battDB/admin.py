@@ -10,8 +10,8 @@ from .models import *
 
 
 admin.site.register([
-    Experiment, TestProtocol, Equipment, EquipmentType, DeviceBatch, Device, DeviceType,
-    CellConfig, Cell, ExperimentDataFile, DataRange], BaseAdmin)
+    Experiment, TestProtocol, Equipment, EquipmentType,
+    CellConfig,  ExperimentDataFile, DataRange], BaseAdmin)
 
 
 class DataAdmin(BaseAdmin):

@@ -79,8 +79,7 @@
     "date": "2020-08-05",
     "status": "edit",
     "cellConfig": null,
-    "protocol": null,
-    "cells": []
+    "protocol": null
   }
 },
 {
@@ -96,8 +95,7 @@
     "date": "2020-08-05",
     "status": "edit",
     "cellConfig": null,
-    "protocol": null,
-    "cells": []
+    "protocol": null
   }
 },
 {
@@ -189,6 +187,16 @@
   }
 },
 {
+  "model": "common.person",
+  "pk": 2,
+  "fields": {
+    "longName": "nobby",
+    "shortName": "n",
+    "user": null,
+    "org": null
+  }
+},
+{
   "model": "common.paper",
   "pk": 1,
   "fields": {
@@ -205,6 +213,34 @@
     "publisher": null,
     "url": "https://ieeexplore.ieee.org/document/771073",
     "PDF": ""
+  }
+},
+{
+  "model": "common.paper",
+  "pk": 2,
+  "fields": {
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-16T17:21:59.877Z",
+    "modified_on": "2020-10-16T17:21:59.877Z",
+    "attributes": {},
+    "notes": "",
+    "DOI": null,
+    "tag": "re-now-we-will-need-tin-hats-2020",
+    "year": 2020,
+    "title": "Re: Now We Will Need Tin Hats",
+    "publisher": null,
+    "url": null,
+    "PDF": ""
+  }
+},
+{
+  "model": "common.paperauthor",
+  "pk": 1,
+  "fields": {
+    "paper": 2,
+    "author": 2,
+    "is_principal": false
   }
 },
 {
@@ -477,6 +513,19 @@
   }
 },
 {
+  "model": "dfndb.quantityunit",
+  "pk": 10,
+  "fields": {
+    "quantityName": "Distance",
+    "quantitySymbol": "d",
+    "unitName": "nanometres",
+    "unitSymbol": "nm",
+    "is_SI_unit": false,
+    "related_unit": 6,
+    "related_scale": 1e-09
+  }
+},
+{
   "model": "dfndb.parameter",
   "pk": 1,
   "fields": {
@@ -485,10 +534,13 @@
     "user_owner": null,
     "created_on": "2020-10-16T12:02:34.855Z",
     "modified_on": "2020-10-16",
-    "attributes": {},
+    "attributes": [
+      "boing",
+      "boing"
+    ],
+    "notes": "",
     "symbol": "rP",
-    "unit": 6,
-    "notes": ""
+    "unit": 10
   }
 },
 {
@@ -501,9 +553,9 @@
     "created_on": "2020-10-16T12:36:29.748Z",
     "modified_on": "2020-10-16",
     "attributes": {},
+    "notes": "",
     "symbol": "t",
-    "unit": 6,
-    "notes": ""
+    "unit": 6
   }
 },
 {
@@ -516,9 +568,56 @@
     "created_on": "2020-10-16T12:51:37.090Z",
     "modified_on": "2020-10-16",
     "attributes": {},
+    "notes": "",
     "symbol": "C",
-    "unit": 9,
-    "notes": ""
+    "unit": 9
+  }
+},
+{
+  "model": "dfndb.data",
+  "pk": 1,
+  "fields": {
+    "name": "test foo",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-16T17:01:43.737Z",
+    "modified_on": "2020-10-16",
+    "attributes": {},
+    "notes": "moo",
+    "paper": 1
+  }
+},
+{
+  "model": "dfndb.dataparameter",
+  "pk": 1,
+  "fields": {
+    "data": 1,
+    "parameter": 1,
+    "type": 20,
+    "material": 2,
+    "value": 100
+  }
+},
+{
+  "model": "dfndb.dataparameter",
+  "pk": 2,
+  "fields": {
+    "data": 1,
+    "parameter": 1,
+    "type": 20,
+    "material": 1,
+    "value": 400
+  }
+},
+{
+  "model": "dfndb.dataparameter",
+  "pk": 3,
+  "fields": {
+    "data": 1,
+    "parameter": 3,
+    "type": 30,
+    "material": null,
+    "value": null
   }
 },
 {
@@ -2810,6 +2909,175 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 178,
+  "fields": {
+    "action_time": "2020-10-16T17:01:43.739Z",
+    "user": 1,
+    "content_type": 33,
+    "object_id": "1",
+    "object_repr": "test foo",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"data parameter\", \"object\": \"DataParameter object (1)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 179,
+  "fields": {
+    "action_time": "2020-10-16T17:05:08.980Z",
+    "user": 1,
+    "content_type": 33,
+    "object_id": "1",
+    "object_repr": "test foo",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"data parameter\", \"object\": \"particle radius: rP / m\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 180,
+  "fields": {
+    "action_time": "2020-10-16T17:07:52.509Z",
+    "user": 1,
+    "content_type": 33,
+    "object_id": "1",
+    "object_repr": "test foo",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"data parameter\", \"object\": \"particle radius: rP / m\", \"fields\": [\"Value\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 181,
+  "fields": {
+    "action_time": "2020-10-16T17:09:41.262Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "10",
+    "object_repr": "Particle Radius (rP) / nm",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 182,
+  "fields": {
+    "action_time": "2020-10-16T17:10:14.091Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "10",
+    "object_repr": "Distance (d) / nm",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"QuantityName\", \"QuantitySymbol\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 183,
+  "fields": {
+    "action_time": "2020-10-16T17:10:26.756Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "1",
+    "object_repr": "particle radius: rP / nm",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Unit\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 184,
+  "fields": {
+    "action_time": "2020-10-16T17:10:52.547Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "1",
+    "object_repr": "particle radius: rP / nm",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 185,
+  "fields": {
+    "action_time": "2020-10-16T17:11:23.597Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "1",
+    "object_repr": "particle radius: rP / nm",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Attributes\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 186,
+  "fields": {
+    "action_time": "2020-10-16T17:11:49.627Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "1",
+    "object_repr": "particle radius: rP / nm",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Attributes\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 187,
+  "fields": {
+    "action_time": "2020-10-16T17:19:20.884Z",
+    "user": 1,
+    "content_type": 33,
+    "object_id": "1",
+    "object_repr": "test foo",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"data parameter\", \"object\": \"particle radius: rP / nm\", \"fields\": [\"Value\"]}}, {\"changed\": {\"name\": \"data parameter\", \"object\": \"particle radius: rP / nm\", \"fields\": [\"Value\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 188,
+  "fields": {
+    "action_time": "2020-10-16T17:19:37.251Z",
+    "user": 1,
+    "content_type": 33,
+    "object_id": "1",
+    "object_repr": "test foo",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"data parameter\", \"object\": \"Capacity: C / Wh\"}}, {\"changed\": {\"name\": \"data parameter\", \"object\": \"particle radius: rP / nm\", \"fields\": [\"Type\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 189,
+  "fields": {
+    "action_time": "2020-10-16T17:21:10.812Z",
+    "user": 1,
+    "content_type": 36,
+    "object_id": "2",
+    "object_repr": "n",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 190,
+  "fields": {
+    "action_time": "2020-10-16T17:21:59.880Z",
+    "user": 1,
+    "content_type": 35,
+    "object_id": "2",
+    "object_repr": "re-now-we-will-need-tin-hats-2020",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"paper author\", \"object\": \"PaperAuthor object (1)\"}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -4574,6 +4842,42 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 197,
+  "fields": {
+    "name": "Can add device config node",
+    "content_type": 50,
+    "codename": "add_deviceconfignode"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 198,
+  "fields": {
+    "name": "Can change device config node",
+    "content_type": 50,
+    "codename": "change_deviceconfignode"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 199,
+  "fields": {
+    "name": "Can delete device config node",
+    "content_type": 50,
+    "codename": "delete_deviceconfignode"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 200,
+  "fields": {
+    "name": "Can view device config node",
+    "content_type": 50,
+    "codename": "view_deviceconfignode"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -4708,7 +5012,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$216000$OafoLVPyzITM$orFVUO5QzVoBneWLEpu4jxz+Ucrc+DqclzTFOsJcvH4=",
-    "last_login": "2020-10-13T09:54:08.868Z",
+    "last_login": "2020-10-17T20:50:44.251Z",
     "is_superuser": true,
     "username": "tom",
     "first_name": "Tom",
@@ -5276,6 +5580,14 @@
   }
 },
 {
+  "model": "contenttypes.contenttype",
+  "pk": 50,
+  "fields": {
+    "app_label": "battDB",
+    "model": "deviceconfignode"
+  }
+},
+{
   "model": "sessions.session",
   "pk": "9n5s8vuiaybs4f16zd2ihvnybnmmowy2",
   "fields": {
@@ -5337,6 +5649,14 @@
   "fields": {
     "session_data": "ODkzNGRjMTU3YjY1NTAxMDE2MGU5NGRmNzU3ZWQ1YjYzOGEwMGJjNTp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiI4ZDc3MzRjOGIwMDg0NmM4NGU3Nzg1ZGZiZjc3ZTk4ODBhMWE3OWFiIn0=",
     "expire_date": "2020-08-25T10:09:00.092Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "mb8xezkfh12vyv80crcv462o2wfaiydq",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kTtA4:Z6s8v3V8CFqtgrlLW5XlMF_zvKSxJzgktRZ9VxCOm4M",
+    "expire_date": "2020-10-31T20:50:44.256Z"
   }
 },
 {
