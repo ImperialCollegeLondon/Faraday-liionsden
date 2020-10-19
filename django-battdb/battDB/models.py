@@ -226,7 +226,7 @@ class Experiment(cm.BaseModel):
     # owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
     #status = models.CharField(max_length=16, choices=[("edit", "Edit"), ("published", "Published")], default="edit")
-    #status = None
+    status = None
     # apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
     #cells = models.ManyToManyField(Cell, related_name='experiments')
     #cellConfig = models.ForeignKey(CellConfig, on_delete=models.SET_NULL, null=True, blank=True)
