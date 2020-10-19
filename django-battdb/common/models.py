@@ -93,7 +93,7 @@ class HasSlug(models.Model):
     """
     Adds a unique SlugField
     """
-    slug = models.SlugField(unique=True, editable=False)
+    slug = models.SlugField(unique=False, default="bork", editable=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self))
@@ -103,17 +103,13 @@ class HasSlug(models.Model):
         abstract = True
 
 
-class BaseModel(HasName, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates):
+class BaseModel(HasName, HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates):
     """
    Abstract base Inheriting all the common bases as mixins:<br>
-   HasName, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
+   HasName, HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
    """
     class Meta:
         abstract = True
-
-
-class BaseModelWithSlug(BaseModel, HasSlug):
-    pass
 
 
 # TODO: ModelForm Org.head = filter on Person WHERE Person.org = this

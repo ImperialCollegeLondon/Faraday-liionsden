@@ -28,42 +28,58 @@ import hashlib
 #         return "%s/%s" % (self.name, self.unit_symbol)
 
 
-class DeviceType(cm.BaseModel):
-    """
-    A type of thing, or specification. Provides default metadata for objects referencing this type
-    """
-    DEVICE_TYPE_NONE = 1
-    DEVICE_TYPE_CYCLER = 10
+# class DeviceType(cm.BaseModel):
+#     """
+#     A type of thing, or specification. Provides default metadata for objects referencing this type
+#     """
+#     DEVICE_TYPE_NONE = 1
+#     DEVICE_TYPE_CYCLER = 10
+#     DEVICE_TYPE_CELL = 20
+#     DEVICE_TYPE_MODULE = 30
+#     DEVICE_TYPE_SENSOR = 40
+#
+#     DEVICE_TYPE = (
+#         (DEVICE_TYPE_CELL, 'Cell'),
+#         (DEVICE_TYPE_CYCLER, 'Cycler'),
+#         (DEVICE_TYPE_MODULE, 'Module'),
+#         (DEVICE_TYPE_SENSOR, 'Sensor')
+#     )
+#
+#     type = models.PositiveSmallIntegerField(default=DEVICE_TYPE_NONE, choices=DEVICE_TYPE)
+
+
+# class DeviceBatch(cm.BaseModel):
+#     """
+#     Describes a batch of things produced to the same type specification
+#     """
+#     manufacturer = models.ForeignKey(cm.Org, null=True, blank=True, on_delete=models.SET_NULL,
+#                                      limit_choices_to={'is_mfg_cells': True})
+#     manufactured_on = models.DateField(null=True, blank=True)
+#     device_type = models.ForeignKey(DeviceType, null=True, blank=True, on_delete=models.SET_NULL)
+#
+#     class Meta:
+#         verbose_name_plural = "Device Batches"
+
+
+# a physical thing or specification
+class Device(cm.BaseModel):
+    DEVICE_TYPE_NONE = 0
+    DEVICE_TYPE_CYCLER = 1
+    DEVICE_TYPE_SENSOR = 10
     DEVICE_TYPE_CELL = 20
     DEVICE_TYPE_MODULE = 30
-    DEVICE_TYPE_SENSOR = 40
+    DEVICE_TYPE_PACK = 40
 
     DEVICE_TYPE = (
         (DEVICE_TYPE_CELL, 'Cell'),
-        (DEVICE_TYPE_CYCLER, 'Cycler'),
         (DEVICE_TYPE_MODULE, 'Module'),
+        (DEVICE_TYPE_PACK, 'Pack'),
+        (DEVICE_TYPE_CYCLER, 'Cycler'),
         (DEVICE_TYPE_SENSOR, 'Sensor')
     )
 
     type = models.PositiveSmallIntegerField(default=DEVICE_TYPE_NONE, choices=DEVICE_TYPE)
-
-
-class DeviceBatch(cm.BaseModel):
-    """
-    Describes a batch of things produced to the same type specification
-    """
-    manufacturer = models.ForeignKey(cm.Org, null=True, blank=True, on_delete=models.SET_NULL,
-                                     limit_choices_to={'is_mfg_cells': True})
-    manufactured_on = models.DateField(null=True, blank=True)
-    device_type = models.ForeignKey(DeviceType, null=True, blank=True, on_delete=models.SET_NULL)
-
-    class Meta:
-        verbose_name_plural = "Device Batches"
-
-
-# a physical thing
-class Device(cm.BaseModel):
-
+    is_template = models.BooleanField(default=False)
 
     class Meta:
         abstract = True
@@ -84,36 +100,35 @@ class Device(cm.BaseModel):
 # "channels":None,
 # }
 
-class DeviceConfig(cm.BaseModel):
-    devices = models.ManyToManyField(DeviceType, through='DeviceConfigNode')
-
-
-class DeviceConfigNode(cm.BaseModel):
-
-    deviceType = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
-    deviceConfig = models.ForeignKey(DeviceConfig, on_delete=models.CASCADE)
-
-
+# class DeviceConfig(cm.BaseModelWithSlug):
+#     devices = models.ManyToManyField(Device, through='DeviceConfigNode', limit_choices_to={'is_template': True})
+#
+#
+# class DeviceConfigNode(cm.BaseModelWithSlug):
+#     deviceType = models.ForeignKey(Device, on_delete=models.CASCADE, limit_choices_to={'is_template': True})
+#     deviceConfig = models.ForeignKey(DeviceConfig, on_delete=models.CASCADE)
 
 
 
-class EquipmentType(cm.BaseModel):
-    # validate: my manufacturer is an org with mfg_equip=True
-    pass
+
+
+# class EquipmentType(cm.BaseModel):
+#     # validate: my manufacturer is an org with mfg_equip=True
+#     pass
 
 
 # EquipmentType._meta.get_field('attributes').default = equipmentType_schema
 
 # Equipment - e.g. Bob's cycler
-class Equipment(cm.BaseModel):
-    """
-    Equipment e.g. cycler machines, etc.
-    """
-    type = models.ForeignKey(EquipmentType, on_delete=models.SET_NULL, null=True, blank=True)
-    serialNo = models.CharField(max_length=64)
-
-    class Meta:
-        verbose_name_plural = "Equipment"
+# class Equipment(cm.BaseModel):
+#     """
+#     Equipment e.g. cycler machines, etc.
+#     """
+#     type = models.ForeignKey(EquipmentType, on_delete=models.SET_NULL, null=True, blank=True)
+#     serialNo = models.CharField(max_length=64)
+#
+#     class Meta:
+#         verbose_name_plural = "Equipment"
 
 
 # TODO: These should be actual enforceable JSON schemas, not just a collection of default values. (Issue #23)
@@ -151,11 +166,11 @@ class Equipment(cm.BaseModel):
 #    class Meta:
 #        ordering=('position_in_config',)
 
-class CellConfig(cm.BaseModel):
+#class CellConfig(cm.BaseModel):
     # TODO: think about how to link cells into packs in a flexible way - supports idea #15 (SVG Diagrams)
     # e.g.:
     # cells = ManyToManyField(CellType, through=CellTypeConfig)
-    num_cells = models.PositiveIntegerField(default=1)
+#    num_cells = models.PositiveIntegerField(default=1)
 
 
 # Model class to represent a "system of equipment" - e.g. if more complicated than a standalone cycler machine, user can add descriptive JSON and a photo here
@@ -200,28 +215,28 @@ class CellConfig(cm.BaseModel):
 # "rows": []
 # }
 
-# Main "Experiment" aka DataSet class.
-# Has many: data files (from cyclers)
-# Has many: cells (actual physical objects)
-# Has one: apparatus (i.e. lab)
+
 class Experiment(cm.BaseModel):
-    name = models.SlugField()
+    """
+    Main "Experiment" aka DataSet class. <br>
+    Has many: data files (from cyclers) <br>
+    Has many: devices (actual physical objects e.g. cells) <br>
+    """
+    #name = models.SlugField()
     # owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
-    status = models.CharField(max_length=16, choices=[("edit", "Edit"), ("published", "Published")], default="edit")
+    #status = models.CharField(max_length=16, choices=[("edit", "Edit"), ("published", "Published")], default="edit")
+    #status = None
     # apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
     #cells = models.ManyToManyField(Cell, related_name='experiments')
-    cellConfig = models.ForeignKey(CellConfig, on_delete=models.SET_NULL, null=True, blank=True)
-    protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True)
+    #cellConfig = models.ForeignKey(CellConfig, on_delete=models.SET_NULL, null=True, blank=True)
+    #protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True)
 
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
         return str(self.user_owner) + "/" + str(self.name) + "/" + str(self.date)
 
-    @property
-    def slug(self):
-        return str(self)
 
     def get_absolute_url(self):
         # return reverse('Experiment', kwargs={'slug': self.slug})
@@ -251,48 +266,49 @@ class RawDataFile(cm.BaseModel):
         return super().clean()
 
 
-class ExperimentDataFile(cm.BaseModel):
-    raw_data_file = models.OneToOneField(RawDataFile, on_delete=models.CASCADE, related_name="ExperimentData")
-    machine = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True, related_name='all_data')
-    # metadata = JSONField(default=resultMetadata_schema, blank=True)
-    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True,
-                                   related_name='data_files')
+# class ExperimentDataFile(cm.BaseModel):
+#     raw_data_file = models.OneToOneField(RawDataFile, on_delete=models.CASCADE, related_name="ExperimentData")
+#     #machine = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True, related_name='all_data')
+#     # metadata = JSONField(default=resultMetadata_schema, blank=True)
+#     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True,
+#                                    related_name='data_files')
+#
+#     # import_columns = models.ManyToManyField(SignalType, blank=True)
+#     # parameters = JSONField(default=experimentParameters_schema, blank=True)
+#     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
+#     def __str__(self):
+#         return os.path.basename(self.raw_data_file.name)
+#
+#     class Meta:
+#         verbose_name_plural = "Experiment Data Files"
 
-    # import_columns = models.ManyToManyField(SignalType, blank=True)
-    # parameters = JSONField(default=experimentParameters_schema, blank=True)
-    # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
-    def __str__(self):
-        return os.path.basename(self.raw_data_file.name)
 
-    class Meta:
-        verbose_name_plural = "Experiment Data Files"
-
-
-# DataRange - each data file contains numerous ranges e.g. charge & discharge cycles.
-# TODO: Write (or find) code to segment data into ranges.
-# Their data might overlap.
-# TODO: Convert this into a JSON Schema within ExperimentData - see Git issue #23
-class DataRange(cm.BaseModel):
-    dataFile = models.ForeignKey(ExperimentDataFile, on_delete=models.SET_NULL, null=True, blank=True,
-                                 related_name='ranges')
-    file_offset = models.PositiveIntegerField(default=0)
-    label = models.CharField(max_length=32, null=True)
-    protocol_step = models.PositiveIntegerField()
-    step_action = models.CharField(max_length=8,
-                                   choices=[('chg', 'Charging'), ('dchg', 'Discharging'), ('rest', 'Rest'),
-                                            (None, 'Undefined')], null=True)
-    # TODO: Possibly split these arrays into a new object
-    ts_headers = ArrayField(models.CharField(max_length=32, null=True), null=True, blank=True)
-    ts_data = ArrayField(ArrayField(models.FloatField(null=True), null=True), null=True, blank=True)
-
-    # TODO: These need a schema
-    # events = JSONField(null=True, blank=True)
-    # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
-    def __str__(self):
-        return "%s/%d: %s" % (self.dataFile, self.id, self.label)
-
-    class Meta:
-        verbose_name_plural = "Data Ranges"
+# class DataRange(cm.BaseModel):
+#     """
+#     DataRange - each data file contains numerous ranges e.g. charge & discharge cycles. Their data might overlap. <br>
+#     TODO: Write (or find) code to segment data into ranges. <br>
+#     TODO: Convert this into a JSON Schema within ExperimentData - see Git issue #23 <br>
+#     """
+#     dataFile = models.ForeignKey(ExperimentDataFile, on_delete=models.SET_NULL, null=True, blank=True,
+#                                  related_name='ranges')
+#     file_offset = models.PositiveIntegerField(default=0)
+#     label = models.CharField(max_length=32, null=True)
+#     protocol_step = models.PositiveIntegerField()
+#     step_action = models.CharField(max_length=8,
+#                                    choices=[('chg', 'Charging'), ('dchg', 'Discharging'), ('rest', 'Rest'),
+#                                             (None, 'Undefined')], null=True)
+#     # TODO: Possibly split these arrays into a new object
+#     ts_headers = ArrayField(models.CharField(max_length=32, null=True), null=True, blank=True)
+#     ts_data = ArrayField(ArrayField(models.FloatField(null=True), null=True), null=True, blank=True)
+#
+#     # TODO: These need a schema
+#     # events = JSONField(null=True, blank=True)
+#     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
+#     def __str__(self):
+#         return "%s/%d: %s" % (self.dataFile, self.id, self.label)
+#
+#     class Meta:
+#         verbose_name_plural = "Data Ranges"
 
 
 # When saving a data file, call this to parse the data.
@@ -333,4 +349,4 @@ def data_pre_save(sender, instance, *args, **kwargs):
 from django.dispatch import Signal
 from django.db.models import signals
 
-signals.post_save.connect(data_pre_save, sender=ExperimentDataFile)
+#signals.post_save.connect(data_pre_save, sender=ExperimentDataFile)

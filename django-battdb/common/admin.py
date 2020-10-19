@@ -25,7 +25,7 @@ class PersonAdmin(admin.ModelAdmin):
 class BaseAdmin(admin.ModelAdmin):
     list_display = (["__str__", "user_owner", "status", "created_on", "modified_on"])
     list_filter = (["status"])
-    readonly_fields = ['created_on', 'modified_on']
+    readonly_fields = ['created_on', 'modified_on', 'slug']
     generic_fields = {'name', 'notes', 'status', 'user_owner', 'attributes'}
 
     def get_changeform_initial_data(self, request):
