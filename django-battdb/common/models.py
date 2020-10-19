@@ -16,9 +16,9 @@ from django.utils import timezone
 
 class HasName(models.Model):
     """
-    Abstract base class for any model having a unique name
+    Abstract base class for any model having a name
     """
-    name = models.CharField(max_length=128, unique=True, blank=True, null=True, help_text="Unique name for this object")
+    name = models.CharField(max_length=128, blank=True, null=True, help_text="Name for this object")
 
     def __str__(self):
         return str(self.name)
@@ -89,6 +89,20 @@ class HasNotes(models.Model):
         abstract = True
 
 
+class HasSlug(models.Model):
+    """
+    Adds a unique SlugField
+    """
+    slug = models.SlugField(unique=True, editable=False)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(str(self))
+        return super().save(*args, **kwargs)
+
+    class Meta:
+        abstract = True
+
+
 class BaseModel(HasName, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates):
     """
    Abstract base Inheriting all the common bases as mixins:<br>
@@ -96,6 +110,10 @@ class BaseModel(HasName, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreate
    """
     class Meta:
         abstract = True
+
+
+class BaseModelWithSlug(BaseModel, HasSlug):
+    pass
 
 
 # TODO: ModelForm Org.head = filter on Person WHERE Person.org = this
@@ -210,14 +228,12 @@ class ContentTypeRestrictedFileField(models.FileField):
         return data
 
 
-class Paper(HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates):
+class Paper(HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates):
     """
     An academic paper
    """
     DOI = DOIField(unique=True, blank=True, null=True,
                    help_text="Paper DOI. In future, this could populate the other fields automatically.")
-    tag = models.SlugField(max_length=100, unique=True,
-                           help_text="Tag or 'slug' used to uniquely identify this paper. This will be auto-generated in future versions.")
     year = YearField(default=datetime.date.today().year)
     title = models.CharField(max_length=300)
     # authors = models.ManyToManyField(Person) # no - see above
@@ -232,16 +248,9 @@ class Paper(HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDate
     def has_pdf(self):
         return self.PDF is not None
 
-    def save(self, *args, **kwargs):
-        self.tag = slugify(str(self.title) + "-" + str(self.year))
-        return super().save(*args, **kwargs)
-
     def __str__(self):
-        return str(self.tag)
-    # TODO: Validator which autogenerates 'tag' field from a 'slugification' of principal author surname + year + title
-#   def save(self, *args, **kwargs):
-#     self.tag = slugify(self.authors + self.year + self.title)
-#     super().save(*args,**kwargs)
+        return slugify(str(self.title) + "-" + str(self.year))
+
 # TODO: ModelForm paper.publisher = filter on Org where Org.type = PUBLISHER
 
 

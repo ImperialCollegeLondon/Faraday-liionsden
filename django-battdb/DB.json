@@ -8,21 +8,6 @@
   }
 },
 {
-  "model": "battDB.testprotocol",
-  "pk": 1,
-  "fields": {
-    "name": null,
-    "status": 20,
-    "user_owner": null,
-    "created_on": "2020-10-15T17:18:04.965Z",
-    "modified_on": "2020-10-15T17:13:05.815Z",
-    "attributes": {},
-    "notes": null,
-    "description": "pybamm.Experiment(\r\n    [\r\n        \"Discharge at C/10 for 10 hours or until 3.3 V\",\r\n        \"Rest for 1 hour\",\r\n        \"Charge at 1 A until 4.1 V\",\r\n        \"Hold at 4.1 V until 50 mA\",\r\n        \"Rest for 1 hour\",\r\n    ]\r\n    * 3,",
-    "parameters": {}
-  }
-},
-{
   "model": "battDB.equipmenttype",
   "pk": 2,
   "fields": {
@@ -203,44 +188,16 @@
     "status": 10,
     "user_owner": null,
     "created_on": "2020-10-15T17:18:05.103Z",
-    "modified_on": "2020-10-15T17:23:51.976Z",
+    "modified_on": "2020-10-18T23:10:07.658Z",
     "attributes": {},
-    "notes": "",
+    "notes": ".",
+    "slug": "toward-unique-identifiers-2019",
     "DOI": "https://doi.org/10.1109/5.771073",
-    "tag": "toward-unique-identifiers2020",
-    "year": 2020,
+    "year": 2019,
     "title": "Toward unique identifiers",
     "publisher": null,
     "url": "https://ieeexplore.ieee.org/document/771073",
     "PDF": ""
-  }
-},
-{
-  "model": "common.paper",
-  "pk": 2,
-  "fields": {
-    "status": 10,
-    "user_owner": 1,
-    "created_on": "2020-10-16T17:21:59.877Z",
-    "modified_on": "2020-10-16T17:21:59.877Z",
-    "attributes": {},
-    "notes": "",
-    "DOI": null,
-    "tag": "re-now-we-will-need-tin-hats-2020",
-    "year": 2020,
-    "title": "Re: Now We Will Need Tin Hats",
-    "publisher": null,
-    "url": null,
-    "PDF": ""
-  }
-},
-{
-  "model": "common.paperauthor",
-  "pk": 1,
-  "fields": {
-    "paper": 2,
-    "author": 2,
-    "is_principal": false
   }
 },
 {
@@ -3078,6 +3035,97 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 191,
+  "fields": {
+    "action_time": "2020-10-18T23:05:42.509Z",
+    "user": 1,
+    "content_type": 35,
+    "object_id": "2",
+    "object_repr": "re-now-we-will-need-tin-hats-2020",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 192,
+  "fields": {
+    "action_time": "2020-10-18T23:06:26.891Z",
+    "user": 1,
+    "content_type": 35,
+    "object_id": "1",
+    "object_repr": "toward-unique-identifiers-2020",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 193,
+  "fields": {
+    "action_time": "2020-10-18T23:06:43.201Z",
+    "user": 1,
+    "content_type": 35,
+    "object_id": "1",
+    "object_repr": "toward-unique-identifiers-2020",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Notes\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 194,
+  "fields": {
+    "action_time": "2020-10-18T23:07:39.546Z",
+    "user": 1,
+    "content_type": 35,
+    "object_id": "1",
+    "object_repr": "toward-unique-identifiers-2020",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 195,
+  "fields": {
+    "action_time": "2020-10-18T23:09:05.032Z",
+    "user": 1,
+    "content_type": 35,
+    "object_id": "1",
+    "object_repr": "toward-unique-identifiers-2020",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 196,
+  "fields": {
+    "action_time": "2020-10-18T23:09:55.795Z",
+    "user": 1,
+    "content_type": 35,
+    "object_id": "1",
+    "object_repr": "toward-unique-identifiers-2020",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 197,
+  "fields": {
+    "action_time": "2020-10-18T23:10:07.659Z",
+    "user": 1,
+    "content_type": 35,
+    "object_id": "1",
+    "object_repr": "toward-unique-identifiers-2019",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Year\"]}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -4878,6 +4926,78 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 201,
+  "fields": {
+    "name": "Can add device config",
+    "content_type": 51,
+    "codename": "add_deviceconfig"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 202,
+  "fields": {
+    "name": "Can change device config",
+    "content_type": 51,
+    "codename": "change_deviceconfig"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 203,
+  "fields": {
+    "name": "Can delete device config",
+    "content_type": 51,
+    "codename": "delete_deviceconfig"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 204,
+  "fields": {
+    "name": "Can view device config",
+    "content_type": 51,
+    "codename": "view_deviceconfig"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 205,
+  "fields": {
+    "name": "Can add base model with slug",
+    "content_type": 52,
+    "codename": "add_basemodelwithslug"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 206,
+  "fields": {
+    "name": "Can change base model with slug",
+    "content_type": 52,
+    "codename": "change_basemodelwithslug"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 207,
+  "fields": {
+    "name": "Can delete base model with slug",
+    "content_type": 52,
+    "codename": "delete_basemodelwithslug"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 208,
+  "fields": {
+    "name": "Can view base model with slug",
+    "content_type": 52,
+    "codename": "view_basemodelwithslug"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -5585,6 +5705,22 @@
   "fields": {
     "app_label": "battDB",
     "model": "deviceconfignode"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 51,
+  "fields": {
+    "app_label": "battDB",
+    "model": "deviceconfig"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 52,
+  "fields": {
+    "app_label": "common",
+    "model": "basemodelwithslug"
   }
 },
 {

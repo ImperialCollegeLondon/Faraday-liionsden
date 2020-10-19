@@ -69,13 +69,13 @@ class Device(cm.BaseModel):
         abstract = True
 
 
-class TestProtocol(cm.BaseModel):
-    """
-    Test Protocol description.<br>
-    TODO: Harmonise with PyBaMM protocol specifications (issue #18)
-    """
-    description = models.TextField(help_text="Protocol description, ideally in PyBaMM format")
-    parameters = JSONField(default=dict, blank=True)
+# class TestProtocol(cm.BaseModel):
+#     """
+#     Test Protocol description.<br>
+#     TODO: Harmonise with PyBaMM protocol specifications (issue #18)
+#     """
+#     description = models.TextField(help_text="Protocol description, ideally in PyBaMM format")
+#     parameters = JSONField(default=dict, blank=True)
 
 
 # Equipment Type - e.g. model number of cycler machine
@@ -84,9 +84,17 @@ class TestProtocol(cm.BaseModel):
 # "channels":None,
 # }
 
+class DeviceConfig(cm.BaseModel):
+    devices = models.ManyToManyField(DeviceType, through='DeviceConfigNode')
+
 
 class DeviceConfigNode(cm.BaseModel):
-    type = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
+
+    deviceType = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
+    deviceConfig = models.ForeignKey(DeviceConfig, on_delete=models.CASCADE)
+
+
+
 
 
 class EquipmentType(cm.BaseModel):
@@ -204,7 +212,7 @@ class Experiment(cm.BaseModel):
     # apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
     #cells = models.ManyToManyField(Cell, related_name='experiments')
     cellConfig = models.ForeignKey(CellConfig, on_delete=models.SET_NULL, null=True, blank=True)
-    protocol = models.ForeignKey(TestProtocol, on_delete=models.SET_NULL, null=True, blank=True)
+    protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True)
 
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)

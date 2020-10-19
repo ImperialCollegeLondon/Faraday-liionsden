@@ -245,20 +245,21 @@ def plotData(request):
 
 class UploadFileView(GenericAPIView):
     queryset = RawDataFile.objects.all()
-    parser_class = (FileUploadParser,)
-    serializer_class = DataFileSerializer
+    parser_classes = (FileUploadParser,)
+    #serializer_class = DataFileSerializer
     # authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAdminUser]
 
-    def put(self, request, format=None):
-        if 'raw_data_file' not in request.data:
+    def put(self, request, filename, format=None):
+        if 'file' not in request.data:
             raise ParseError("Empty content")
 
-        f = request.data['raw_data_file']
+        f = request.data['file']
         obj = RawDataFile()
-        obj.raw_data_file.save(f.name, f, save=True)
-        obj.user_owner = request.user
-        obj.save()
+        obj.raw_data_file.save(filename, f, save=True)
+
+        # obj.user_owner = request.user
+        # obj.save()
         return Response(status=status.HTTP_201_CREATED)
 
     def get(self, request, format=None):

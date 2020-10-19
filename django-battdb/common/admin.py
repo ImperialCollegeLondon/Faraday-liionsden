@@ -66,9 +66,9 @@ class PaperAuthorInline(admin.TabularInline):
 
 class PaperAdmin(BaseAdmin):
     inlines = (PaperAuthorInline,)
-    list_display = ["title", "tag", "DOI", "year", "has_pdf"]
+    list_display = ["title", "DOI", "year", "has_pdf"]
     list_filter = ["year", "publisher", "authors"]
-    readonly_fields = ['created_on', 'tag']
+    readonly_fields = ['created_on', 'slug']
 
 
 admin.site.register([

@@ -18,5 +18,5 @@ urlpatterns = [
     path('create_exp/', CreateExperimentView.as_view(), name='add_experiment'),
     #url(r'^getData/', get_data),
     url(r'^plotData/', plotData),
-    path('upload/', UploadFileView.as_view(), name='upload_file'),
+    path('upload/<str:filename>', UploadFileView.as_view(), name='upload_file'),
 ]
