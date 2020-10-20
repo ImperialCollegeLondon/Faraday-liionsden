@@ -252,6 +252,142 @@ CREATE TABLE public.authtoken_token (
 ALTER TABLE public.authtoken_token OWNER TO towen;
 
 --
+-- Name: battDB_cell; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public."battDB_cell" (
+    device_ptr_id integer NOT NULL
+);
+
+
+ALTER TABLE public."battDB_cell" OWNER TO towen;
+
+--
+-- Name: battDB_device; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public."battDB_device" (
+    id integer NOT NULL,
+    name character varying(128),
+    status smallint NOT NULL,
+    created_on timestamp with time zone NOT NULL,
+    modified_on timestamp with time zone NOT NULL,
+    attributes jsonb NOT NULL,
+    notes text,
+    slug character varying(50) NOT NULL,
+    type smallint NOT NULL,
+    is_template boolean NOT NULL,
+    user_owner_id integer,
+    CONSTRAINT "battDB_device_status_check" CHECK ((status >= 0)),
+    CONSTRAINT "battDB_device_type_check" CHECK ((type >= 0))
+);
+
+
+ALTER TABLE public."battDB_device" OWNER TO towen;
+
+--
+-- Name: battDB_device_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public."battDB_device_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."battDB_device_id_seq" OWNER TO towen;
+
+--
+-- Name: battDB_device_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public."battDB_device_id_seq" OWNED BY public."battDB_device".id;
+
+
+--
+-- Name: battDB_deviceconfig; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public."battDB_deviceconfig" (
+    id integer NOT NULL,
+    name character varying(128),
+    status smallint NOT NULL,
+    created_on timestamp with time zone NOT NULL,
+    modified_on timestamp with time zone NOT NULL,
+    attributes jsonb NOT NULL,
+    notes text,
+    slug character varying(50) NOT NULL,
+    user_owner_id integer,
+    CONSTRAINT "battDB_deviceconfig_status_check" CHECK ((status >= 0))
+);
+
+
+ALTER TABLE public."battDB_deviceconfig" OWNER TO towen;
+
+--
+-- Name: battDB_deviceconfig_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public."battDB_deviceconfig_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."battDB_deviceconfig_id_seq" OWNER TO towen;
+
+--
+-- Name: battDB_deviceconfig_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public."battDB_deviceconfig_id_seq" OWNED BY public."battDB_deviceconfig".id;
+
+
+--
+-- Name: battDB_deviceconfignode; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public."battDB_deviceconfignode" (
+    id integer NOT NULL,
+    "Device_terminal_name" character varying(20),
+    "Net_name" character varying(20),
+    config_id integer NOT NULL,
+    device_id integer NOT NULL,
+    next_id integer
+);
+
+
+ALTER TABLE public."battDB_deviceconfignode" OWNER TO towen;
+
+--
+-- Name: battDB_deviceconfignode_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public."battDB_deviceconfignode_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."battDB_deviceconfignode_id_seq" OWNER TO towen;
+
+--
+-- Name: battDB_deviceconfignode_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public."battDB_deviceconfignode_id_seq" OWNED BY public."battDB_deviceconfignode".id;
+
+
+--
 -- Name: battDB_experiment; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -264,11 +400,49 @@ CREATE TABLE public."battDB_experiment" (
     notes text,
     modified_on timestamp with time zone NOT NULL,
     created_on timestamp with time zone NOT NULL,
-    slug character varying(50) NOT NULL
+    slug character varying(50) NOT NULL,
+    protocol_id integer,
+    status smallint NOT NULL,
+    CONSTRAINT "battDB_experiment_status_check" CHECK ((status >= 0))
 );
 
 
 ALTER TABLE public."battDB_experiment" OWNER TO towen;
+
+--
+-- Name: battDB_experiment_device; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public."battDB_experiment_device" (
+    id integer NOT NULL,
+    experiment_id integer NOT NULL,
+    device_id integer NOT NULL
+);
+
+
+ALTER TABLE public."battDB_experiment_device" OWNER TO towen;
+
+--
+-- Name: battDB_experiment_device_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public."battDB_experiment_device_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."battDB_experiment_device_id_seq" OWNER TO towen;
+
+--
+-- Name: battDB_experiment_device_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public."battDB_experiment_device_id_seq" OWNED BY public."battDB_experiment_device".id;
+
 
 --
 -- Name: battDB_experiment_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
@@ -1016,10 +1190,38 @@ ALTER TABLE ONLY public.auth_user_user_permissions ALTER COLUMN id SET DEFAULT n
 
 
 --
+-- Name: battDB_device id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_device" ALTER COLUMN id SET DEFAULT nextval('public."battDB_device_id_seq"'::regclass);
+
+
+--
+-- Name: battDB_deviceconfig id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_deviceconfig" ALTER COLUMN id SET DEFAULT nextval('public."battDB_deviceconfig_id_seq"'::regclass);
+
+
+--
+-- Name: battDB_deviceconfignode id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_deviceconfignode" ALTER COLUMN id SET DEFAULT nextval('public."battDB_deviceconfignode_id_seq"'::regclass);
+
+
+--
 -- Name: battDB_experiment id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experiment" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experiment_id_seq"'::regclass);
+
+
+--
+-- Name: battDB_experiment_device id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experiment_device" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experiment_device_id_seq"'::regclass);
 
 
 --
@@ -1623,12 +1825,52 @@ COPY public.authtoken_token (key, created, user_id) FROM stdin;
 
 
 --
+-- Data for Name: battDB_cell; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public."battDB_cell" (device_ptr_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: battDB_device; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public."battDB_device" (id, name, status, created_on, modified_on, attributes, notes, slug, type, is_template, user_owner_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: battDB_deviceconfig; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public."battDB_deviceconfig" (id, name, status, created_on, modified_on, attributes, notes, slug, user_owner_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: battDB_deviceconfignode; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public."battDB_deviceconfignode" (id, "Device_terminal_name", "Net_name", config_id, device_id, next_id) FROM stdin;
+\.
+
+
+--
 -- Data for Name: battDB_experiment; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_experiment" (id, name, date, user_owner_id, attributes, notes, modified_on, created_on, slug) FROM stdin;
-8	experiment	2020-08-05	1	{}	\N	2020-10-15 18:13:05.703611+01	2020-10-15 18:18:04.905104+01	bork
-9	fooo	2020-08-05	1	{}	\N	2020-10-15 18:13:05.703611+01	2020-10-15 18:18:04.905104+01	bork
+COPY public."battDB_experiment" (id, name, date, user_owner_id, attributes, notes, modified_on, created_on, slug, protocol_id, status) FROM stdin;
+8	experiment	2020-08-05	1	{}	\N	2020-10-15 18:13:05.703611+01	2020-10-15 18:18:04.905104+01	bork	\N	10
+9	fooo	2020-08-05	1	{}	\N	2020-10-15 18:13:05.703611+01	2020-10-15 18:18:04.905104+01	bork	\N	10
+\.
+
+
+--
+-- Data for Name: battDB_experiment_device; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public."battDB_experiment_device" (id, experiment_id, device_id) FROM stdin;
 \.
 
 
@@ -2228,6 +2470,11 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 168	common	0028_remove_paper_slug	2020-10-19 16:24:44.817054+01
 169	dfndb	0031_auto_20201019_1515	2020-10-19 16:24:44.871755+01
 170	common	0029_paper_slug	2020-10-19 16:59:00.007833+01
+171	dfndb	0032_auto_20201020_0903	2020-10-20 10:03:39.742447+01
+172	battDB	0078_auto_20201020_0903	2020-10-20 10:03:39.925265+01
+173	battDB	0079_auto_20201020_0919	2020-10-20 10:19:51.028859+01
+174	battDB	0080_auto_20201020_1000	2020-10-20 11:01:25.721509+01
+175	battDB	0081_auto_20201020_1018	2020-10-20 11:18:29.38124+01
 \.
 
 
@@ -2289,6 +2536,34 @@ SELECT pg_catalog.setval('public.auth_user_id_seq', 7, true);
 --
 
 SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 104, true);
+
+
+--
+-- Name: battDB_device_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public."battDB_device_id_seq"', 1, false);
+
+
+--
+-- Name: battDB_deviceconfig_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public."battDB_deviceconfig_id_seq"', 1, false);
+
+
+--
+-- Name: battDB_deviceconfignode_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public."battDB_deviceconfignode_id_seq"', 1, false);
+
+
+--
+-- Name: battDB_experiment_device_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public."battDB_experiment_device_id_seq"', 1, false);
 
 
 --
@@ -2407,7 +2682,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 52, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 170, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 175, true);
 
 
 --
@@ -2520,6 +2795,54 @@ ALTER TABLE ONLY public.authtoken_token
 
 ALTER TABLE ONLY public.authtoken_token
     ADD CONSTRAINT authtoken_token_user_id_key UNIQUE (user_id);
+
+
+--
+-- Name: battDB_cell battDB_cell_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_cell"
+    ADD CONSTRAINT "battDB_cell_pkey" PRIMARY KEY (device_ptr_id);
+
+
+--
+-- Name: battDB_device battDB_device_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_device"
+    ADD CONSTRAINT "battDB_device_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: battDB_deviceconfig battDB_deviceconfig_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_deviceconfig"
+    ADD CONSTRAINT "battDB_deviceconfig_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: battDB_deviceconfignode battDB_deviceconfignode_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_deviceconfignode"
+    ADD CONSTRAINT "battDB_deviceconfignode_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: battDB_experiment_device battDB_experiment_device_experiment_id_device_id_6c997419_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experiment_device"
+    ADD CONSTRAINT "battDB_experiment_device_experiment_id_device_id_6c997419_uniq" UNIQUE (experiment_id, device_id);
+
+
+--
+-- Name: battDB_experiment_device battDB_experiment_device_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experiment_device"
+    ADD CONSTRAINT "battDB_experiment_device_pkey" PRIMARY KEY (id);
 
 
 --
@@ -2849,10 +3172,94 @@ CREATE INDEX authtoken_token_key_10f0b77e_like ON public.authtoken_token USING b
 
 
 --
+-- Name: battDB_device_slug_4f0f55aa; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_device_slug_4f0f55aa" ON public."battDB_device" USING btree (slug);
+
+
+--
+-- Name: battDB_device_slug_4f0f55aa_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_device_slug_4f0f55aa_like" ON public."battDB_device" USING btree (slug varchar_pattern_ops);
+
+
+--
+-- Name: battDB_device_user_owner_id_b85fcf7d; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_device_user_owner_id_b85fcf7d" ON public."battDB_device" USING btree (user_owner_id);
+
+
+--
+-- Name: battDB_deviceconfig_slug_eede7fcb; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_deviceconfig_slug_eede7fcb" ON public."battDB_deviceconfig" USING btree (slug);
+
+
+--
+-- Name: battDB_deviceconfig_slug_eede7fcb_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_deviceconfig_slug_eede7fcb_like" ON public."battDB_deviceconfig" USING btree (slug varchar_pattern_ops);
+
+
+--
+-- Name: battDB_deviceconfig_user_owner_id_9f82fb32; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_deviceconfig_user_owner_id_9f82fb32" ON public."battDB_deviceconfig" USING btree (user_owner_id);
+
+
+--
+-- Name: battDB_deviceconfignode_config_id_08206ff9; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_deviceconfignode_config_id_08206ff9" ON public."battDB_deviceconfignode" USING btree (config_id);
+
+
+--
+-- Name: battDB_deviceconfignode_device_id_21bed58f; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_deviceconfignode_device_id_21bed58f" ON public."battDB_deviceconfignode" USING btree (device_id);
+
+
+--
+-- Name: battDB_deviceconfignode_next_id_8ac05430; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_deviceconfignode_next_id_8ac05430" ON public."battDB_deviceconfignode" USING btree (next_id);
+
+
+--
+-- Name: battDB_experiment_device_device_id_ff7f05b5; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_experiment_device_device_id_ff7f05b5" ON public."battDB_experiment_device" USING btree (device_id);
+
+
+--
+-- Name: battDB_experiment_device_experiment_id_596b43cf; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_experiment_device_experiment_id_596b43cf" ON public."battDB_experiment_device" USING btree (experiment_id);
+
+
+--
 -- Name: battDB_experiment_owner_id_ebf94468; Type: INDEX; Schema: public; Owner: towen
 --
 
 CREATE INDEX "battDB_experiment_owner_id_ebf94468" ON public."battDB_experiment" USING btree (user_owner_id);
+
+
+--
+-- Name: battDB_experiment_protocol_id_ed0e9fcd; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_experiment_protocol_id_ed0e9fcd" ON public."battDB_experiment" USING btree (protocol_id);
 
 
 --
@@ -3232,6 +3639,78 @@ ALTER TABLE ONLY public.auth_user_user_permissions
 
 ALTER TABLE ONLY public.authtoken_token
     ADD CONSTRAINT authtoken_token_user_id_35299eff_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_cell battDB_cell_device_ptr_id_cb0d7fdb_fk_battDB_device_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_cell"
+    ADD CONSTRAINT "battDB_cell_device_ptr_id_cb0d7fdb_fk_battDB_device_id" FOREIGN KEY (device_ptr_id) REFERENCES public."battDB_device"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_device battDB_device_user_owner_id_b85fcf7d_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_device"
+    ADD CONSTRAINT "battDB_device_user_owner_id_b85fcf7d_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_deviceconfig battDB_deviceconfig_user_owner_id_9f82fb32_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_deviceconfig"
+    ADD CONSTRAINT "battDB_deviceconfig_user_owner_id_9f82fb32_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_deviceconfignode battDB_deviceconfign_config_id_08206ff9_fk_battDB_de; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_deviceconfignode"
+    ADD CONSTRAINT "battDB_deviceconfign_config_id_08206ff9_fk_battDB_de" FOREIGN KEY (config_id) REFERENCES public."battDB_deviceconfig"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_deviceconfignode battDB_deviceconfign_next_id_8ac05430_fk_battDB_de; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_deviceconfignode"
+    ADD CONSTRAINT "battDB_deviceconfign_next_id_8ac05430_fk_battDB_de" FOREIGN KEY (next_id) REFERENCES public."battDB_deviceconfignode"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_deviceconfignode battDB_deviceconfignode_device_id_21bed58f_fk_battDB_device_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_deviceconfignode"
+    ADD CONSTRAINT "battDB_deviceconfignode_device_id_21bed58f_fk_battDB_device_id" FOREIGN KEY (device_id) REFERENCES public."battDB_device"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_experiment_device battDB_experiment_de_experiment_id_596b43cf_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experiment_device"
+    ADD CONSTRAINT "battDB_experiment_de_experiment_id_596b43cf_fk_battDB_ex" FOREIGN KEY (experiment_id) REFERENCES public."battDB_experiment"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_experiment_device battDB_experiment_device_device_id_ff7f05b5_fk_battDB_device_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experiment_device"
+    ADD CONSTRAINT "battDB_experiment_device_device_id_ff7f05b5_fk_battDB_device_id" FOREIGN KEY (device_id) REFERENCES public."battDB_device"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_experiment battDB_experiment_protocol_id_ed0e9fcd_fk_dfndb_method_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experiment"
+    ADD CONSTRAINT "battDB_experiment_protocol_id_ed0e9fcd_fk_dfndb_method_id" FOREIGN KEY (protocol_id) REFERENCES public.dfndb_method(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

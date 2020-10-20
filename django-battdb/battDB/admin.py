@@ -7,11 +7,24 @@ from django.utils.safestring import mark_safe
 from .models import *
 
 
-
-
 admin.site.register([
       #Experiment, #Equipment, EquipmentType,
+      Device
       ], BaseAdmin)
+
+
+class DeviceConfigInline(admin.TabularInline):
+    model = DeviceConfigNode
+    extra = 2
+
+
+class DeviceConfigAdmin(BaseAdmin):
+    inlines = (DeviceConfigInline,)
+    # list_display = ["title", "DOI", "year", "has_pdf"]
+    # list_filter = ["year", "publisher", "authors"]
+
+
+admin.site.register([DeviceConfig,], DeviceConfigAdmin)
 
 
 class DataAdmin(BaseAdmin):
