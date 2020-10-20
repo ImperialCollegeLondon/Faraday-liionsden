@@ -81,8 +81,6 @@ class Device(cm.BaseModel):
     type = models.PositiveSmallIntegerField(default=DEVICE_TYPE_NONE, choices=DEVICE_TYPE)
     is_template = models.BooleanField(default=False)
 
-    class Meta:
-        abstract = True
 
 
 # class TestProtocol(cm.BaseModel):
@@ -100,13 +98,13 @@ class Device(cm.BaseModel):
 # "channels":None,
 # }
 
-# class DeviceConfig(cm.BaseModelWithSlug):
-#     devices = models.ManyToManyField(Device, through='DeviceConfigNode', limit_choices_to={'is_template': True})
-#
-#
-# class DeviceConfigNode(cm.BaseModelWithSlug):
-#     deviceType = models.ForeignKey(Device, on_delete=models.CASCADE, limit_choices_to={'is_template': True})
-#     deviceConfig = models.ForeignKey(DeviceConfig, on_delete=models.CASCADE)
+class DeviceConfig(cm.BaseModel):
+    devices = models.ManyToManyField(Device, through='DeviceConfigNode', limit_choices_to={'is_template': True})
+
+
+class DeviceConfigNode(cm.BaseModel):
+    deviceType = models.ForeignKey(Device, on_delete=models.CASCADE, limit_choices_to={'is_template': True})
+    deviceConfig = models.ForeignKey(DeviceConfig, on_delete=models.CASCADE)
 
 
 
@@ -222,15 +220,13 @@ class Experiment(cm.BaseModel):
     Has many: data files (from cyclers) <br>
     Has many: devices (actual physical objects e.g. cells) <br>
     """
-    #name = models.SlugField()
-    # owner = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, blank=True)
     date = models.DateField()
-    #status = models.CharField(max_length=16, choices=[("edit", "Edit"), ("published", "Published")], default="edit")
-    status = None
     # apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
-    #cells = models.ManyToManyField(Cell, related_name='experiments')
+    device = models.ManyToManyField(Device, related_name='experiments')
     #cellConfig = models.ForeignKey(CellConfig, on_delete=models.SET_NULL, null=True, blank=True)
-    #protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True)
+    protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
+                                 limit_choices_to={'type': (dfn.Method.METHOD_TYPE_EXPERIMENTAL,
+                                                            dfn.Method.METHOD_TYPE_BOTH)})
 
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)

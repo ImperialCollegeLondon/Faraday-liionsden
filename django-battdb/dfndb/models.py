@@ -71,11 +71,15 @@ class CompositionPart(models.Model):
 
 class Method(cm.BaseModel):
     """
-    Description of experimental method types ???
+    Description of experimental / modelling method types
     """
+    METHOD_TYPE_MODELLING = 1000
+    METHOD_TYPE_EXPERIMENTAL = 2000
+    METHOD_TYPE_BOTH = 3000
     METHOD_TYPE_CHOICES = [
-        (1, 'Experimental'),
-        (2, 'Modelling'),
+        (METHOD_TYPE_EXPERIMENTAL, 'Experimental'),
+        (METHOD_TYPE_MODELLING, 'Modelling'),
+        (METHOD_TYPE_BOTH, 'Both'),
     ]
     type = models.IntegerField(choices=METHOD_TYPE_CHOICES)
     description = models.TextField(blank=True, help_text="Method description in PyBaMM format")
