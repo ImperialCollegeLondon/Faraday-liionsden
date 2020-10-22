@@ -9,7 +9,7 @@ from .models import *
 
 admin.site.register([
       #Experiment, #Equipment, EquipmentType,
-      Device
+      Device, Cell
       ], BaseAdmin)
 
 

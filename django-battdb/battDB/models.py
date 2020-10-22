@@ -61,14 +61,17 @@ import hashlib
 #         verbose_name_plural = "Device Batches"
 
 
-# a physical thing or specification
 class Device(cm.BaseModel):
+    """
+    A physical thing or specification
+    """
     DEVICE_TYPE_NONE = 0
     DEVICE_TYPE_CYCLER = 1
     DEVICE_TYPE_SENSOR = 10
     DEVICE_TYPE_CELL = 20
     DEVICE_TYPE_MODULE = 30
     DEVICE_TYPE_PACK = 40
+    DEVICE_TYPE_APPARATUS = 100
 
     DEVICE_TYPE = (
         (DEVICE_TYPE_CELL, 'Cell'),
@@ -78,10 +81,45 @@ class Device(cm.BaseModel):
         (DEVICE_TYPE_SENSOR, 'Sensor')
     )
 
-    type = models.PositiveSmallIntegerField(default=DEVICE_TYPE_NONE, choices=DEVICE_TYPE)
-    is_template = models.BooleanField(default=False)
+    devType = models.PositiveSmallIntegerField(default=DEVICE_TYPE_NONE, choices=DEVICE_TYPE)
+    terminals = models.TextField(null=True,
+                                 help_text="comma-separated list of terminal names e.g. 'Positive, Negative'")
+    is_template = models.BooleanField(default=False,
+                                      help_text="Set to true if this object does not describe a real device, "
+                                                "but a specification or type of devices")
+    manufacturer = models.ForeignKey(cm.Org, null=True, blank=True, on_delete=models.SET_NULL)
+    serialNo = models.CharField(max_length=60, null=True, blank=True, help_text=
+                                "Serial Number - or format, for device templates")
+    parent = models.ForeignKey('Device', on_delete=models.SET_NULL, null=True, blank=True,
+                               limit_choices_to={'is_template': True},
+                               help_text="Parent device specification")
 
 
+
+class Cell(Device):
+    """
+    Proxy model of Device - A Cell must have certain properties, such as Anode, Cathode material in its metadata <br>
+    TODO: This will be enforced by JSON schema in future releases
+    """
+    def __init__(self, *args, **kwargs):
+        self._meta.get_field('devType').default = Device.DEVICE_TYPE_CELL
+        self._meta.get_field('is_template').default = False
+        self._meta.get_field('devType').editable = False
+        self._meta.get_field('is_template').help_text = "Set to True if this is a Cell specification"
+        self._meta.get_field('manufacturer').limit_choices_to = {'is_mfg_cells': True}
+        self._meta.get_field('serialNo').help_text = "Cell serial number"
+        self._meta.get_field('parent').help_text = "link to module or pack specification"
+        # FIXME: Cannot change 'limit_choices_to' in subclasses - limitation in Django?
+        self._meta.get_field('parent').limit_choices_to = {"is_template": True, "devType": [Device.DEVICE_TYPE_PACK,
+                                                                                            Device.DEVICE_TYPE_MODULE]}
+        #self._meta.get_field('serialNo').blank = False
+        super(Cell, self).__init__(*args, **kwargs)
+
+    class Meta:
+        proxy=True
+
+
+#class CellBatch(Cell):
 
 # class TestProtocol(cm.BaseModel):
 #     """
@@ -99,6 +137,9 @@ class Device(cm.BaseModel):
 # }
 
 class DeviceConfig(cm.BaseModel):
+    """
+    A configuration of device templates to represent how devices are connected in a module, pack, or experimental set-up
+    """
     devices = models.ManyToManyField(Device, through='DeviceConfigNode')
 
 
@@ -116,18 +157,42 @@ class DeviceConfigNode(models.Model):
                                help_text="Related device specification e.g. cell or sensor. Must have is_template=True")
     config = models.ForeignKey(DeviceConfig, on_delete=models.CASCADE,
                                help_text="Config instance to which this node belongs")
+    device_position_id = models.CharField(max_length=20, null=True, blank=True,
+                                          help_text="Position of device in pack e.g. 1 - identifies this device")
     next = models.ForeignKey('DeviceConfigNode', null=True, blank=True, on_delete=models.SET_NULL,
                              help_text="Connected node in chain. Must be part of the same config."
                                        "In a series pack, this would be the negative terminal of the next cell")
-    Device_terminal_name = models.CharField(max_length=20, null=True, blank=True, help_text=
+    device_terminal_name = models.CharField(max_length=10, null=True, blank=True, help_text=
                                             "Name of device port or terminal. e.g. 'Anode'")
-    Net_name = models.CharField(max_length=20, null=True, blank=True,
+    net_name = models.CharField(max_length=20, null=True, blank=True,
                                 help_text="Name of electrical signal e.g. cell_1_v")
 
+    def __str__(self):
+        return str(self.config) + "/" + str(self.net_name) + str(self.device_terminal_name)
 
-class Cell(Device):
-    pass
 
+# class Module(Device):
+#     """
+#     Composite device comprising multiple sub-devices
+#     """
+#     moduleConfig = models.ForeignKey(DeviceConfig, null=True, blank=True, on_delete=models.SET_NULL,
+#                                      help_text="Module config link")
+#
+#     deviceList = models.ManyToManyField(Device, through='ModuleDevice')
+#     MODULE_TYPE = [
+#         (Device.DEVICE_TYPE_MODULE, "Module"),
+#         (Device.DEVICE_TYPE_PACK, "Pack"),
+#         (Device.DEVICE_TYPE_APPARATUS, "Apparatus"),
+#     ]
+#
+#     def __init__(self, *args, **kwargs):
+#         self._meta.get_field('devType').default = Device.DEVICE_TYPE_MODULE
+#         self._meta.get_field('devType').choices = self.MODULE_TYPE
+#
+# class ModuleDevice(models.Model):
+#     module = models.ForeignKey(Module, on_delete=models.CASCADE)
+#     device = models.ForeignKey(Device, on_delete=models.CASCADE)
+#     dev_id =
 
 # class EquipmentType(cm.BaseModel):
 #     # validate: my manufacturer is an org with mfg_equip=True
