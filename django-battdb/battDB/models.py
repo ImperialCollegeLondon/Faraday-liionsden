@@ -171,28 +171,30 @@ class DeviceConfigNode(models.Model):
         return str(self.config) + "/" + str(self.net_name) + str(self.device_terminal_name)
 
 
-# class Module(Device):
-#     """
-#     Composite device comprising multiple sub-devices
-#     """
-#     moduleConfig = models.ForeignKey(DeviceConfig, null=True, blank=True, on_delete=models.SET_NULL,
-#                                      help_text="Module config link")
-#
-#     deviceList = models.ManyToManyField(Device, through='ModuleDevice')
-#     MODULE_TYPE = [
-#         (Device.DEVICE_TYPE_MODULE, "Module"),
-#         (Device.DEVICE_TYPE_PACK, "Pack"),
-#         (Device.DEVICE_TYPE_APPARATUS, "Apparatus"),
-#     ]
-#
-#     def __init__(self, *args, **kwargs):
-#         self._meta.get_field('devType').default = Device.DEVICE_TYPE_MODULE
-#         self._meta.get_field('devType').choices = self.MODULE_TYPE
-#
-# class ModuleDevice(models.Model):
-#     module = models.ForeignKey(Module, on_delete=models.CASCADE)
-#     device = models.ForeignKey(Device, on_delete=models.CASCADE)
-#     dev_id =
+class CompositeDevice(Device):
+    """
+    Composite device comprising multiple sub-devices
+    """
+    moduleConfig = models.ForeignKey(DeviceConfig, null=True, blank=True, on_delete=models.SET_NULL,
+                                     help_text="Module config link", related_name="used_by_modules")
+
+    deviceList = models.ManyToManyField(Device, through='ModuleDevice', related_name="my_module")
+    MODULE_TYPE_CHOICES = [
+        (Device.DEVICE_TYPE_MODULE, "Module"),
+        (Device.DEVICE_TYPE_PACK, "Pack"),
+        (Device.DEVICE_TYPE_APPARATUS, "Apparatus"),
+    ]
+
+    def __init__(self, *args, **kwargs):
+        self._meta.get_field('devType').default = Device.DEVICE_TYPE_MODULE
+        self._meta.get_field('devType').choices = self.MODULE_TYPE_CHOICES
+
+
+class ModuleDevice(models.Model):
+    module = models.ForeignKey(CompositeDevice, on_delete=models.CASCADE, related_name="device_members")
+    device = models.ForeignKey(Device, on_delete=models.CASCADE, related_name="modules")
+    device_position_id = models.CharField(max_length=20, null=True, blank=True,
+                                          help_text="Position of device in pack e.g. 1 - identifies this device")
 
 # class EquipmentType(cm.BaseModel):
 #     # validate: my manufacturer is an org with mfg_equip=True
