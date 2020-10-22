@@ -24,7 +24,18 @@ class DeviceConfigAdmin(BaseAdmin):
     # list_filter = ["year", "publisher", "authors"]
 
 
+# class ModuleDeviceInline(admin.TabularInline):
+#     model = ModuleDevice
+#     extra = 2
+# #    fk_name = "device"
+
+
+# class ModuleAdmin(BaseAdmin):
+    # inlines = [ModuleDeviceInline,]
+
+
 admin.site.register([DeviceConfig,], DeviceConfigAdmin)
+# admin.site.register([CompositeDevice,], ModuleAdmin)
 
 
 class DataAdmin(BaseAdmin):

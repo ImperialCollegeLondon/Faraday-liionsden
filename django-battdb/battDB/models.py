@@ -83,17 +83,22 @@ class Device(cm.BaseModel):
 
     devType = models.PositiveSmallIntegerField(default=DEVICE_TYPE_NONE, choices=DEVICE_TYPE)
     terminals = models.TextField(null=True,
-                                 help_text="comma-separated list of terminal names e.g. 'Positive, Negative'")
+                                 default="positive, negative",
+                                 help_text="comma-separated list of terminal names")
     is_template = models.BooleanField(default=False,
                                       help_text="Set to true if this object does not describe a real device, "
                                                 "but a specification or type of devices")
     manufacturer = models.ForeignKey(cm.Org, null=True, blank=True, on_delete=models.SET_NULL)
     serialNo = models.CharField(max_length=60, null=True, blank=True, help_text=
                                 "Serial Number - or format, for device templates")
-    parent = models.ForeignKey('Device', on_delete=models.SET_NULL, null=True, blank=True,
-                               limit_choices_to={'is_template': True},
-                               help_text="Parent device specification")
-
+    specification = models.ForeignKey('Device', on_delete=models.SET_NULL, null=True, blank=True,
+                                      limit_choices_to={'is_template': True},
+                                      related_name="specified_devices",
+                                      help_text="Parent device specification")
+    parent_device = models.ForeignKey('Device', on_delete=models.SET_NULL, null=True, blank=True,
+                                      limit_choices_to={'devType': (DEVICE_TYPE_MODULE, DEVICE_TYPE_PACK)},
+                                      related_name="child_devices",
+                                      help_text="If this device is part of a module or pack, link to it here")
 
 
 class Cell(Device):
@@ -171,30 +176,30 @@ class DeviceConfigNode(models.Model):
         return str(self.config) + "/" + str(self.net_name) + str(self.device_terminal_name)
 
 
-class CompositeDevice(Device):
-    """
-    Composite device comprising multiple sub-devices
-    """
-    moduleConfig = models.ForeignKey(DeviceConfig, null=True, blank=True, on_delete=models.SET_NULL,
-                                     help_text="Module config link", related_name="used_by_modules")
-
-    deviceList = models.ManyToManyField(Device, through='ModuleDevice', related_name="my_module")
-    MODULE_TYPE_CHOICES = [
-        (Device.DEVICE_TYPE_MODULE, "Module"),
-        (Device.DEVICE_TYPE_PACK, "Pack"),
-        (Device.DEVICE_TYPE_APPARATUS, "Apparatus"),
-    ]
-
-    def __init__(self, *args, **kwargs):
-        self._meta.get_field('devType').default = Device.DEVICE_TYPE_MODULE
-        self._meta.get_field('devType').choices = self.MODULE_TYPE_CHOICES
-
-
-class ModuleDevice(models.Model):
-    module = models.ForeignKey(CompositeDevice, on_delete=models.CASCADE, related_name="device_members")
-    device = models.ForeignKey(Device, on_delete=models.CASCADE, related_name="modules")
-    device_position_id = models.CharField(max_length=20, null=True, blank=True,
-                                          help_text="Position of device in pack e.g. 1 - identifies this device")
+# class CompositeDevice(Device):
+#     """
+#     Composite device comprising multiple sub-devices
+#     """
+#     moduleConfig = models.ForeignKey(DeviceConfig, null=True, blank=True, on_delete=models.SET_NULL,
+#                                      help_text="Module config link", related_name="used_by_modules")
+#
+#     deviceList = models.ManyToManyField(Device, through='ModuleDevice', related_name="my_module")
+#     MODULE_TYPE_CHOICES = [
+#         (Device.DEVICE_TYPE_MODULE, "Module"),
+#         (Device.DEVICE_TYPE_PACK, "Pack"),
+#         (Device.DEVICE_TYPE_APPARATUS, "Apparatus"),
+#     ]
+#
+#     def __init__(self, *args, **kwargs):
+#         self._meta.get_field('devType').default = Device.DEVICE_TYPE_MODULE
+#         self._meta.get_field('devType').choices = self.MODULE_TYPE_CHOICES
+#
+#
+# class ModuleDevice(models.Model):
+#     module = models.ForeignKey(CompositeDevice, on_delete=models.CASCADE, related_name="device_members")
+#     device = models.ForeignKey(Device, on_delete=models.CASCADE, related_name="modules")
+#     device_position_id = models.CharField(max_length=20, null=True, blank=True,
+#                                           help_text="Position of device in pack e.g. 1 - identifies this device")
 
 # class EquipmentType(cm.BaseModel):
 #     # validate: my manufacturer is an org with mfg_equip=True

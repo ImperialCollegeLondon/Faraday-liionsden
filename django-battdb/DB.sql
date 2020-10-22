@@ -252,17 +252,6 @@ CREATE TABLE public.authtoken_token (
 ALTER TABLE public.authtoken_token OWNER TO towen;
 
 --
--- Name: battDB_cell; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public."battDB_cell" (
-    device_ptr_id integer NOT NULL
-);
-
-
-ALTER TABLE public."battDB_cell" OWNER TO towen;
-
---
 -- Name: battDB_device; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -275,11 +264,16 @@ CREATE TABLE public."battDB_device" (
     attributes jsonb NOT NULL,
     notes text,
     slug character varying(50) NOT NULL,
-    type smallint NOT NULL,
+    "devType" smallint NOT NULL,
     is_template boolean NOT NULL,
     user_owner_id integer,
-    CONSTRAINT "battDB_device_status_check" CHECK ((status >= 0)),
-    CONSTRAINT "battDB_device_type_check" CHECK ((type >= 0))
+    "serialNo" character varying(60),
+    manufacturer_id integer,
+    terminals text,
+    parent_device_id integer,
+    specification_id integer,
+    CONSTRAINT "battDB_device_devType_f16eb09d_check" CHECK (("devType" >= 0)),
+    CONSTRAINT "battDB_device_status_check" CHECK ((status >= 0))
 );
 
 
@@ -355,11 +349,12 @@ ALTER SEQUENCE public."battDB_deviceconfig_id_seq" OWNED BY public."battDB_devic
 
 CREATE TABLE public."battDB_deviceconfignode" (
     id integer NOT NULL,
-    "Device_terminal_name" character varying(20),
-    "Net_name" character varying(20),
+    device_terminal_name character varying(10),
+    net_name character varying(20),
     config_id integer NOT NULL,
     device_id integer NOT NULL,
-    next_id integer
+    next_id integer,
+    device_position_id character varying(20)
 );
 
 
@@ -544,7 +539,12 @@ CREATE TABLE public.common_org (
     is_publisher boolean NOT NULL,
     is_research boolean NOT NULL,
     manager_id integer,
-    name character varying(128) NOT NULL
+    name character varying(128) NOT NULL,
+    attributes jsonb NOT NULL,
+    created_on timestamp with time zone NOT NULL,
+    modified_on timestamp with time zone NOT NULL,
+    notes text,
+    slug character varying(50) NOT NULL
 );
 
 
@@ -1679,6 +1679,14 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 206	Can change base model with slug	52	change_basemodelwithslug
 207	Can delete base model with slug	52	delete_basemodelwithslug
 208	Can view base model with slug	52	view_basemodelwithslug
+209	Can add module device	53	add_moduledevice
+210	Can change module device	53	change_moduledevice
+211	Can delete module device	53	delete_moduledevice
+212	Can view module device	53	view_moduledevice
+213	Can add composite device	54	add_compositedevice
+214	Can change composite device	54	change_compositedevice
+215	Can delete composite device	54	delete_compositedevice
+216	Can view composite device	54	view_compositedevice
 \.
 
 
@@ -1825,18 +1833,15 @@ COPY public.authtoken_token (key, created, user_id) FROM stdin;
 
 
 --
--- Data for Name: battDB_cell; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public."battDB_cell" (device_ptr_id) FROM stdin;
-\.
-
-
---
 -- Data for Name: battDB_device; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_device" (id, name, status, created_on, modified_on, attributes, notes, slug, type, is_template, user_owner_id) FROM stdin;
+COPY public."battDB_device" (id, name, status, created_on, modified_on, attributes, notes, slug, "devType", is_template, user_owner_id, "serialNo", manufacturer_id, terminals, parent_device_id, specification_id) FROM stdin;
+1	\N	10	2020-10-21 12:34:11.858682+01	2020-10-21 12:34:11.858737+01	{}		none	20	f	1	\N	\N	\N	\N	\N
+2	bob's LiPo	10	2020-10-21 12:36:23.182465+01	2020-10-21 12:36:23.18248+01	{}		bobs-lipo	20	f	1	\N	2	\N	\N	\N
+3	test 1s LiPo spec	10	2020-10-22 11:13:00.282807+01	2020-10-22 11:13:00.282823+01	{}	fribble	test-1s-lipo-spec	20	t	1	\N	1	\N	\N	\N
+4	GalvoTron 5000	10	2020-10-22 11:13:56.649387+01	2020-10-22 11:13:56.649401+01	{}	Cycler machine	galvotron-5000	1	t	1	\N	2	\N	\N	\N
+5	MyCellSpecification	10	2020-10-22 11:16:00.879087+01	2020-10-22 11:16:19.661607+01	{"anode_material": "Cheese/Wensleydale"}	Test cell spec	mycellspecification	20	t	1	\N	1	\N	\N	\N
 \.
 
 
@@ -1845,6 +1850,7 @@ COPY public."battDB_device" (id, name, status, created_on, modified_on, attribut
 --
 
 COPY public."battDB_deviceconfig" (id, name, status, created_on, modified_on, attributes, notes, slug, user_owner_id) FROM stdin;
+1	2S Module config	10	2020-10-22 11:19:23.721697+01	2020-10-22 11:56:13.73504+01	{}		2s-module-config	1
 \.
 
 
@@ -1852,7 +1858,11 @@ COPY public."battDB_deviceconfig" (id, name, status, created_on, modified_on, at
 -- Data for Name: battDB_deviceconfignode; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_deviceconfignode" (id, "Device_terminal_name", "Net_name", config_id, device_id, next_id) FROM stdin;
+COPY public."battDB_deviceconfignode" (id, device_terminal_name, net_name, config_id, device_id, next_id, device_position_id) FROM stdin;
+1	Positive	Pack +ve	1	3	\N	1
+2	Negative	Middle	1	3	3	1
+3	Positive	Middle	1	3	2	2
+4	Negative	Pack -ve	1	3	\N	2
 \.
 
 
@@ -1905,8 +1915,9 @@ COPY public."battDB_rawdatafile" (id, status, attributes, raw_data_file, user_ow
 -- Data for Name: common_org; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.common_org (id, website, is_mfg_cells, is_mfg_equip, is_publisher, is_research, manager_id, name) FROM stdin;
-1	http://imperial.ac.uk	t	f	f	t	\N	Imperial College
+COPY public.common_org (id, website, is_mfg_cells, is_mfg_equip, is_publisher, is_research, manager_id, name, attributes, created_on, modified_on, notes, slug) FROM stdin;
+1	http://imperial.ac.uk	t	f	f	t	\N	Imperial College	{}	2020-10-21 12:38:47.020706+01	2020-10-21 12:38:47.033474+01	\N	autogenerated
+2	\N	f	f	f	f	\N	Bob's company	{}	2020-10-21 12:38:47.020706+01	2020-10-21 12:38:47.033474+01	\N	autogenerated
 \.
 
 
@@ -2234,6 +2245,20 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 196	2020-10-19 00:09:55.795814+01	1	toward-unique-identifiers-2020	2	[]	35	1
 197	2020-10-19 00:10:07.659737+01	1	toward-unique-identifiers-2019	2	[{"changed": {"fields": ["Year"]}}]	35	1
 198	2020-10-19 16:59:28.043635+01	1	toward-unique-identifiers-2019	2	[]	35	1
+199	2020-10-21 12:34:11.865153+01	1	None	1	[{"added": {}}]	1	1
+200	2020-10-21 12:34:48.225406+01	2	Bob's company	1	[{"added": {}}]	34	1
+201	2020-10-21 12:36:23.18336+01	2	bob's LiPo	1	[{"added": {}}]	1	1
+202	2020-10-22 11:13:00.283855+01	3	test 1s LiPo spec	1	[{"added": {}}]	39	1
+203	2020-10-22 11:13:56.650286+01	4	GalvoTron 5000	1	[{"added": {}}]	39	1
+204	2020-10-22 11:16:00.880295+01	5	MyCellSpecification	1	[{"added": {}}]	39	1
+205	2020-10-22 11:16:19.662917+01	5	MyCellSpecification	2	[{"changed": {"fields": ["Attributes"]}}]	39	1
+206	2020-10-22 11:19:23.723233+01	1	None	1	[{"added": {}}, {"added": {"name": "device config node", "object": "DeviceConfigNode object (1)"}}]	51	1
+207	2020-10-22 11:27:04.622444+01	1	None	2	[{"added": {"name": "device config node", "object": "DeviceConfigNode object (2)"}}, {"added": {"name": "device config node", "object": "DeviceConfigNode object (3)"}}, {"added": {"name": "device config node", "object": "DeviceConfigNode object (4)"}}, {"changed": {"name": "device config node", "object": "DeviceConfigNode object (1)", "fields": ["Net name"]}}]	51	1
+208	2020-10-22 11:33:41.512118+01	1	2s Module	2	[{"changed": {"fields": ["Name"]}}, {"changed": {"name": "device config node", "object": "2s Module/MiddleCathode", "fields": ["Next"]}}, {"changed": {"name": "device config node", "object": "2s Module/MiddleAnode", "fields": ["Next"]}}]	51	1
+209	2020-10-22 11:33:53.214627+01	1	2S Module	2	[{"changed": {"fields": ["Name"]}}]	51	1
+210	2020-10-22 11:38:46.195344+01	1	2S Module	2	[{"changed": {"name": "device config node", "object": "2S Module/Pack +vePositive", "fields": ["Device terminal name"]}}, {"changed": {"name": "device config node", "object": "2S Module/MiddleNegative", "fields": ["Device terminal name"]}}, {"changed": {"name": "device config node", "object": "2S Module/MiddlePositive", "fields": ["Device terminal name"]}}, {"changed": {"name": "device config node", "object": "2S Module/Pack -veNegative", "fields": ["Device terminal name"]}}]	51	1
+211	2020-10-22 11:43:18.232646+01	1	2S Module	2	[{"changed": {"name": "device config node", "object": "2S Module/Pack +vePositive", "fields": ["Device position id"]}}, {"changed": {"name": "device config node", "object": "2S Module/MiddleNegative", "fields": ["Device position id"]}}, {"changed": {"name": "device config node", "object": "2S Module/MiddlePositive", "fields": ["Device position id"]}}, {"changed": {"name": "device config node", "object": "2S Module/Pack -veNegative", "fields": ["Device position id"]}}]	51	1
+212	2020-10-22 11:56:13.735901+01	1	2S Module config	2	[{"changed": {"fields": ["Name"]}}]	51	1
 \.
 
 
@@ -2294,6 +2319,8 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 50	battDB	deviceconfignode
 51	battDB	deviceconfig
 52	common	basemodelwithslug
+53	battDB	moduledevice
+54	battDB	compositedevice
 \.
 
 
@@ -2475,6 +2502,20 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 173	battDB	0079_auto_20201020_0919	2020-10-20 10:19:51.028859+01
 174	battDB	0080_auto_20201020_1000	2020-10-20 11:01:25.721509+01
 175	battDB	0081_auto_20201020_1018	2020-10-20 11:18:29.38124+01
+176	battDB	0082_auto_20201021_1112	2020-10-21 12:12:44.491812+01
+177	common	0030_auto_20201021_1112	2020-10-21 12:12:44.508888+01
+178	dfndb	0033_auto_20201021_1112	2020-10-21 12:12:44.570172+01
+179	battDB	0083_device_serialno	2020-10-21 12:23:17.941164+01
+180	battDB	0084_device_manufacturer	2020-10-21 12:34:06.887883+01
+181	common	0031_auto_20201021_1138	2020-10-21 12:38:47.060591+01
+182	battDB	0085_auto_20201021_1223	2020-10-21 13:23:49.282414+01
+183	battDB	0086_auto_20201022_1030	2020-10-22 11:30:23.510595+01
+184	battDB	0087_deviceconfignode_device_position_id	2020-10-22 11:42:50.675115+01
+185	battDB	0088_auto_20201022_1153	2020-10-22 12:53:45.740454+01
+186	battDB	0089_auto_20201022_1507	2020-10-22 16:07:42.081004+01
+187	battDB	0090_auto_20201022_1946	2020-10-22 20:46:30.638996+01
+188	battDB	0091_auto_20201022_1947	2020-10-22 20:47:21.499028+01
+189	battDB	0092_auto_20201022_2335	2020-10-23 00:35:53.164347+01
 \.
 
 
@@ -2514,7 +2555,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 112, true);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 208, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 216, true);
 
 
 --
@@ -2542,21 +2583,21 @@ SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 104, true);
 -- Name: battDB_device_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_device_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_device_id_seq"', 5, true);
 
 
 --
 -- Name: battDB_deviceconfig_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_deviceconfig_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_deviceconfig_id_seq"', 1, true);
 
 
 --
 -- Name: battDB_deviceconfignode_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_deviceconfignode_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_deviceconfignode_id_seq"', 4, true);
 
 
 --
@@ -2584,7 +2625,7 @@ SELECT pg_catalog.setval('public."battDB_rawdatafile_id_seq"', 12, true);
 -- Name: common_org_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.common_org_id_seq', 1, true);
+SELECT pg_catalog.setval('public.common_org_id_seq', 2, true);
 
 
 --
@@ -2668,21 +2709,21 @@ SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 10, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 198, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 212, true);
 
 
 --
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 52, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 54, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 175, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 189, true);
 
 
 --
@@ -2795,14 +2836,6 @@ ALTER TABLE ONLY public.authtoken_token
 
 ALTER TABLE ONLY public.authtoken_token
     ADD CONSTRAINT authtoken_token_user_id_key UNIQUE (user_id);
-
-
---
--- Name: battDB_cell battDB_cell_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_cell"
-    ADD CONSTRAINT "battDB_cell_pkey" PRIMARY KEY (device_ptr_id);
 
 
 --
@@ -3172,6 +3205,20 @@ CREATE INDEX authtoken_token_key_10f0b77e_like ON public.authtoken_token USING b
 
 
 --
+-- Name: battDB_device_manufacturer_id_61d85dde; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_device_manufacturer_id_61d85dde" ON public."battDB_device" USING btree (manufacturer_id);
+
+
+--
+-- Name: battDB_device_parent_device_id_86bf0136; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_device_parent_device_id_86bf0136" ON public."battDB_device" USING btree (parent_device_id);
+
+
+--
 -- Name: battDB_device_slug_4f0f55aa; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -3183,6 +3230,13 @@ CREATE INDEX "battDB_device_slug_4f0f55aa" ON public."battDB_device" USING btree
 --
 
 CREATE INDEX "battDB_device_slug_4f0f55aa_like" ON public."battDB_device" USING btree (slug varchar_pattern_ops);
+
+
+--
+-- Name: battDB_device_specification_id_ac7ff6d5; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_device_specification_id_ac7ff6d5" ON public."battDB_device" USING btree (specification_id);
 
 
 --
@@ -3309,6 +3363,20 @@ CREATE INDEX "battDB_rawdatafile_user_owner_id_90ad71dd" ON public."battDB_rawda
 --
 
 CREATE INDEX common_org_name_062cae2a_like ON public.common_org USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: common_org_slug_9b1804cf; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_org_slug_9b1804cf ON public.common_org USING btree (slug);
+
+
+--
+-- Name: common_org_slug_9b1804cf_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_org_slug_9b1804cf_like ON public.common_org USING btree (slug varchar_pattern_ops);
 
 
 --
@@ -3642,11 +3710,27 @@ ALTER TABLE ONLY public.authtoken_token
 
 
 --
--- Name: battDB_cell battDB_cell_device_ptr_id_cb0d7fdb_fk_battDB_device_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+-- Name: battDB_device battDB_device_manufacturer_id_61d85dde_fk_common_org_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
-ALTER TABLE ONLY public."battDB_cell"
-    ADD CONSTRAINT "battDB_cell_device_ptr_id_cb0d7fdb_fk_battDB_device_id" FOREIGN KEY (device_ptr_id) REFERENCES public."battDB_device"(id) DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE ONLY public."battDB_device"
+    ADD CONSTRAINT "battDB_device_manufacturer_id_61d85dde_fk_common_org_id" FOREIGN KEY (manufacturer_id) REFERENCES public.common_org(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_device battDB_device_parent_device_id_86bf0136_fk_battDB_device_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_device"
+    ADD CONSTRAINT "battDB_device_parent_device_id_86bf0136_fk_battDB_device_id" FOREIGN KEY (parent_device_id) REFERENCES public."battDB_device"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_device battDB_device_specification_id_ac7ff6d5_fk_battDB_device_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_device"
+    ADD CONSTRAINT "battDB_device_specification_id_ac7ff6d5_fk_battDB_device_id" FOREIGN KEY (specification_id) REFERENCES public."battDB_device"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
