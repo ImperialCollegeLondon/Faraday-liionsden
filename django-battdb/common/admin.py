@@ -78,3 +78,17 @@ class PersonAdmin(admin.ModelAdmin):
 admin.site.register([
     Person,
 ], PersonAdmin)
+
+
+class CompositeThingInline(admin.TabularInline):
+    fk_name = "sub_thing"
+    model = ThingComposition
+    extra = 2
+
+
+class ThingAdmin(BaseAdmin):
+    inlines = [CompositeThingInline,]
+
+
+
+admin.site.register(Thing, ThingAdmin)

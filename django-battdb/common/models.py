@@ -246,3 +246,17 @@ class Paper(HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedMod
     def __str__(self):
         return slugify(str(self.title) + "-" + str(self.year))
 
+
+class Thing(BaseModel):
+    is_specification = models.BooleanField(default=False,
+                                           help_text="Can this thing be used as a specification for other things?")
+    specification = models.ForeignKey('Thing', limit_choices_to={'is_specification': True},
+                                      related_name="specifies", null=True, blank=True, on_delete=models.RESTRICT,
+                                      help_text="Is this Thing specified by another Thing (it inherits its attributes)")
+    composition = models.ManyToManyField('Thing', through="ThingComposition", related_name="parts")
+
+
+class ThingComposition(models.Model):
+    super_thing = models.ForeignKey(Thing, related_name="part", on_delete=models.CASCADE)
+    sub_thing = models.ForeignKey(Thing, related_name="part_of", on_delete=models.CASCADE)
+

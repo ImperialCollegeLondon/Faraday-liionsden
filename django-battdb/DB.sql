@@ -659,6 +659,85 @@ ALTER SEQUENCE public.common_person_id_seq OWNED BY public.common_person.id;
 
 
 --
+-- Name: common_thing; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.common_thing (
+    id integer NOT NULL,
+    name character varying(128),
+    status smallint NOT NULL,
+    created_on timestamp with time zone NOT NULL,
+    modified_on timestamp with time zone NOT NULL,
+    attributes jsonb NOT NULL,
+    notes text,
+    slug character varying(50) NOT NULL,
+    is_specification boolean NOT NULL,
+    specification_id integer,
+    user_owner_id integer,
+    CONSTRAINT common_thing_status_check CHECK ((status >= 0))
+);
+
+
+ALTER TABLE public.common_thing OWNER TO towen;
+
+--
+-- Name: common_thing_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.common_thing_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.common_thing_id_seq OWNER TO towen;
+
+--
+-- Name: common_thing_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.common_thing_id_seq OWNED BY public.common_thing.id;
+
+
+--
+-- Name: common_thingcomposition; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.common_thingcomposition (
+    id integer NOT NULL,
+    sub_thing_id integer NOT NULL,
+    super_thing_id integer NOT NULL
+);
+
+
+ALTER TABLE public.common_thingcomposition OWNER TO towen;
+
+--
+-- Name: common_thingcomposition_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.common_thingcomposition_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.common_thingcomposition_id_seq OWNER TO towen;
+
+--
+-- Name: common_thingcomposition_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.common_thingcomposition_id_seq OWNED BY public.common_thingcomposition.id;
+
+
+--
 -- Name: dfndb_compositionpart; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -1219,6 +1298,20 @@ ALTER TABLE ONLY public.common_person ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: common_thing id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_thing ALTER COLUMN id SET DEFAULT nextval('public.common_thing_id_seq'::regclass);
+
+
+--
+-- Name: common_thingcomposition id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_thingcomposition ALTER COLUMN id SET DEFAULT nextval('public.common_thingcomposition_id_seq'::regclass);
+
+
+--
 -- Name: dfndb_compositionpart id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
@@ -1646,6 +1739,14 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 214	Can change composite device	54	change_compositedevice
 215	Can delete composite device	54	delete_compositedevice
 216	Can view composite device	54	view_compositedevice
+217	Can add thing composition	55	add_thingcomposition
+218	Can change thing composition	55	change_thingcomposition
+219	Can delete thing composition	55	delete_thingcomposition
+220	Can view thing composition	55	view_thingcomposition
+221	Can add thing	56	add_thing
+222	Can change thing	56	change_thing
+223	Can delete thing	56	delete_thing
+224	Can view thing	56	view_thing
 \.
 
 
@@ -1898,6 +1999,22 @@ COPY public.common_paper (id, "DOI", year, title, url, publisher_id, attributes,
 COPY public.common_person (id, org_id, user_id, "longName", "shortName") FROM stdin;
 1	1	1	Tom Owen	T.Owen
 2	\N	\N	nobby	n
+\.
+
+
+--
+-- Data for Name: common_thing; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.common_thing (id, name, status, created_on, modified_on, attributes, notes, slug, is_specification, specification_id, user_owner_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: common_thingcomposition; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.common_thingcomposition (id, sub_thing_id, super_thing_id) FROM stdin;
 \.
 
 
@@ -2280,6 +2397,8 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 52	common	basemodelwithslug
 53	battDB	moduledevice
 54	battDB	compositedevice
+55	common	thingcomposition
+56	common	thing
 \.
 
 
@@ -2480,6 +2599,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 192	battDB	0095_auto_20201026_1245	2020-10-26 12:45:44.600734+00
 193	common	0032_auto_20201026_1245	2020-10-26 12:45:44.629801+00
 194	common	0033_auto_20201026_1247	2020-10-26 12:47:36.367464+00
+195	common	0034_compositeThing	2020-10-26 13:18:40.712358+00
 \.
 
 
@@ -2519,7 +2639,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 112, true);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 216, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 224, true);
 
 
 --
@@ -2607,6 +2727,20 @@ SELECT pg_catalog.setval('public.common_person_id_seq', 2, true);
 
 
 --
+-- Name: common_thing_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.common_thing_id_seq', 1, false);
+
+
+--
+-- Name: common_thingcomposition_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.common_thingcomposition_id_seq', 1, false);
+
+
+--
 -- Name: dfndb_compositionpart_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
@@ -2673,14 +2807,14 @@ SELECT pg_catalog.setval('public.django_admin_log_id_seq', 216, true);
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 54, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 56, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 194, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 195, true);
 
 
 --
@@ -2937,6 +3071,22 @@ ALTER TABLE ONLY public.common_person
 
 ALTER TABLE ONLY public.common_person
     ADD CONSTRAINT common_person_user_id_key UNIQUE (user_id);
+
+
+--
+-- Name: common_thing common_thing_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_thing
+    ADD CONSTRAINT common_thing_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: common_thingcomposition common_thingcomposition_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_thingcomposition
+    ADD CONSTRAINT common_thingcomposition_pkey PRIMARY KEY (id);
 
 
 --
@@ -3399,6 +3549,48 @@ CREATE INDEX "common_person_shortName_7a8b3bab_like" ON public.common_person USI
 
 
 --
+-- Name: common_thing_slug_150b9c55; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_thing_slug_150b9c55 ON public.common_thing USING btree (slug);
+
+
+--
+-- Name: common_thing_slug_150b9c55_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_thing_slug_150b9c55_like ON public.common_thing USING btree (slug varchar_pattern_ops);
+
+
+--
+-- Name: common_thing_specification_id_7ad6e8bb; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_thing_specification_id_7ad6e8bb ON public.common_thing USING btree (specification_id);
+
+
+--
+-- Name: common_thing_user_owner_id_6beabbab; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_thing_user_owner_id_6beabbab ON public.common_thing USING btree (user_owner_id);
+
+
+--
+-- Name: common_thingcomposition_sub_thing_id_a31e9e51; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_thingcomposition_sub_thing_id_a31e9e51 ON public.common_thingcomposition USING btree (sub_thing_id);
+
+
+--
+-- Name: common_thingcomposition_super_thing_id_8e700bb1; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_thingcomposition_super_thing_id_8e700bb1 ON public.common_thingcomposition USING btree (super_thing_id);
+
+
+--
 -- Name: dfndb_compositionpart_compound_id_98d443d4; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -3801,6 +3993,38 @@ ALTER TABLE ONLY public.common_person
 
 ALTER TABLE ONLY public.common_person
     ADD CONSTRAINT common_person_user_id_c5d7cec8_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_thing common_thing_specification_id_7ad6e8bb_fk_common_thing_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_thing
+    ADD CONSTRAINT common_thing_specification_id_7ad6e8bb_fk_common_thing_id FOREIGN KEY (specification_id) REFERENCES public.common_thing(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_thing common_thing_user_owner_id_6beabbab_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_thing
+    ADD CONSTRAINT common_thing_user_owner_id_6beabbab_fk_auth_user_id FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_thingcomposition common_thingcomposit_sub_thing_id_a31e9e51_fk_common_th; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_thingcomposition
+    ADD CONSTRAINT common_thingcomposit_sub_thing_id_a31e9e51_fk_common_th FOREIGN KEY (sub_thing_id) REFERENCES public.common_thing(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: common_thingcomposition common_thingcomposit_super_thing_id_8e700bb1_fk_common_th; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_thingcomposition
+    ADD CONSTRAINT common_thingcomposit_super_thing_id_8e700bb1_fk_common_th FOREIGN KEY (super_thing_id) REFERENCES public.common_thing(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
