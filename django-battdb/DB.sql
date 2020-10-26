@@ -592,6 +592,7 @@ CREATE TABLE public.common_paper (
     modified_on timestamp with time zone NOT NULL,
     created_on timestamp with time zone NOT NULL,
     slug character varying(50) NOT NULL,
+    authors character varying(300) NOT NULL,
     CONSTRAINT common_paper_status_check CHECK ((status >= 0))
 );
 
@@ -618,42 +619,6 @@ ALTER TABLE public.common_paper_id_seq OWNER TO towen;
 --
 
 ALTER SEQUENCE public.common_paper_id_seq OWNED BY public.common_paper.id;
-
-
---
--- Name: common_paperauthor; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public.common_paperauthor (
-    id integer NOT NULL,
-    is_principal boolean NOT NULL,
-    author_id integer NOT NULL,
-    paper_id integer NOT NULL
-);
-
-
-ALTER TABLE public.common_paperauthor OWNER TO towen;
-
---
--- Name: common_paperauthor_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
---
-
-CREATE SEQUENCE public.common_paperauthor_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.common_paperauthor_id_seq OWNER TO towen;
-
---
--- Name: common_paperauthor_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
---
-
-ALTER SEQUENCE public.common_paperauthor_id_seq OWNED BY public.common_paperauthor.id;
 
 
 --
@@ -1244,13 +1209,6 @@ ALTER TABLE ONLY public.common_org ALTER COLUMN id SET DEFAULT nextval('public.c
 --
 
 ALTER TABLE ONLY public.common_paper ALTER COLUMN id SET DEFAULT nextval('public.common_paper_id_seq'::regclass);
-
-
---
--- Name: common_paperauthor id; Type: DEFAULT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.common_paperauthor ALTER COLUMN id SET DEFAULT nextval('public.common_paperauthor_id_seq'::regclass);
 
 
 --
@@ -1928,16 +1886,8 @@ COPY public.common_org (id, website, is_mfg_cells, is_mfg_equip, is_publisher, i
 -- Data for Name: common_paper; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.common_paper (id, "DOI", year, title, url, publisher_id, attributes, status, user_owner_id, notes, "PDF", modified_on, created_on, slug) FROM stdin;
-1	https://doi.org/10.1109/5.771073	2019	Toward unique identifiers	https://ieeexplore.ieee.org/document/771073	\N	{}	10	\N	.		2020-10-19 16:59:28.034498+01	2020-10-15 18:18:05.103148+01	toward-unique-identifiers-2019
-\.
-
-
---
--- Data for Name: common_paperauthor; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public.common_paperauthor (id, is_principal, author_id, paper_id) FROM stdin;
+COPY public.common_paper (id, "DOI", year, title, url, publisher_id, attributes, status, user_owner_id, notes, "PDF", modified_on, created_on, slug, authors) FROM stdin;
+1	https://doi.org/10.1109/5.771073	2019	Toward unique identifiers	https://ieeexplore.ieee.org/document/771073	\N	{}	10	\N	.		2020-10-19 16:59:28.034498+01	2020-10-15 18:18:05.103148+01	toward-unique-identifiers-2019	
 \.
 
 
@@ -2527,6 +2477,9 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 189	battDB	0092_auto_20201022_2335	2020-10-23 00:35:53.164347+01
 190	battDB	0093_auto_20201026_1141	2020-10-26 11:41:25.56533+00
 191	battDB	0094_auto_20201026_1208	2020-10-26 12:08:40.147447+00
+192	battDB	0095_auto_20201026_1245	2020-10-26 12:45:44.600734+00
+193	common	0032_auto_20201026_1245	2020-10-26 12:45:44.629801+00
+194	common	0033_auto_20201026_1247	2020-10-26 12:47:36.367464+00
 \.
 
 
@@ -2647,13 +2600,6 @@ SELECT pg_catalog.setval('public.common_paper_id_seq', 2, true);
 
 
 --
--- Name: common_paperauthor_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
---
-
-SELECT pg_catalog.setval('public.common_paperauthor_id_seq', 1, true);
-
-
---
 -- Name: common_person_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
@@ -2734,7 +2680,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 54, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 191, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 194, true);
 
 
 --
@@ -2959,14 +2905,6 @@ ALTER TABLE ONLY public.common_paper
 
 ALTER TABLE ONLY public.common_paper
     ADD CONSTRAINT common_paper_pkey PRIMARY KEY (id);
-
-
---
--- Name: common_paperauthor common_paperauthor_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.common_paperauthor
-    ADD CONSTRAINT common_paperauthor_pkey PRIMARY KEY (id);
 
 
 --
@@ -3440,20 +3378,6 @@ CREATE INDEX common_paper_user_owner_id_ea0784cc ON public.common_paper USING bt
 
 
 --
--- Name: common_paperauthor_author_id_2b56138f; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX common_paperauthor_author_id_2b56138f ON public.common_paperauthor USING btree (author_id);
-
-
---
--- Name: common_paperauthor_paper_id_53f7190d; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX common_paperauthor_paper_id_53f7190d ON public.common_paperauthor USING btree (paper_id);
-
-
---
 -- Name: common_person_longName_613e60b4_like; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -3861,22 +3785,6 @@ ALTER TABLE ONLY public.common_paper
 
 ALTER TABLE ONLY public.common_paper
     ADD CONSTRAINT common_paper_user_owner_id_ea0784cc_fk_auth_user_id FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: common_paperauthor common_paperauthor_author_id_2b56138f_fk_common_person_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.common_paperauthor
-    ADD CONSTRAINT common_paperauthor_author_id_2b56138f_fk_common_person_id FOREIGN KEY (author_id) REFERENCES public.common_person(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: common_paperauthor common_paperauthor_paper_id_53f7190d_fk_common_paper_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.common_paperauthor
-    ADD CONSTRAINT common_paperauthor_paper_id_53f7190d_fk_common_paper_id FOREIGN KEY (paper_id) REFERENCES public.common_paper(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

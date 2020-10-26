@@ -228,18 +228,15 @@ class ContentTypeRestrictedFileField(models.FileField):
 class Paper(HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates):
     """
     An academic paper
-    FIXME: M2M Author is not needed, will be removed in future version & replaced with a text field
    """
     DOI = DOIField(unique=True, blank=True, null=True,
                    help_text="Paper DOI. In future, this could populate the other fields automatically.")
     year = YearField(default=datetime.date.today().year)
-    title = models.CharField(max_length=300)
-    # authors = models.ManyToManyField(Person) # no - see above
+    title = models.CharField(max_length=300, default="")
+    authors = models.CharField(max_length=300, default="")
     publisher = models.ForeignKey(Org, on_delete=models.SET_NULL, null=True, blank=True,
                                   limit_choices_to={'is_publisher': True})
-    authors = models.ManyToManyField(Person,
-                                     through='PaperAuthor',
-                                     related_name='papers', help_text="Contributing Persons.")
+
     url = models.URLField(null=True, blank=True)
     PDF = models.FileField(null=True, blank=True, help_text="Optional PDF copy")
 
@@ -249,19 +246,3 @@ class Paper(HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedMod
     def __str__(self):
         return slugify(str(self.title) + "-" + str(self.year))
 
-# TODO: ModelForm paper.publisher = filter on Org where Org.type = PUBLISHER
-
-
-class PaperAuthor(models.Model):
-    """
-    Author on paper
-    """
-    paper = models.ForeignKey(Paper, on_delete=models.CASCADE)
-    author = models.ForeignKey(Person, on_delete=models.CASCADE)
-    is_principal = models.BooleanField(default=False)
-
-    # def __str__(self):
-    #     return "%s%d" % (self.compound.formula, self.amount)
-
-    # class Meta:
-    #     unique_together = ('data', 'parameter')
