@@ -372,6 +372,7 @@
     "DOI": "https://doi.org/10.1109/5.771073",
     "year": 2019,
     "title": "Toward unique identifiers",
+    "authors": "",
     "publisher": null,
     "url": "https://ieeexplore.ieee.org/document/771073",
     "PDF": ""
@@ -5535,6 +5536,78 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 217,
+  "fields": {
+    "name": "Can add thing composition",
+    "content_type": 55,
+    "codename": "add_thingcomposition"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 218,
+  "fields": {
+    "name": "Can change thing composition",
+    "content_type": 55,
+    "codename": "change_thingcomposition"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 219,
+  "fields": {
+    "name": "Can delete thing composition",
+    "content_type": 55,
+    "codename": "delete_thingcomposition"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 220,
+  "fields": {
+    "name": "Can view thing composition",
+    "content_type": 55,
+    "codename": "view_thingcomposition"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 221,
+  "fields": {
+    "name": "Can add thing",
+    "content_type": 56,
+    "codename": "add_thing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 222,
+  "fields": {
+    "name": "Can change thing",
+    "content_type": 56,
+    "codename": "change_thing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 223,
+  "fields": {
+    "name": "Can delete thing",
+    "content_type": 56,
+    "codename": "delete_thing"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 224,
+  "fields": {
+    "name": "Can view thing",
+    "content_type": 56,
+    "codename": "view_thing"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -6274,6 +6347,22 @@
   "fields": {
     "app_label": "battDB",
     "model": "compositedevice"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 55,
+  "fields": {
+    "app_label": "common",
+    "model": "thingcomposition"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 56,
+  "fields": {
+    "app_label": "common",
+    "model": "thing"
   }
 },
 {

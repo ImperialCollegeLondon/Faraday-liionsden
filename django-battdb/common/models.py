@@ -103,6 +103,8 @@ class HasSlug(models.Model):
     class Meta:
         abstract = True
 
+#TODO class HasHistory(models.Model):
+# history = models.JSONField(...)
 
 class BaseModel(HasName, HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates):
     """
@@ -250,13 +252,17 @@ class Paper(HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedMod
 class Thing(BaseModel):
     is_specification = models.BooleanField(default=False,
                                            help_text="Can this thing be used as a specification for other things?")
+    is_composite = models.BooleanField(default=False,
+                                       help_text="Is this thing composed of other things?")
     specification = models.ForeignKey('Thing', limit_choices_to={'is_specification': True},
                                       related_name="specifies", null=True, blank=True, on_delete=models.RESTRICT,
                                       help_text="Is this Thing specified by another Thing (it inherits its attributes)")
-    composition = models.ManyToManyField('Thing', through="ThingComposition", related_name="parts")
+    part_of = models.ForeignKey('Thing', null=True, on_delete=models.SET_NULL, related_name="components",
+                                limit_choices_to={'is_composite': True},
+                                help_text="Is this Thing a physical part of another Thing?")
 
 
-class ThingComposition(models.Model):
-    super_thing = models.ForeignKey(Thing, related_name="part", on_delete=models.CASCADE)
-    sub_thing = models.ForeignKey(Thing, related_name="part_of", on_delete=models.CASCADE)
+# class ThingComposition(models.Model):
+#     super_thing = models.ForeignKey(Thing, related_name="part", on_delete=models.CASCADE)
+#     sub_thing = models.ForeignKey(Thing, related_name="part_of", on_delete=models.CASCADE)
 

@@ -81,8 +81,10 @@ admin.site.register([
 
 
 class CompositeThingInline(admin.TabularInline):
-    fk_name = "sub_thing"
-    model = ThingComposition
+    fk_name = "part_of"
+    verbose_name_plural = "Composition"
+    exclude = ["user_owner", "status", "is_composite"]
+    model = Thing
     extra = 2
 
 
