@@ -3,6 +3,7 @@ from django.contrib.postgres.fields import JSONField
 # from jsoneditor.forms import JSONEditor
 
 from .models import *
+import mptt
 
 admin.site.site_header = 'The Faraday Institution - Liionsden Electrochemistry Database'
 admin.site.site_title = 'Liionsden Admin'
@@ -81,14 +82,16 @@ admin.site.register([
 
 
 class CompositeThingInline(admin.TabularInline):
-    fk_name = "part_of"
+    fk_name = "parent_assembly"
     verbose_name_plural = "Composition"
-    exclude = ["user_owner", "status", "is_composite"]
+    verbose_name = "Part"
+    exclude = ["user_owner", "status", "is_composite", "is_specification"]
     model = Thing
-    extra = 2
+    extra = 1
 
 
-class ThingAdmin(BaseAdmin):
+#class ThingAdmin(mptt.admin.MPTTModelAdmin):
+class ThingAdmin(mptt.admin.DraggableMPTTAdmin):
     inlines = [CompositeThingInline,]
 
 

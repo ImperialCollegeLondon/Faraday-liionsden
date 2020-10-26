@@ -379,6 +379,98 @@
   }
 },
 {
+  "model": "common.thing",
+  "pk": 11,
+  "fields": {
+    "name": "My Module",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-26T16:31:06.600Z",
+    "modified_on": "2020-10-26T16:31:06.600Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "my-module",
+    "type": "Thing",
+    "is_specification": false,
+    "is_composite": false,
+    "specification": null,
+    "parent_assembly": null,
+    "lft": 1,
+    "rght": 8,
+    "tree_id": 1,
+    "level": 0
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 12,
+  "fields": {
+    "name": "Cell 1",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-26T16:31:06.602Z",
+    "modified_on": "2020-10-26T16:33:20.828Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "cell-1",
+    "type": "Thing",
+    "is_specification": false,
+    "is_composite": false,
+    "specification": null,
+    "parent_assembly": 11,
+    "lft": 2,
+    "rght": 5,
+    "tree_id": 1,
+    "level": 1
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 13,
+  "fields": {
+    "name": "Cell 2",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-26T16:31:06.603Z",
+    "modified_on": "2020-10-26T16:31:06.603Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "cell-2",
+    "type": "Thing",
+    "is_specification": false,
+    "is_composite": false,
+    "specification": null,
+    "parent_assembly": 11,
+    "lft": 6,
+    "rght": 7,
+    "tree_id": 1,
+    "level": 1
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 14,
+  "fields": {
+    "name": "PositiveElectrode",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-26T16:31:18.650Z",
+    "modified_on": "2020-10-26T16:31:18.650Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "positiveelectrode",
+    "type": "Thing",
+    "is_specification": false,
+    "is_composite": false,
+    "specification": null,
+    "parent_assembly": 12,
+    "lft": 3,
+    "rght": 4,
+    "tree_id": 1,
+    "level": 2
+  }
+},
+{
   "model": "dfndb.compound",
   "pk": 1,
   "fields": {
@@ -3589,6 +3681,513 @@
     "object_repr": "a module",
     "action_flag": 1,
     "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 217,
+  "fields": {
+    "action_time": "2020-10-26T14:19:59.406Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "1",
+    "object_repr": "pack",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"thing\", \"object\": \"Cell 1\"}}, {\"added\": {\"name\": \"thing\", \"object\": \"Cell 2\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 218,
+  "fields": {
+    "action_time": "2020-10-26T14:21:02.988Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "3",
+    "object_repr": "Cell 2",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"lft\", \"rght\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 219,
+  "fields": {
+    "action_time": "2020-10-26T14:21:06.718Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "3",
+    "object_repr": "Cell 2",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"parent\", \"lft\", \"rght\", \"level\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 220,
+  "fields": {
+    "action_time": "2020-10-26T14:21:39.758Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "3",
+    "object_repr": "Cell 2",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"parent\", \"lft\", \"rght\", \"level\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 221,
+  "fields": {
+    "action_time": "2020-10-26T14:21:44.666Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "2",
+    "object_repr": "Cell 1",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"lft\", \"rght\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 222,
+  "fields": {
+    "action_time": "2020-10-26T14:22:28.077Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "2",
+    "object_repr": "Cell 1",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Parent\"]}}, {\"added\": {\"name\": \"thing\", \"object\": \"PositiveElectrode\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 223,
+  "fields": {
+    "action_time": "2020-10-26T14:23:59.310Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "2",
+    "object_repr": "Cell 1",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is composite\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 224,
+  "fields": {
+    "action_time": "2020-10-26T14:24:04.314Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "1",
+    "object_repr": "pack",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is composite\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 225,
+  "fields": {
+    "action_time": "2020-10-26T14:24:11.597Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "2",
+    "object_repr": "Cell 1",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Parent\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 226,
+  "fields": {
+    "action_time": "2020-10-26T14:25:10.117Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "3",
+    "object_repr": "Cell 2",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"thing\", \"object\": \"PositiveElectrode\"}}, {\"added\": {\"name\": \"thing\", \"object\": \"NegativeElectrode\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 227,
+  "fields": {
+    "action_time": "2020-10-26T14:25:18.384Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "2",
+    "object_repr": "Cell 1",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"thing\", \"object\": \"NegativeElectrode\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 228,
+  "fields": {
+    "action_time": "2020-10-26T14:25:43.682Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "1",
+    "object_repr": "2S Pack",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 229,
+  "fields": {
+    "action_time": "2020-10-26T14:27:04.015Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "8",
+    "object_repr": "My Batch",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 230,
+  "fields": {
+    "action_time": "2020-10-26T14:27:11.893Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "1",
+    "object_repr": "2S Pack",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Parent\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 231,
+  "fields": {
+    "action_time": "2020-10-26T14:27:26.371Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "1",
+    "object_repr": "2S Pack",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is specification\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 232,
+  "fields": {
+    "action_time": "2020-10-26T14:28:49.550Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "1",
+    "object_repr": "2S Module",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 233,
+  "fields": {
+    "action_time": "2020-10-26T14:30:48.491Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "8",
+    "object_repr": "My Module",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 234,
+  "fields": {
+    "action_time": "2020-10-26T14:30:56.382Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "8",
+    "object_repr": "My Pack",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 235,
+  "fields": {
+    "action_time": "2020-10-26T14:31:12.764Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "8",
+    "object_repr": "My Pack",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is specification\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 236,
+  "fields": {
+    "action_time": "2020-10-26T14:32:00.704Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "9",
+    "object_repr": "Pack Clone",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 237,
+  "fields": {
+    "action_time": "2020-10-26T16:21:44.441Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "6",
+    "object_repr": "NegativeElectrode",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is composite\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 238,
+  "fields": {
+    "action_time": "2020-10-26T16:21:58.668Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "5",
+    "object_repr": "PositiveElectrode",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is composite\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 239,
+  "fields": {
+    "action_time": "2020-10-26T16:29:08.691Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "6",
+    "object_repr": "NegativeElectrode",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"thing\", \"object\": \"foo\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 240,
+  "fields": {
+    "action_time": "2020-10-26T16:29:41.113Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "3",
+    "object_repr": "Cell 2",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is composite\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 241,
+  "fields": {
+    "action_time": "2020-10-26T16:30:08.247Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "8",
+    "object_repr": "My Pack",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 242,
+  "fields": {
+    "action_time": "2020-10-26T16:30:38.113Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "8",
+    "object_repr": "My Pack",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 243,
+  "fields": {
+    "action_time": "2020-10-26T16:30:38.136Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "1",
+    "object_repr": "2S Module",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 244,
+  "fields": {
+    "action_time": "2020-10-26T16:30:38.151Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "3",
+    "object_repr": "Cell 2",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 245,
+  "fields": {
+    "action_time": "2020-10-26T16:30:38.166Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "5",
+    "object_repr": "PositiveElectrode",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 246,
+  "fields": {
+    "action_time": "2020-10-26T16:30:38.188Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "6",
+    "object_repr": "NegativeElectrode",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 247,
+  "fields": {
+    "action_time": "2020-10-26T16:30:38.211Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "10",
+    "object_repr": "foo",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 248,
+  "fields": {
+    "action_time": "2020-10-26T16:30:38.229Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "2",
+    "object_repr": "Cell 1",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 249,
+  "fields": {
+    "action_time": "2020-10-26T16:30:38.249Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "4",
+    "object_repr": "PositiveElectrode",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 250,
+  "fields": {
+    "action_time": "2020-10-26T16:30:38.262Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "7",
+    "object_repr": "NegativeElectrode",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 251,
+  "fields": {
+    "action_time": "2020-10-26T16:30:38.273Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "9",
+    "object_repr": "Pack Clone",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 252,
+  "fields": {
+    "action_time": "2020-10-26T16:31:06.604Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "11",
+    "object_repr": "My Module",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"thing\", \"object\": \"Cell 1\"}}, {\"added\": {\"name\": \"thing\", \"object\": \"Cell 2\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 253,
+  "fields": {
+    "action_time": "2020-10-26T16:31:18.650Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "12",
+    "object_repr": "Cell 1",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Parent assembly\"]}}, {\"added\": {\"name\": \"thing\", \"object\": \"PositiveElectrode\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 254,
+  "fields": {
+    "action_time": "2020-10-26T16:32:25.605Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "12",
+    "object_repr": "Cell 1",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Parent assembly\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 255,
+  "fields": {
+    "action_time": "2020-10-26T16:33:20.829Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "12",
+    "object_repr": "Cell 1",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"lft\", \"rght\"]}}]"
   }
 },
 {

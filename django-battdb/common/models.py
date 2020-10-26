@@ -10,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 import idutils  # for DOI validation: https://idutils.readthedocs.io/en/latest/
 import datetime
 from django.utils import timezone
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 # TODOnt: Add localised strings (l10n) using django_gettext for all string literals in this file
@@ -249,20 +250,25 @@ class Paper(HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedMod
         return slugify(str(self.title) + "-" + str(self.year))
 
 
-class Thing(BaseModel):
+class Thing(BaseModel, MPTTModel):
+    # TYPE_CHOICES = [
+    #     ("cell", "Single cell"),
+    #     ("module", "Module containing multiple cells"),
+    #     ("battery", "Battery containing cells OR modules"),
+    #     ("sensor", "Sensor attached to a device"),
+    # ]
+    type = models.CharField(max_length=16, default="Thing")
     is_specification = models.BooleanField(default=False,
                                            help_text="Can this thing be used as a specification for other things?")
     is_composite = models.BooleanField(default=False,
                                        help_text="Is this thing composed of other things?")
     specification = models.ForeignKey('Thing', limit_choices_to={'is_specification': True},
-                                      related_name="specifies", null=True, blank=True, on_delete=models.RESTRICT,
+                                      related_name="specifies", null=True, blank=True, on_delete=models.SET_NULL,
                                       help_text="Is this Thing specified by another Thing (it inherits its attributes)")
-    part_of = models.ForeignKey('Thing', null=True, on_delete=models.SET_NULL, related_name="components",
-                                limit_choices_to={'is_composite': True},
-                                help_text="Is this Thing a physical part of another Thing?")
+    parent_assembly = TreeForeignKey('Thing', null=True, blank=True, on_delete=models.SET_NULL, related_name="components",
+                                     help_text="Is this Thing a physical part of another Thing?")
 
+    class MPTTMeta:
+        parent_attr = 'parent_assembly'
 
-# class ThingComposition(models.Model):
-#     super_thing = models.ForeignKey(Thing, related_name="part", on_delete=models.CASCADE)
-#     sub_thing = models.ForeignKey(Thing, related_name="part_of", on_delete=models.CASCADE)
-
+#class ThingHistory

@@ -675,8 +675,17 @@ CREATE TABLE public.common_thing (
     specification_id integer,
     user_owner_id integer,
     is_composite boolean NOT NULL,
-    part_of_id integer,
-    CONSTRAINT common_thing_status_check CHECK ((status >= 0))
+    level integer NOT NULL,
+    lft integer NOT NULL,
+    rght integer NOT NULL,
+    tree_id integer NOT NULL,
+    parent_assembly_id integer,
+    type character varying(16) NOT NULL,
+    CONSTRAINT common_thing_level_check CHECK ((level >= 0)),
+    CONSTRAINT common_thing_lft_check CHECK ((lft >= 0)),
+    CONSTRAINT common_thing_rght_check CHECK ((rght >= 0)),
+    CONSTRAINT common_thing_status_check CHECK ((status >= 0)),
+    CONSTRAINT common_thing_tree_id_check CHECK ((tree_id >= 0))
 );
 
 
@@ -1966,7 +1975,11 @@ COPY public.common_person (id, org_id, user_id, "longName", "shortName") FROM st
 -- Data for Name: common_thing; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.common_thing (id, name, status, created_on, modified_on, attributes, notes, slug, is_specification, specification_id, user_owner_id, is_composite, part_of_id) FROM stdin;
+COPY public.common_thing (id, name, status, created_on, modified_on, attributes, notes, slug, is_specification, specification_id, user_owner_id, is_composite, level, lft, rght, tree_id, parent_assembly_id, type) FROM stdin;
+13	Cell 2	10	2020-10-26 16:31:06.603809+00	2020-10-26 16:31:06.60382+00	{}		cell-2	f	\N	\N	f	1	6	7	1	11	Thing
+11	My Module	10	2020-10-26 16:31:06.600112+00	2020-10-26 16:31:06.600127+00	{}		my-module	f	\N	\N	f	0	1	8	1	\N	Thing
+14	PositiveElectrode	10	2020-10-26 16:31:18.650199+00	2020-10-26 16:31:18.650213+00	{}		positiveelectrode	f	\N	\N	f	2	3	4	1	12	Thing
+12	Cell 1	10	2020-10-26 16:31:06.602258+00	2020-10-26 16:33:20.828309+00	{}		cell-1	f	\N	\N	f	1	2	5	1	11	Thing
 \.
 
 
@@ -2287,6 +2300,45 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 213	2020-10-26 11:52:26.988082+00	3	My DFN model	1	[{"added": {}}]	30	1
 215	2020-10-26 12:08:07.604887+00	6	a cell	1	[{"added": {}}]	1	1
 216	2020-10-26 12:11:37.378668+00	7	a module	1	[{"added": {}}]	39	1
+217	2020-10-26 14:19:59.406685+00	1	pack	1	[{"added": {}}, {"added": {"name": "thing", "object": "Cell 1"}}, {"added": {"name": "thing", "object": "Cell 2"}}]	56	1
+218	2020-10-26 14:21:02.988101+00	3	Cell 2	2	[{"changed": {"fields": ["lft", "rght"]}}]	56	1
+219	2020-10-26 14:21:06.718299+00	3	Cell 2	2	[{"changed": {"fields": ["parent", "lft", "rght", "level"]}}]	56	1
+220	2020-10-26 14:21:39.75855+00	3	Cell 2	2	[{"changed": {"fields": ["parent", "lft", "rght", "level"]}}]	56	1
+221	2020-10-26 14:21:44.666408+00	2	Cell 1	2	[{"changed": {"fields": ["lft", "rght"]}}]	56	1
+222	2020-10-26 14:22:28.077301+00	2	Cell 1	2	[{"changed": {"fields": ["Parent"]}}, {"added": {"name": "thing", "object": "PositiveElectrode"}}]	56	1
+223	2020-10-26 14:23:59.310044+00	2	Cell 1	2	[{"changed": {"fields": ["Is composite"]}}]	56	1
+224	2020-10-26 14:24:04.314103+00	1	pack	2	[{"changed": {"fields": ["Is composite"]}}]	56	1
+225	2020-10-26 14:24:11.597249+00	2	Cell 1	2	[{"changed": {"fields": ["Parent"]}}]	56	1
+226	2020-10-26 14:25:10.117402+00	3	Cell 2	2	[{"added": {"name": "thing", "object": "PositiveElectrode"}}, {"added": {"name": "thing", "object": "NegativeElectrode"}}]	56	1
+227	2020-10-26 14:25:18.384065+00	2	Cell 1	2	[{"added": {"name": "thing", "object": "NegativeElectrode"}}]	56	1
+228	2020-10-26 14:25:43.682137+00	1	2S Pack	2	[{"changed": {"fields": ["Name"]}}]	56	1
+229	2020-10-26 14:27:04.015632+00	8	My Batch	1	[{"added": {}}]	56	1
+230	2020-10-26 14:27:11.893738+00	1	2S Pack	2	[{"changed": {"fields": ["Parent"]}}]	56	1
+231	2020-10-26 14:27:26.371091+00	1	2S Pack	2	[{"changed": {"fields": ["Is specification"]}}]	56	1
+232	2020-10-26 14:28:49.550933+00	1	2S Module	2	[{"changed": {"fields": ["Name"]}}]	56	1
+233	2020-10-26 14:30:48.491003+00	8	My Module	2	[{"changed": {"fields": ["Name"]}}]	56	1
+234	2020-10-26 14:30:56.382136+00	8	My Pack	2	[{"changed": {"fields": ["Name"]}}]	56	1
+235	2020-10-26 14:31:12.764119+00	8	My Pack	2	[{"changed": {"fields": ["Is specification"]}}]	56	1
+236	2020-10-26 14:32:00.704136+00	9	Pack Clone	1	[{"added": {}}]	56	1
+237	2020-10-26 16:21:44.441835+00	6	NegativeElectrode	2	[{"changed": {"fields": ["Is composite"]}}]	56	1
+238	2020-10-26 16:21:58.668651+00	5	PositiveElectrode	2	[{"changed": {"fields": ["Is composite"]}}]	56	1
+239	2020-10-26 16:29:08.691665+00	6	NegativeElectrode	2	[{"added": {"name": "thing", "object": "foo"}}]	56	1
+240	2020-10-26 16:29:41.11374+00	3	Cell 2	2	[{"changed": {"fields": ["Is composite"]}}]	56	1
+241	2020-10-26 16:30:08.247457+00	8	My Pack	3		56	1
+242	2020-10-26 16:30:38.113092+00	8	My Pack	3		56	1
+243	2020-10-26 16:30:38.136902+00	1	2S Module	3		56	1
+244	2020-10-26 16:30:38.151424+00	3	Cell 2	3		56	1
+245	2020-10-26 16:30:38.166317+00	5	PositiveElectrode	3		56	1
+246	2020-10-26 16:30:38.18824+00	6	NegativeElectrode	3		56	1
+247	2020-10-26 16:30:38.211684+00	10	foo	3		56	1
+248	2020-10-26 16:30:38.229517+00	2	Cell 1	3		56	1
+249	2020-10-26 16:30:38.249766+00	4	PositiveElectrode	3		56	1
+250	2020-10-26 16:30:38.26269+00	7	NegativeElectrode	3		56	1
+251	2020-10-26 16:30:38.273716+00	9	Pack Clone	3		56	1
+252	2020-10-26 16:31:06.604435+00	11	My Module	1	[{"added": {}}, {"added": {"name": "thing", "object": "Cell 1"}}, {"added": {"name": "thing", "object": "Cell 2"}}]	56	1
+253	2020-10-26 16:31:18.650988+00	12	Cell 1	2	[{"changed": {"fields": ["Parent assembly"]}}, {"added": {"name": "thing", "object": "PositiveElectrode"}}]	56	1
+254	2020-10-26 16:32:25.60542+00	12	Cell 1	2	[{"changed": {"fields": ["Parent assembly"]}}]	56	1
+255	2020-10-26 16:33:20.829772+00	12	Cell 1	2	[{"changed": {"fields": ["lft", "rght"]}}]	56	1
 \.
 
 
@@ -2553,6 +2605,12 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 194	common	0033_auto_20201026_1247	2020-10-26 12:47:36.367464+00
 195	common	0034_compositeThing	2020-10-26 13:18:40.712358+00
 196	common	0035_ThingParts	2020-10-26 13:46:54.487556+00
+197	common	0036_MPTT_Thing	2020-10-26 14:11:14.42603+00
+198	common	0037_auto_20201026_1412	2020-10-26 14:12:40.08033+00
+199	common	0038_MPTT_Thing_parent	2020-10-26 15:06:01.616118+00
+200	common	0039_MPTT_Thing_parent_revert	2020-10-26 16:24:58.625979+00
+201	common	0040_MPTT_Thing_parent_rev2	2020-10-26 16:27:07.522374+00
+202	common	0041_auto_20201026_1631	2020-10-26 16:31:48.771737+00
 \.
 
 
@@ -2683,7 +2741,7 @@ SELECT pg_catalog.setval('public.common_person_id_seq', 2, true);
 -- Name: common_thing_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.common_thing_id_seq', 1, false);
+SELECT pg_catalog.setval('public.common_thing_id_seq', 14, true);
 
 
 --
@@ -2746,7 +2804,7 @@ SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 10, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 216, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 255, true);
 
 
 --
@@ -2760,7 +2818,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 56, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 196, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 202, true);
 
 
 --
@@ -3490,7 +3548,7 @@ CREATE INDEX "common_person_shortName_7a8b3bab_like" ON public.common_person USI
 -- Name: common_thing_part_of_id_c982987a; Type: INDEX; Schema: public; Owner: towen
 --
 
-CREATE INDEX common_thing_part_of_id_c982987a ON public.common_thing USING btree (part_of_id);
+CREATE INDEX common_thing_part_of_id_c982987a ON public.common_thing USING btree (parent_assembly_id);
 
 
 --
@@ -3512,6 +3570,13 @@ CREATE INDEX common_thing_slug_150b9c55_like ON public.common_thing USING btree 
 --
 
 CREATE INDEX common_thing_specification_id_7ad6e8bb ON public.common_thing USING btree (specification_id);
+
+
+--
+-- Name: common_thing_tree_id_8c141737; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_thing_tree_id_8c141737 ON public.common_thing USING btree (tree_id);
 
 
 --
@@ -3927,11 +3992,11 @@ ALTER TABLE ONLY public.common_person
 
 
 --
--- Name: common_thing common_thing_part_of_id_c982987a_fk_common_thing_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+-- Name: common_thing common_thing_parent_assembly_id_7fa0e18f_fk_common_thing_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public.common_thing
-    ADD CONSTRAINT common_thing_part_of_id_c982987a_fk_common_thing_id FOREIGN KEY (part_of_id) REFERENCES public.common_thing(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT common_thing_parent_assembly_id_7fa0e18f_fk_common_thing_id FOREIGN KEY (parent_assembly_id) REFERENCES public.common_thing(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
