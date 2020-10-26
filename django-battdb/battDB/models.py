@@ -74,6 +74,7 @@ class Device(cm.BaseModel):
     DEVICE_TYPE_APPARATUS = 100
 
     DEVICE_TYPE = (
+        (DEVICE_TYPE_NONE, 'None'),
         (DEVICE_TYPE_CELL, 'Cell'),
         (DEVICE_TYPE_MODULE, 'Module'),
         (DEVICE_TYPE_PACK, 'Pack'),
@@ -96,7 +97,7 @@ class Device(cm.BaseModel):
                                       related_name="specified_devices",
                                       help_text="Parent device specification")
     parent_device = models.ForeignKey('Device', on_delete=models.SET_NULL, null=True, blank=True,
-                                      limit_choices_to={'devType': (DEVICE_TYPE_MODULE, DEVICE_TYPE_PACK)},
+                                      limit_choices_to={'devType': DEVICE_TYPE_MODULE},
                                       related_name="child_devices",
                                       help_text="If this device is part of a module or pack, link to it here")
 
@@ -113,15 +114,16 @@ class Cell(Device):
         self._meta.get_field('is_template').help_text = "Set to True if this is a Cell specification"
         self._meta.get_field('manufacturer').limit_choices_to = {'is_mfg_cells': True}
         self._meta.get_field('serialNo').help_text = "Cell serial number"
-        self._meta.get_field('parent').help_text = "link to module or pack specification"
+        self._meta.get_field('parent_device').help_text = "link to module or pack specification"
         # FIXME: Cannot change 'limit_choices_to' in subclasses - limitation in Django?
-        self._meta.get_field('parent').limit_choices_to = {"is_template": True, "devType": [Device.DEVICE_TYPE_PACK,
-                                                                                            Device.DEVICE_TYPE_MODULE]}
+        self._meta.get_field('parent_device').limit_choices_to = {"is_template": True,
+                                                                  "devType": Device.DEVICE_TYPE_MODULE}
         #self._meta.get_field('serialNo').blank = False
         super(Cell, self).__init__(*args, **kwargs)
 
     class Meta:
         proxy=True
+
 
 
 #class CellBatch(Cell):
@@ -312,11 +314,10 @@ class Experiment(cm.BaseModel):
     """
     date = models.DateField()
     # apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
-    device = models.ManyToManyField(Device, related_name='experiments')
-    #cellConfig = models.ForeignKey(CellConfig, on_delete=models.SET_NULL, null=True, blank=True)
+    device = models.ManyToManyField(Device, related_name='used_in')
+    config = models.ForeignKey(DeviceConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='used_in')
     protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
-                                 limit_choices_to={'type': (dfn.Method.METHOD_TYPE_EXPERIMENTAL,
-                                                            dfn.Method.METHOD_TYPE_BOTH)})
+                                 limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL})
 
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)

@@ -115,6 +115,48 @@
   }
 },
 {
+  "model": "battDB.device",
+  "pk": 6,
+  "fields": {
+    "name": "a cell",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-26T12:08:07.603Z",
+    "modified_on": "2020-10-26T12:08:07.603Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "a-cell",
+    "devType": 20,
+    "terminals": "positive, negative",
+    "is_template": false,
+    "manufacturer": null,
+    "serialNo": null,
+    "specification": null,
+    "parent_device": null
+  }
+},
+{
+  "model": "battDB.device",
+  "pk": 7,
+  "fields": {
+    "name": "a module",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-26T12:11:37.377Z",
+    "modified_on": "2020-10-26T12:11:37.377Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "a-module",
+    "devType": 30,
+    "terminals": "positive, negative",
+    "is_template": false,
+    "manufacturer": null,
+    "serialNo": null,
+    "specification": null,
+    "parent_device": null
+  }
+},
+{
   "model": "battDB.deviceconfig",
   "pk": 1,
   "fields": {
@@ -189,6 +231,7 @@
     "notes": null,
     "slug": "bork",
     "date": "2020-08-05",
+    "config": null,
     "protocol": null,
     "device": []
   }
@@ -206,6 +249,7 @@
     "notes": null,
     "slug": "bork",
     "date": "2020-08-05",
+    "config": null,
     "protocol": null,
     "device": []
   }
@@ -500,6 +544,38 @@
     "notes": "",
     "slug": "bork",
     "type": 1,
+    "description": ""
+  }
+},
+{
+  "model": "dfndb.method",
+  "pk": 3,
+  "fields": {
+    "name": "My DFN model",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-26T11:52:26.985Z",
+    "modified_on": "2020-10-26",
+    "attributes": {},
+    "notes": "",
+    "slug": "my-dfn-model",
+    "type": 1000,
+    "description": ""
+  }
+},
+{
+  "model": "dfndb.method",
+  "pk": 4,
+  "fields": {
+    "name": "My experimental method",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-26T11:53:05.693Z",
+    "modified_on": "2020-10-26",
+    "attributes": {},
+    "notes": "",
+    "slug": "my-experimental-method",
+    "type": 2000,
     "description": ""
   }
 },
@@ -3460,6 +3536,58 @@
     "object_repr": "2S Module config",
     "action_flag": 2,
     "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 213,
+  "fields": {
+    "action_time": "2020-10-26T11:52:26.988Z",
+    "user": 1,
+    "content_type": 30,
+    "object_id": "3",
+    "object_repr": "My DFN model",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 214,
+  "fields": {
+    "action_time": "2020-10-26T11:53:05.695Z",
+    "user": 1,
+    "content_type": 30,
+    "object_id": "4",
+    "object_repr": "My experimental method",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 215,
+  "fields": {
+    "action_time": "2020-10-26T12:08:07.604Z",
+    "user": 1,
+    "content_type": 1,
+    "object_id": "6",
+    "object_repr": "a cell",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 216,
+  "fields": {
+    "action_time": "2020-10-26T12:11:37.378Z",
+    "user": 1,
+    "content_type": 39,
+    "object_id": "7",
+    "object_repr": "a module",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
   }
 },
 {

@@ -398,6 +398,7 @@ CREATE TABLE public."battDB_experiment" (
     slug character varying(50) NOT NULL,
     protocol_id integer,
     status smallint NOT NULL,
+    config_id integer,
     CONSTRAINT "battDB_experiment_status_check" CHECK ((status >= 0))
 );
 
@@ -1842,6 +1843,8 @@ COPY public."battDB_device" (id, name, status, created_on, modified_on, attribut
 3	test 1s LiPo spec	10	2020-10-22 11:13:00.282807+01	2020-10-22 11:13:00.282823+01	{}	fribble	test-1s-lipo-spec	20	t	1	\N	1	\N	\N	\N
 4	GalvoTron 5000	10	2020-10-22 11:13:56.649387+01	2020-10-22 11:13:56.649401+01	{}	Cycler machine	galvotron-5000	1	t	1	\N	2	\N	\N	\N
 5	MyCellSpecification	10	2020-10-22 11:16:00.879087+01	2020-10-22 11:16:19.661607+01	{"anode_material": "Cheese/Wensleydale"}	Test cell spec	mycellspecification	20	t	1	\N	1	\N	\N	\N
+6	a cell	10	2020-10-26 12:08:07.60309+00	2020-10-26 12:08:07.60311+00	{}		a-cell	20	f	1	\N	\N	positive, negative	\N	\N
+7	a module	10	2020-10-26 12:11:37.37701+00	2020-10-26 12:11:37.377034+00	{}		a-module	30	f	1	\N	\N	positive, negative	\N	\N
 \.
 
 
@@ -1870,9 +1873,9 @@ COPY public."battDB_deviceconfignode" (id, device_terminal_name, net_name, confi
 -- Data for Name: battDB_experiment; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_experiment" (id, name, date, user_owner_id, attributes, notes, modified_on, created_on, slug, protocol_id, status) FROM stdin;
-8	experiment	2020-08-05	1	{}	\N	2020-10-15 18:13:05.703611+01	2020-10-15 18:18:04.905104+01	bork	\N	10
-9	fooo	2020-08-05	1	{}	\N	2020-10-15 18:13:05.703611+01	2020-10-15 18:18:04.905104+01	bork	\N	10
+COPY public."battDB_experiment" (id, name, date, user_owner_id, attributes, notes, modified_on, created_on, slug, protocol_id, status, config_id) FROM stdin;
+8	experiment	2020-08-05	1	{}	\N	2020-10-15 18:13:05.703611+01	2020-10-15 18:18:04.905104+01	bork	\N	10	\N
+9	fooo	2020-08-05	1	{}	\N	2020-10-15 18:13:05.703611+01	2020-10-15 18:18:04.905104+01	bork	\N	10	\N
 \.
 
 
@@ -2012,6 +2015,8 @@ COPY public.dfndb_material (id, polymer, user_owner_id, type, attributes, status
 COPY public.dfndb_method (id, type, description, user_owner_id, attributes, status, name, notes, modified_on, created_on, slug) FROM stdin;
 1	2		1	{}	10	DFN		2020-10-16	2020-10-16 14:09:50.498057+01	bork
 2	1		1	{}	10	GITT		2020-10-16	2020-10-16 14:10:00.357987+01	bork
+3	1000		1	{}	10	My DFN model		2020-10-26	2020-10-26 11:52:26.985926+00	my-dfn-model
+4	2000		1	{}	10	My experimental method		2020-10-26	2020-10-26 11:53:05.693795+00	my-experimental-method
 \.
 
 
@@ -2203,6 +2208,7 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 154	2020-10-16 12:16:10.339922+01	1	NMC622	1	[{"added": {}}]	29	1
 155	2020-10-16 12:44:34.907919+01	1	NMC622	2	[{"added": {"name": "composition part", "object": "Li0"}}]	29	1
 156	2020-10-16 12:45:00.824275+01	1	NMC622	2	[{"added": {"name": "composition part", "object": "Mg2"}}, {"added": {"name": "composition part", "object": "Co2"}}, {"changed": {"name": "composition part", "object": "Ni6", "fields": ["Compound", "Amount"]}}]	29	1
+214	2020-10-26 11:53:05.695042+00	4	My experimental method	1	[{"added": {}}]	30	1
 157	2020-10-16 12:54:56.11646+01	1	NMC622	2	[{"changed": {"name": "composition part", "object": "Ni7", "fields": ["Amount"]}}]	29	1
 158	2020-10-16 12:55:00.733173+01	1	NMC622	2	[{"changed": {"name": "composition part", "object": "Ni6", "fields": ["Amount"]}}]	29	1
 159	2020-10-16 13:02:19.57821+01	6	Distance (d) / m	1	[{"added": {}}]	31	1
@@ -2259,6 +2265,9 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 210	2020-10-22 11:38:46.195344+01	1	2S Module	2	[{"changed": {"name": "device config node", "object": "2S Module/Pack +vePositive", "fields": ["Device terminal name"]}}, {"changed": {"name": "device config node", "object": "2S Module/MiddleNegative", "fields": ["Device terminal name"]}}, {"changed": {"name": "device config node", "object": "2S Module/MiddlePositive", "fields": ["Device terminal name"]}}, {"changed": {"name": "device config node", "object": "2S Module/Pack -veNegative", "fields": ["Device terminal name"]}}]	51	1
 211	2020-10-22 11:43:18.232646+01	1	2S Module	2	[{"changed": {"name": "device config node", "object": "2S Module/Pack +vePositive", "fields": ["Device position id"]}}, {"changed": {"name": "device config node", "object": "2S Module/MiddleNegative", "fields": ["Device position id"]}}, {"changed": {"name": "device config node", "object": "2S Module/MiddlePositive", "fields": ["Device position id"]}}, {"changed": {"name": "device config node", "object": "2S Module/Pack -veNegative", "fields": ["Device position id"]}}]	51	1
 212	2020-10-22 11:56:13.735901+01	1	2S Module config	2	[{"changed": {"fields": ["Name"]}}]	51	1
+213	2020-10-26 11:52:26.988082+00	3	My DFN model	1	[{"added": {}}]	30	1
+215	2020-10-26 12:08:07.604887+00	6	a cell	1	[{"added": {}}]	1	1
+216	2020-10-26 12:11:37.378668+00	7	a module	1	[{"added": {}}]	39	1
 \.
 
 
@@ -2516,6 +2525,8 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 187	battDB	0090_auto_20201022_1946	2020-10-22 20:46:30.638996+01
 188	battDB	0091_auto_20201022_1947	2020-10-22 20:47:21.499028+01
 189	battDB	0092_auto_20201022_2335	2020-10-23 00:35:53.164347+01
+190	battDB	0093_auto_20201026_1141	2020-10-26 11:41:25.56533+00
+191	battDB	0094_auto_20201026_1208	2020-10-26 12:08:40.147447+00
 \.
 
 
@@ -2583,7 +2594,7 @@ SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 104, true);
 -- Name: battDB_device_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_device_id_seq"', 5, true);
+SELECT pg_catalog.setval('public."battDB_device_id_seq"', 7, true);
 
 
 --
@@ -2688,7 +2699,7 @@ SELECT pg_catalog.setval('public.dfndb_material_id_seq', 3, true);
 -- Name: dfndb_method_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_method_id_seq', 2, true);
+SELECT pg_catalog.setval('public.dfndb_method_id_seq', 4, true);
 
 
 --
@@ -2709,7 +2720,7 @@ SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 10, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 212, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 216, true);
 
 
 --
@@ -2723,7 +2734,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 54, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 189, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 191, true);
 
 
 --
@@ -3289,6 +3300,13 @@ CREATE INDEX "battDB_deviceconfignode_next_id_8ac05430" ON public."battDB_device
 
 
 --
+-- Name: battDB_experiment_config_id_308e8e11; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_experiment_config_id_308e8e11" ON public."battDB_experiment" USING btree (config_id);
+
+
+--
 -- Name: battDB_experiment_device_device_id_ff7f05b5; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -3771,6 +3789,14 @@ ALTER TABLE ONLY public."battDB_deviceconfignode"
 
 ALTER TABLE ONLY public."battDB_deviceconfignode"
     ADD CONSTRAINT "battDB_deviceconfignode_device_id_21bed58f_fk_battDB_device_id" FOREIGN KEY (device_id) REFERENCES public."battDB_device"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_experiment battDB_experiment_config_id_308e8e11_fk_battDB_deviceconfig_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experiment"
+    ADD CONSTRAINT "battDB_experiment_config_id_308e8e11_fk_battDB_deviceconfig_id" FOREIGN KEY (config_id) REFERENCES public."battDB_deviceconfig"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

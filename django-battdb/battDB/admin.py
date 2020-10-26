@@ -8,7 +8,7 @@ from .models import *
 
 
 admin.site.register([
-      #Experiment, #Equipment, EquipmentType,
+      Experiment, #Equipment, EquipmentType,
       Device, Cell
       ], BaseAdmin)
 
