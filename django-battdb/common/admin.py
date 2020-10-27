@@ -82,7 +82,7 @@ admin.site.register([
 
 
 class CompositeThingInline(admin.TabularInline):
-    fk_name = "parent_assembly"
+    fk_name = "parent"
     verbose_name_plural = "Composition"
     verbose_name = "Part"
     exclude = ["user_owner", "status", "is_composite", "is_specification"]

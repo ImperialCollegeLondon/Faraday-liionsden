@@ -61,45 +61,23 @@ import hashlib
 #         verbose_name_plural = "Device Batches"
 
 
-class Device(cm.BaseModel):
+class Device(cm.Thing):
     """
     A physical thing or specification
     """
-    DEVICE_TYPE_NONE = 0
-    DEVICE_TYPE_CYCLER = 1
-    DEVICE_TYPE_SENSOR = 10
-    DEVICE_TYPE_CELL = 20
-    DEVICE_TYPE_MODULE = 30
-    DEVICE_TYPE_PACK = 40
-    DEVICE_TYPE_APPARATUS = 100
+    TYPE_CHOICES = [
+        ("cell", "Single cell"),
+        ("module", "Module containing multiple cells"),
+        ("battery", "Battery containing cells OR modules"),
+        ("sensor", "Sensor attached to a device"),
+        ("cycler", "Cycler Machine"),
+    ]
 
-    DEVICE_TYPE = (
-        (DEVICE_TYPE_NONE, 'None'),
-        (DEVICE_TYPE_CELL, 'Cell'),
-        (DEVICE_TYPE_MODULE, 'Module'),
-        (DEVICE_TYPE_PACK, 'Pack'),
-        (DEVICE_TYPE_CYCLER, 'Cycler'),
-        (DEVICE_TYPE_SENSOR, 'Sensor')
-    )
+    devType = models.CharField(max_length=16, default="cell", choices=TYPE_CHOICES)
 
-    devType = models.PositiveSmallIntegerField(default=DEVICE_TYPE_NONE, choices=DEVICE_TYPE)
-    terminals = models.TextField(null=True,
-                                 default="positive, negative",
-                                 help_text="comma-separated list of terminal names")
-    is_template = models.BooleanField(default=False,
-                                      help_text="Set to true if this object does not describe a real device, "
-                                                "but a specification or type of devices")
     manufacturer = models.ForeignKey(cm.Org, null=True, blank=True, on_delete=models.SET_NULL)
     serialNo = models.CharField(max_length=60, null=True, blank=True, help_text=
                                 "Serial Number - or format, for device templates")
-    specification = models.ForeignKey('Device', on_delete=models.SET_NULL, null=True, blank=True,
-                                      limit_choices_to={'is_template': True},
-                                      related_name="specified_devices",
-                                      help_text="Parent device specification")
-    parent_device = models.ForeignKey('Device', on_delete=models.SET_NULL, null=True, blank=True,
-                                      limit_choices_to={'devType': DEVICE_TYPE_MODULE},
-                                      related_name="child_devices",
-                                      help_text="If this device is part of a module or pack, link to it here")
 
 
 class Cell(Device):
@@ -108,16 +86,16 @@ class Cell(Device):
     TODO: This will be enforced by JSON schema in future releases
     """
     def __init__(self, *args, **kwargs):
-        self._meta.get_field('devType').default = Device.DEVICE_TYPE_CELL
-        self._meta.get_field('is_template').default = False
+        self._meta.get_field('devType').default = "cell"
+        self._meta.get_field('inherit_metadata').default = False
+        self._meta.get_field('inherit_metadata').hidden = True
         self._meta.get_field('devType').editable = False
-        self._meta.get_field('is_template').help_text = "Set to True if this is a Cell specification"
         self._meta.get_field('manufacturer').limit_choices_to = {'is_mfg_cells': True}
         self._meta.get_field('serialNo').help_text = "Cell serial number"
-        self._meta.get_field('parent_device').help_text = "link to module or pack specification"
-        # FIXME: Cannot change 'limit_choices_to' in subclasses - limitation in Django?
-        self._meta.get_field('parent_device').limit_choices_to = {"is_template": True,
-                                                                  "devType": Device.DEVICE_TYPE_MODULE}
+        # self._meta.get_field('parent_device').help_text = "link to module or pack specification"
+        # # FIXME: Cannot change 'limit_choices_to' in subclasses - limitation in Django?
+        # self._meta.get_field('parent_device').limit_choices_to = {"is_template": True,
+        #                                                           "devType": Device.DEVICE_TYPE_MODULE}
         #self._meta.get_field('serialNo').blank = False
         super(Cell, self).__init__(*args, **kwargs)
 
@@ -160,7 +138,7 @@ class DeviceConfigNode(models.Model):
            limit_choices_to={'config':config} would result in an error.
            Maybe there is a flaw in my database design here? This might not need to be a ManyToMany 'through' table.
     """
-    device = models.ForeignKey(Device, on_delete=models.CASCADE, limit_choices_to={'is_template': True},
+    device = models.ForeignKey(Device, on_delete=models.CASCADE, limit_choices_to={'inherit_metadata': True},
                                help_text="Related device specification e.g. cell or sensor. Must have is_template=True")
     config = models.ForeignKey(DeviceConfig, on_delete=models.CASCADE,
                                help_text="Config instance to which this node belongs")

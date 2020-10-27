@@ -104,6 +104,15 @@ class HasSlug(models.Model):
     class Meta:
         abstract = True
 
+class HasMPTT(MPTTModel):
+    """
+    Adds object hierarchical tree structure using django-MPTT library
+    """
+    parent = TreeForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL,
+                            help_text="Parent node in object tree hierarchy")
+    class Meta:
+        abstract=True
+
 #TODO class HasHistory(models.Model):
 # history = models.JSONField(...)
 
@@ -114,6 +123,16 @@ class BaseModel(HasName, HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, 
    """
     class Meta:
         abstract = True
+
+
+class Thing(BaseModel, HasMPTT):
+    """
+    A generic "thing"
+    """
+    inherit_metadata = models.BooleanField(default=True,
+                                           help_text="Set to True if this object does not describe a real life thing, "
+                                                     "but a specification, type or grouping. In this case, the "
+                                                     "metadata will be inherited.")
 
 
 # TODO: ModelForm Org.head = filter on Person WHERE Person.org = this
@@ -250,25 +269,5 @@ class Paper(HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedMod
         return slugify(str(self.title) + "-" + str(self.year))
 
 
-class Thing(BaseModel, MPTTModel):
-    # TYPE_CHOICES = [
-    #     ("cell", "Single cell"),
-    #     ("module", "Module containing multiple cells"),
-    #     ("battery", "Battery containing cells OR modules"),
-    #     ("sensor", "Sensor attached to a device"),
-    # ]
-    type = models.CharField(max_length=16, default="Thing")
-    is_specification = models.BooleanField(default=False,
-                                           help_text="Can this thing be used as a specification for other things?")
-    is_composite = models.BooleanField(default=False,
-                                       help_text="Is this thing composed of other things?")
-    specification = models.ForeignKey('Thing', limit_choices_to={'is_specification': True},
-                                      related_name="specifies", null=True, blank=True, on_delete=models.SET_NULL,
-                                      help_text="Is this Thing specified by another Thing (it inherits its attributes)")
-    parent_assembly = TreeForeignKey('Thing', null=True, blank=True, on_delete=models.SET_NULL, related_name="components",
-                                     help_text="Is this Thing a physical part of another Thing?")
 
-    class MPTTMeta:
-        parent_attr = 'parent_assembly'
 
-#class ThingHistory
