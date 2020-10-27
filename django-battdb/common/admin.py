@@ -91,7 +91,7 @@ class CompositeThingInline(admin.TabularInline):
 
 
 #class ThingAdmin(mptt.admin.MPTTModelAdmin):
-class ThingAdmin(mptt.admin.DraggableMPTTAdmin):
+class ThingAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
     inlines = [CompositeThingInline,]
 
 

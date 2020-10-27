@@ -1,17 +1,27 @@
 from django.contrib import admin
-from common.admin import BaseAdmin
+from common.admin import BaseAdmin, ThingAdmin
 from django.utils.safestring import mark_safe
+import common
 
 # Register your models here.
 
 from .models import *
 
 
-admin.site.register([
-      Experiment, #Equipment, EquipmentType,
-      Device, Cell
-      ], BaseAdmin)
+# Need to override inline class to set model to Device instead of Thing
+class CompositeDeviceInline(common.admin.CompositeThingInline):
+    model = Device
 
+
+#class ThingAdmin(mptt.admin.MPTTModelAdmin):
+class DeviceAdmin(common.admin.ThingAdmin):
+    inlines = [CompositeDeviceInline,]
+
+
+admin.site.register(Device, DeviceAdmin)
+
+
+admin.site.register(Experiment, ThingAdmin)
 
 class DeviceConfigInline(admin.TabularInline):
     model = DeviceConfigNode

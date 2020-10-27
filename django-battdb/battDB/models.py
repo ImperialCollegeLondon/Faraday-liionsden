@@ -66,9 +66,10 @@ class Device(cm.Thing):
     A physical thing or specification
     """
     TYPE_CHOICES = [
+        ("component", "Component part of a cell, such as an electrode"),
         ("cell", "Single cell"),
-        ("module", "Module containing multiple cells"),
-        ("battery", "Battery containing cells OR modules"),
+        ("module", "Module or small pack containing multiple cells"),
+        ("battery", "Modular battery pack containing sub-modules"),
         ("sensor", "Sensor attached to a device"),
         ("cycler", "Cycler Machine"),
     ]
@@ -80,27 +81,28 @@ class Device(cm.Thing):
                                 "Serial Number - or format, for device templates")
 
 
-class Cell(Device):
-    """
-    Proxy model of Device - A Cell must have certain properties, such as Anode, Cathode material in its metadata <br>
-    TODO: This will be enforced by JSON schema in future releases
-    """
-    def __init__(self, *args, **kwargs):
-        self._meta.get_field('devType').default = "cell"
-        self._meta.get_field('inherit_metadata').default = False
-        self._meta.get_field('inherit_metadata').hidden = True
-        self._meta.get_field('devType').editable = False
-        self._meta.get_field('manufacturer').limit_choices_to = {'is_mfg_cells': True}
-        self._meta.get_field('serialNo').help_text = "Cell serial number"
-        # self._meta.get_field('parent_device').help_text = "link to module or pack specification"
-        # # FIXME: Cannot change 'limit_choices_to' in subclasses - limitation in Django?
-        # self._meta.get_field('parent_device').limit_choices_to = {"is_template": True,
-        #                                                           "devType": Device.DEVICE_TYPE_MODULE}
-        #self._meta.get_field('serialNo').blank = False
-        super(Cell, self).__init__(*args, **kwargs)
 
-    class Meta:
-        proxy=True
+# class Cell(Device):
+#     """
+#     Proxy model of Device - A Cell must have certain properties, such as Anode, Cathode material in its metadata <br>
+#     TODO: This will be enforced by JSON schema in future releases
+#     """
+#     def __init__(self, *args, **kwargs):
+#         self._meta.get_field('devType').default = "cell"
+#         self._meta.get_field('inherit_metadata').default = False
+#         self._meta.get_field('inherit_metadata').hidden = True
+#         self._meta.get_field('devType').editable = False
+#         self._meta.get_field('manufacturer').limit_choices_to = {'is_mfg_cells': True}
+#         self._meta.get_field('serialNo').help_text = "Cell serial number"
+#         # self._meta.get_field('parent_device').help_text = "link to module or pack specification"
+#         # # FIXME: Cannot change 'limit_choices_to' in subclasses - limitation in Django?
+#         # self._meta.get_field('parent_device').limit_choices_to = {"is_template": True,
+#         #                                                           "devType": Device.DEVICE_TYPE_MODULE}
+#         #self._meta.get_field('serialNo').blank = False
+#         super(Cell, self).__init__(*args, **kwargs)
+#
+#     class Meta:
+#         proxy=True
 
 
 
@@ -284,7 +286,7 @@ class DeviceConfigNode(models.Model):
 # }
 
 
-class Experiment(cm.BaseModel):
+class Experiment(cm.Thing):
     """
     Main "Experiment" aka DataSet class. <br>
     Has many: data files (from cyclers) <br>
