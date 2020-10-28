@@ -9,6 +9,7 @@ import common.models as cm
 from .utils import hash_file
 import dfndb.models as dfn
 from .migration_dummy import *
+from datetime import datetime
 import hashlib
 
 # from jsonfield_schema import JSONSchema
@@ -63,25 +64,48 @@ import hashlib
 
 class Device(cm.Thing):
     """
-    A physical thing or specification
+    A device
     """
     TYPE_CHOICES = [
-        ("component", "Component part of a cell, such as an electrode"),
+        ("component", "Component part of a cell"),
         ("cell", "Single cell"),
-        ("module", "Module or small pack containing multiple cells"),
-        ("battery", "Modular battery pack containing sub-modules"),
+        ("module", "Module containing cells"),
+        ("battery", "Battery pack containing sub-modules"),
         ("sensor", "Sensor attached to a device"),
         ("cycler", "Cycler Machine"),
     ]
 
     devType = models.CharField(max_length=16, default="cell", choices=TYPE_CHOICES)
 
+    specification = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL,
+                                      limit_choices_to={'inherit_metadata': True},
+                                      help_text="Copy metadata from another device?")
     manufacturer = models.ForeignKey(cm.Org, null=True, blank=True, on_delete=models.SET_NULL)
     serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
                                 "Serial Number - or format, for device templates")
     batch_size = models.PositiveSmallIntegerField(default=0,
                                                   help_text="If this record describes a batch of identical devices, "
                                                             "enter the batch size here")
+    class Meta:
+        verbose_name_plural = "Device Tree"
+    # def __init__(self, *args, **kwargs):
+    #     self._meta.get_field('inherit_metadata').verbose_name = "Is Specification"
+    #     self._meta.get_field('inherit_metadata').default = True
+    #     self._meta.get_field('inherit_metadata').help_text = "Set to True if this entry is to be used " \
+    #                                                          "as a specification for other devices." \
+    #                                                          "Metadata will be re-used inside child nodes" \
+    #                                                          "e.g. if metadata describes electrode material " \
+    #                                                          "for a pack, the cells will default to the same"
+    #     super(Device, self).__init__(*args, **kwargs)
+
+
+class DeviceList(Device):
+    """
+    List view of devices
+    """
+    class Meta:
+        verbose_name_plural = "Device List"
+        proxy = True
 
 
 class BatchDevice(cm.HasAttributes):
@@ -92,46 +116,7 @@ class BatchDevice(cm.HasAttributes):
     class Meta:
         unique_together = ['batch', 'batch_index']
 
-# class Cell(Device):
-#     """
-#     Proxy model of Device - A Cell must have certain properties, such as Anode, Cathode material in its metadata <br>
-#     TODO: This will be enforced by JSON schema in future releases
-#     """
-#     def __init__(self, *args, **kwargs):
-#         self._meta.get_field('devType').default = "cell"
-#         self._meta.get_field('inherit_metadata').default = False
-#         self._meta.get_field('inherit_metadata').hidden = True
-#         self._meta.get_field('devType').editable = False
-#         self._meta.get_field('manufacturer').limit_choices_to = {'is_mfg_cells': True}
-#         self._meta.get_field('serialNo').help_text = "Cell serial number"
-#         # self._meta.get_field('parent_device').help_text = "link to module or pack specification"
-#         # # FIXME: Cannot change 'limit_choices_to' in subclasses - limitation in Django?
-#         # self._meta.get_field('parent_device').limit_choices_to = {"is_template": True,
-#         #                                                           "devType": Device.DEVICE_TYPE_MODULE}
-#         #self._meta.get_field('serialNo').blank = False
-#         super(Cell, self).__init__(*args, **kwargs)
-#
-#     class Meta:
-#         proxy=True
 
-
-
-#class CellBatch(Cell):
-
-# class TestProtocol(cm.BaseModel):
-#     """
-#     Test Protocol description.<br>
-#     TODO: Harmonise with PyBaMM protocol specifications (issue #18)
-#     """
-#     description = models.TextField(help_text="Protocol description, ideally in PyBaMM format")
-#     parameters = JSONField(default=dict, blank=True)
-
-
-# Equipment Type - e.g. model number of cycler machine
-# def equipmentType_schema():
-# return {
-# "channels":None,
-# }
 
 class DeviceConfig(cm.BaseModel):
     """
@@ -166,6 +151,8 @@ class DeviceConfigNode(models.Model):
 
     def __str__(self):
         return str(self.config) + "/" + str(self.net_name) + str(self.device_terminal_name)
+
+
 
 
 # class CompositeDevice(Device):
@@ -302,9 +289,9 @@ class Experiment(cm.Thing):
     Has many: data files (from cyclers) <br>
     Has many: devices (actual physical objects e.g. cells) <br>
     """
-    date = models.DateField()
+    date = models.DateField(default=datetime.now)
     # apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
-    device = models.ManyToManyField(Device, related_name='used_in')
+    devices = models.ManyToManyField(Device, related_name='used_in')
     config = models.ForeignKey(DeviceConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='used_in')
     protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
                                  limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL})
@@ -322,6 +309,11 @@ class Experiment(cm.Thing):
     # constraints = [
     # models.UniqueConstraint(fields=['owner', 'name', 'date'], name='unique_slugname')
     # ]
+
+    # def __init__(self, *args, **kwargs):
+    #     self._meta.get_field('parent').limit_choices_to = {"inherit_metadata": True,
+    #                                                        "devType": "module"}
+    #     super(Experiment, self).__init__(*args, **kwargs)
 
 
 

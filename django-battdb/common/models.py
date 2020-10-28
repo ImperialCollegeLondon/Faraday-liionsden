@@ -129,7 +129,7 @@ class Thing(BaseModel, HasMPTT):
     """
     A generic "thing"
     """
-    inherit_metadata = models.BooleanField(default=True,
+    inherit_metadata = models.BooleanField(default=True, verbose_name="Inherit metadata from parent",
                                            help_text="Set to True if this object does not describe a real life thing, "
                                                      "but a specification, type or grouping. In this case, the "
                                                      "metadata will be inherited.")

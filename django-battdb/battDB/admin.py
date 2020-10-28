@@ -2,6 +2,7 @@ from django.contrib import admin
 from common.admin import BaseAdmin, ThingAdmin
 from django.utils.safestring import mark_safe
 import common
+from django.forms import Textarea
 
 # Register your models here.
 
@@ -11,6 +12,19 @@ from .models import *
 # Need to override inline class to set model to Device instead of Thing
 class CompositeDeviceInline(common.admin.CompositeThingInline):
     model = Device
+    exclude = ['attributes']
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(
+                           attrs={'rows': 1,
+                                  'cols': 40,
+                                  'style': 'height: 1em;'})},
+    }
+
+    def get_changeform_initial_data(self, request):
+        get_data = super().get_changeform_initial_data(request)
+        get_data['user_owner'] = request.user.pk
+        return get_data
+
 
 class BatchDeviceInline(admin.TabularInline):
     model = BatchDevice
@@ -20,12 +34,21 @@ class BatchDeviceInline(admin.TabularInline):
     exclude = ['attributes']
 
 
+class DeviceListAdmin(BaseAdmin):
+    list_display = (BaseAdmin.list_display or []) + ['inherit_metadata', 'parent', 'devType']
+    list_filter = (BaseAdmin.list_filter or []) + ['inherit_metadata', 'devType',]
+
+
 #class ThingAdmin(mptt.admin.MPTTModelAdmin):
-class DeviceAdmin(common.admin.ThingAdmin):
+class DeviceAdmin(common.admin.ThingAdmin, DeviceListAdmin):
     inlines = [CompositeDeviceInline,BatchDeviceInline,]
 
 
 admin.site.register(Device, DeviceAdmin)
+
+
+
+admin.site.register(DeviceList, DeviceListAdmin)
 
 
 admin.site.register(Experiment, ThingAdmin)
