@@ -13,7 +13,58 @@
   "fields": {
     "devType": "cell",
     "manufacturer": 1,
-    "serialNo": "0"
+    "serialNo": "0",
+    "batch_size": 0
+  }
+},
+{
+  "model": "battDB.device",
+  "pk": 2,
+  "fields": {
+    "devType": "battery",
+    "manufacturer": null,
+    "serialNo": "",
+    "batch_size": 0
+  }
+},
+{
+  "model": "battDB.device",
+  "pk": 11,
+  "fields": {
+    "devType": "cell",
+    "manufacturer": null,
+    "serialNo": "",
+    "batch_size": 0
+  }
+},
+{
+  "model": "battDB.device",
+  "pk": 12,
+  "fields": {
+    "devType": "cell",
+    "manufacturer": null,
+    "serialNo": "",
+    "batch_size": 0
+  }
+},
+{
+  "model": "battDB.device",
+  "pk": 13,
+  "fields": {
+    "devType": "cell",
+    "manufacturer": null,
+    "serialNo": "",
+    "batch_size": 0
+  }
+},
+{
+  "model": "battDB.device",
+  "pk": 14,
+  "fields": {
+    "devType": "cell",
+    "manufacturer": null,
+    "serialNo": "",
+    "batch_size": 0
   }
 },
 {
@@ -120,6 +171,106 @@
     "rght": 2,
     "tree_id": 1,
     "level": 0
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 2,
+  "fields": {
+    "name": "My NMC622 2s2p Module",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-27T11:27:15.168Z",
+    "modified_on": "2020-10-27T11:41:01.289Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "my-nmc622-2s2p-module",
+    "parent": null,
+    "inherit_metadata": true,
+    "lft": 1,
+    "rght": 10,
+    "tree_id": 2,
+    "level": 0
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 11,
+  "fields": {
+    "name": "Cell A1",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-27T11:40:50.468Z",
+    "modified_on": "2020-10-27T11:40:50.468Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "cell-a1",
+    "parent": 2,
+    "inherit_metadata": true,
+    "lft": 2,
+    "rght": 3,
+    "tree_id": 2,
+    "level": 1
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 12,
+  "fields": {
+    "name": "Cell A2",
+    "status": 20,
+    "user_owner": null,
+    "created_on": "2020-10-27T11:40:50.471Z",
+    "modified_on": "2020-10-27T11:43:39.924Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "cell-a2",
+    "parent": 2,
+    "inherit_metadata": true,
+    "lft": 4,
+    "rght": 5,
+    "tree_id": 2,
+    "level": 1
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 13,
+  "fields": {
+    "name": "Cell B1",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-27T11:41:01.292Z",
+    "modified_on": "2020-10-27T11:41:01.292Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "cell-b1",
+    "parent": 2,
+    "inherit_metadata": true,
+    "lft": 6,
+    "rght": 7,
+    "tree_id": 2,
+    "level": 1
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 14,
+  "fields": {
+    "name": "Cell B2",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-27T11:41:01.294Z",
+    "modified_on": "2020-10-27T11:41:01.294Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "cell-b2",
+    "parent": 2,
+    "inherit_metadata": true,
+    "lft": 8,
+    "rght": 9,
+    "tree_id": 2,
+    "level": 1
   }
 },
 {
@@ -3945,6 +4096,175 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 258,
+  "fields": {
+    "action_time": "2020-10-27T11:27:15.178Z",
+    "user": 1,
+    "content_type": 39,
+    "object_id": "2",
+    "object_repr": "My NMC622 2s2p Module",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"thing\", \"object\": \"Cell A1\"}}, {\"added\": {\"name\": \"thing\", \"object\": \"Cell A2\"}}, {\"added\": {\"name\": \"thing\", \"object\": \"Cell B1\"}}, {\"added\": {\"name\": \"thing\", \"object\": \"Cell B2\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 259,
+  "fields": {
+    "action_time": "2020-10-27T11:27:47.258Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "3",
+    "object_repr": "Cell A1",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 260,
+  "fields": {
+    "action_time": "2020-10-27T11:27:47.273Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "4",
+    "object_repr": "Cell A2",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 261,
+  "fields": {
+    "action_time": "2020-10-27T11:27:47.286Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "5",
+    "object_repr": "Cell B1",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 262,
+  "fields": {
+    "action_time": "2020-10-27T11:27:47.301Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "6",
+    "object_repr": "Cell B2",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 263,
+  "fields": {
+    "action_time": "2020-10-27T11:38:38.412Z",
+    "user": 1,
+    "content_type": 39,
+    "object_id": "2",
+    "object_repr": "My NMC622 2s2p Module",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"thing\", \"object\": \"Cell A1\"}}, {\"added\": {\"name\": \"thing\", \"object\": \"Cell A2\"}}, {\"added\": {\"name\": \"thing\", \"object\": \"Cell B1\"}}, {\"added\": {\"name\": \"thing\", \"object\": \"Cell B2\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 264,
+  "fields": {
+    "action_time": "2020-10-27T11:38:58.550Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "7",
+    "object_repr": "Cell A1",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 265,
+  "fields": {
+    "action_time": "2020-10-27T11:38:58.587Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "8",
+    "object_repr": "Cell A2",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 266,
+  "fields": {
+    "action_time": "2020-10-27T11:38:58.613Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "9",
+    "object_repr": "Cell B1",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 267,
+  "fields": {
+    "action_time": "2020-10-27T11:38:58.642Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "10",
+    "object_repr": "Cell B2",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 268,
+  "fields": {
+    "action_time": "2020-10-27T11:40:50.472Z",
+    "user": 1,
+    "content_type": 39,
+    "object_id": "2",
+    "object_repr": "My NMC622 2s2p Module",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device\", \"object\": \"Cell A1\"}}, {\"added\": {\"name\": \"device\", \"object\": \"Cell A2\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 269,
+  "fields": {
+    "action_time": "2020-10-27T11:41:01.295Z",
+    "user": 1,
+    "content_type": 39,
+    "object_id": "2",
+    "object_repr": "My NMC622 2s2p Module",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device\", \"object\": \"Cell B1\"}}, {\"added\": {\"name\": \"device\", \"object\": \"Cell B2\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 270,
+  "fields": {
+    "action_time": "2020-10-27T11:43:39.926Z",
+    "user": 1,
+    "content_type": 56,
+    "object_id": "12",
+    "object_repr": "Cell A2",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -5961,6 +6281,42 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 225,
+  "fields": {
+    "name": "Can add batch device",
+    "content_type": 57,
+    "codename": "add_batchdevice"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 226,
+  "fields": {
+    "name": "Can change batch device",
+    "content_type": 57,
+    "codename": "change_batchdevice"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 227,
+  "fields": {
+    "name": "Can delete batch device",
+    "content_type": 57,
+    "codename": "delete_batchdevice"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 228,
+  "fields": {
+    "name": "Can view batch device",
+    "content_type": 57,
+    "codename": "view_batchdevice"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -6095,7 +6451,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$216000$OafoLVPyzITM$orFVUO5QzVoBneWLEpu4jxz+Ucrc+DqclzTFOsJcvH4=",
-    "last_login": "2020-10-17T20:50:44.251Z",
+    "last_login": "2020-10-27T10:57:17.429Z",
     "is_superuser": true,
     "username": "tom",
     "first_name": "Tom",
@@ -6719,6 +7075,14 @@
   }
 },
 {
+  "model": "contenttypes.contenttype",
+  "pk": 57,
+  "fields": {
+    "app_label": "battDB",
+    "model": "batchdevice"
+  }
+},
+{
   "model": "sessions.session",
   "pk": "9n5s8vuiaybs4f16zd2ihvnybnmmowy2",
   "fields": {
@@ -6772,6 +7136,14 @@
   "fields": {
     "session_data": ".eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kQVAL:iSngFIWICRX_JMTDzaTgNLmNR4npexx4OOSyqzT0sBc",
     "expire_date": "2020-10-22T12:37:01.400Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "i50nfgp0d9lr4o4xa9r7n38hn3b3flsf",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kXMfF:FCILVNS4TYGSwjZqVzGQbwp-d-b-Ho3DlZcdH3VE0gA",
+    "expire_date": "2020-11-10T10:57:17.435Z"
   }
 },
 {
