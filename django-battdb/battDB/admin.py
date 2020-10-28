@@ -45,13 +45,19 @@ class DeviceAdmin(common.admin.ThingAdmin, DeviceListAdmin):
 
 
 admin.site.register(Device, DeviceAdmin)
+# admin.site.register(DeviceList, DeviceListAdmin)
 
 
+class ExperimentDataInline(admin.TabularInline):
+    model = ExperimentDataFile
+    extra = 1
+    exclude = ['attributes']
 
-admin.site.register(DeviceList, DeviceListAdmin)
 
+class ExperimentAdmin(common.admin.BaseAdmin):
+    inlines = [ExperimentDataInline]
 
-admin.site.register(Experiment, ThingAdmin)
+admin.site.register(Experiment, ExperimentAdmin)
 
 # class DeviceConfigInline(admin.TabularInline):
 #     model = DeviceConfigNode
@@ -92,4 +98,4 @@ class DataAdmin(BaseAdmin):
             return "N/A"
     get_experiment_link.short_description="Experiment"
 
-admin.site.register([RawDataFile], DataAdmin)
+admin.site.register([ExperimentDataFile], DataAdmin)

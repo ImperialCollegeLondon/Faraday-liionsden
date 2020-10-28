@@ -283,7 +283,7 @@ class BatchDevice(cm.HasAttributes):
 # }
 
 
-class Experiment(cm.Thing):
+class Experiment(cm.BaseModel):
     """
     Main "Experiment" aka DataSet class. <br>
     Has many: data files (from cyclers) <br>
@@ -291,7 +291,7 @@ class Experiment(cm.Thing):
     """
     date = models.DateField(default=datetime.now)
     # apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
-    devices = models.ManyToManyField(Device, related_name='used_in')
+    device = models.ForeignKey(Device, related_name='used_in', null=True, on_delete=models.SET_NULL)
     #config = models.ForeignKey(DeviceConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='used_in')
     protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
                                  limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL})
@@ -316,9 +316,7 @@ class Experiment(cm.Thing):
     #     super(Experiment, self).__init__(*args, **kwargs)
 
 
-
-
-class RawDataFile(cm.BaseModel):
+class ExperimentDataFile(cm.BaseModel):
     """
         # FIXME: DataFile currently duplicates data. <br>
         # It is stored for posterity in the format in which it was uploaded. <br>
@@ -330,54 +328,63 @@ class RawDataFile(cm.BaseModel):
     raw_data_file = models.FileField(upload_to='raw_data_files', null=True)
     file_hash = models.CharField(max_length=64, unique=True)
 
+    #raw_data_file = models.OneToOneField(RawDataFile, on_delete=models.CASCADE, related_name="ExperimentData")
+    devices = models.ManyToManyField(Device, through='DeviceData', null=True, blank=True, related_name='data_files')
+    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True,
+                                   related_name='data_files')
+
+    # import_columns = models.ManyToManyField(SignalType, blank=True)
+    # parameters = JSONField(default=experimentParameters_schema, blank=True)
+    # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
+
     def clean(self):
         self.file_hash = hash_file(self.raw_data_file)
         return super().clean()
 
+    def __str__(self):
+        return os.path.basename(self.raw_data_file.name)
 
-# class ExperimentDataFile(cm.BaseModel):
-#     raw_data_file = models.OneToOneField(RawDataFile, on_delete=models.CASCADE, related_name="ExperimentData")
-#     #machine = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True, related_name='all_data')
-#     # metadata = JSONField(default=resultMetadata_schema, blank=True)
-#     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True,
-#                                    related_name='data_files')
-#
-#     # import_columns = models.ManyToManyField(SignalType, blank=True)
-#     # parameters = JSONField(default=experimentParameters_schema, blank=True)
-#     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
-#     def __str__(self):
-#         return os.path.basename(self.raw_data_file.name)
-#
-#     class Meta:
-#         verbose_name_plural = "Experiment Data Files"
+    class Meta:
+        verbose_name_plural = "Data Files"
+        verbose_name = "dataset"
 
 
-# class DataRange(cm.BaseModel):
-#     """
-#     DataRange - each data file contains numerous ranges e.g. charge & discharge cycles. Their data might overlap. <br>
-#     TODO: Write (or find) code to segment data into ranges. <br>
-#     TODO: Convert this into a JSON Schema within ExperimentData - see Git issue #23 <br>
-#     """
-#     dataFile = models.ForeignKey(ExperimentDataFile, on_delete=models.SET_NULL, null=True, blank=True,
-#                                  related_name='ranges')
-#     file_offset = models.PositiveIntegerField(default=0)
-#     label = models.CharField(max_length=32, null=True)
-#     protocol_step = models.PositiveIntegerField()
-#     step_action = models.CharField(max_length=8,
-#                                    choices=[('chg', 'Charging'), ('dchg', 'Discharging'), ('rest', 'Rest'),
-#                                             (None, 'Undefined')], null=True)
-#     # TODO: Possibly split these arrays into a new object
-#     ts_headers = ArrayField(models.CharField(max_length=32, null=True), null=True, blank=True)
-#     ts_data = ArrayField(ArrayField(models.FloatField(null=True), null=True), null=True, blank=True)
-#
-#     # TODO: These need a schema
-#     # events = JSONField(null=True, blank=True)
-#     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
-#     def __str__(self):
-#         return "%s/%d: %s" % (self.dataFile, self.id, self.label)
-#
-#     class Meta:
-#         verbose_name_plural = "Data Ranges"
+class DeviceData(models.Model):
+    device = models.ForeignKey(Device, on_delete=models.CASCADE)
+    data = models.ForeignKey(ExperimentDataFile, on_delete=models.CASCADE)
+    batch_id = models.PositiveSmallIntegerField(default=0)
+    signal_name = models.CharField(max_length=20)
+
+    class Meta:
+        unique_together = ['device', 'data', 'batch_id']
+
+
+class DataRange(cm.BaseModel):
+    """
+    DataRange - each data file contains numerous ranges e.g. charge & discharge cycles. Their data might overlap. <br>
+    TODO: Write (or find) code to segment data into ranges. <br>
+    TODO: Convert this into a JSON Schema within ExperimentData - see Git issue #23 <br>
+    """
+    dataFile = models.ForeignKey(ExperimentDataFile, on_delete=models.SET_NULL, null=True, blank=True,
+                                 related_name='ranges')
+    file_offset = models.PositiveIntegerField(default=0)
+    label = models.CharField(max_length=32, null=True)
+    protocol_step = models.PositiveIntegerField()
+    step_action = models.CharField(max_length=8,
+                                   choices=[('chg', 'Charging'), ('dchg', 'Discharging'), ('rest', 'Rest'),
+                                            (None, 'Undefined')], null=True)
+    # TODO: Possibly split these arrays into a new object
+    ts_headers = ArrayField(models.CharField(max_length=32, null=True), null=True, blank=True)
+    ts_data = ArrayField(ArrayField(models.FloatField(null=True), null=True), null=True, blank=True)
+
+    # TODO: These need a schema
+    # events = JSONField(null=True, blank=True)
+    # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
+    def __str__(self):
+        return "%s/%d: %s" % (self.dataFile, self.id, self.label)
+
+    class Meta:
+        verbose_name_plural = "Data Ranges"
 
 
 # When saving a data file, call this to parse the data.
