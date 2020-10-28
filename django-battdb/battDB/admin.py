@@ -51,7 +51,7 @@ admin.site.register(Device, DeviceAdmin)
 class ExperimentDataInline(admin.TabularInline):
     model = ExperimentDataFile
     extra = 1
-    exclude = ['attributes']
+    exclude = ['attributes', 'file_hash', 'user_owner']
 
 
 class ExperimentAdmin(common.admin.BaseAdmin):
@@ -83,8 +83,13 @@ admin.site.register(Experiment, ExperimentAdmin)
 #admin.site.register([DeviceConfig,], DeviceConfigAdmin)
 # admin.site.register([CompositeDevice,], ModuleAdmin)
 
+class DeviceDataInline(admin.TabularInline):
+    model = DeviceData
+    readonly_fields = ["serialNo"]
+    extra = 1
 
 class DataAdmin(BaseAdmin):
+    inlines = [DeviceDataInline, ]
     list_display = BaseAdmin.list_display + ['get_experiment_link']
     readonly_fields = BaseAdmin.readonly_fields + ['get_experiment_link', 'file_hash']
 

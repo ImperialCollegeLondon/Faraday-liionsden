@@ -86,8 +86,8 @@ class Device(cm.Thing):
     batch_size = models.PositiveSmallIntegerField(default=0,
                                                   help_text="If this record describes a batch of identical devices, "
                                                             "enter the batch size here")
-    class Meta:
-        verbose_name_plural = "Device Tree"
+    # class Meta:
+    #     verbose_name_plural = "Device Tree"
     # def __init__(self, *args, **kwargs):
     #     self._meta.get_field('inherit_metadata').verbose_name = "Is Specification"
     #     self._meta.get_field('inherit_metadata').default = True
@@ -291,7 +291,7 @@ class Experiment(cm.BaseModel):
     """
     date = models.DateField(default=datetime.now)
     # apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
-    device = models.ForeignKey(Device, related_name='used_in', null=True, on_delete=models.SET_NULL)
+    device = models.ForeignKey(Device, related_name='used_in', null=True, blank=True, on_delete=models.SET_NULL)
     #config = models.ForeignKey(DeviceConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='used_in')
     protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
                                  limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL})
@@ -299,7 +299,7 @@ class Experiment(cm.BaseModel):
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
-        return str(self.user_owner) + "/" + str(self.name) + "/" + str(self.date)
+        return str(self.user_owner) + " " + str(self.name) + " " + str(self.date)
 
 
     def get_absolute_url(self):
@@ -329,7 +329,7 @@ class ExperimentDataFile(cm.BaseModel):
     file_hash = models.CharField(max_length=64, unique=True)
 
     #raw_data_file = models.OneToOneField(RawDataFile, on_delete=models.CASCADE, related_name="ExperimentData")
-    devices = models.ManyToManyField(Device, through='DeviceData', null=True, blank=True, related_name='data_files')
+    devices = models.ManyToManyField(Device, through='DeviceData', blank=True, related_name='data_files')
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True,
                                    related_name='data_files')
 
@@ -354,9 +354,16 @@ class DeviceData(models.Model):
     data = models.ForeignKey(ExperimentDataFile, on_delete=models.CASCADE)
     batch_id = models.PositiveSmallIntegerField(default=0)
     signal_name = models.CharField(max_length=20)
+    parameter = models.ForeignKey(dfn.Parameter, null=True, on_delete=models.SET_NULL,
+                                  default=4)
+    def serialNo(self):
+        return "bork"
+
 
     class Meta:
         unique_together = ['device', 'data', 'batch_id']
+        verbose_name = "Data File to Device Mapping"
+        verbose_name_plural = "Data File to Device Mappings"
 
 
 class DataRange(cm.BaseModel):

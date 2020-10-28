@@ -246,7 +246,7 @@ def plotData(request):
 
 
 class UploadFileView(GenericAPIView):
-    queryset = RawDataFile.objects.all()
+    queryset = ExperimentDataFile.objects.all()
     parser_classes = (FileUploadParser,)
     #serializer_class = DataFileSerializer
     # authentication_classes = [authentication.TokenAuthentication]
@@ -257,7 +257,7 @@ class UploadFileView(GenericAPIView):
             raise ParseError("Empty content")
 
         f = request.data['file']
-        obj = RawDataFile()
+        obj = ExperimentDataFile()
         obj.raw_data_file.save(filename, f, save=True)
 
         # obj.user_owner = request.user

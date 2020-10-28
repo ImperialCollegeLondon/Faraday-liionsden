@@ -8,6 +8,6 @@ from .models import *
         
 class DataFileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = RawDataFile
+        model = ExperimentDataFile
         exclude=[]
 
