@@ -187,8 +187,8 @@ class BatchDevice(cm.HasAttributes):
 
 # EquipmentType._meta.get_field('attributes').default = equipmentType_schema
 
-# Equipment - e.g. Bob's cycler
-# class Equipment(cm.BaseModel):
+
+# class Equipment(cm.Thing):
 #     """
 #     Equipment e.g. cycler machines, etc.
 #     """
@@ -328,16 +328,20 @@ class ExperimentDataFile(cm.BaseModel):
     raw_data_file = models.FileField(upload_to='raw_data_files', null=True)
     file_hash = models.CharField(max_length=64, null=True, unique=True)
 
-    devices = models.ManyToManyField(Device, through='DeviceData', blank=True, related_name='data_files')
+    mappings = models.ManyToManyField(Device, through='DataColumn', blank=True, related_name='data_files')
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True,
                                    related_name='data_files')
+    parsed_data = models.JSONField(editable=False, default=dict)
 
-    # import_columns = models.ManyToManyField(SignalType, blank=True)
+    #import_columns = models.ManyToManyField(dfn.Parameter, blank=True)
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
 
     def num_cycles(self):
         return 0
+
+    def columns(self):
+        return []
 
     def is_parsed(self):
         return self.num_cycles() > 0
@@ -359,21 +363,21 @@ class ExperimentDataFile(cm.BaseModel):
         verbose_name = "dataset"
 
 
-class DeviceData(models.Model):
-    device = models.ForeignKey(Device, on_delete=models.CASCADE)
+class DataColumn(models.Model):
     data = models.ForeignKey(ExperimentDataFile, on_delete=models.CASCADE)
-    batch_id = models.PositiveSmallIntegerField(default=0)
     signal_name = models.CharField(max_length=20)
     parameter = models.ForeignKey(dfn.Parameter, null=True, on_delete=models.SET_NULL,
                                   default=4)
+    device = models.ForeignKey(Device, on_delete=models.CASCADE)
+    batch_id = models.PositiveSmallIntegerField(default=0)
+
     def serialNo(self):
         return "bork"
 
-
     class Meta:
         unique_together = ['device', 'data', 'batch_id']
-        verbose_name = "Data File to Device Mapping"
-        verbose_name_plural = "Data File to Device Mappings"
+        verbose_name = "Column Mapping"
+        verbose_name_plural = "Data Column Mappings to Device Parameters"
 
 
 class DataRange(cm.BaseModel):

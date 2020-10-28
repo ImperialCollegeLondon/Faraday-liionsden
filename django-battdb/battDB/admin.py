@@ -84,9 +84,9 @@ admin.site.register(Experiment, ExperimentAdmin)
 # admin.site.register([CompositeDevice,], ModuleAdmin)
 
 class DeviceDataInline(admin.TabularInline):
-    model = DeviceData
+    model = DataColumn
     readonly_fields = ["serialNo"]
-    extra = 1
+    extra = 0
 
 class DataAdmin(BaseAdmin):
     inlines = [DeviceDataInline, ]
