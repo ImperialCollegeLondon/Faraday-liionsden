@@ -12,10 +12,17 @@ from .models import *
 class CompositeDeviceInline(common.admin.CompositeThingInline):
     model = Device
 
+class BatchDeviceInline(admin.TabularInline):
+    model = BatchDevice
+    extra = 1
+    verbose_name_plural = "Batch Members"
+    verbose_name = "member"
+    exclude = ['attributes']
+
 
 #class ThingAdmin(mptt.admin.MPTTModelAdmin):
 class DeviceAdmin(common.admin.ThingAdmin):
-    inlines = [CompositeDeviceInline,]
+    inlines = [CompositeDeviceInline,BatchDeviceInline,]
 
 
 admin.site.register(Device, DeviceAdmin)

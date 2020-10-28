@@ -77,10 +77,20 @@ class Device(cm.Thing):
     devType = models.CharField(max_length=16, default="cell", choices=TYPE_CHOICES)
 
     manufacturer = models.ForeignKey(cm.Org, null=True, blank=True, on_delete=models.SET_NULL)
-    serialNo = models.CharField(max_length=60, null=True, blank=True, help_text=
+    serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
                                 "Serial Number - or format, for device templates")
+    batch_size = models.PositiveSmallIntegerField(default=0,
+                                                  help_text="If this record describes a batch of identical devices, "
+                                                            "enter the batch size here")
 
 
+class BatchDevice(cm.HasAttributes):
+    batch = models.ForeignKey(Device, on_delete=models.CASCADE)
+    batch_index = models.PositiveSmallIntegerField(default=1)
+    serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
+                                "Serial Number")
+    class Meta:
+        unique_together = ['batch', 'batch_index']
 
 # class Cell(Device):
 #     """
