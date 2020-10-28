@@ -326,9 +326,8 @@ class ExperimentDataFile(cm.BaseModel):
     """
 
     raw_data_file = models.FileField(upload_to='raw_data_files', null=True)
-    file_hash = models.CharField(max_length=64, unique=True)
+    file_hash = models.CharField(max_length=64, null=True, unique=True)
 
-    #raw_data_file = models.OneToOneField(RawDataFile, on_delete=models.CASCADE, related_name="ExperimentData")
     devices = models.ManyToManyField(Device, through='DeviceData', blank=True, related_name='data_files')
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True,
                                    related_name='data_files')
@@ -336,6 +335,17 @@ class ExperimentDataFile(cm.BaseModel):
     # import_columns = models.ManyToManyField(SignalType, blank=True)
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
+
+    def num_cycles(self):
+        return 0
+
+    def is_parsed(self):
+        return self.num_cycles() > 0
+    is_parsed.boolean = True
+
+    def file_exists(self):
+        return self.raw_data_file.storage.exists(self.raw_data_file.name)
+    file_exists.boolean = True
 
     def clean(self):
         self.file_hash = hash_file(self.raw_data_file)

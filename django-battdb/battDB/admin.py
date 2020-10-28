@@ -90,13 +90,13 @@ class DeviceDataInline(admin.TabularInline):
 
 class DataAdmin(BaseAdmin):
     inlines = [DeviceDataInline, ]
-    list_display = BaseAdmin.list_display + ['get_experiment_link']
+    list_display = BaseAdmin.list_display + ['get_experiment_link', 'file_exists', 'is_parsed']
     readonly_fields = BaseAdmin.readonly_fields + ['get_experiment_link', 'file_hash']
 
     def get_experiment_link(self, obj):
         if hasattr(obj,'experiment'):
             return mark_safe('<a href="{}">{}</a>'.format(
-                reverse("admin:auth_user_change", args=(obj.experiment.pk,)),
+                reverse("admin:battDB_experiment_change", args=(obj.experiment.pk,)),
                 str(obj.experiment)
             ))
         else:
