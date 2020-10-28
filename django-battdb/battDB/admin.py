@@ -12,7 +12,7 @@ from .models import *
 # Need to override inline class to set model to Device instead of Thing
 class CompositeDeviceInline(common.admin.CompositeThingInline):
     model = Device
-    exclude = ['attributes']
+    exclude = ['attributes', 'user_owner']
     formfield_overrides = {
         models.TextField: {'widget': Textarea(
                            attrs={'rows': 1,
@@ -53,15 +53,15 @@ admin.site.register(DeviceList, DeviceListAdmin)
 
 admin.site.register(Experiment, ThingAdmin)
 
-class DeviceConfigInline(admin.TabularInline):
-    model = DeviceConfigNode
-    extra = 2
-
-
-class DeviceConfigAdmin(BaseAdmin):
-    inlines = (DeviceConfigInline,)
-    # list_display = ["title", "DOI", "year", "has_pdf"]
-    # list_filter = ["year", "publisher", "authors"]
+# class DeviceConfigInline(admin.TabularInline):
+#     model = DeviceConfigNode
+#     extra = 2
+#
+#
+# class DeviceConfigAdmin(BaseAdmin):
+#     inlines = (DeviceConfigInline,)
+#     # list_display = ["title", "DOI", "year", "has_pdf"]
+#     # list_filter = ["year", "publisher", "authors"]
 
 
 # class ModuleDeviceInline(admin.TabularInline):
@@ -74,7 +74,7 @@ class DeviceConfigAdmin(BaseAdmin):
     # inlines = [ModuleDeviceInline,]
 
 
-admin.site.register([DeviceConfig,], DeviceConfigAdmin)
+#admin.site.register([DeviceConfig,], DeviceConfigAdmin)
 # admin.site.register([CompositeDevice,], ModuleAdmin)
 
 

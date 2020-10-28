@@ -12,6 +12,7 @@
   "pk": 1,
   "fields": {
     "devType": "cell",
+    "specification": null,
     "manufacturer": 1,
     "serialNo": "0",
     "batch_size": 0
@@ -22,6 +23,7 @@
   "pk": 2,
   "fields": {
     "devType": "battery",
+    "specification": null,
     "manufacturer": null,
     "serialNo": "",
     "batch_size": 0
@@ -32,6 +34,7 @@
   "pk": 11,
   "fields": {
     "devType": "cell",
+    "specification": 1,
     "manufacturer": null,
     "serialNo": "",
     "batch_size": 0
@@ -42,6 +45,7 @@
   "pk": 12,
   "fields": {
     "devType": "cell",
+    "specification": 1,
     "manufacturer": null,
     "serialNo": "",
     "batch_size": 0
@@ -52,6 +56,7 @@
   "pk": 13,
   "fields": {
     "devType": "cell",
+    "specification": 1,
     "manufacturer": null,
     "serialNo": "",
     "batch_size": 0
@@ -62,6 +67,7 @@
   "pk": 14,
   "fields": {
     "devType": "cell",
+    "specification": 1,
     "manufacturer": null,
     "serialNo": "",
     "batch_size": 0
@@ -181,7 +187,7 @@
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-10-27T11:27:15.168Z",
-    "modified_on": "2020-10-27T11:41:01.289Z",
+    "modified_on": "2020-10-28T11:30:30.548Z",
     "attributes": {},
     "notes": "",
     "slug": "my-nmc622-2s2p-module",
@@ -201,7 +207,7 @@
     "status": 10,
     "user_owner": null,
     "created_on": "2020-10-27T11:40:50.468Z",
-    "modified_on": "2020-10-27T11:40:50.468Z",
+    "modified_on": "2020-10-28T11:30:16.702Z",
     "attributes": {},
     "notes": "",
     "slug": "cell-a1",
@@ -221,7 +227,7 @@
     "status": 20,
     "user_owner": null,
     "created_on": "2020-10-27T11:40:50.471Z",
-    "modified_on": "2020-10-27T11:43:39.924Z",
+    "modified_on": "2020-10-28T11:30:30.549Z",
     "attributes": {},
     "notes": "",
     "slug": "cell-a2",
@@ -241,7 +247,7 @@
     "status": 10,
     "user_owner": null,
     "created_on": "2020-10-27T11:41:01.292Z",
-    "modified_on": "2020-10-27T11:41:01.292Z",
+    "modified_on": "2020-10-28T11:30:30.551Z",
     "attributes": {},
     "notes": "",
     "slug": "cell-b1",
@@ -261,7 +267,7 @@
     "status": 10,
     "user_owner": null,
     "created_on": "2020-10-27T11:41:01.294Z",
-    "modified_on": "2020-10-27T11:41:01.294Z",
+    "modified_on": "2020-10-28T11:30:30.553Z",
     "attributes": {},
     "notes": "",
     "slug": "cell-b2",
@@ -4265,6 +4271,32 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 271,
+  "fields": {
+    "action_time": "2020-10-28T11:30:16.704Z",
+    "user": 1,
+    "content_type": 39,
+    "object_id": "11",
+    "object_repr": "Cell A1",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Specification\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 272,
+  "fields": {
+    "action_time": "2020-10-28T11:30:30.554Z",
+    "user": 1,
+    "content_type": 39,
+    "object_id": "2",
+    "object_repr": "My NMC622 2s2p Module",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"device\", \"object\": \"Cell A2\", \"fields\": [\"Specification\"]}}, {\"changed\": {\"name\": \"device\", \"object\": \"Cell B1\", \"fields\": [\"Specification\"]}}, {\"changed\": {\"name\": \"device\", \"object\": \"Cell B2\", \"fields\": [\"Specification\"]}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -6317,6 +6349,42 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 229,
+  "fields": {
+    "name": "Can add device list",
+    "content_type": 58,
+    "codename": "add_devicelist"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 230,
+  "fields": {
+    "name": "Can change device list",
+    "content_type": 58,
+    "codename": "change_devicelist"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 231,
+  "fields": {
+    "name": "Can delete device list",
+    "content_type": 58,
+    "codename": "delete_devicelist"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 232,
+  "fields": {
+    "name": "Can view device list",
+    "content_type": 58,
+    "codename": "view_devicelist"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -7080,6 +7148,14 @@
   "fields": {
     "app_label": "battDB",
     "model": "batchdevice"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 58,
+  "fields": {
+    "app_label": "battDB",
+    "model": "devicelist"
   }
 },
 {
