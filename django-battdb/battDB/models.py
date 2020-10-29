@@ -49,20 +49,9 @@ import hashlib
 #     type = models.PositiveSmallIntegerField(default=DEVICE_TYPE_NONE, choices=DEVICE_TYPE)
 
 
-# class DeviceBatch(cm.BaseModel):
-#     """
-#     Describes a batch of things produced to the same type specification
-#     """
-#     manufacturer = models.ForeignKey(cm.Org, null=True, blank=True, on_delete=models.SET_NULL,
-#                                      limit_choices_to={'is_mfg_cells': True})
-#     manufactured_on = models.DateField(null=True, blank=True)
-#     device_type = models.ForeignKey(DeviceType, null=True, blank=True, on_delete=models.SET_NULL)
-#
-#     class Meta:
-#         verbose_name_plural = "Device Batches"
 
 
-class Device(cm.Thing):
+class DeviceSpecification(cm.Thing):
     """
     A device
     """
@@ -74,18 +63,45 @@ class Device(cm.Thing):
         ("sensor", "Sensor attached to a device"),
         ("cycler", "Cycler Machine"),
     ]
+    parameters = models.ManyToManyField(dfn.Parameter, through='DeviceParameter')
+    device_type = models.CharField(max_length=16, default="cell", choices=TYPE_CHOICES)
+    # class Meta:
+    #     verbose_name_plural = "1. Device Specifications"
 
-    devType = models.CharField(max_length=16, default="cell", choices=TYPE_CHOICES)
 
-    specification = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL,
+class DeviceParameter(models.Model):
+    """
+    Parameters on device
+    """
+
+    data = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE)
+    parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
+    material = models.ForeignKey(dfn.Material, on_delete=models.CASCADE, blank=True, null=True)
+    value = models.JSONField(blank=True, null=True)
+
+    def __str__(self):
+        return str(self.parameter)
+
+    class Meta:
+        unique_together = ('data', 'parameter', 'material')
+
+
+class DeviceBatch(cm.BaseModel):
+    """
+    Describes a batch of things produced to the same type specification
+    """
+    specification = models.ForeignKey(DeviceSpecification, null=True, blank=True, on_delete=models.SET_NULL,
                                       limit_choices_to={'inherit_metadata': True},
                                       help_text="Copy metadata from another device?")
     manufacturer = models.ForeignKey(cm.Org, null=True, blank=True, on_delete=models.SET_NULL)
     serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
-                                "Serial Number - or format, for device templates")
-    batch_size = models.PositiveSmallIntegerField(default=0,
-                                                  help_text="If this record describes a batch of identical devices, "
-                                                            "enter the batch size here")
+                                "Batch number, optionally indicate serial number format")
+    batch_size = models.PositiveSmallIntegerField(default=1)
+    manufactured_on = models.DateField(default=datetime.now)
+
+    # class Meta:
+    #     verbose_name_plural = "2. Devices"
+
     # class Meta:
     #     verbose_name_plural = "Device Tree"
     # def __init__(self, *args, **kwargs):
@@ -99,17 +115,17 @@ class Device(cm.Thing):
     #     super(Device, self).__init__(*args, **kwargs)
 
 
-class DeviceList(Device):
-    """
-    List view of devices
-    """
-    class Meta:
-        verbose_name_plural = "Device List"
-        proxy = True
+# class DeviceList(Device):
+#     """
+#     List view of devices
+#     """
+#     class Meta:
+#         verbose_name_plural = "Device List"
+#         proxy = True
 
 
 class BatchDevice(cm.HasAttributes):
-    batch = models.ForeignKey(Device, on_delete=models.CASCADE)
+    batch = models.ForeignKey(DeviceBatch, on_delete=models.CASCADE)
     batch_index = models.PositiveSmallIntegerField(default=1)
     serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
                                 "Serial Number")
@@ -291,7 +307,7 @@ class Experiment(cm.BaseModel):
     """
     date = models.DateField(default=datetime.now)
     # apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
-    device = models.ForeignKey(Device, related_name='used_in', null=True, blank=True, on_delete=models.SET_NULL)
+    device = models.ForeignKey(DeviceSpecification, related_name='used_in', null=True, blank=True, on_delete=models.SET_NULL)
     #config = models.ForeignKey(DeviceConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='used_in')
     protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
                                  limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL})
@@ -314,6 +330,9 @@ class Experiment(cm.BaseModel):
     #     self._meta.get_field('parent').limit_choices_to = {"inherit_metadata": True,
     #                                                        "devType": "module"}
     #     super(Experiment, self).__init__(*args, **kwargs)
+    class Meta:
+        # verbose_name_plural = "3. Experiments"
+        verbose_name = "dataset"
 
 
 class ExperimentDataFile(cm.BaseModel):
@@ -328,7 +347,7 @@ class ExperimentDataFile(cm.BaseModel):
     raw_data_file = models.FileField(upload_to='raw_data_files', null=True)
     file_hash = models.CharField(max_length=64, null=True, unique=True)
 
-    mappings = models.ManyToManyField(Device, through='DataColumn', blank=True, related_name='data_files')
+    mappings = models.ManyToManyField(DeviceBatch, through='DataColumn', blank=True, related_name='data_files')
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True,
                                    related_name='data_files')
     parsed_data = models.JSONField(editable=False, default=dict)
@@ -359,6 +378,7 @@ class ExperimentDataFile(cm.BaseModel):
         return os.path.basename(self.raw_data_file.name)
 
     class Meta:
+        # verbose_name_plural = "4. Data Files"
         verbose_name_plural = "Data Files"
         verbose_name = "dataset"
 
@@ -368,7 +388,7 @@ class DataColumn(models.Model):
     signal_name = models.CharField(max_length=20)
     parameter = models.ForeignKey(dfn.Parameter, null=True, on_delete=models.SET_NULL,
                                   default=4)
-    device = models.ForeignKey(Device, on_delete=models.CASCADE)
+    device = models.ForeignKey(DeviceBatch, on_delete=models.CASCADE)
     batch_id = models.PositiveSmallIntegerField(default=0)
 
     def serialNo(self):
@@ -446,4 +466,6 @@ def data_pre_save(sender, instance, *args, **kwargs):
 from django.dispatch import Signal
 from django.db.models import signals
 
-#signals.post_save.connect(data_pre_save, sender=ExperimentDataFile)
+signals.post_save.connect(data_pre_save, sender=ExperimentDataFile)
+
+

@@ -11,7 +11,7 @@ from .models import *
 
 # Need to override inline class to set model to Device instead of Thing
 class CompositeDeviceInline(common.admin.CompositeThingInline):
-    model = Device
+    model = DeviceSpecification
     exclude = ['attributes', 'user_owner']
     formfield_overrides = {
         models.TextField: {'widget': Textarea(
@@ -26,6 +26,19 @@ class CompositeDeviceInline(common.admin.CompositeThingInline):
         return get_data
 
 
+class DeviceParameterInline(admin.TabularInline):
+    model = DeviceParameter
+    extra = 1
+
+class DeviceSpecAdmin(BaseAdmin):
+    list_display = (BaseAdmin.list_display or []) + ['inherit_metadata', 'parent', 'device_type']
+    list_filter = (BaseAdmin.list_filter or []) + ['inherit_metadata', 'device_type',]
+    inlines = [CompositeDeviceInline, DeviceParameterInline, ]
+
+
+admin.site.register(DeviceSpecification, DeviceSpecAdmin)
+
+
 class BatchDeviceInline(admin.TabularInline):
     model = BatchDevice
     extra = 1
@@ -34,18 +47,12 @@ class BatchDeviceInline(admin.TabularInline):
     exclude = ['attributes']
 
 
-class DeviceListAdmin(BaseAdmin):
-    list_display = (BaseAdmin.list_display or []) + ['inherit_metadata', 'parent', 'devType']
-    list_filter = (BaseAdmin.list_filter or []) + ['inherit_metadata', 'devType',]
-
-
 #class ThingAdmin(mptt.admin.MPTTModelAdmin):
-class DeviceAdmin(common.admin.ThingAdmin, DeviceListAdmin):
-    inlines = [CompositeDeviceInline,BatchDeviceInline,]
+class DeviceBatchAdmin(BaseAdmin):
+    inlines = [BatchDeviceInline,]
 
 
-admin.site.register(Device, DeviceAdmin)
-# admin.site.register(DeviceList, DeviceListAdmin)
+admin.site.register(DeviceBatch, DeviceBatchAdmin)
 
 
 class ExperimentDataInline(admin.TabularInline):
@@ -94,7 +101,7 @@ class DataAdmin(BaseAdmin):
     readonly_fields = BaseAdmin.readonly_fields + ['get_experiment_link', 'file_hash']
 
     def get_experiment_link(self, obj):
-        if hasattr(obj,'experiment'):
+        if hasattr(obj,'experiment') and obj.experiment is not None:
             return mark_safe('<a href="{}">{}</a>'.format(
                 reverse("admin:battDB_experiment_change", args=(obj.experiment.pk,)),
                 str(obj.experiment)

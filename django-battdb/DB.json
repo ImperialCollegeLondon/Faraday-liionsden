@@ -8,72 +8,6 @@
   }
 },
 {
-  "model": "battDB.device",
-  "pk": 1,
-  "fields": {
-    "devType": "cell",
-    "specification": null,
-    "manufacturer": 1,
-    "serialNo": "0",
-    "batch_size": 0
-  }
-},
-{
-  "model": "battDB.device",
-  "pk": 2,
-  "fields": {
-    "devType": "battery",
-    "specification": null,
-    "manufacturer": null,
-    "serialNo": "",
-    "batch_size": 0
-  }
-},
-{
-  "model": "battDB.device",
-  "pk": 11,
-  "fields": {
-    "devType": "cell",
-    "specification": 1,
-    "manufacturer": null,
-    "serialNo": "",
-    "batch_size": 0
-  }
-},
-{
-  "model": "battDB.device",
-  "pk": 12,
-  "fields": {
-    "devType": "cell",
-    "specification": 1,
-    "manufacturer": null,
-    "serialNo": "",
-    "batch_size": 0
-  }
-},
-{
-  "model": "battDB.device",
-  "pk": 13,
-  "fields": {
-    "devType": "cell",
-    "specification": 1,
-    "manufacturer": null,
-    "serialNo": "",
-    "batch_size": 0
-  }
-},
-{
-  "model": "battDB.device",
-  "pk": 14,
-  "fields": {
-    "devType": "cell",
-    "specification": 1,
-    "manufacturer": null,
-    "serialNo": "",
-    "batch_size": 0
-  }
-},
-{
   "model": "battDB.experiment",
   "pk": 1,
   "fields": {
@@ -98,13 +32,32 @@
     "status": 10,
     "user_owner": null,
     "created_on": "2020-10-28T14:49:51.194Z",
-    "modified_on": "2020-10-28T14:49:51.194Z",
+    "modified_on": "2020-10-29T12:46:24.922Z",
     "attributes": {},
     "notes": "",
     "slug": "a8932-datasheetpdf",
     "raw_data_file": "raw_data_files/A8932-Datasheet.pdf",
     "file_hash": "c40f3d480385e75b5d554a77cf76e89c",
-    "experiment": 1
+    "experiment": 1,
+    "parsed_data": {}
+  }
+},
+{
+  "model": "battDB.experimentdatafile",
+  "pk": 2,
+  "fields": {
+    "name": null,
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-29T12:47:46.773Z",
+    "modified_on": "2020-10-29T12:52:36.592Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "biologic_full_mqseywktxt",
+    "raw_data_file": "raw_data_files/BioLogic_full_MQSEywk.txt",
+    "file_hash": "abf6e42283668f8ba9094a0f85411f64",
+    "experiment": null,
+    "parsed_data": {}
   }
 },
 {
@@ -4300,6 +4253,58 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 276,
+  "fields": {
+    "action_time": "2020-10-29T12:46:15.234Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "1",
+    "object_repr": "A8932-Datasheet.pdf",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 277,
+  "fields": {
+    "action_time": "2020-10-29T12:46:24.923Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "1",
+    "object_repr": "A8932-Datasheet.pdf",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 278,
+  "fields": {
+    "action_time": "2020-10-29T12:47:46.791Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "2",
+    "object_repr": "BioLogic_full_MQSEywk.txt",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 279,
+  "fields": {
+    "action_time": "2020-10-29T12:52:36.593Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "2",
+    "object_repr": "BioLogic_full_MQSEywk.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -6424,6 +6429,114 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 237,
+  "fields": {
+    "name": "Can add Data File to Device Mapping",
+    "content_type": 60,
+    "codename": "add_datacolumn"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 238,
+  "fields": {
+    "name": "Can change Data File to Device Mapping",
+    "content_type": 60,
+    "codename": "change_datacolumn"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 239,
+  "fields": {
+    "name": "Can delete Data File to Device Mapping",
+    "content_type": 60,
+    "codename": "delete_datacolumn"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 240,
+  "fields": {
+    "name": "Can view Data File to Device Mapping",
+    "content_type": 60,
+    "codename": "view_datacolumn"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 241,
+  "fields": {
+    "name": "Can add device specification",
+    "content_type": 61,
+    "codename": "add_devicespecification"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 242,
+  "fields": {
+    "name": "Can change device specification",
+    "content_type": 61,
+    "codename": "change_devicespecification"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 243,
+  "fields": {
+    "name": "Can delete device specification",
+    "content_type": 61,
+    "codename": "delete_devicespecification"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 244,
+  "fields": {
+    "name": "Can view device specification",
+    "content_type": 61,
+    "codename": "view_devicespecification"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 245,
+  "fields": {
+    "name": "Can add device parameter",
+    "content_type": 62,
+    "codename": "add_deviceparameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 246,
+  "fields": {
+    "name": "Can change device parameter",
+    "content_type": 62,
+    "codename": "change_deviceparameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 247,
+  "fields": {
+    "name": "Can delete device parameter",
+    "content_type": 62,
+    "codename": "delete_deviceparameter"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 248,
+  "fields": {
+    "name": "Can view device parameter",
+    "content_type": 62,
+    "codename": "view_deviceparameter"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -7203,6 +7316,30 @@
   "fields": {
     "app_label": "battDB",
     "model": "devicedata"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 60,
+  "fields": {
+    "app_label": "battDB",
+    "model": "datacolumn"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 61,
+  "fields": {
+    "app_label": "battDB",
+    "model": "devicespecification"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 62,
+  "fields": {
+    "app_label": "battDB",
+    "model": "deviceparameter"
   }
 },
 {
