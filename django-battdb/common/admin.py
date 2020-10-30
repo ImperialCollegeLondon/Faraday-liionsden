@@ -49,6 +49,10 @@ class BaseAdmin(ChangeformMixin, admin.ModelAdmin):
                            attrs={'rows': 3,
                                   'cols': 40,
                                   'style': 'height: 3em;'})},
+        models.JSONField: {'widget': django.forms.Textarea(
+            attrs={'rows': 3,
+                   'cols': 40,
+                   'style': 'height: 3em;'})},
     }
 
     # this works, but it messes up field ordering due to conversion to sets

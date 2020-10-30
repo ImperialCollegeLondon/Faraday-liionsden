@@ -112,8 +112,11 @@ class Parameter(cm.BaseModel):
     Experiment or simulation parameters. E.g. electrode thickness, electrolyte concentration etc.<br>
     Use the notes field to explain what this parameter is for. Use the JSON field to add machine-readable metadata.
     """
-    symbol = models.CharField(max_length=40, unique=True, help_text="Parameter symbol. Will be decoded as LaTeX")
+    symbol = models.CharField(max_length=40,  help_text="Parameter symbol. Will be decoded as LaTeX")
     unit = models.ForeignKey(QuantityUnit, blank=True, null=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        unique_together = ('symbol', 'unit')
 
     def __str__(self):
         return "%s: %s / %s" % (self.name, self.symbol, self.unit.unitSymbol)

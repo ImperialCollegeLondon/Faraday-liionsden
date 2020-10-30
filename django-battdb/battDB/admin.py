@@ -13,6 +13,7 @@ from .models import *
 # Need to override inline class to set model to Device instead of Thing
 class CompositeDeviceInline(common.admin.CompositeThingInline):
     model = DeviceSpecification
+    show_change_link = True
     exclude = ['attributes', 'user_owner']
     formfield_overrides = {
         models.TextField: {'widget': Textarea(
@@ -33,8 +34,8 @@ class DeviceParameterInline(common.admin.TabularInLine):
 
 
 class DeviceSpecAdmin(common.admin.ThingAdmin):
-    list_display = common.admin.ThingAdmin.list_display + ('device_type', 'abstract')
-    list_filter = (common.admin.ThingAdmin.list_filter or []) + ['device_type', 'abstract']
+    list_display = common.admin.ThingAdmin.list_display + ('device_type', 'abstract', 'complete')
+    list_filter = (common.admin.ThingAdmin.list_filter or []) + ['device_type', 'abstract', 'complete']
     readonly_fields = (common.admin.ThingAdmin.readonly_fields or []) + ['inherit_metadata']
     inlines = [CompositeDeviceInline, DeviceParameterInline, ]
 
@@ -80,7 +81,7 @@ class DeviceConfigAdmin(BaseAdmin):
     inlines = (DeviceConfigInline,)
 
 
-admin.site.register([DeviceConfig,], DeviceConfigAdmin)
+#admin.site.register([DeviceConfig,], DeviceConfigAdmin)
 
 # class ModuleDeviceInline(admin.TabularInline):
 #     model = ModuleDevice
@@ -116,3 +117,5 @@ class DataAdmin(BaseAdmin):
 
 
 admin.site.register([ExperimentDataFile], DataAdmin)
+
+

@@ -8,6 +8,178 @@
   }
 },
 {
+  "model": "battDB.devicespecification",
+  "pk": 15,
+  "fields": {
+    "abstract": true,
+    "complete": false,
+    "device_type": null
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 16,
+  "fields": {
+    "abstract": true,
+    "complete": false,
+    "device_type": null
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 17,
+  "fields": {
+    "abstract": true,
+    "complete": false,
+    "device_type": null
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 18,
+  "fields": {
+    "abstract": true,
+    "complete": false,
+    "device_type": null
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 19,
+  "fields": {
+    "abstract": true,
+    "complete": false,
+    "device_type": null
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 20,
+  "fields": {
+    "abstract": false,
+    "complete": true,
+    "device_type": 15
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 21,
+  "fields": {
+    "abstract": true,
+    "complete": false,
+    "device_type": null
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 23,
+  "fields": {
+    "abstract": false,
+    "complete": true,
+    "device_type": null
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 24,
+  "fields": {
+    "abstract": false,
+    "complete": false,
+    "device_type": 15
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 25,
+  "fields": {
+    "abstract": false,
+    "complete": false,
+    "device_type": 15
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 26,
+  "fields": {
+    "abstract": false,
+    "complete": false,
+    "device_type": 15
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 27,
+  "fields": {
+    "abstract": false,
+    "complete": false,
+    "device_type": 15
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 28,
+  "fields": {
+    "abstract": false,
+    "complete": false,
+    "device_type": null
+  }
+},
+{
+  "model": "battDB.deviceparameter",
+  "pk": 1,
+  "fields": {
+    "name": "Voltage",
+    "spec": 15,
+    "parameter": 4,
+    "material": null,
+    "value": null
+  }
+},
+{
+  "model": "battDB.deviceparameter",
+  "pk": 2,
+  "fields": {
+    "name": "Cell Capacity",
+    "spec": 20,
+    "parameter": 6,
+    "material": 1,
+    "value": 1000
+  }
+},
+{
+  "model": "battDB.deviceparameter",
+  "pk": 3,
+  "fields": {
+    "name": "Pack Current",
+    "spec": 28,
+    "parameter": 7,
+    "material": null,
+    "value": null
+  }
+},
+{
+  "model": "battDB.devicebatch",
+  "pk": 22,
+  "fields": {
+    "specification": 20,
+    "manufacturer": 1,
+    "serialNo": "",
+    "batch_size": 1,
+    "manufactured_on": "2020-10-30"
+  }
+},
+{
+  "model": "battDB.devicebatch",
+  "pk": 30,
+  "fields": {
+    "specification": 23,
+    "manufacturer": null,
+    "serialNo": "",
+    "batch_size": 100,
+    "manufactured_on": "2020-10-30"
+  }
+},
+{
   "model": "battDB.experiment",
   "pk": 1,
   "fields": {
@@ -15,13 +187,13 @@
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-10-28T14:49:51.192Z",
-    "modified_on": "2020-10-28T14:53:01.701Z",
+    "modified_on": "2020-10-30T14:59:54.190Z",
     "attributes": {},
     "notes": "",
     "slug": "tom-none-2020-10-28",
     "date": "2020-10-28",
-    "device": null,
-    "protocol": null
+    "device": 23,
+    "protocol": 4
   }
 },
 {
@@ -178,6 +350,310 @@
     "rght": 9,
     "tree_id": 2,
     "level": 1
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 15,
+  "fields": {
+    "name": "Cell",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-30T11:08:16.557Z",
+    "modified_on": "2020-10-30T15:02:17.216Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "cell",
+    "parent": 28,
+    "inherit_metadata": true,
+    "lft": 3,
+    "rght": 12,
+    "tree_id": 4,
+    "level": 2
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 16,
+  "fields": {
+    "name": "Positive Electrode",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-30T11:08:16.566Z",
+    "modified_on": "2020-10-30T14:51:53.236Z",
+    "attributes": {
+      "age": 30,
+      "city": "New York",
+      "name": "John"
+    },
+    "notes": "",
+    "slug": "positive-electrode",
+    "parent": 15,
+    "inherit_metadata": true,
+    "lft": 4,
+    "rght": 5,
+    "tree_id": 4,
+    "level": 3
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 17,
+  "fields": {
+    "name": "Negative Electrode",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-30T11:08:16.568Z",
+    "modified_on": "2020-10-30T11:08:16.568Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "negative-electrode",
+    "parent": 15,
+    "inherit_metadata": true,
+    "lft": 6,
+    "rght": 7,
+    "tree_id": 4,
+    "level": 3
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 18,
+  "fields": {
+    "name": "Electrolyte",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-30T11:08:16.571Z",
+    "modified_on": "2020-10-30T11:30:54.687Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "electrolyte",
+    "parent": 15,
+    "inherit_metadata": true,
+    "lft": 8,
+    "rght": 9,
+    "tree_id": 4,
+    "level": 3
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 19,
+  "fields": {
+    "name": "Separator",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-30T11:08:16.572Z",
+    "modified_on": "2020-10-30T11:31:02.679Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "separator",
+    "parent": 15,
+    "inherit_metadata": true,
+    "lft": 10,
+    "rght": 11,
+    "tree_id": 4,
+    "level": 3
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 20,
+  "fields": {
+    "name": "My NMC622 Cell",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-30T12:17:54.380Z",
+    "modified_on": "2020-10-30T14:59:03.032Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "my-nmc622-cell",
+    "parent": null,
+    "inherit_metadata": true,
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 5,
+    "level": 0
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 21,
+  "fields": {
+    "name": "Generic",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-30T12:20:54.355Z",
+    "modified_on": "2020-10-30T13:49:29.477Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "generic",
+    "parent": null,
+    "inherit_metadata": true,
+    "lft": 1,
+    "rght": 14,
+    "tree_id": 4,
+    "level": 0
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 22,
+  "fields": {
+    "name": "My NMC622 Cell 1",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-30T13:06:04.632Z",
+    "modified_on": "2020-10-30T15:05:31.982Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "my-nmc622-cell-1",
+    "parent": null,
+    "inherit_metadata": true,
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 6,
+    "level": 0
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 23,
+  "fields": {
+    "name": "2s2p module",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-30T13:33:16.203Z",
+    "modified_on": "2020-10-30T14:58:58.468Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "2s2p-module",
+    "parent": null,
+    "inherit_metadata": true,
+    "lft": 1,
+    "rght": 10,
+    "tree_id": 7,
+    "level": 0
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 24,
+  "fields": {
+    "name": "Cell 1A",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-30T13:33:16.205Z",
+    "modified_on": "2020-10-30T13:33:16.205Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "cell-1a",
+    "parent": 23,
+    "inherit_metadata": true,
+    "lft": 2,
+    "rght": 3,
+    "tree_id": 7,
+    "level": 1
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 25,
+  "fields": {
+    "name": "Cell 1B",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-30T13:33:16.207Z",
+    "modified_on": "2020-10-30T13:33:16.207Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "cell-1b",
+    "parent": 23,
+    "inherit_metadata": true,
+    "lft": 4,
+    "rght": 5,
+    "tree_id": 7,
+    "level": 1
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 26,
+  "fields": {
+    "name": "Cell 2A",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-30T13:33:16.209Z",
+    "modified_on": "2020-10-30T13:33:16.209Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "cell-2a",
+    "parent": 23,
+    "inherit_metadata": true,
+    "lft": 6,
+    "rght": 7,
+    "tree_id": 7,
+    "level": 1
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 27,
+  "fields": {
+    "name": "Cell 2B",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-30T13:33:16.211Z",
+    "modified_on": "2020-10-30T13:33:16.211Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "cell-2b",
+    "parent": 23,
+    "inherit_metadata": true,
+    "lft": 8,
+    "rght": 9,
+    "tree_id": 7,
+    "level": 1
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 28,
+  "fields": {
+    "name": "Module",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-10-30T13:49:29.480Z",
+    "modified_on": "2020-10-30T15:03:15.395Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "module",
+    "parent": 21,
+    "inherit_metadata": true,
+    "lft": 2,
+    "rght": 13,
+    "tree_id": 4,
+    "level": 1
+  }
+},
+{
+  "model": "common.thing",
+  "pk": 30,
+  "fields": {
+    "name": "2s2p module batch of 100",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-30T15:06:29.932Z",
+    "modified_on": "2020-10-30T15:06:29.932Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "2s2p-module-batch-of-100",
+    "parent": null,
+    "inherit_metadata": true,
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 8,
+    "level": 0
   }
 },
 {
@@ -576,6 +1052,19 @@
   }
 },
 {
+  "model": "dfndb.quantityunit",
+  "pk": 11,
+  "fields": {
+    "quantityName": "Capacity",
+    "quantitySymbol": "C",
+    "unitName": "milliAmp Hour",
+    "unitSymbol": "mAh",
+    "is_SI_unit": false,
+    "related_unit": 3,
+    "related_scale": 0.0002777777777777778
+  }
+},
+{
   "model": "dfndb.parameter",
   "pk": 1,
   "fields": {
@@ -640,6 +1129,38 @@
     "slug": "cell-voltage-v-v",
     "symbol": "V",
     "unit": 1
+  }
+},
+{
+  "model": "dfndb.parameter",
+  "pk": 6,
+  "fields": {
+    "name": "Capacity",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-30T12:17:04.438Z",
+    "modified_on": "2020-10-30",
+    "attributes": {},
+    "notes": "",
+    "slug": "capacity-c-mah",
+    "symbol": "C",
+    "unit": 11
+  }
+},
+{
+  "model": "dfndb.parameter",
+  "pk": 7,
+  "fields": {
+    "name": "Pack Current",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-10-30T15:03:05.688Z",
+    "modified_on": "2020-10-30",
+    "attributes": {},
+    "notes": "",
+    "slug": "pack-current-i-a",
+    "symbol": "I",
+    "unit": 5
   }
 },
 {
@@ -709,7 +1230,7 @@
   "fields": {
     "action_time": "2020-08-04T18:25:35.516Z",
     "user": 1,
-    "content_type": 4,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "BorkCorp",
     "action_flag": 1,
@@ -735,7 +1256,7 @@
   "fields": {
     "action_time": "2020-08-04T18:27:53.921Z",
     "user": 1,
-    "content_type": 2,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "MyMembrane",
     "action_flag": 1,
@@ -761,7 +1282,7 @@
   "fields": {
     "action_time": "2020-08-04T18:41:57.989Z",
     "user": 1,
-    "content_type": 4,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "Maccor",
     "action_flag": 1,
@@ -800,7 +1321,7 @@
   "fields": {
     "action_time": "2020-08-04T18:47:34.828Z",
     "user": 1,
-    "content_type": 3,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "Tom's GalvoTron 3000",
     "action_flag": 1,
@@ -813,7 +1334,7 @@
   "fields": {
     "action_time": "2020-08-04T18:51:08.397Z",
     "user": 1,
-    "content_type": 6,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "PyBaMM example protocol",
     "action_flag": 1,
@@ -826,7 +1347,7 @@
   "fields": {
     "action_time": "2020-08-04T18:52:01.270Z",
     "user": 1,
-    "content_type": 7,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "Tom's Lab",
     "action_flag": 1,
@@ -852,7 +1373,7 @@
   "fields": {
     "action_time": "2020-08-04T18:52:52.127Z",
     "user": 1,
-    "content_type": 3,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "Tom's GalvoTron 3000",
     "action_flag": 2,
@@ -1801,7 +2322,7 @@
   "fields": {
     "action_time": "2020-09-03T18:08:40.505Z",
     "user": 1,
-    "content_type": 5,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "Voltage",
     "action_flag": 1,
@@ -1814,7 +2335,7 @@
   "fields": {
     "action_time": "2020-09-03T18:08:49.552Z",
     "user": 1,
-    "content_type": 5,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "Current",
     "action_flag": 1,
@@ -1827,7 +2348,7 @@
   "fields": {
     "action_time": "2020-09-03T18:09:08.482Z",
     "user": 1,
-    "content_type": 5,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "Temperature",
     "action_flag": 1,
@@ -1840,7 +2361,7 @@
   "fields": {
     "action_time": "2020-09-03T18:09:18.249Z",
     "user": 1,
-    "content_type": 5,
+    "content_type": null,
     "object_id": "4",
     "object_repr": "Time",
     "action_flag": 1,
@@ -1853,7 +2374,7 @@
   "fields": {
     "action_time": "2020-09-03T18:12:30.310Z",
     "user": 1,
-    "content_type": 5,
+    "content_type": null,
     "object_id": "4",
     "object_repr": "Time",
     "action_flag": 2,
@@ -1866,7 +2387,7 @@
   "fields": {
     "action_time": "2020-09-03T18:16:46.720Z",
     "user": 1,
-    "content_type": 5,
+    "content_type": null,
     "object_id": "4",
     "object_repr": "Time/s",
     "action_flag": 2,
@@ -1879,7 +2400,7 @@
   "fields": {
     "action_time": "2020-09-03T18:17:17.039Z",
     "user": 1,
-    "content_type": 5,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "Temperature/°C",
     "action_flag": 2,
@@ -1892,7 +2413,7 @@
   "fields": {
     "action_time": "2020-09-03T18:17:33.724Z",
     "user": 1,
-    "content_type": 5,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "Current/A",
     "action_flag": 2,
@@ -1905,7 +2426,7 @@
   "fields": {
     "action_time": "2020-09-03T18:17:40.814Z",
     "user": 1,
-    "content_type": 5,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "Temperature/°C",
     "action_flag": 2,
@@ -1918,7 +2439,7 @@
   "fields": {
     "action_time": "2020-09-03T18:18:31.397Z",
     "user": 1,
-    "content_type": 5,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "Voltage/V",
     "action_flag": 2,
@@ -1931,7 +2452,7 @@
   "fields": {
     "action_time": "2020-09-03T18:18:54.762Z",
     "user": 1,
-    "content_type": 5,
+    "content_type": null,
     "object_id": "5",
     "object_repr": "Power/W",
     "action_flag": 1,
@@ -2178,7 +2699,7 @@
   "fields": {
     "action_time": "2020-10-12T21:00:22.900Z",
     "user": 1,
-    "content_type": 7,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "ExperimentalApparatus object (1)",
     "action_flag": 2,
@@ -2191,7 +2712,7 @@
   "fields": {
     "action_time": "2020-10-12T22:22:21.079Z",
     "user": 1,
-    "content_type": 7,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "ExperimentalApparatus object (1)",
     "action_flag": 2,
@@ -2204,7 +2725,7 @@
   "fields": {
     "action_time": "2020-10-12T22:26:31.741Z",
     "user": 1,
-    "content_type": 7,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "None",
     "action_flag": 2,
@@ -2386,7 +2907,7 @@
   "fields": {
     "action_time": "2020-10-15T16:55:03.068Z",
     "user": 1,
-    "content_type": 3,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "Tom's GalvoTron 5000",
     "action_flag": 2,
@@ -4305,6 +4826,617 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 280,
+  "fields": {
+    "action_time": "2020-10-29T13:32:48.344Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "97",
+    "object_repr": "statelessapp | Can add stateless app",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 281,
+  "fields": {
+    "action_time": "2020-10-29T13:32:48.355Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "98",
+    "object_repr": "statelessapp | Can change stateless app",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 282,
+  "fields": {
+    "action_time": "2020-10-29T13:32:48.360Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "99",
+    "object_repr": "statelessapp | Can delete stateless app",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 283,
+  "fields": {
+    "action_time": "2020-10-29T13:32:48.364Z",
+    "user": 1,
+    "content_type": 10,
+    "object_id": "100",
+    "object_repr": "statelessapp | Can view stateless app",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 284,
+  "fields": {
+    "action_time": "2020-10-29T13:35:00.903Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "25",
+    "object_repr": "statelessapp",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 285,
+  "fields": {
+    "action_time": "2020-10-29T13:35:00.914Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "24",
+    "object_repr": "dashapp",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 286,
+  "fields": {
+    "action_time": "2020-10-29T13:35:00.918Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "20",
+    "object_repr": "ec_cycle",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 287,
+  "fields": {
+    "action_time": "2020-10-29T13:35:00.925Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "7",
+    "object_repr": "experimentalapparatus",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 288,
+  "fields": {
+    "action_time": "2020-10-29T13:35:00.931Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "6",
+    "object_repr": "testprotocol",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 289,
+  "fields": {
+    "action_time": "2020-10-29T13:35:00.947Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "5",
+    "object_repr": "signaltype",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 290,
+  "fields": {
+    "action_time": "2020-10-29T13:35:00.953Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "4",
+    "object_repr": "manufacturer",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 291,
+  "fields": {
+    "action_time": "2020-10-29T13:35:00.959Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "3",
+    "object_repr": "equipment",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 292,
+  "fields": {
+    "action_time": "2020-10-29T13:35:00.965Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "2",
+    "object_repr": "cellseparator",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 293,
+  "fields": {
+    "action_time": "2020-10-30T11:08:16.575Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "15",
+    "object_repr": "Generic Cell",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"device specification\", \"object\": \"Positive Electrode\"}}, {\"added\": {\"name\": \"device specification\", \"object\": \"Negative Electrode\"}}, {\"added\": {\"name\": \"device specification\", \"object\": \"Electrolyte\"}}, {\"added\": {\"name\": \"device specification\", \"object\": \"Separator\"}}, {\"added\": {\"name\": \"device parameter\", \"object\": \"Thickness: t / m\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 294,
+  "fields": {
+    "action_time": "2020-10-30T11:19:28.772Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "15",
+    "object_repr": "Generic Cell",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 295,
+  "fields": {
+    "action_time": "2020-10-30T11:30:54.689Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "18",
+    "object_repr": "Electrolyte",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Abstract Specification\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 296,
+  "fields": {
+    "action_time": "2020-10-30T11:31:02.680Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "19",
+    "object_repr": "Separator",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Abstract Specification\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 297,
+  "fields": {
+    "action_time": "2020-10-30T11:49:08.862Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "15",
+    "object_repr": "Generic Cell",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 298,
+  "fields": {
+    "action_time": "2020-10-30T11:51:24.625Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "15",
+    "object_repr": "Generic Cell",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 299,
+  "fields": {
+    "action_time": "2020-10-30T12:13:43.480Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "11",
+    "object_repr": "Capacity (C) / mAh",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 300,
+  "fields": {
+    "action_time": "2020-10-30T12:17:04.439Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "6",
+    "object_repr": "Capacity: C / mAh",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 301,
+  "fields": {
+    "action_time": "2020-10-30T12:17:54.383Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "20",
+    "object_repr": "My NMC622 Cell",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"device parameter\", \"object\": \"Capacity: C / mAh\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 302,
+  "fields": {
+    "action_time": "2020-10-30T12:18:38.515Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "20",
+    "object_repr": "My NMC622 Cell",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Device type\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 303,
+  "fields": {
+    "action_time": "2020-10-30T12:18:56.130Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "15",
+    "object_repr": "Cell",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 304,
+  "fields": {
+    "action_time": "2020-10-30T12:20:54.357Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "21",
+    "object_repr": "Generic",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 305,
+  "fields": {
+    "action_time": "2020-10-30T12:21:03.012Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "15",
+    "object_repr": "Cell",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"parent\", \"lft\", \"rght\", \"tree_id\", \"level\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 306,
+  "fields": {
+    "action_time": "2020-10-30T12:21:18.167Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "21",
+    "object_repr": "Generic",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"tree_id\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 307,
+  "fields": {
+    "action_time": "2020-10-30T12:21:59.967Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "21",
+    "object_repr": "Generic",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Abstract Specification\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 308,
+  "fields": {
+    "action_time": "2020-10-30T13:06:04.634Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "22",
+    "object_repr": "None",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 309,
+  "fields": {
+    "action_time": "2020-10-30T13:28:23.307Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "58",
+    "object_repr": "devicelist",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 310,
+  "fields": {
+    "action_time": "2020-10-30T13:33:16.212Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "23",
+    "object_repr": "2s2p module",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"device specification\", \"object\": \"Cell 1A\"}}, {\"added\": {\"name\": \"device specification\", \"object\": \"Cell 1B\"}}, {\"added\": {\"name\": \"device specification\", \"object\": \"Cell 2A\"}}, {\"added\": {\"name\": \"device specification\", \"object\": \"Cell 2B\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 311,
+  "fields": {
+    "action_time": "2020-10-30T13:49:29.483Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "21",
+    "object_repr": "Generic",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device specification\", \"object\": \"Module\"}}, {\"added\": {\"name\": \"device specification\", \"object\": \"Pack\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 312,
+  "fields": {
+    "action_time": "2020-10-30T13:50:00.069Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "15",
+    "object_repr": "Cell",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"parent\", \"lft\", \"rght\", \"level\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 313,
+  "fields": {
+    "action_time": "2020-10-30T13:51:23.240Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "29",
+    "object_repr": "Pack",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 314,
+  "fields": {
+    "action_time": "2020-10-30T14:33:45.884Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "16",
+    "object_repr": "Positive Electrode",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Attributes\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 315,
+  "fields": {
+    "action_time": "2020-10-30T14:36:14.883Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "16",
+    "object_repr": "Positive Electrode",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Attributes\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 316,
+  "fields": {
+    "action_time": "2020-10-30T14:36:44.453Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "16",
+    "object_repr": "Positive Electrode",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Attributes\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 317,
+  "fields": {
+    "action_time": "2020-10-30T14:51:53.237Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "16",
+    "object_repr": "Positive Electrode",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 318,
+  "fields": {
+    "action_time": "2020-10-30T14:58:58.470Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "23",
+    "object_repr": "2s2p module",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Complete\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 319,
+  "fields": {
+    "action_time": "2020-10-30T14:59:03.033Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "20",
+    "object_repr": "My NMC622 Cell",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Complete\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 320,
+  "fields": {
+    "action_time": "2020-10-30T14:59:54.191Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "1",
+    "object_repr": "tom None 2020-10-28",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Device\", \"Protocol\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 321,
+  "fields": {
+    "action_time": "2020-10-30T15:01:02.902Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "15",
+    "object_repr": "Cell",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"device parameter\", \"object\": \"Cell Voltage: V / V\", \"fields\": [\"Name\", \"Parameter\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 322,
+  "fields": {
+    "action_time": "2020-10-30T15:02:17.217Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "15",
+    "object_repr": "Cell",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 323,
+  "fields": {
+    "action_time": "2020-10-30T15:03:05.689Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "7",
+    "object_repr": "Pack Current: I / A",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 324,
+  "fields": {
+    "action_time": "2020-10-30T15:03:15.398Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "28",
+    "object_repr": "Module",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device parameter\", \"object\": \"Pack Current: I / A\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 325,
+  "fields": {
+    "action_time": "2020-10-30T15:05:31.984Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "22",
+    "object_repr": "My NMC622 Cell 1",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 326,
+  "fields": {
+    "action_time": "2020-10-30T15:06:29.933Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "30",
+    "object_repr": "2s2p module batch of 100",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 1,
   "fields": {
@@ -4338,222 +5470,6 @@
     "name": "Can view cell",
     "content_type": 1,
     "codename": "view_cell"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 5,
-  "fields": {
-    "name": "Can add cell separator",
-    "content_type": 2,
-    "codename": "add_cellseparator"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 6,
-  "fields": {
-    "name": "Can change cell separator",
-    "content_type": 2,
-    "codename": "change_cellseparator"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 7,
-  "fields": {
-    "name": "Can delete cell separator",
-    "content_type": 2,
-    "codename": "delete_cellseparator"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 8,
-  "fields": {
-    "name": "Can view cell separator",
-    "content_type": 2,
-    "codename": "view_cellseparator"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 9,
-  "fields": {
-    "name": "Can add equipment",
-    "content_type": 3,
-    "codename": "add_equipment"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 10,
-  "fields": {
-    "name": "Can change equipment",
-    "content_type": 3,
-    "codename": "change_equipment"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 11,
-  "fields": {
-    "name": "Can delete equipment",
-    "content_type": 3,
-    "codename": "delete_equipment"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 12,
-  "fields": {
-    "name": "Can view equipment",
-    "content_type": 3,
-    "codename": "view_equipment"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 13,
-  "fields": {
-    "name": "Can add manufacturer",
-    "content_type": 4,
-    "codename": "add_manufacturer"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 14,
-  "fields": {
-    "name": "Can change manufacturer",
-    "content_type": 4,
-    "codename": "change_manufacturer"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 15,
-  "fields": {
-    "name": "Can delete manufacturer",
-    "content_type": 4,
-    "codename": "delete_manufacturer"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 16,
-  "fields": {
-    "name": "Can view manufacturer",
-    "content_type": 4,
-    "codename": "view_manufacturer"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 17,
-  "fields": {
-    "name": "Can add signal type",
-    "content_type": 5,
-    "codename": "add_signaltype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 18,
-  "fields": {
-    "name": "Can change signal type",
-    "content_type": 5,
-    "codename": "change_signaltype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 19,
-  "fields": {
-    "name": "Can delete signal type",
-    "content_type": 5,
-    "codename": "delete_signaltype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 20,
-  "fields": {
-    "name": "Can view signal type",
-    "content_type": 5,
-    "codename": "view_signaltype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 21,
-  "fields": {
-    "name": "Can add test protocol",
-    "content_type": 6,
-    "codename": "add_testprotocol"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 22,
-  "fields": {
-    "name": "Can change test protocol",
-    "content_type": 6,
-    "codename": "change_testprotocol"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 23,
-  "fields": {
-    "name": "Can delete test protocol",
-    "content_type": 6,
-    "codename": "delete_testprotocol"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 24,
-  "fields": {
-    "name": "Can view test protocol",
-    "content_type": 6,
-    "codename": "view_testprotocol"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 25,
-  "fields": {
-    "name": "Can add experimental apparatus",
-    "content_type": 7,
-    "codename": "add_experimentalapparatus"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 26,
-  "fields": {
-    "name": "Can change experimental apparatus",
-    "content_type": 7,
-    "codename": "change_experimentalapparatus"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 27,
-  "fields": {
-    "name": "Can delete experimental apparatus",
-    "content_type": 7,
-    "codename": "delete_experimentalapparatus"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 28,
-  "fields": {
-    "name": "Can view experimental apparatus",
-    "content_type": 7,
-    "codename": "view_experimentalapparatus"
   }
 },
 {
@@ -4990,42 +5906,6 @@
 },
 {
   "model": "auth.permission",
-  "pk": 77,
-  "fields": {
-    "name": "Can add e c_ cycle",
-    "content_type": 20,
-    "codename": "add_ec_cycle"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 78,
-  "fields": {
-    "name": "Can change e c_ cycle",
-    "content_type": 20,
-    "codename": "change_ec_cycle"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 79,
-  "fields": {
-    "name": "Can delete e c_ cycle",
-    "content_type": 20,
-    "codename": "delete_ec_cycle"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 80,
-  "fields": {
-    "name": "Can view e c_ cycle",
-    "content_type": 20,
-    "codename": "view_ec_cycle"
-  }
-},
-{
-  "model": "auth.permission",
   "pk": 81,
   "fields": {
     "name": "Can add cell type",
@@ -5130,78 +6010,6 @@
     "name": "Can view experiment data file",
     "content_type": 23,
     "codename": "view_experimentdatafile"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 93,
-  "fields": {
-    "name": "Can add dash app",
-    "content_type": 24,
-    "codename": "add_dashapp"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 94,
-  "fields": {
-    "name": "Can change dash app",
-    "content_type": 24,
-    "codename": "change_dashapp"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 95,
-  "fields": {
-    "name": "Can delete dash app",
-    "content_type": 24,
-    "codename": "delete_dashapp"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 96,
-  "fields": {
-    "name": "Can view dash app",
-    "content_type": 24,
-    "codename": "view_dashapp"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 97,
-  "fields": {
-    "name": "Can add stateless app",
-    "content_type": 25,
-    "codename": "add_statelessapp"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 98,
-  "fields": {
-    "name": "Can change stateless app",
-    "content_type": 25,
-    "codename": "change_statelessapp"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 99,
-  "fields": {
-    "name": "Can delete stateless app",
-    "content_type": 25,
-    "codename": "delete_statelessapp"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 100,
-  "fields": {
-    "name": "Can view stateless app",
-    "content_type": 25,
-    "codename": "view_statelessapp"
   }
 },
 {
@@ -6358,42 +7166,6 @@
 },
 {
   "model": "auth.permission",
-  "pk": 229,
-  "fields": {
-    "name": "Can add device list",
-    "content_type": 58,
-    "codename": "add_devicelist"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 230,
-  "fields": {
-    "name": "Can change device list",
-    "content_type": 58,
-    "codename": "change_devicelist"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 231,
-  "fields": {
-    "name": "Can delete device list",
-    "content_type": 58,
-    "codename": "delete_devicelist"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 232,
-  "fields": {
-    "name": "Can view device list",
-    "content_type": 58,
-    "codename": "view_devicelist"
-  }
-},
-{
-  "model": "auth.permission",
   "pk": 233,
   "fields": {
     "name": "Can add Data File to Device Mapping",
@@ -6570,14 +7342,6 @@
       66,
       67,
       68,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
       61,
       62,
       63,
@@ -6586,22 +7350,6 @@
       30,
       31,
       32,
-      25,
-      26,
-      27,
-      28,
-      13,
-      14,
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      21,
-      22,
-      23,
-      24,
       49,
       50,
       51,
@@ -6631,14 +7379,6 @@
       66,
       67,
       68,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
       61,
       62,
       63,
@@ -6646,23 +7386,7 @@
       29,
       30,
       31,
-      32,
-      25,
-      26,
-      27,
-      28,
-      13,
-      14,
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      21,
-      22,
-      23,
-      24
+      32
     ]
   }
 },
@@ -6728,14 +7452,6 @@
       66,
       67,
       68,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
       61,
       62,
       63,
@@ -6744,22 +7460,6 @@
       30,
       31,
       32,
-      25,
-      26,
-      27,
-      28,
-      13,
-      14,
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      21,
-      22,
-      23,
-      24,
       49,
       50,
       51,
@@ -6814,20 +7514,13 @@
       4,
       36,
       68,
-      8,
       84,
       88,
-      80,
-      12,
       64,
       32,
-      28,
       76,
       92,
       72,
-      16,
-      20,
-      24,
       136,
       140,
       144,
@@ -6840,8 +7533,6 @@
       104,
       128,
       124,
-      96,
-      100,
       60
     ]
   }
@@ -6852,54 +7543,6 @@
   "fields": {
     "app_label": "battDB",
     "model": "cell"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 2,
-  "fields": {
-    "app_label": "battDB",
-    "model": "cellseparator"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 3,
-  "fields": {
-    "app_label": "battDB",
-    "model": "equipment"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 4,
-  "fields": {
-    "app_label": "battDB",
-    "model": "manufacturer"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 5,
-  "fields": {
-    "app_label": "battDB",
-    "model": "signaltype"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 6,
-  "fields": {
-    "app_label": "battDB",
-    "model": "testprotocol"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 7,
-  "fields": {
-    "app_label": "battDB",
-    "model": "experimentalapparatus"
   }
 },
 {
@@ -7000,14 +7643,6 @@
 },
 {
   "model": "contenttypes.contenttype",
-  "pk": 20,
-  "fields": {
-    "app_label": "battDB",
-    "model": "ec_cycle"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
   "pk": 21,
   "fields": {
     "app_label": "battDB",
@@ -7028,22 +7663,6 @@
   "fields": {
     "app_label": "battDB",
     "model": "experimentdatafile"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 24,
-  "fields": {
-    "app_label": "django_plotly_dash",
-    "model": "dashapp"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 25,
-  "fields": {
-    "app_label": "django_plotly_dash",
-    "model": "statelessapp"
   }
 },
 {
@@ -7300,14 +7919,6 @@
   "fields": {
     "app_label": "battDB",
     "model": "batchdevice"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 58,
-  "fields": {
-    "app_label": "battDB",
-    "model": "devicelist"
   }
 },
 {

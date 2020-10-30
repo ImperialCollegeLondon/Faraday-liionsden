@@ -10,6 +10,7 @@ from .utils import hash_file
 import dfndb.models as dfn
 from .migration_dummy import *
 from datetime import datetime
+import django.core.exceptions
 
 import hashlib
 
@@ -56,14 +57,14 @@ class DeviceSpecification(cm.Thing):
     """
     A device specification.
     """
-    TYPE_CHOICES = [
-        ("component", "Component part of a cell"),
-        ("cell", "Single cell"),
-        ("module", "Module containing cells"),
-        ("battery", "Battery pack containing modules"),
-        ("sensor", "Sensor attached to a device"),
-        ("cycler", "Cycler Machine"),
-    ]
+    # TYPE_CHOICES = [
+    #     ("component", "Component part of a cell"),
+    #     ("cell", "Single cell"),
+    #     ("module", "Module containing cells"),
+    #     ("battery", "Battery pack containing modules"),
+    #     ("sensor", "Sensor attached to a device"),
+    #     ("cycler", "Cycler Machine"),
+    # ]
     parameters = models.ManyToManyField(dfn.Parameter, through='DeviceParameter')
     abstract = models.BooleanField(default=False,
                                    verbose_name="Abstract Specification",
@@ -71,24 +72,30 @@ class DeviceSpecification(cm.Thing):
                                              "'Positive Electrode, Negative Electrode, Electrolyte etc. <BR>"
                                              "If this is set to True, then all metadata declared here must be "
                                              "overridden in child classes. An abstract specification cannot be used "
-                                             "to define a physical device or batch. <BR>"
-                                             "There should be at least one abstract specification in the database "
-                                             "for each device type listed below.")
-    device_type = models.CharField(max_length=16, default="cell", choices=TYPE_CHOICES)
-#    device_type = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True,
-#                                     help_text="")
+                                             "to define a physical device or batch.")
+    complete = models.BooleanField(default=False,
+                                   help_text="This device is complete - it can be used in experiments without a parent")
+    device_type = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True,
+                                    limit_choices_to={'abstract': True},
+                                    help_text="Device type. e.g. Cell, Module, Battery Pack. <BR>"
+                                              "An abstract specification cannot have a device type - "
+                                              "they define the device types.")
+   # json = JSONEditableField()
 
+    def clean(self):
+        if self.abstract and self.device_type is not None:
+            raise django.core.exceptions.ValidationError("Abstract specifications cannot have a device type")
+        return super(DeviceSpecification, self).clean()
     class Meta:
         # verbose_name_plural = "1. Device Specifications"
         verbose_name_plural = "Device Specifications"
 
 
-class DeviceParameter(models.Model):
+class DeviceParameter(cm.HasName):
     """
     Parameters on device
     """
-
-    data = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE)
+    spec = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE)
     parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
     material = models.ForeignKey(dfn.Material, on_delete=models.CASCADE, blank=True, null=True)
     value = models.JSONField(blank=True, null=True)
@@ -97,7 +104,7 @@ class DeviceParameter(models.Model):
         return str(self.parameter)
 
     class Meta:
-        unique_together = ('data', 'parameter', 'material')
+        unique_together = [('spec', 'parameter', 'material'), ('spec', 'name')]
 
 
 class DeviceBatch(cm.Thing):
@@ -114,6 +121,7 @@ class DeviceBatch(cm.Thing):
     manufactured_on = models.DateField(default=datetime.now)
 
     class Meta:
+        verbose_name = "Device or Batch"
         verbose_name_plural = "Devices"
 
 
@@ -148,7 +156,6 @@ class BatchDevice(cm.HasAttributes):
         unique_together = ['batch', 'batch_index']
 
 
-
 class DeviceConfig(cm.BaseModel):
     """
     A configuration of device templates to represent how devices are connected in a module, pack, or experimental set-up
@@ -157,6 +164,7 @@ class DeviceConfig(cm.BaseModel):
 
     class Meta:
         verbose_name_plural = "Device Configurations"
+
 
 class DeviceConfigNode(models.Model):
     """
@@ -168,7 +176,7 @@ class DeviceConfigNode(models.Model):
            limit_choices_to={'config':config} would result in an error.
            Maybe there is a flaw in my database design here? This might not need to be a ManyToMany 'through' table.
     """
-    device = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE, limit_choices_to={'inherit_metadata': True},
+    device = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE, limit_choices_to={'abstract': False},
                                help_text="Related device specification e.g. cell or sensor. Must have is_template=True")
     config = models.ForeignKey(DeviceConfig, on_delete=models.CASCADE,
                                help_text="Config instance to which this node belongs")
@@ -324,7 +332,9 @@ class Experiment(cm.BaseModel):
     """
     date = models.DateField(default=datetime.now)
     # apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
-    device = models.ForeignKey(DeviceSpecification, related_name='used_in', null=True, blank=True, on_delete=models.SET_NULL)
+    device = models.ForeignKey(DeviceSpecification, related_name='used_in', null=True, blank=True,
+                               on_delete=models.SET_NULL,
+                               limit_choices_to={'abstract': False, 'complete': True})
     #config = models.ForeignKey(DeviceConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='used_in')
     protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
                                  limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL})
