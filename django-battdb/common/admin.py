@@ -5,6 +5,14 @@ from django.contrib.postgres.fields import JSONField
 from .models import *
 import mptt
 
+from django.contrib.auth.models import Permission, ContentType
+
+class PermissionsAdmin(admin.ModelAdmin):
+    list_filter = ['content_type']
+
+admin.site.register(Permission, PermissionsAdmin)
+admin.site.register(ContentType)
+
 admin.site.site_header = 'The Faraday Institution - Liionsden Electrochemistry Database'
 admin.site.site_title = 'Liionsden Admin'
 admin.site.index_title = 'Liionsden Admin'

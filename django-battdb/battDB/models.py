@@ -65,8 +65,10 @@ class DeviceSpecification(cm.Thing):
     ]
     parameters = models.ManyToManyField(dfn.Parameter, through='DeviceParameter')
     device_type = models.CharField(max_length=16, default="cell", choices=TYPE_CHOICES)
-    # class Meta:
-    #     verbose_name_plural = "1. Device Specifications"
+
+    class Meta:
+        # verbose_name_plural = "1. Device Specifications"
+        verbose_name_plural = "Device Specifications"
 
 
 class DeviceParameter(models.Model):
@@ -86,7 +88,7 @@ class DeviceParameter(models.Model):
         unique_together = ('data', 'parameter', 'material')
 
 
-class DeviceBatch(cm.BaseModel):
+class DeviceBatch(cm.Thing):
     """
     Describes a batch of things produced to the same type specification
     """
@@ -99,8 +101,9 @@ class DeviceBatch(cm.BaseModel):
     batch_size = models.PositiveSmallIntegerField(default=1)
     manufactured_on = models.DateField(default=datetime.now)
 
-    # class Meta:
-    #     verbose_name_plural = "2. Devices"
+    class Meta:
+        verbose_name_plural = "Devices"
+
 
     # class Meta:
     #     verbose_name_plural = "Device Tree"
@@ -134,39 +137,39 @@ class BatchDevice(cm.HasAttributes):
 
 
 
-# class DeviceConfig(cm.BaseModel):
-#     """
-#     A configuration of device templates to represent how devices are connected in a module, pack, or experimental set-up
-#     """
-#     devices = models.ManyToManyField(Device, through='DeviceConfigNode')
-#
-#
-# class DeviceConfigNode(models.Model):
-#     """
-#     Self-referential model - defines a chain of devices electrically connected together, like a netlist
-#     FIXME: I would like to use 'limit_choices_to to' dynamically restrict choices based on 'config',
-#            to ensure that all nodes in chain are part of the same config & net,
-#            i.e. you cannot link to a node in a different config.
-#            But it's a limitation of django that limit_choices_to cannot apply dynamically
-#            limit_choices_to={'config':config} would result in an error.
-#            Maybe there is a flaw in my database design here? This might not need to be a ManyToMany 'through' table.
-#     """
-#     device = models.ForeignKey(Device, on_delete=models.CASCADE, limit_choices_to={'inherit_metadata': True},
-#                                help_text="Related device specification e.g. cell or sensor. Must have is_template=True")
-#     config = models.ForeignKey(DeviceConfig, on_delete=models.CASCADE,
-#                                help_text="Config instance to which this node belongs")
-#     device_position_id = models.CharField(max_length=20, null=True, blank=True,
-#                                           help_text="Position of device in pack e.g. 1 - identifies this device")
-#     next = models.ForeignKey('DeviceConfigNode', null=True, blank=True, on_delete=models.SET_NULL,
-#                              help_text="Connected node in chain. Must be part of the same config."
-#                                        "In a series pack, this would be the negative terminal of the next cell")
-#     device_terminal_name = models.CharField(max_length=10, null=True, blank=True, help_text=
-#                                             "Name of device port or terminal. e.g. 'Anode'")
-#     net_name = models.CharField(max_length=20, null=True, blank=True,
-#                                 help_text="Name of electrical signal e.g. cell_1_v")
-#
-#     def __str__(self):
-#         return str(self.config) + "/" + str(self.net_name) + str(self.device_terminal_name)
+class DeviceConfig(cm.BaseModel):
+    """
+    A configuration of device templates to represent how devices are connected in a module, pack, or experimental set-up
+    """
+    devices = models.ManyToManyField(DeviceSpecification, through='DeviceConfigNode')
+
+
+class DeviceConfigNode(models.Model):
+    """
+    Self-referential model - defines a chain of devices electrically connected together, like a netlist
+    FIXME: I would like to use 'limit_choices_to to' dynamically restrict choices based on 'config',
+           to ensure that all nodes in chain are part of the same config & net,
+           i.e. you cannot link to a node in a different config.
+           But it's a limitation of django that limit_choices_to cannot apply dynamically
+           limit_choices_to={'config':config} would result in an error.
+           Maybe there is a flaw in my database design here? This might not need to be a ManyToMany 'through' table.
+    """
+    device = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE, limit_choices_to={'inherit_metadata': True},
+                               help_text="Related device specification e.g. cell or sensor. Must have is_template=True")
+    config = models.ForeignKey(DeviceConfig, on_delete=models.CASCADE,
+                               help_text="Config instance to which this node belongs")
+    device_position_id = models.CharField(max_length=20, null=True, blank=True,
+                                          help_text="Position of device in pack e.g. 1 - identifies this device")
+    next = models.ForeignKey('DeviceConfigNode', null=True, blank=True, on_delete=models.SET_NULL,
+                             help_text="Connected node in chain. Must be part of the same config."
+                                       "In a series pack, this would be the negative terminal of the next cell")
+    device_terminal_name = models.CharField(max_length=10, null=True, blank=True, help_text=
+                                            "Name of device port or terminal. e.g. 'Anode'")
+    net_name = models.CharField(max_length=20, null=True, blank=True,
+                                help_text="Name of electrical signal e.g. cell_1_v")
+
+    def __str__(self):
+        return str(self.config) + "/" + str(self.net_name) + str(self.device_terminal_name)
 
 
 
@@ -331,7 +334,7 @@ class Experiment(cm.BaseModel):
     #                                                        "devType": "module"}
     #     super(Experiment, self).__init__(*args, **kwargs)
     class Meta:
-        # verbose_name_plural = "3. Experiments"
+        verbose_name_plural = "Experiments"
         verbose_name = "dataset"
 
 

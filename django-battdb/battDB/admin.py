@@ -30,6 +30,7 @@ class DeviceParameterInline(admin.TabularInline):
     model = DeviceParameter
     extra = 1
 
+
 class DeviceSpecAdmin(BaseAdmin):
     list_display = (BaseAdmin.list_display or []) + ['inherit_metadata', 'parent', 'device_type']
     list_filter = (BaseAdmin.list_filter or []) + ['inherit_metadata', 'device_type',]
@@ -64,18 +65,20 @@ class ExperimentDataInline(admin.TabularInline):
 class ExperimentAdmin(common.admin.BaseAdmin):
     inlines = [ExperimentDataInline]
 
+
 admin.site.register(Experiment, ExperimentAdmin)
 
-# class DeviceConfigInline(admin.TabularInline):
-#     model = DeviceConfigNode
-#     extra = 2
-#
-#
-# class DeviceConfigAdmin(BaseAdmin):
-#     inlines = (DeviceConfigInline,)
-#     # list_display = ["title", "DOI", "year", "has_pdf"]
-#     # list_filter = ["year", "publisher", "authors"]
 
+class DeviceConfigInline(admin.TabularInline):
+    model = DeviceConfigNode
+    extra = 2
+
+
+class DeviceConfigAdmin(BaseAdmin):
+    inlines = (DeviceConfigInline,)
+
+
+admin.site.register([DeviceConfig,], DeviceConfigAdmin)
 
 # class ModuleDeviceInline(admin.TabularInline):
 #     model = ModuleDevice
@@ -86,14 +89,13 @@ admin.site.register(Experiment, ExperimentAdmin)
 # class ModuleAdmin(BaseAdmin):
     # inlines = [ModuleDeviceInline,]
 
-
-#admin.site.register([DeviceConfig,], DeviceConfigAdmin)
 # admin.site.register([CompositeDevice,], ModuleAdmin)
 
 class DeviceDataInline(admin.TabularInline):
     model = DataColumn
     readonly_fields = ["serialNo"]
     extra = 0
+
 
 class DataAdmin(BaseAdmin):
     inlines = [DeviceDataInline, ]
@@ -109,5 +111,6 @@ class DataAdmin(BaseAdmin):
         else:
             return "N/A"
     get_experiment_link.short_description="Experiment"
+
 
 admin.site.register([ExperimentDataFile], DataAdmin)
