@@ -3,6 +3,7 @@ from common.admin import BaseAdmin, ThingAdmin
 from django.utils.safestring import mark_safe
 import common
 from django.forms import Textarea
+import mptt
 
 # Register your models here.
 
@@ -26,14 +27,15 @@ class CompositeDeviceInline(common.admin.CompositeThingInline):
         return get_data
 
 
-class DeviceParameterInline(admin.TabularInline):
+class DeviceParameterInline(common.admin.TabularInLine):
     model = DeviceParameter
     extra = 1
 
 
-class DeviceSpecAdmin(BaseAdmin):
-    list_display = (BaseAdmin.list_display or []) + ['inherit_metadata', 'parent', 'device_type']
-    list_filter = (BaseAdmin.list_filter or []) + ['inherit_metadata', 'device_type',]
+class DeviceSpecAdmin(common.admin.ThingAdmin):
+    list_display = common.admin.ThingAdmin.list_display + ('device_type', 'abstract')
+    list_filter = (common.admin.ThingAdmin.list_filter or []) + ['device_type', 'abstract']
+    readonly_fields = (common.admin.ThingAdmin.readonly_fields or []) + ['inherit_metadata']
     inlines = [CompositeDeviceInline, DeviceParameterInline, ]
 
 

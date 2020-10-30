@@ -4,6 +4,7 @@ from django.contrib.postgres.fields import JSONField
 
 from .models import *
 import mptt
+import django.forms
 
 from django.contrib.auth.models import Permission, ContentType
 
@@ -30,17 +31,25 @@ class PersonAdmin(admin.ModelAdmin):
 #  User,
 # ], PersonAdmin)
 
+class ChangeformMixin():
+    def get_changeform_initial_data(self, request):
+        get_data = super().get_changeform_initial_data(request)
+        get_data['user_owner'] = request.user.pk
+        return get_data
 
-class BaseAdmin(admin.ModelAdmin):
+
+class BaseAdmin(ChangeformMixin, admin.ModelAdmin):
     list_display = (["__str__", "user_owner", "status", "created_on", "modified_on"])
     list_filter = (["status"])
     readonly_fields = ['created_on', 'modified_on', 'slug']
     generic_fields = {'name', 'notes', 'status', 'user_owner', 'attributes'}
 
-    def get_changeform_initial_data(self, request):
-        get_data = super().get_changeform_initial_data(request)
-        get_data['user_owner'] = request.user.pk
-        return get_data
+    formfield_overrides = {
+        models.TextField: {'widget': django.forms.Textarea(
+                           attrs={'rows': 3,
+                                  'cols': 40,
+                                  'style': 'height: 3em;'})},
+    }
 
     # this works, but it messes up field ordering due to conversion to sets
     # def get_fieldsets(self, request, obj=None):
@@ -89,13 +98,17 @@ admin.site.register([
 ], PersonAdmin)
 
 
-class CompositeThingInline(admin.TabularInline):
+class TabularInLine(ChangeformMixin, admin.TabularInline):
+    pass
+
+class CompositeThingInline(TabularInLine):
     fk_name = "parent"
     verbose_name_plural = "Composition"
     verbose_name = "Part"
     exclude = ["user_owner", "status", "is_composite", "is_specification"]
     model = Thing
     extra = 1
+
 
 
 #class ThingAdmin(mptt.admin.MPTTModelAdmin):

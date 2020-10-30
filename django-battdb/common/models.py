@@ -19,7 +19,7 @@ class HasName(models.Model):
     """
     Abstract base class for any model having a name
     """
-    name = models.CharField(max_length=128, blank=True, null=True, help_text="Name for this object")
+    name = models.CharField(max_length=128, blank=True, null=True)
 
     def __str__(self):
         return str(self.name)

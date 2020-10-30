@@ -10,6 +10,7 @@ from .utils import hash_file
 import dfndb.models as dfn
 from .migration_dummy import *
 from datetime import datetime
+
 import hashlib
 
 # from jsonfield_schema import JSONSchema
@@ -53,7 +54,7 @@ import hashlib
 
 class DeviceSpecification(cm.Thing):
     """
-    A device
+    A device specification.
     """
     TYPE_CHOICES = [
         ("component", "Component part of a cell"),
@@ -64,7 +65,18 @@ class DeviceSpecification(cm.Thing):
         ("cycler", "Cycler Machine"),
     ]
     parameters = models.ManyToManyField(dfn.Parameter, through='DeviceParameter')
+    abstract = models.BooleanField(default=False,
+                                   verbose_name="Abstract Specification",
+                                   help_text="This specifies an abstract device, e.g. 'Cell' with child members such as"
+                                             "'Positive Electrode, Negative Electrode, Electrolyte etc. <BR>"
+                                             "If this is set to True, then all metadata declared here must be "
+                                             "overridden in child classes. An abstract specification cannot be used "
+                                             "to define a physical device or batch. <BR>"
+                                             "There should be at least one abstract specification in the database "
+                                             "for each device type listed below.")
     device_type = models.CharField(max_length=16, default="cell", choices=TYPE_CHOICES)
+#    device_type = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True,
+#                                     help_text="")
 
     class Meta:
         # verbose_name_plural = "1. Device Specifications"
@@ -93,8 +105,8 @@ class DeviceBatch(cm.Thing):
     Describes a batch of things produced to the same type specification
     """
     specification = models.ForeignKey(DeviceSpecification, null=True, blank=True, on_delete=models.SET_NULL,
-                                      limit_choices_to={'inherit_metadata': True},
-                                      help_text="Copy metadata from another device?")
+                                      limit_choices_to={'abstract': False},
+                                      help_text="Batch Specification")
     manufacturer = models.ForeignKey(cm.Org, null=True, blank=True, on_delete=models.SET_NULL)
     serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
                                 "Batch number, optionally indicate serial number format")
@@ -143,6 +155,8 @@ class DeviceConfig(cm.BaseModel):
     """
     devices = models.ManyToManyField(DeviceSpecification, through='DeviceConfigNode')
 
+    class Meta:
+        verbose_name_plural = "Device Configurations"
 
 class DeviceConfigNode(models.Model):
     """
