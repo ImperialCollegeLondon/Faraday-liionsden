@@ -111,9 +111,9 @@ class DeviceBatch(cm.BaseModel, cm.HasMPTT):
     """
     Describes a batch of things produced to the same type specification
     """
-    # specification = models.ForeignKey(DeviceSpecification, null=True, blank=True, on_delete=models.SET_NULL,
-    #                                   limit_choices_to={'abstract': False},
-    #                                   help_text="Batch Specification")
+    specification = models.ForeignKey(DeviceSpecification, null=True, blank=True, on_delete=models.SET_NULL,
+                                      limit_choices_to={'abstract': False},
+                                      help_text="Batch Specification")
     manufacturer = models.ForeignKey(cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True)
     serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
                                 "Batch number, optionally indicate serial number format")
