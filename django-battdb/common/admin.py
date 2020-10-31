@@ -105,20 +105,26 @@ admin.site.register([
 class TabularInLine(ChangeformMixin, admin.TabularInline):
     pass
 
-class CompositeThingInline(TabularInLine):
+class CompositeBaseInLine(TabularInLine):
     fk_name = "parent"
     verbose_name_plural = "Composition"
-    verbose_name = "Part"
-    exclude = ["user_owner", "status", "is_composite", "is_specification"]
-    model = Thing
     extra = 1
+    show_change_link = True
+    verbose_name_plural = "Child Objects"
+    formfield_overrides = {
+        models.TextField: {'widget': django.forms.Textarea(
+                           attrs={'rows': 1,
+                                  'cols': 40,
+                                  'style': 'height: 1em;'})},
+    }
+
+    def get_changeform_initial_data(self, request):
+        get_data = super().get_changeform_initial_data(request)
+        get_data['user_owner'] = request.user.pk
+        return get_data
 
 
+class HasMPTTAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
+    inlines = [CompositeBaseInLine,]
 
-#class ThingAdmin(mptt.admin.MPTTModelAdmin):
-class ThingAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
-    inlines = [CompositeThingInline,]
-
-
-
-admin.site.register(Thing, ThingAdmin)
+#admin.site.register(Thing, ThingAdmin)

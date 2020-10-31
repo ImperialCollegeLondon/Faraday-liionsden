@@ -1,5 +1,5 @@
 from django.contrib import admin
-from common.admin import BaseAdmin, ThingAdmin
+from common.admin import BaseAdmin
 from django.utils.safestring import mark_safe
 import common
 from django.forms import Textarea
@@ -10,34 +10,22 @@ import mptt
 from .models import *
 
 
-# Need to override inline class to set model to Device instead of Thing
-class CompositeDeviceInline(common.admin.CompositeThingInline):
-    model = DeviceSpecification
-    show_change_link = True
-    exclude = ['attributes', 'user_owner']
-    formfield_overrides = {
-        models.TextField: {'widget': Textarea(
-                           attrs={'rows': 1,
-                                  'cols': 40,
-                                  'style': 'height: 1em;'})},
-    }
-
-    def get_changeform_initial_data(self, request):
-        get_data = super().get_changeform_initial_data(request)
-        get_data['user_owner'] = request.user.pk
-        return get_data
-
 
 class DeviceParameterInline(common.admin.TabularInLine):
     model = DeviceParameter
     extra = 1
 
 
-class DeviceSpecAdmin(common.admin.ThingAdmin):
-    list_display = common.admin.ThingAdmin.list_display + ('device_type', 'abstract', 'complete')
-    list_filter = (common.admin.ThingAdmin.list_filter or []) + ['device_type', 'abstract', 'complete']
-    readonly_fields = (common.admin.ThingAdmin.readonly_fields or []) + ['inherit_metadata']
-    inlines = [CompositeDeviceInline, DeviceParameterInline, ]
+class DeviceSpecInline(common.admin.CompositeBaseInLine):
+    model = DeviceSpecification
+    extra = 1
+
+class DeviceSpecAdmin(common.admin.HasMPTTAdmin):
+    model = DeviceSpecification
+    list_display = common.admin.HasMPTTAdmin.list_display + ('device_type', 'abstract', 'complete')
+    list_filter = (common.admin.HasMPTTAdmin.list_filter or []) + ['device_type', 'abstract', 'complete']
+    #readonly_fields = (common.admin.HasMPTTAdmin.readonly_fields or []) + ['inherit_metadata']
+    inlines = [DeviceSpecInline, DeviceParameterInline, ]
 
 
 admin.site.register(DeviceSpecification, DeviceSpecAdmin)
@@ -50,10 +38,18 @@ class BatchDeviceInline(admin.TabularInline):
     verbose_name = "member"
     exclude = ['attributes']
 
+class DeviceBatchInline(admin.TabularInline):
+    model = DeviceBatch
+    extra = 1
+    verbose_name = "member"
+    exclude = ['attributes']
+
 
 #class ThingAdmin(mptt.admin.MPTTModelAdmin):
-class DeviceBatchAdmin(BaseAdmin):
-    inlines = [BatchDeviceInline,]
+class DeviceBatchAdmin(mptt.admin.MPTTModelAdmin):
+    list_display = BaseAdmin.list_display + ['manufacturer', 'serialNo', 'manufactured_on', 'batch_size']
+    list_filter = BaseAdmin.list_filter + ['manufacturer', 'batch_size']
+    inlines = [DeviceBatchInline, BatchDeviceInline,]
 
 
 admin.site.register(DeviceBatch, DeviceBatchAdmin)

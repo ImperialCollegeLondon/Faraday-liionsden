@@ -116,7 +116,15 @@ class HasMPTT(MPTTModel):
 #TODO class HasHistory(models.Model):
 # history = models.JSONField(...)
 
-class BaseModel(HasName, HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates):
+class BaseModelNoName(HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates):
+    """
+   Abstract base Inheriting all the common bases as mixins:<br>
+   HasName, HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
+   """
+    class Meta:
+        abstract = True
+
+class BaseModel(BaseModelNoName, HasName):
     """
    Abstract base Inheriting all the common bases as mixins:<br>
    HasName, HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
@@ -133,6 +141,9 @@ class Thing(BaseModel, HasMPTT):
                                            help_text="Set to True if this object does not describe a real life thing, "
                                                      "but a specification, type or grouping. In this case, the "
                                                      "metadata will be inherited.")
+    class Meta:
+        abstract = True
+
 
 
 # TODO: ModelForm Org.head = filter on Person WHERE Person.org = this

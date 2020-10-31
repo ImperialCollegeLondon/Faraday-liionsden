@@ -53,7 +53,7 @@ import hashlib
 
 
 
-class DeviceSpecification(cm.Thing):
+class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
     """
     A device specification.
     """
@@ -76,7 +76,7 @@ class DeviceSpecification(cm.Thing):
     complete = models.BooleanField(default=False,
                                    help_text="This device is complete - it can be used in experiments without a parent")
     device_type = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True,
-                                    limit_choices_to={'abstract': True},
+                                    limit_choices_to={'abstract': True}, related_name="specifies",
                                     help_text="Device type. e.g. Cell, Module, Battery Pack. <BR>"
                                               "An abstract specification cannot have a device type - "
                                               "they define the device types.")
@@ -107,18 +107,21 @@ class DeviceParameter(cm.HasName):
         unique_together = [('spec', 'parameter', 'material'), ('spec', 'name')]
 
 
-class DeviceBatch(cm.Thing):
+class DeviceBatch(cm.BaseModel, cm.HasMPTT):
     """
     Describes a batch of things produced to the same type specification
     """
-    specification = models.ForeignKey(DeviceSpecification, null=True, blank=True, on_delete=models.SET_NULL,
-                                      limit_choices_to={'abstract': False},
-                                      help_text="Batch Specification")
-    manufacturer = models.ForeignKey(cm.Org, null=True, blank=True, on_delete=models.SET_NULL)
+    # specification = models.ForeignKey(DeviceSpecification, null=True, blank=True, on_delete=models.SET_NULL,
+    #                                   limit_choices_to={'abstract': False},
+    #                                   help_text="Batch Specification")
+    manufacturer = models.ForeignKey(cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True)
     serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
                                 "Batch number, optionally indicate serial number format")
     batch_size = models.PositiveSmallIntegerField(default=1)
     manufactured_on = models.DateField(default=datetime.now)
+
+    def __str__(self):
+        return "%s %s (%d off) %s" % (self.manufacturer, self.specification, self.batch_size, self.manufactured_on)
 
     class Meta:
         verbose_name = "Device or Batch"
@@ -362,7 +365,7 @@ class Experiment(cm.BaseModel):
         verbose_name = "dataset"
 
 
-class ExperimentDataFile(cm.BaseModel):
+class ExperimentDataFile(cm.BaseModelNoName):
     """
         # FIXME: DataFile currently duplicates data. <br>
         # It is stored for posterity in the format in which it was uploaded. <br>
