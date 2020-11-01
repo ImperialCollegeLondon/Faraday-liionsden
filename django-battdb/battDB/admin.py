@@ -4,6 +4,7 @@ from django.utils.safestring import mark_safe
 import common
 from django.forms import Textarea
 import mptt
+from .forms import *
 
 # Register your models here.
 
@@ -11,7 +12,7 @@ from .models import *
 
 
 
-class DeviceParameterInline(common.admin.TabularInLine):
+class DeviceParameterInline(common.admin.TabularInline):
     model = DeviceParameter
     extra = 1
 
@@ -31,22 +32,22 @@ class DeviceSpecAdmin(common.admin.HasMPTTAdmin):
 admin.site.register(DeviceSpecification, DeviceSpecAdmin)
 
 
-class BatchDeviceInline(admin.TabularInline):
+class BatchDeviceInline(common.admin.TabularInline):
     model = BatchDevice
     extra = 1
     verbose_name_plural = "Batch Members"
     verbose_name = "member"
     exclude = ['attributes']
 
-class DeviceBatchInline(admin.TabularInline):
+class DeviceBatchInline(common.admin.TabularInline):
     model = DeviceBatch
-    extra = 1
+    extra = 0
     verbose_name = "member"
     exclude = ['attributes']
 
 
 #class ThingAdmin(mptt.admin.MPTTModelAdmin):
-class DeviceBatchAdmin(mptt.admin.MPTTModelAdmin):
+class DeviceBatchAdmin(common.admin.BaseAdmin, mptt.admin.MPTTModelAdmin):
     list_display = BaseAdmin.list_display + ['manufacturer', 'serialNo', 'manufactured_on', 'batch_size']
     list_filter = BaseAdmin.list_filter + ['manufacturer', 'batch_size']
     inlines = [DeviceBatchInline, BatchDeviceInline,]
@@ -55,20 +56,28 @@ class DeviceBatchAdmin(mptt.admin.MPTTModelAdmin):
 admin.site.register(DeviceBatch, DeviceBatchAdmin)
 
 
-class ExperimentDataInline(admin.TabularInline):
+class ExperimentDataInline(common.admin.TabularInline):
     model = ExperimentDataFile
-    extra = 1
+    extra = 0
     exclude = ['attributes', 'file_hash', 'user_owner']
 
 
+class ExperimentDevicesInline(common.admin.TabularInline):
+    model = DataColumn
+    extra = 1
+    # exclude = ['attributes', 'file_hash', 'user_owner']
+
 class ExperimentAdmin(common.admin.BaseAdmin):
-    inlines = [ExperimentDataInline]
+#    readonly_fields = BaseAdmin.readonly_fields + ['data_files']
+    exclude = ['data_files']
+    inlines = [ExperimentDataInline, ]
+#    form = ExperimentForm
 
 
 admin.site.register(Experiment, ExperimentAdmin)
 
 
-class DeviceConfigInline(admin.TabularInline):
+class DeviceConfigInline(common.admin.TabularInline):
     model = DeviceConfigNode
     extra = 2
 
@@ -90,16 +99,24 @@ class DeviceConfigAdmin(BaseAdmin):
 
 # admin.site.register([CompositeDevice,], ModuleAdmin)
 
-class DeviceDataInline(admin.TabularInline):
+# class DataFileAdmin(admin.TabularInline):
+#     model = common.models.UploadedFile
+#     readonly_fields = ["hash"]
+#     extra = 0
+
+class DeviceDataInline(common.admin.TabularInline):
     model = DataColumn
     readonly_fields = ["serialNo"]
     extra = 0
 
+class DataRangeInline(common.admin.TabularInline):
+    model = DataRange
+    extra = 0
 
 class DataAdmin(BaseAdmin):
-    inlines = [DeviceDataInline, ]
+    inlines = [DeviceDataInline, DataRangeInline, ]
     list_display = BaseAdmin.list_display + ['get_experiment_link', 'file_exists', 'is_parsed']
-    readonly_fields = BaseAdmin.readonly_fields + ['get_experiment_link', 'file_hash']
+    readonly_fields = BaseAdmin.readonly_fields + ['get_experiment_link', 'file_hash', 'columns']
 
     def get_experiment_link(self, obj):
         if hasattr(obj,'experiment') and obj.experiment is not None:
@@ -110,6 +127,8 @@ class DataAdmin(BaseAdmin):
         else:
             return "N/A"
     get_experiment_link.short_description="Experiment"
+
+
 
 
 admin.site.register([ExperimentDataFile], DataAdmin)

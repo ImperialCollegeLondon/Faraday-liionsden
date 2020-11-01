@@ -6660,6 +6660,42 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 249,
+  "fields": {
+    "name": "Can add uploaded file",
+    "content_type": 63,
+    "codename": "add_uploadedfile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 250,
+  "fields": {
+    "name": "Can change uploaded file",
+    "content_type": 63,
+    "codename": "change_uploadedfile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 251,
+  "fields": {
+    "name": "Can delete uploaded file",
+    "content_type": 63,
+    "codename": "delete_uploadedfile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 252,
+  "fields": {
+    "name": "Can view uploaded file",
+    "content_type": 63,
+    "codename": "view_uploadedfile"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -7302,6 +7338,14 @@
   "fields": {
     "app_label": "battDB",
     "model": "deviceparameter"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 63,
+  "fields": {
+    "app_label": "common",
+    "model": "uploadedfile"
   }
 },
 {

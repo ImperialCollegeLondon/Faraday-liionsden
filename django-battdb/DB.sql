@@ -666,8 +666,7 @@ CREATE TABLE public."battDB_experimentdatafile" (
     attributes jsonb NOT NULL,
     notes text,
     slug character varying(50) NOT NULL,
-    raw_data_file character varying(100),
-    file_hash character varying(64),
+    raw_data_file_id integer,
     parsed_data jsonb NOT NULL,
     experiment_id integer,
     user_owner_id integer,
@@ -849,6 +848,43 @@ ALTER TABLE public.common_person_id_seq OWNER TO towen;
 --
 
 ALTER SEQUENCE public.common_person_id_seq OWNED BY public.common_person.id;
+
+
+--
+-- Name: common_uploadedfile; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public.common_uploadedfile (
+    id integer NOT NULL,
+    created_on timestamp with time zone NOT NULL,
+    modified_on timestamp with time zone NOT NULL,
+    file character varying(100) NOT NULL,
+    hash character varying(64) NOT NULL
+);
+
+
+ALTER TABLE public.common_uploadedfile OWNER TO towen;
+
+--
+-- Name: common_uploadedfile_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public.common_uploadedfile_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.common_uploadedfile_id_seq OWNER TO towen;
+
+--
+-- Name: common_uploadedfile_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public.common_uploadedfile_id_seq OWNED BY public.common_uploadedfile.id;
 
 
 --
@@ -1440,6 +1476,13 @@ ALTER TABLE ONLY public.common_person ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: common_uploadedfile id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_uploadedfile ALTER COLUMN id SET DEFAULT nextval('public.common_uploadedfile_id_seq'::regclass);
+
+
+--
 -- Name: dfndb_compositionpart id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
@@ -1811,6 +1854,10 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 246	Can change device parameter	62	change_deviceparameter
 247	Can delete device parameter	62	delete_deviceparameter
 248	Can view device parameter	62	view_deviceparameter
+249	Can add uploaded file	63	add_uploadedfile
+250	Can change uploaded file	63	change_uploadedfile
+251	Can delete uploaded file	63	delete_uploadedfile
+252	Can view uploaded file	63	view_uploadedfile
 \.
 
 
@@ -1999,7 +2046,7 @@ COPY public."battDB_experiment" (id, name, status, created_on, modified_on, attr
 -- Data for Name: battDB_experimentdatafile; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_experimentdatafile" (id, status, created_on, modified_on, attributes, notes, slug, raw_data_file, file_hash, parsed_data, experiment_id, user_owner_id) FROM stdin;
+COPY public."battDB_experimentdatafile" (id, status, created_on, modified_on, attributes, notes, slug, raw_data_file_id, parsed_data, experiment_id, user_owner_id) FROM stdin;
 \.
 
 
@@ -2045,6 +2092,14 @@ COPY public.common_paper (id, "DOI", year, title, url, publisher_id, attributes,
 COPY public.common_person (id, org_id, user_id, "longName", "shortName") FROM stdin;
 1	1	1	Tom Owen	T.Owen
 2	\N	\N	nobby	n
+\.
+
+
+--
+-- Data for Name: common_uploadedfile; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public.common_uploadedfile (id, created_on, modified_on, file, hash) FROM stdin;
 \.
 
 
@@ -2539,6 +2594,7 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 60	battDB	datacolumn
 61	battDB	devicespecification
 62	battDB	deviceparameter
+63	common	uploadedfile
 \.
 
 
@@ -2795,6 +2851,8 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 248	common	0049_Bork	2020-10-31 16:24:47.92398+00
 249	battDB	0132_Bork	2020-10-31 16:24:47.932202+00
 250	battDB	0133_RecreateAllModels	2020-10-31 16:25:33.26896+00
+251	common	0050_ExperimentDataFile	2020-11-01 13:38:07.89016+00
+252	battDB	0134_ExperimentDataFile	2020-11-01 13:38:08.033279+00
 \.
 
 
@@ -2835,7 +2893,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 112, true);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 248, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 252, true);
 
 
 --
@@ -2951,6 +3009,13 @@ SELECT pg_catalog.setval('public.common_person_id_seq', 2, true);
 
 
 --
+-- Name: common_uploadedfile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public.common_uploadedfile_id_seq', 1, false);
+
+
+--
 -- Name: dfndb_compositionpart_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
@@ -3017,14 +3082,14 @@ SELECT pg_catalog.setval('public.django_admin_log_id_seq', 326, true);
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 62, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 63, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 250, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 252, true);
 
 
 --
@@ -3244,14 +3309,6 @@ ALTER TABLE ONLY public."battDB_experiment"
 
 
 --
--- Name: battDB_experimentdatafile battDB_experimentdatafile_file_hash_key; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experimentdatafile"
-    ADD CONSTRAINT "battDB_experimentdatafile_file_hash_key" UNIQUE (file_hash);
-
-
---
 -- Name: battDB_experimentdatafile battDB_experimentdatafile_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -3337,6 +3394,22 @@ ALTER TABLE ONLY public.common_person
 
 ALTER TABLE ONLY public.common_person
     ADD CONSTRAINT common_person_user_id_key UNIQUE (user_id);
+
+
+--
+-- Name: common_uploadedfile common_uploadedfile_hash_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_uploadedfile
+    ADD CONSTRAINT common_uploadedfile_hash_key UNIQUE (hash);
+
+
+--
+-- Name: common_uploadedfile common_uploadedfile_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public.common_uploadedfile
+    ADD CONSTRAINT common_uploadedfile_pkey PRIMARY KEY (id);
 
 
 --
@@ -3806,10 +3879,10 @@ CREATE INDEX "battDB_experimentdatafile_experiment_id_de169b40" ON public."battD
 
 
 --
--- Name: battDB_experimentdatafile_file_hash_48d9ed9b_like; Type: INDEX; Schema: public; Owner: towen
+-- Name: battDB_experimentdatafile_raw_data_file_id_91752398; Type: INDEX; Schema: public; Owner: towen
 --
 
-CREATE INDEX "battDB_experimentdatafile_file_hash_48d9ed9b_like" ON public."battDB_experimentdatafile" USING btree (file_hash varchar_pattern_ops);
+CREATE INDEX "battDB_experimentdatafile_raw_data_file_id_91752398" ON public."battDB_experimentdatafile" USING btree (raw_data_file_id);
 
 
 --
@@ -3915,6 +3988,13 @@ CREATE INDEX common_person_org_id_fa830db5 ON public.common_person USING btree (
 --
 
 CREATE INDEX "common_person_shortName_7a8b3bab_like" ON public.common_person USING btree ("shortName" varchar_pattern_ops);
+
+
+--
+-- Name: common_uploadedfile_hash_724f1a2d_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX common_uploadedfile_hash_724f1a2d_like ON public.common_uploadedfile USING btree (hash varchar_pattern_ops);
 
 
 --
@@ -4353,6 +4433,14 @@ ALTER TABLE ONLY public."battDB_experiment"
 
 ALTER TABLE ONLY public."battDB_experimentdatafile"
     ADD CONSTRAINT "battDB_experimentdat_experiment_id_de169b40_fk_battDB_ex" FOREIGN KEY (experiment_id) REFERENCES public."battDB_experiment"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_experimentdatafile battDB_experimentdat_raw_data_file_id_91752398_fk_common_up; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experimentdatafile"
+    ADD CONSTRAINT "battDB_experimentdat_raw_data_file_id_91752398_fk_common_up" FOREIGN KEY (raw_data_file_id) REFERENCES public.common_uploadedfile(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

@@ -6,7 +6,6 @@ from django.contrib.postgres.fields import ArrayField
 from django.urls import reverse
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 import common.models as cm
-from .utils import hash_file
 import dfndb.models as dfn
 from .migration_dummy import *
 from datetime import datetime
@@ -327,6 +326,9 @@ class DeviceConfigNode(models.Model):
 # }
 
 
+
+
+
 class Experiment(cm.BaseModel):
     """
     Main "Experiment" aka DataSet class. <br>
@@ -341,6 +343,7 @@ class Experiment(cm.BaseModel):
     #config = models.ForeignKey(DeviceConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='used_in')
     protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
                                  limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL})
+    data_files = models.ManyToManyField(cm.UploadedFile, through="ExperimentDataFile")
 
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
@@ -360,9 +363,9 @@ class Experiment(cm.BaseModel):
     #     self._meta.get_field('parent').limit_choices_to = {"inherit_metadata": True,
     #                                                        "devType": "module"}
     #     super(Experiment, self).__init__(*args, **kwargs)
-    class Meta:
-        verbose_name_plural = "Experiments"
-        verbose_name = "dataset"
+    # class Meta:
+    #     verbose_name_plural = "Experiments"
+    #     verbose_name = "dataset"
 
 
 class ExperimentDataFile(cm.BaseModelNoName):
@@ -374,12 +377,11 @@ class ExperimentDataFile(cm.BaseModelNoName):
         # As yet unclear to me which is the best approach.
     """
 
-    raw_data_file = models.FileField(upload_to='raw_data_files', null=True)
-    file_hash = models.CharField(max_length=64, null=True, unique=True)
+    raw_data_file = models.ForeignKey(cm.UploadedFile, null=True, blank=False, on_delete=models.SET_NULL,
+                                      related_name="used_by")
 
     mappings = models.ManyToManyField(DeviceBatch, through='DataColumn', blank=True, related_name='data_files')
-    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True,
-                                   related_name='data_files')
+    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
     parsed_data = models.JSONField(editable=False, default=dict)
 
     #import_columns = models.ManyToManyField(dfn.Parameter, blank=True)
@@ -397,32 +399,39 @@ class ExperimentDataFile(cm.BaseModelNoName):
     is_parsed.boolean = True
 
     def file_exists(self):
-        return self.raw_data_file.storage.exists(self.raw_data_file.name)
+        if self.raw_data_file is not None:
+            return self.raw_data_file.exists()
+        return False
     file_exists.boolean = True
 
-    def clean(self):
-        self.file_hash = hash_file(self.raw_data_file)
-        return super().clean()
+    def file_hash(self):
+        return self.raw_data_file.file_hash()
+
+
 
     def __str__(self):
-        return os.path.basename(self.raw_data_file.name)
+        return str(self.raw_data_file)
 
     class Meta:
         # verbose_name_plural = "4. Data Files"
-        verbose_name_plural = "Data Files"
-        verbose_name = "dataset"
+        # verbose_name_plural = "Data Files"
+        verbose_name = "Data File"
+        unique_together = ['raw_data_file', 'experiment']
 
 
 class DataColumn(models.Model):
     data = models.ForeignKey(ExperimentDataFile, on_delete=models.CASCADE)
-    signal_name = models.CharField(max_length=20)
     parameter = models.ForeignKey(dfn.Parameter, null=True, on_delete=models.SET_NULL,
                                   default=4)
+    column_name = models.CharField(max_length=20)
     device = models.ForeignKey(DeviceBatch, on_delete=models.CASCADE)
     batch_id = models.PositiveSmallIntegerField(default=0)
 
     def serialNo(self):
         return "bork"
+
+    def experiment(self):
+        return self.data.exeriment()
 
     class Meta:
         unique_together = ['device', 'data', 'batch_id']
@@ -430,7 +439,7 @@ class DataColumn(models.Model):
         verbose_name_plural = "Data Column Mappings to Device Parameters"
 
 
-class DataRange(cm.BaseModel):
+class DataRange(cm.HasAttributes, cm.HasName, cm.HasNotes, cm.HasCreatedModifiedDates):
     """
     DataRange - each data file contains numerous ranges e.g. charge & discharge cycles. Their data might overlap. <br>
     TODO: Write (or find) code to segment data into ranges. <br>

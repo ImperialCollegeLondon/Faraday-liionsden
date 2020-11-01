@@ -36,14 +36,7 @@ class ChangeformMixin():
         get_data = super().get_changeform_initial_data(request)
         get_data['user_owner'] = request.user.pk
         return get_data
-
-
-class BaseAdmin(ChangeformMixin, admin.ModelAdmin):
-    list_display = (["__str__", "user_owner", "status", "created_on", "modified_on"])
-    list_filter = (["status"])
-    readonly_fields = ['created_on', 'modified_on', 'slug']
-    generic_fields = {'name', 'notes', 'status', 'user_owner', 'attributes'}
-
+    show_change_link = True
     formfield_overrides = {
         models.TextField: {'widget': django.forms.Textarea(
                            attrs={'rows': 3,
@@ -54,6 +47,14 @@ class BaseAdmin(ChangeformMixin, admin.ModelAdmin):
                    'cols': 40,
                    'style': 'height: 3em;'})},
     }
+
+class BaseAdmin(ChangeformMixin, admin.ModelAdmin):
+    list_display = (["__str__", "user_owner", "status", "created_on", "modified_on"])
+    list_filter = (["status"])
+    readonly_fields = ['created_on', 'modified_on', 'slug']
+    generic_fields = {'name', 'notes', 'status', 'user_owner', 'attributes'}
+
+
 
     # this works, but it messes up field ordering due to conversion to sets
     # def get_fieldsets(self, request, obj=None):
@@ -102,29 +103,27 @@ admin.site.register([
 ], PersonAdmin)
 
 
-class TabularInLine(ChangeformMixin, admin.TabularInline):
+class TabularInline(ChangeformMixin, admin.TabularInline):
     pass
 
-class CompositeBaseInLine(TabularInLine):
+
+
+
+class CompositeBaseInLine(TabularInline):
     fk_name = "parent"
     verbose_name_plural = "Composition"
     extra = 1
-    show_change_link = True
     verbose_name_plural = "Child Objects"
-    formfield_overrides = {
-        models.TextField: {'widget': django.forms.Textarea(
-                           attrs={'rows': 1,
-                                  'cols': 40,
-                                  'style': 'height: 1em;'})},
-    }
 
-    def get_changeform_initial_data(self, request):
-        get_data = super().get_changeform_initial_data(request)
-        get_data['user_owner'] = request.user.pk
-        return get_data
+
 
 
 class HasMPTTAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
     inlines = [CompositeBaseInLine,]
 
-#admin.site.register(Thing, ThingAdmin)
+
+class FileAdmin(admin.ModelAdmin):
+    readonly_fields = ['created_on', 'modified_on', 'hash']
+
+
+admin.site.register(UploadedFile, FileAdmin)
