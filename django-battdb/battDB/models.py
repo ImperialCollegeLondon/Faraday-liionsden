@@ -98,6 +98,7 @@ class DeviceParameter(cm.HasName):
     parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
     material = models.ForeignKey(dfn.Material, on_delete=models.CASCADE, blank=True, null=True)
     value = models.JSONField(blank=True, null=True)
+    inherit_to_children = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.parameter)
@@ -106,11 +107,11 @@ class DeviceParameter(cm.HasName):
         unique_together = [('spec', 'parameter', 'material'), ('spec', 'name')]
 
 
-class DeviceBatch(cm.BaseModel, cm.HasMPTT):
+class DeviceBatch(cm.BaseModelNoName, cm.HasMPTT):
     """
     Describes a batch of things produced to the same type specification
     """
-    specification = models.ForeignKey(DeviceSpecification, null=True, blank=True, on_delete=models.SET_NULL,
+    specification = models.ForeignKey(DeviceSpecification, null=True, blank=False, on_delete=models.SET_NULL,
                                       limit_choices_to={'abstract': False},
                                       help_text="Batch Specification")
     manufacturer = models.ForeignKey(cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True)
@@ -337,9 +338,9 @@ class Experiment(cm.BaseModel):
     """
     date = models.DateField(default=datetime.now)
     # apparatus = models.ForeignKey(ExperimentalApparatus, on_delete=models.SET_NULL,  null=True, blank=True)
-    device = models.ForeignKey(DeviceSpecification, related_name='used_in', null=True, blank=True,
-                               on_delete=models.SET_NULL,
-                               limit_choices_to={'abstract': False, 'complete': True})
+    # device = models.ForeignKey(DeviceSpecification, related_name='used_in', null=True, blank=True,
+    #                            on_delete=models.SET_NULL,
+    #                            limit_choices_to={'abstract': False, 'complete': True})
     #config = models.ForeignKey(DeviceConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='used_in')
     protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
                                  limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL})

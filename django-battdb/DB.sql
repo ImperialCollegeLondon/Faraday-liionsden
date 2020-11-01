@@ -295,7 +295,7 @@ ALTER SEQUENCE public."battDB_batchdevice_id_seq" OWNED BY public."battDB_batchd
 
 CREATE TABLE public."battDB_datacolumn" (
     id integer NOT NULL,
-    signal_name character varying(20) NOT NULL,
+    column_name character varying(20) NOT NULL,
     batch_id smallint NOT NULL,
     data_id integer NOT NULL,
     device_id integer NOT NULL,
@@ -335,12 +335,10 @@ ALTER SEQUENCE public."battDB_datacolumn_id_seq" OWNED BY public."battDB_datacol
 CREATE TABLE public."battDB_datarange" (
     id integer NOT NULL,
     name character varying(128),
-    status smallint NOT NULL,
     created_on timestamp with time zone NOT NULL,
     modified_on timestamp with time zone NOT NULL,
     attributes jsonb NOT NULL,
     notes text,
-    slug character varying(50) NOT NULL,
     file_offset integer NOT NULL,
     label character varying(32),
     protocol_step integer NOT NULL,
@@ -348,10 +346,8 @@ CREATE TABLE public."battDB_datarange" (
     ts_headers character varying(32)[],
     ts_data double precision[],
     "dataFile_id" integer,
-    user_owner_id integer,
     CONSTRAINT "battDB_datarange_file_offset_check" CHECK ((file_offset >= 0)),
-    CONSTRAINT "battDB_datarange_protocol_step_check" CHECK ((protocol_step >= 0)),
-    CONSTRAINT "battDB_datarange_status_check" CHECK ((status >= 0))
+    CONSTRAINT "battDB_datarange_protocol_step_check" CHECK ((protocol_step >= 0))
 );
 
 
@@ -385,13 +381,12 @@ ALTER SEQUENCE public."battDB_datarange_id_seq" OWNED BY public."battDB_datarang
 
 CREATE TABLE public."battDB_devicebatch" (
     id integer NOT NULL,
-    name character varying(128),
     status smallint NOT NULL,
     created_on timestamp with time zone NOT NULL,
     modified_on timestamp with time zone NOT NULL,
     attributes jsonb NOT NULL,
     notes text,
-    slug character varying(50) NOT NULL,
+    slug character varying(500) NOT NULL,
     "serialNo" character varying(60) NOT NULL,
     batch_size smallint NOT NULL,
     manufactured_on date NOT NULL,
@@ -448,7 +443,7 @@ CREATE TABLE public."battDB_deviceconfig" (
     modified_on timestamp with time zone NOT NULL,
     attributes jsonb NOT NULL,
     notes text,
-    slug character varying(50) NOT NULL,
+    slug character varying(500) NOT NULL,
     user_owner_id integer,
     CONSTRAINT "battDB_deviceconfig_status_check" CHECK ((status >= 0))
 );
@@ -487,9 +482,9 @@ CREATE TABLE public."battDB_deviceconfignode" (
     device_position_id character varying(20),
     device_terminal_name character varying(10),
     net_name character varying(20),
-    config_id integer NOT NULL,
+    next_id integer,
     device_id integer NOT NULL,
-    next_id integer
+    config_id integer NOT NULL
 );
 
 
@@ -527,7 +522,8 @@ CREATE TABLE public."battDB_deviceparameter" (
     value jsonb,
     material_id integer,
     parameter_id integer NOT NULL,
-    spec_id integer NOT NULL
+    spec_id integer NOT NULL,
+    inherit_to_children boolean NOT NULL
 );
 
 
@@ -567,7 +563,7 @@ CREATE TABLE public."battDB_devicespecification" (
     modified_on timestamp with time zone NOT NULL,
     attributes jsonb NOT NULL,
     notes text,
-    slug character varying(50) NOT NULL,
+    slug character varying(500) NOT NULL,
     abstract boolean NOT NULL,
     complete boolean NOT NULL,
     lft integer NOT NULL,
@@ -621,9 +617,8 @@ CREATE TABLE public."battDB_experiment" (
     modified_on timestamp with time zone NOT NULL,
     attributes jsonb NOT NULL,
     notes text,
-    slug character varying(50) NOT NULL,
+    slug character varying(500) NOT NULL,
     date date NOT NULL,
-    device_id integer,
     protocol_id integer,
     user_owner_id integer,
     CONSTRAINT "battDB_experiment_status_check" CHECK ((status >= 0))
@@ -665,7 +660,7 @@ CREATE TABLE public."battDB_experimentdatafile" (
     modified_on timestamp with time zone NOT NULL,
     attributes jsonb NOT NULL,
     notes text,
-    slug character varying(50) NOT NULL,
+    slug character varying(500) NOT NULL,
     raw_data_file_id integer,
     parsed_data jsonb NOT NULL,
     experiment_id integer,
@@ -737,7 +732,7 @@ CREATE TABLE public.common_org (
     created_on timestamp with time zone NOT NULL,
     modified_on timestamp with time zone NOT NULL,
     notes text,
-    slug character varying(50) NOT NULL
+    slug character varying(500) NOT NULL
 );
 
 
@@ -783,7 +778,7 @@ CREATE TABLE public.common_paper (
     "PDF" character varying(100),
     modified_on timestamp with time zone NOT NULL,
     created_on timestamp with time zone NOT NULL,
-    slug character varying(50) NOT NULL,
+    slug character varying(500) NOT NULL,
     authors character varying(300) NOT NULL,
     CONSTRAINT common_paper_status_check CHECK ((status >= 0))
 );
@@ -975,7 +970,7 @@ CREATE TABLE public.dfndb_data (
     notes text,
     modified_on date NOT NULL,
     created_on timestamp with time zone NOT NULL,
-    slug character varying(50) NOT NULL,
+    slug character varying(500) NOT NULL,
     CONSTRAINT dfndb_data_status_check CHECK ((status >= 0))
 );
 
@@ -1058,7 +1053,7 @@ CREATE TABLE public.dfndb_material (
     notes text,
     modified_on date NOT NULL,
     created_on timestamp with time zone NOT NULL,
-    slug character varying(50) NOT NULL,
+    slug character varying(500) NOT NULL,
     CONSTRAINT dfndb_material_polymer_cda0da24_check CHECK ((polymer >= 0)),
     CONSTRAINT dfndb_material_status_check CHECK ((status >= 0)),
     CONSTRAINT dfndb_material_type_19d56e15_check CHECK ((type >= 0))
@@ -1104,7 +1099,7 @@ CREATE TABLE public.dfndb_method (
     notes text,
     modified_on date NOT NULL,
     created_on timestamp with time zone NOT NULL,
-    slug character varying(50) NOT NULL,
+    slug character varying(500) NOT NULL,
     CONSTRAINT dfndb_method_status_check CHECK ((status >= 0))
 );
 
@@ -1148,7 +1143,7 @@ CREATE TABLE public.dfndb_parameter (
     name character varying(128),
     modified_on date NOT NULL,
     created_on timestamp with time zone NOT NULL,
-    slug character varying(50) NOT NULL,
+    slug character varying(500) NOT NULL,
     CONSTRAINT dfndb_parameter_status_check CHECK ((status >= 0))
 );
 
@@ -1574,18 +1569,10 @@ COPY public.auth_group (id, name) FROM stdin;
 --
 
 COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
-1	1	1
-2	1	2
-3	1	3
-4	1	4
 29	1	29
 30	1	30
 31	1	31
 32	1	32
-33	1	33
-34	1	34
-35	1	35
-36	1	36
 37	1	37
 38	1	38
 39	1	39
@@ -1610,34 +1597,66 @@ COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
 58	1	58
 59	1	59
 60	1	60
-61	1	61
-62	1	62
-63	1	63
-64	1	64
-65	1	65
-66	1	66
-67	1	67
-68	1	68
-69	2	1
-70	2	2
-71	2	3
-72	2	4
 97	2	29
 98	2	30
 99	2	31
 100	2	32
-101	2	33
-102	2	34
-103	2	35
-104	2	36
-105	2	61
-106	2	62
-107	2	63
-108	2	64
-109	2	65
-110	2	66
-111	2	67
-112	2	68
+113	2	128
+114	2	129
+115	2	130
+116	2	131
+117	2	132
+118	2	136
+119	2	137
+120	2	138
+121	2	139
+122	2	140
+123	2	144
+124	2	149
+125	2	150
+126	2	151
+127	2	152
+128	2	192
+129	2	197
+130	2	198
+131	2	199
+132	2	200
+133	2	201
+134	2	202
+135	2	203
+136	2	204
+137	2	85
+138	2	86
+139	2	87
+140	2	88
+141	2	89
+142	2	90
+143	2	91
+144	2	92
+145	2	120
+146	2	225
+147	2	226
+148	2	227
+149	2	228
+150	2	105
+151	2	108
+152	2	237
+153	2	238
+154	2	239
+155	2	240
+156	2	112
+157	2	124
+158	2	244
+159	2	245
+160	2	246
+161	2	247
+162	2	248
+163	2	249
+164	2	116
+165	2	117
+166	2	252
+167	2	118
+168	2	125
 \.
 
 
@@ -1646,18 +1665,10 @@ COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
 --
 
 COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
-1	Can add cell	1	add_cell
-2	Can change cell	1	change_cell
-3	Can delete cell	1	delete_cell
-4	Can view cell	1	view_cell
 29	Can add experiment	8	add_experiment
 30	Can change experiment	8	change_experiment
 31	Can delete experiment	8	delete_experiment
 32	Can view experiment	8	view_experiment
-33	Can add cell batch	9	add_cellbatch
-34	Can change cell batch	9	change_cellbatch
-35	Can delete cell batch	9	delete_cellbatch
-36	Can view cell batch	9	view_cellbatch
 37	Can add permission	10	add_permission
 38	Can change permission	10	change_permission
 39	Can delete permission	10	delete_permission
@@ -1682,26 +1693,6 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 58	Can change session	15	change_session
 59	Can delete session	15	delete_session
 60	Can view session	15	view_session
-61	Can add equipment type	16	add_equipmenttype
-62	Can change equipment type	16	change_equipmenttype
-63	Can delete equipment type	16	delete_equipmenttype
-64	Can view equipment type	16	view_equipmenttype
-65	Can add cell config	17	add_cellconfig
-66	Can change cell config	17	change_cellconfig
-67	Can delete cell config	17	delete_cellconfig
-68	Can view cell config	17	view_cellconfig
-69	Can add experiment result	18	add_experimentresult
-70	Can change experiment result	18	change_experimentresult
-71	Can delete experiment result	18	delete_experimentresult
-72	Can view experiment result	18	view_experimentresult
-73	Can add experiment data	19	add_experimentdata
-74	Can change experiment data	19	change_experimentdata
-75	Can delete experiment data	19	delete_experimentdata
-76	Can view experiment data	19	view_experimentdata
-81	Can add cell type	21	add_celltype
-82	Can change cell type	21	change_celltype
-83	Can delete cell type	21	delete_celltype
-84	Can view cell type	21	view_celltype
 85	Can add data range	22	add_datarange
 86	Can change data range	22	change_datarange
 87	Can delete data range	22	delete_datarange
@@ -1710,10 +1701,6 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 90	Can change experiment data file	23	change_experimentdatafile
 91	Can delete experiment data file	23	delete_experimentdatafile
 92	Can view experiment data file	23	view_experimentdatafile
-101	Can add paper	26	add_paper
-102	Can change paper	26	change_paper
-103	Can delete paper	26	delete_paper
-104	Can view paper	26	view_paper
 105	Can add composition part	27	add_compositionpart
 106	Can change composition part	27	change_compositionpart
 107	Can delete composition part	27	delete_compositionpart
@@ -1754,38 +1741,10 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 142	Can change person	36	change_person
 143	Can delete person	36	delete_person
 144	Can view person	36	view_person
-145	Can add device type	37	add_devicetype
-146	Can change device type	37	change_devicetype
-147	Can delete device type	37	delete_devicetype
-148	Can view device type	37	view_devicetype
 149	Can add device batch	38	add_devicebatch
 150	Can change device batch	38	change_devicebatch
 151	Can delete device batch	38	delete_devicebatch
 152	Can view device batch	38	view_devicebatch
-153	Can add device	39	add_device
-154	Can change device	39	change_device
-155	Can delete device	39	delete_device
-156	Can view device	39	view_device
-157	Can add raw data file	40	add_rawdatafile
-158	Can change raw data file	40	change_rawdatafile
-159	Can delete raw data file	40	delete_rawdatafile
-160	Can view raw data file	40	view_rawdatafile
-161	Can add apparatus equipment	41	add_apparatusequipment
-162	Can change apparatus equipment	41	change_apparatusequipment
-163	Can delete apparatus equipment	41	delete_apparatusequipment
-164	Can view apparatus equipment	41	view_apparatusequipment
-165	Can add device type	42	add_devicetype
-166	Can change device type	42	change_devicetype
-167	Can delete device type	42	delete_devicetype
-168	Can view device type	42	view_devicetype
-169	Can add device	43	add_device
-170	Can change device	43	change_device
-171	Can delete device	43	delete_device
-172	Can view device	43	view_device
-173	Can add batch	44	add_batch
-174	Can change batch	44	change_batch
-175	Can delete batch	44	delete_batch
-176	Can view batch	44	view_batch
 177	Can add Token	45	add_token
 178	Can change Token	45	change_token
 179	Can delete Token	45	delete_token
@@ -1794,18 +1753,10 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 182	Can change token	46	change_tokenproxy
 183	Can delete token	46	delete_tokenproxy
 184	Can view token	46	view_tokenproxy
-185	Can add batch	47	add_batch
-186	Can change batch	47	change_batch
-187	Can delete batch	47	delete_batch
-188	Can view batch	47	view_batch
 189	Can add data parameter	48	add_dataparameter
 190	Can change data parameter	48	change_dataparameter
 191	Can delete data parameter	48	delete_dataparameter
 192	Can view data parameter	48	view_dataparameter
-193	Can add paper author	49	add_paperauthor
-194	Can change paper author	49	change_paperauthor
-195	Can delete paper author	49	delete_paperauthor
-196	Can view paper author	49	view_paperauthor
 197	Can add device config node	50	add_deviceconfignode
 198	Can change device config node	50	change_deviceconfignode
 199	Can delete device config node	50	delete_deviceconfignode
@@ -1814,34 +1765,10 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 202	Can change device config	51	change_deviceconfig
 203	Can delete device config	51	delete_deviceconfig
 204	Can view device config	51	view_deviceconfig
-205	Can add base model with slug	52	add_basemodelwithslug
-206	Can change base model with slug	52	change_basemodelwithslug
-207	Can delete base model with slug	52	delete_basemodelwithslug
-208	Can view base model with slug	52	view_basemodelwithslug
-209	Can add module device	53	add_moduledevice
-210	Can change module device	53	change_moduledevice
-211	Can delete module device	53	delete_moduledevice
-212	Can view module device	53	view_moduledevice
-213	Can add composite device	54	add_compositedevice
-214	Can change composite device	54	change_compositedevice
-215	Can delete composite device	54	delete_compositedevice
-216	Can view composite device	54	view_compositedevice
-217	Can add thing composition	55	add_thingcomposition
-218	Can change thing composition	55	change_thingcomposition
-219	Can delete thing composition	55	delete_thingcomposition
-220	Can view thing composition	55	view_thingcomposition
-221	Can add thing	56	add_thing
-222	Can change thing	56	change_thing
-223	Can delete thing	56	delete_thing
-224	Can view thing	56	view_thing
 225	Can add batch device	57	add_batchdevice
 226	Can change batch device	57	change_batchdevice
 227	Can delete batch device	57	delete_batchdevice
 228	Can view batch device	57	view_batchdevice
-233	Can add Data File to Device Mapping	59	add_devicedata
-234	Can change Data File to Device Mapping	59	change_devicedata
-235	Can delete Data File to Device Mapping	59	delete_devicedata
-236	Can view Data File to Device Mapping	59	view_devicedata
 237	Can add Data File to Device Mapping	60	add_datacolumn
 238	Can change Data File to Device Mapping	60	change_datacolumn
 239	Can delete Data File to Device Mapping	60	delete_datacolumn
@@ -1887,18 +1814,10 @@ COPY public.auth_user_groups (id, user_id, group_id) FROM stdin;
 --
 
 COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
-1	2	1
-2	2	2
-3	2	3
-4	2	4
 29	2	29
 30	2	30
 31	2	31
 32	2	32
-33	2	33
-34	2	34
-35	2	35
-36	2	36
 37	2	37
 38	2	38
 39	2	39
@@ -1923,36 +1842,20 @@ COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
 58	2	58
 59	2	59
 60	2	60
-61	2	61
-62	2	62
-63	2	63
-64	2	64
-65	2	65
-66	2	66
-67	2	67
-68	2	68
 69	7	128
-70	7	4
 71	7	132
 73	7	136
 75	7	140
 77	7	144
 81	7	32
-82	7	36
 83	7	40
 84	7	44
 85	7	48
 86	7	52
 87	7	56
 88	7	60
-89	7	64
-90	7	68
-91	7	72
-92	7	76
-94	7	84
 95	7	88
 96	7	92
-99	7	104
 100	7	108
 101	7	112
 102	7	116
@@ -1982,7 +1885,7 @@ COPY public."battDB_batchdevice" (id, attributes, batch_index, "serialNo", batch
 -- Data for Name: battDB_datacolumn; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_datacolumn" (id, signal_name, batch_id, data_id, device_id, parameter_id) FROM stdin;
+COPY public."battDB_datacolumn" (id, column_name, batch_id, data_id, device_id, parameter_id) FROM stdin;
 \.
 
 
@@ -1990,7 +1893,7 @@ COPY public."battDB_datacolumn" (id, signal_name, batch_id, data_id, device_id, 
 -- Data for Name: battDB_datarange; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_datarange" (id, name, status, created_on, modified_on, attributes, notes, slug, file_offset, label, protocol_step, step_action, ts_headers, ts_data, "dataFile_id", user_owner_id) FROM stdin;
+COPY public."battDB_datarange" (id, name, created_on, modified_on, attributes, notes, file_offset, label, protocol_step, step_action, ts_headers, ts_data, "dataFile_id") FROM stdin;
 \.
 
 
@@ -1998,7 +1901,8 @@ COPY public."battDB_datarange" (id, name, status, created_on, modified_on, attri
 -- Data for Name: battDB_devicebatch; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_devicebatch" (id, name, status, created_on, modified_on, attributes, notes, slug, "serialNo", batch_size, manufactured_on, lft, rght, tree_id, level, manufacturer_id, parent_id, specification_id, user_owner_id) FROM stdin;
+COPY public."battDB_devicebatch" (id, status, created_on, modified_on, attributes, notes, slug, "serialNo", batch_size, manufactured_on, lft, rght, tree_id, level, manufacturer_id, parent_id, specification_id, user_owner_id) FROM stdin;
+32	10	2020-11-01 17:41:49.156174+00	2020-11-01 17:41:49.156188+00	{}		imperial-college-my-nmc622-cell-1-off-2020-11-01		1	2020-11-01	1	2	1	0	1	\N	7	1
 \.
 
 
@@ -2014,7 +1918,7 @@ COPY public."battDB_deviceconfig" (id, name, status, created_on, modified_on, at
 -- Data for Name: battDB_deviceconfignode; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_deviceconfignode" (id, device_position_id, device_terminal_name, net_name, config_id, device_id, next_id) FROM stdin;
+COPY public."battDB_deviceconfignode" (id, device_position_id, device_terminal_name, net_name, next_id, device_id, config_id) FROM stdin;
 \.
 
 
@@ -2022,7 +1926,10 @@ COPY public."battDB_deviceconfignode" (id, device_position_id, device_terminal_n
 -- Data for Name: battDB_deviceparameter; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_deviceparameter" (id, name, value, material_id, parameter_id, spec_id) FROM stdin;
+COPY public."battDB_deviceparameter" (id, name, value, material_id, parameter_id, spec_id, inherit_to_children) FROM stdin;
+1	Pack capacity	\N	\N	3	4	f
+2	Module capacity	\N	\N	3	5	f
+3	Cell Capacity	\N	\N	3	6	f
 \.
 
 
@@ -2031,6 +1938,11 @@ COPY public."battDB_deviceparameter" (id, name, value, material_id, parameter_id
 --
 
 COPY public."battDB_devicespecification" (id, name, status, created_on, modified_on, attributes, notes, slug, abstract, complete, lft, rght, tree_id, level, device_type_id, parent_id, user_owner_id) FROM stdin;
+8	My NMC622 Module	10	2020-11-01 17:45:04.963155+00	2020-11-01 17:45:33.655848+00	{}		my-nmc622-module	f	t	1	4	3	0	5	\N	1
+4	Generic Pack	10	2020-11-01 17:25:16.059603+00	2020-11-01 17:25:16.059616+00	{}		generic-pack	t	f	1	6	1	0	\N	\N	1
+5	Generic Module	10	2020-11-01 17:25:16.061485+00	2020-11-01 17:27:16.423826+00	{}		generic-module	t	f	2	5	1	1	\N	4	\N
+6	Generic Cell	10	2020-11-01 17:27:16.425737+00	2020-11-01 17:27:37.140492+00	{}		generic-cell	t	f	3	4	1	2	\N	5	1
+7	My NMC622 Cell	10	2020-11-01 17:36:29.295484+00	2020-11-01 17:46:29.432615+00	{}		my-nmc622-cell	f	t	1	2	2	0	6	\N	1
 \.
 
 
@@ -2038,7 +1950,8 @@ COPY public."battDB_devicespecification" (id, name, status, created_on, modified
 -- Data for Name: battDB_experiment; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_experiment" (id, name, status, created_on, modified_on, attributes, notes, slug, date, device_id, protocol_id, user_owner_id) FROM stdin;
+COPY public."battDB_experiment" (id, name, status, created_on, modified_on, attributes, notes, slug, date, protocol_id, user_owner_id) FROM stdin;
+5	My experiment	10	2020-11-01 17:43:36.325635+00	2020-11-01 17:43:36.325649+00	{}		tom-my-experiment-2020-11-01	2020-11-01	4	1
 \.
 
 
@@ -2047,6 +1960,7 @@ COPY public."battDB_experiment" (id, name, status, created_on, modified_on, attr
 --
 
 COPY public."battDB_experimentdatafile" (id, status, created_on, modified_on, attributes, notes, slug, raw_data_file_id, parsed_data, experiment_id, user_owner_id) FROM stdin;
+5	10	2020-11-01 16:35:21.068347+00	2020-11-01 17:58:20.640301+00	{}		biologic_full_aa5m9sltxt	4	{}	5	1
 \.
 
 
@@ -2100,6 +2014,7 @@ COPY public.common_person (id, org_id, user_id, "longName", "shortName") FROM st
 --
 
 COPY public.common_uploadedfile (id, created_on, modified_on, file, hash) FROM stdin;
+4	2020-11-01 16:29:33.94877+00	2020-11-01 16:29:33.948786+00	uploaded_files/BioLogic_full_aa5m9sL.txt	
 \.
 
 
@@ -2183,6 +2098,7 @@ COPY public.dfndb_parameter (id, symbol, notes, unit_id, user_owner_id, attribut
 4	V		1	1	{}	10	Cell Voltage	2020-10-28	2020-10-28 14:42:37.150113+00	cell-voltage-v-v
 6	C		11	1	{}	10	Capacity	2020-10-30	2020-10-30 12:17:04.438278+00	capacity-c-mah
 7	I		5	1	{}	10	Pack Current	2020-10-30	2020-10-30 15:03:05.688117+00	pack-current-i-a
+8	x		12	1	{}	10	miscellaneous	2020-11-01	2020-11-01 17:31:08.087297+00	miscellaneous-x-arb
 \.
 
 
@@ -2201,6 +2117,7 @@ COPY public.dfndb_quantityunit (id, "quantityName", "quantitySymbol", "unitName"
 9	Capacity	C	Watt Hours	Wh	f	3600	8
 10	Distance	d	nanometres	nm	f	1e-09	6
 11	Capacity	C	milliAmp Hour	mAh	f	0.0002777777777777778	3
+12	Arbitrary	Arb	Arb	Arb	f	\N	\N
 \.
 
 
@@ -2209,14 +2126,7 @@ COPY public.dfndb_quantityunit (id, "quantityName", "quantitySymbol", "unitName"
 --
 
 COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
-1	2020-08-04 19:13:10.226362+01	1	foo	1	[{"added": {}}]	9	1
-3	2020-08-04 19:26:04.905071+01	1	foo	2	[{"changed": {"fields": ["manufacturer"]}}]	9	1
-5	2020-08-04 19:28:19.927154+01	1	MyLiPo	1	[{"added": {}}]	1	1
-7	2020-08-04 19:42:29.857145+01	1	GalvoTron 3000	1	[{"added": {}}]	16	1
-8	2020-08-04 19:45:01.780472+01	2	GalvoTron 3000	1	[{"added": {}}]	16	1
-12	2020-08-04 19:52:35.233623+01	1	GalvoTron 3000	3		16	1
 14	2020-08-04 19:54:28.563138+01	1	Experiment object (1)	1	[{"added": {}}]	8	1
-15	2020-08-04 20:17:17.174324+01	1	4s	1	[{"added": {}}]	17	1
 16	2020-08-04 20:26:50.203876+01	1	test test	2	[{"changed": {"fields": ["cells", "processed_data_file"]}}]	8	1
 17	2020-08-04 20:36:45.200934+01	1	test test	2	[{"changed": {"fields": ["raw_data_file", "processed_data_file"]}}]	8	1
 18	2020-08-05 13:09:30.332537+01	1	tom/test test/2020-08-04	3		8	1
@@ -2251,42 +2161,27 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 47	2020-08-12 15:34:28.362297+01	8	tom/experiment/2020-08-05	2	[]	8	1
 48	2020-08-13 09:53:36.7441+01	3	binbin	1	[{"added": {}}]	12	1
 49	2020-08-13 09:54:53.286908+01	3	binbin	2	[{"changed": {"fields": ["first_name", "last_name", "is_staff", "groups"]}}]	12	1
-50	2020-08-13 10:08:11.60325+01	1	BioLogic_full_u455xrV.txt	1	[{"added": {}}]	18	1
 51	2020-08-13 11:32:39.18455+01	3	binbin	2	[{"changed": {"fields": ["is_superuser"]}}]	12	1
-52	2020-08-13 11:45:05.248666+01	1	BioLogic_full_u455xrV.txt	2	[]	18	3
-53	2020-08-13 11:45:09.003282+01	1	BioLogic_full_u455xrV.txt	2	[]	18	3
-54	2020-08-13 11:45:59.648366+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	3
-55	2020-08-13 11:46:07.851905+01	1	bio-logic-data-table.tsv	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
-56	2020-08-13 11:46:37.388125+01	1	BioLogic_full_Bq7ABsZ.txt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
-57	2020-08-13 11:47:51.783604+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	1	[{"added": {}}]	18	3
-58	2020-08-13 13:41:16.80162+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	2	[]	18	1
-59	2020-08-13 13:44:28.732886+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	2	[]	18	1
-60	2020-08-13 13:45:10.46911+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	2	[]	18	1
-61	2020-08-13 14:56:13.246066+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	3
-62	2020-08-13 15:42:26.567344+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt	2	[]	18	1
-63	2020-08-13 15:43:05.748529+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_xETlkXH.mpt	1	[{"added": {}}]	18	1
-64	2020-08-13 15:43:11.157068+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt	2	[]	18	1
-65	2020-08-13 15:43:45.614216+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_oa7otTL.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
-66	2020-08-13 15:46:34.261891+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lj6rngx.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
-67	2020-08-13 15:52:59.611491+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lj6rngx.mpt	2	[]	18	1
-68	2020-08-13 15:53:09.682091+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lvMpGzm.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	18	1
-69	2020-08-13 15:54:23.605556+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lvMpGzm.mpt	2	[{"changed": {"fields": ["experiment"]}}]	18	1
 70	2020-08-13 15:55:13.379716+01	9	tom/fooo/2020-08-05	2	[{"changed": {"fields": ["analysis"]}}]	8	1
-71	2020-08-15 16:26:07.435613+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	1	[{"added": {}}]	19	1
-72	2020-08-15 16:26:20.330113+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-73	2020-08-15 16:27:19.328572+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-74	2020-08-15 16:29:00.149786+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-75	2020-08-15 16:35:13.104076+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-76	2020-08-15 16:44:43.695498+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-77	2020-08-15 22:01:36.300505+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-78	2020-08-15 22:02:36.949811+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-79	2020-08-15 22:04:51.218447+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-80	2020-08-15 22:05:28.350057+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-81	2020-08-15 22:15:17.813728+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
-82	2020-08-15 22:15:35.627463+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
+1	2020-08-04 19:13:10.226362+01	1	foo	1	[{"added": {}}]	\N	1
+15	2020-08-04 20:17:17.174324+01	1	4s	1	[{"added": {}}]	\N	1
+7	2020-08-04 19:42:29.857145+01	1	GalvoTron 3000	1	[{"added": {}}]	\N	1
+8	2020-08-04 19:45:01.780472+01	2	GalvoTron 3000	1	[{"added": {}}]	\N	1
+71	2020-08-15 16:26:07.435613+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	1	[{"added": {}}]	\N	1
+72	2020-08-15 16:26:20.330113+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	\N	1
+50	2020-08-13 10:08:11.60325+01	1	BioLogic_full_u455xrV.txt	1	[{"added": {}}]	\N	1
+52	2020-08-13 11:45:05.248666+01	1	BioLogic_full_u455xrV.txt	2	[]	\N	3
+53	2020-08-13 11:45:09.003282+01	1	BioLogic_full_u455xrV.txt	2	[]	\N	3
+54	2020-08-13 11:45:59.648366+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	\N	3
+55	2020-08-13 11:46:07.851905+01	1	bio-logic-data-table.tsv	2	[{"changed": {"fields": ["raw_data_file"]}}]	\N	1
+56	2020-08-13 11:46:37.388125+01	1	BioLogic_full_Bq7ABsZ.txt	2	[{"changed": {"fields": ["raw_data_file"]}}]	\N	1
+57	2020-08-13 11:47:51.783604+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	1	[{"added": {}}]	\N	3
+58	2020-08-13 13:41:16.80162+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	2	[]	\N	1
+59	2020-08-13 13:44:28.732886+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	2	[]	\N	1
+60	2020-08-13 13:45:10.46911+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt	2	[]	\N	1
+61	2020-08-13 14:56:13.246066+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	\N	3
 84	2020-08-16 16:02:44.784119+01	6	rishi	1	[{"added": {}}]	12	1
 85	2020-08-16 16:03:02.079082+01	6	rishi	2	[{"changed": {"fields": ["is_staff", "is_superuser"]}}]	12	1
-86	2020-08-17 13:09:14.120233+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	19	1
 98	2020-09-03 20:56:48.721474+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_VhdOTOf.mpt	1	[{"added": {}}]	23	1
 99	2020-09-04 00:49:08.152134+01	1	charging	1	[{"added": {}}]	22	1
 100	2020-09-04 00:51:23.68365+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_VhdOTOf.mpt/1: charging	2	[]	22	1
@@ -2307,15 +2202,6 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 115	2020-10-12 21:36:22.334348+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_VhdOTOf.mpt	3		23	1
 119	2020-10-14 14:47:38.831365+01	1	None	2	[]	35	1
 120	2020-10-14 15:46:13.419807+01	1	52f1021a6e32e4202acab1c5c19f0067cc1ce38a	1	[{"added": {}}]	46	1
-121	2020-10-15 12:49:42.377249+01	3	None	3		40	1
-122	2020-10-15 12:49:57.048987+01	2	None	3		40	1
-123	2020-10-15 12:49:57.053634+01	1	None	3		40	1
-124	2020-10-15 13:04:19.151885+01	4	foo	1	[{"added": {}}]	40	1
-125	2020-10-15 13:04:57.852735+01	4	foo	2	[{"changed": {"fields": ["Raw data file"]}}]	40	1
-126	2020-10-15 13:05:13.279474+01	4	foo	2	[{"changed": {"fields": ["Raw data file"]}}]	40	1
-127	2020-10-15 13:09:03.892766+01	6	None	1	[{"added": {}}]	40	1
-128	2020-10-15 13:09:19.458002+01	6	None	2	[{"changed": {"fields": ["Raw data file"]}}]	40	1
-129	2020-10-15 13:12:07.30048+01	6	None	2	[{"changed": {"fields": ["Raw data file"]}}]	40	1
 130	2020-10-15 16:41:04.55752+01	1	Imperial College	2	[{"changed": {"fields": ["Name", "Status", "Notes", "Is research", "Is mfg cells", "Website"]}}]	34	1
 131	2020-10-15 17:38:59.894418+01	1	Person object (1)	2	[{"changed": {"fields": ["Name", "User", "Org"]}}]	36	1
 133	2020-10-15 18:20:08.939864+01	1	foo-bar	2	[{"changed": {"fields": ["Publisher", "Authors"]}}]	35	1
@@ -2364,6 +2250,8 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 175	2020-10-16 15:05:13.819015+01	2	Graphite	1	[{"added": {}}, {"added": {"name": "composition part", "object": "C1"}}]	29	1
 176	2020-10-16 15:05:36.225971+01	1	NMC622	2	[{"changed": {"fields": ["User owner"]}}]	29	1
 116	2020-10-12 22:00:22.900391+01	1	ExperimentalApparatus object (1)	2	[]	\N	1
+121	2020-10-15 12:49:42.377249+01	3	None	3		\N	1
+122	2020-10-15 12:49:57.048987+01	2	None	3		\N	1
 177	2020-10-16 15:06:34.98439+01	3	Lithium Metal	1	[{"added": {}}, {"added": {"name": "composition part", "object": "Li1"}}]	29	1
 178	2020-10-16 18:01:43.739615+01	1	test foo	1	[{"added": {}}, {"added": {"name": "data parameter", "object": "DataParameter object (1)"}}]	33	1
 179	2020-10-16 18:05:08.980434+01	1	test foo	2	[{"added": {"name": "data parameter", "object": "particle radius: rP / m"}}]	33	1
@@ -2386,13 +2274,7 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 196	2020-10-19 00:09:55.795814+01	1	toward-unique-identifiers-2020	2	[]	35	1
 197	2020-10-19 00:10:07.659737+01	1	toward-unique-identifiers-2019	2	[{"changed": {"fields": ["Year"]}}]	35	1
 198	2020-10-19 16:59:28.043635+01	1	toward-unique-identifiers-2019	2	[]	35	1
-199	2020-10-21 12:34:11.865153+01	1	None	1	[{"added": {}}]	1	1
 200	2020-10-21 12:34:48.225406+01	2	Bob's company	1	[{"added": {}}]	34	1
-201	2020-10-21 12:36:23.18336+01	2	bob's LiPo	1	[{"added": {}}]	1	1
-202	2020-10-22 11:13:00.283855+01	3	test 1s LiPo spec	1	[{"added": {}}]	39	1
-203	2020-10-22 11:13:56.650286+01	4	GalvoTron 5000	1	[{"added": {}}]	39	1
-204	2020-10-22 11:16:00.880295+01	5	MyCellSpecification	1	[{"added": {}}]	39	1
-205	2020-10-22 11:16:19.662917+01	5	MyCellSpecification	2	[{"changed": {"fields": ["Attributes"]}}]	39	1
 206	2020-10-22 11:19:23.723233+01	1	None	1	[{"added": {}}, {"added": {"name": "device config node", "object": "DeviceConfigNode object (1)"}}]	51	1
 207	2020-10-22 11:27:04.622444+01	1	None	2	[{"added": {"name": "device config node", "object": "DeviceConfigNode object (2)"}}, {"added": {"name": "device config node", "object": "DeviceConfigNode object (3)"}}, {"added": {"name": "device config node", "object": "DeviceConfigNode object (4)"}}, {"changed": {"name": "device config node", "object": "DeviceConfigNode object (1)", "fields": ["Net name"]}}]	51	1
 208	2020-10-22 11:33:41.512118+01	1	2s Module	2	[{"changed": {"fields": ["Name"]}}, {"changed": {"name": "device config node", "object": "2s Module/MiddleCathode", "fields": ["Next"]}}, {"changed": {"name": "device config node", "object": "2s Module/MiddleAnode", "fields": ["Next"]}}]	51	1
@@ -2401,64 +2283,16 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 211	2020-10-22 11:43:18.232646+01	1	2S Module	2	[{"changed": {"name": "device config node", "object": "2S Module/Pack +vePositive", "fields": ["Device position id"]}}, {"changed": {"name": "device config node", "object": "2S Module/MiddleNegative", "fields": ["Device position id"]}}, {"changed": {"name": "device config node", "object": "2S Module/MiddlePositive", "fields": ["Device position id"]}}, {"changed": {"name": "device config node", "object": "2S Module/Pack -veNegative", "fields": ["Device position id"]}}]	51	1
 212	2020-10-22 11:56:13.735901+01	1	2S Module config	2	[{"changed": {"fields": ["Name"]}}]	51	1
 213	2020-10-26 11:52:26.988082+00	3	My DFN model	1	[{"added": {}}]	30	1
-215	2020-10-26 12:08:07.604887+00	6	a cell	1	[{"added": {}}]	1	1
-216	2020-10-26 12:11:37.378668+00	7	a module	1	[{"added": {}}]	39	1
-217	2020-10-26 14:19:59.406685+00	1	pack	1	[{"added": {}}, {"added": {"name": "thing", "object": "Cell 1"}}, {"added": {"name": "thing", "object": "Cell 2"}}]	56	1
-218	2020-10-26 14:21:02.988101+00	3	Cell 2	2	[{"changed": {"fields": ["lft", "rght"]}}]	56	1
-219	2020-10-26 14:21:06.718299+00	3	Cell 2	2	[{"changed": {"fields": ["parent", "lft", "rght", "level"]}}]	56	1
-220	2020-10-26 14:21:39.75855+00	3	Cell 2	2	[{"changed": {"fields": ["parent", "lft", "rght", "level"]}}]	56	1
-221	2020-10-26 14:21:44.666408+00	2	Cell 1	2	[{"changed": {"fields": ["lft", "rght"]}}]	56	1
-222	2020-10-26 14:22:28.077301+00	2	Cell 1	2	[{"changed": {"fields": ["Parent"]}}, {"added": {"name": "thing", "object": "PositiveElectrode"}}]	56	1
-223	2020-10-26 14:23:59.310044+00	2	Cell 1	2	[{"changed": {"fields": ["Is composite"]}}]	56	1
-224	2020-10-26 14:24:04.314103+00	1	pack	2	[{"changed": {"fields": ["Is composite"]}}]	56	1
-225	2020-10-26 14:24:11.597249+00	2	Cell 1	2	[{"changed": {"fields": ["Parent"]}}]	56	1
-226	2020-10-26 14:25:10.117402+00	3	Cell 2	2	[{"added": {"name": "thing", "object": "PositiveElectrode"}}, {"added": {"name": "thing", "object": "NegativeElectrode"}}]	56	1
-227	2020-10-26 14:25:18.384065+00	2	Cell 1	2	[{"added": {"name": "thing", "object": "NegativeElectrode"}}]	56	1
-228	2020-10-26 14:25:43.682137+00	1	2S Pack	2	[{"changed": {"fields": ["Name"]}}]	56	1
-229	2020-10-26 14:27:04.015632+00	8	My Batch	1	[{"added": {}}]	56	1
-230	2020-10-26 14:27:11.893738+00	1	2S Pack	2	[{"changed": {"fields": ["Parent"]}}]	56	1
-231	2020-10-26 14:27:26.371091+00	1	2S Pack	2	[{"changed": {"fields": ["Is specification"]}}]	56	1
-232	2020-10-26 14:28:49.550933+00	1	2S Module	2	[{"changed": {"fields": ["Name"]}}]	56	1
-233	2020-10-26 14:30:48.491003+00	8	My Module	2	[{"changed": {"fields": ["Name"]}}]	56	1
-234	2020-10-26 14:30:56.382136+00	8	My Pack	2	[{"changed": {"fields": ["Name"]}}]	56	1
-235	2020-10-26 14:31:12.764119+00	8	My Pack	2	[{"changed": {"fields": ["Is specification"]}}]	56	1
-236	2020-10-26 14:32:00.704136+00	9	Pack Clone	1	[{"added": {}}]	56	1
-237	2020-10-26 16:21:44.441835+00	6	NegativeElectrode	2	[{"changed": {"fields": ["Is composite"]}}]	56	1
-238	2020-10-26 16:21:58.668651+00	5	PositiveElectrode	2	[{"changed": {"fields": ["Is composite"]}}]	56	1
-239	2020-10-26 16:29:08.691665+00	6	NegativeElectrode	2	[{"added": {"name": "thing", "object": "foo"}}]	56	1
-240	2020-10-26 16:29:41.11374+00	3	Cell 2	2	[{"changed": {"fields": ["Is composite"]}}]	56	1
-241	2020-10-26 16:30:08.247457+00	8	My Pack	3		56	1
-242	2020-10-26 16:30:38.113092+00	8	My Pack	3		56	1
-243	2020-10-26 16:30:38.136902+00	1	2S Module	3		56	1
-244	2020-10-26 16:30:38.151424+00	3	Cell 2	3		56	1
-245	2020-10-26 16:30:38.166317+00	5	PositiveElectrode	3		56	1
-246	2020-10-26 16:30:38.18824+00	6	NegativeElectrode	3		56	1
-247	2020-10-26 16:30:38.211684+00	10	foo	3		56	1
-248	2020-10-26 16:30:38.229517+00	2	Cell 1	3		56	1
-249	2020-10-26 16:30:38.249766+00	4	PositiveElectrode	3		56	1
-250	2020-10-26 16:30:38.26269+00	7	NegativeElectrode	3		56	1
-251	2020-10-26 16:30:38.273716+00	9	Pack Clone	3		56	1
-252	2020-10-26 16:31:06.604435+00	11	My Module	1	[{"added": {}}, {"added": {"name": "thing", "object": "Cell 1"}}, {"added": {"name": "thing", "object": "Cell 2"}}]	56	1
-253	2020-10-26 16:31:18.650988+00	12	Cell 1	2	[{"changed": {"fields": ["Parent assembly"]}}, {"added": {"name": "thing", "object": "PositiveElectrode"}}]	56	1
-254	2020-10-26 16:32:25.60542+00	12	Cell 1	2	[{"changed": {"fields": ["Parent assembly"]}}]	56	1
-255	2020-10-26 16:33:20.829772+00	12	Cell 1	2	[{"changed": {"fields": ["lft", "rght"]}}]	56	1
-256	2020-10-27 00:21:30.75437+00	1	My Cell Spec	1	[{"added": {}}]	39	1
+352	2020-11-01 14:47:05.838445+00	7	Imperial College None (1 off) 2020-11-01	3		38	1
+199	2020-10-21 12:34:11.865153+01	1	None	1	[{"added": {}}]	\N	1
+201	2020-10-21 12:36:23.18336+01	2	bob's LiPo	1	[{"added": {}}]	\N	1
+215	2020-10-26 12:08:07.604887+00	6	a cell	1	[{"added": {}}]	\N	1
+202	2020-10-22 11:13:00.283855+01	3	test 1s LiPo spec	1	[{"added": {}}]	\N	1
+203	2020-10-22 11:13:56.650286+01	4	GalvoTron 5000	1	[{"added": {}}]	\N	1
+204	2020-10-22 11:16:00.880295+01	5	MyCellSpecification	1	[{"added": {}}]	\N	1
+205	2020-10-22 11:16:19.662917+01	5	MyCellSpecification	2	[{"changed": {"fields": ["Attributes"]}}]	\N	1
+216	2020-10-26 12:11:37.378668+00	7	a module	1	[{"added": {}}]	\N	1
 257	2020-10-27 00:21:55.914815+00	1	None	1	[{"added": {}}, {"added": {"name": "device config node", "object": "None/NoneNone"}}, {"added": {"name": "device config node", "object": "None/NoneNone"}}]	51	1
-258	2020-10-27 11:27:15.178955+00	2	My NMC622 2s2p Module	1	[{"added": {}}, {"added": {"name": "thing", "object": "Cell A1"}}, {"added": {"name": "thing", "object": "Cell A2"}}, {"added": {"name": "thing", "object": "Cell B1"}}, {"added": {"name": "thing", "object": "Cell B2"}}]	39	1
-259	2020-10-27 11:27:47.258646+00	3	Cell A1	3		56	1
-260	2020-10-27 11:27:47.273921+00	4	Cell A2	3		56	1
-261	2020-10-27 11:27:47.286354+00	5	Cell B1	3		56	1
-262	2020-10-27 11:27:47.30147+00	6	Cell B2	3		56	1
-263	2020-10-27 11:38:38.412709+00	2	My NMC622 2s2p Module	2	[{"added": {"name": "thing", "object": "Cell A1"}}, {"added": {"name": "thing", "object": "Cell A2"}}, {"added": {"name": "thing", "object": "Cell B1"}}, {"added": {"name": "thing", "object": "Cell B2"}}]	39	1
-264	2020-10-27 11:38:58.55007+00	7	Cell A1	3		56	1
-265	2020-10-27 11:38:58.587016+00	8	Cell A2	3		56	1
-266	2020-10-27 11:38:58.613523+00	9	Cell B1	3		56	1
-267	2020-10-27 11:38:58.64213+00	10	Cell B2	3		56	1
-268	2020-10-27 11:40:50.472164+00	2	My NMC622 2s2p Module	2	[{"added": {"name": "device", "object": "Cell A1"}}, {"added": {"name": "device", "object": "Cell A2"}}]	39	1
-269	2020-10-27 11:41:01.29575+00	2	My NMC622 2s2p Module	2	[{"added": {"name": "device", "object": "Cell B1"}}, {"added": {"name": "device", "object": "Cell B2"}}]	39	1
-270	2020-10-27 11:43:39.926131+00	12	Cell A2	2	[{"changed": {"fields": ["Status"]}}]	56	1
-271	2020-10-28 11:30:16.70413+00	11	Cell A1	2	[{"changed": {"fields": ["Specification"]}}]	39	1
-272	2020-10-28 11:30:30.554495+00	2	My NMC622 2s2p Module	2	[{"changed": {"name": "device", "object": "Cell A2", "fields": ["Specification"]}}, {"changed": {"name": "device", "object": "Cell B1", "fields": ["Specification"]}}, {"changed": {"name": "device", "object": "Cell B2", "fields": ["Specification"]}}]	39	1
 273	2020-10-28 14:42:37.15201+00	4	Cell Voltage: V / V	1	[{"added": {}}]	32	1
 274	2020-10-28 14:49:51.199973+00	1	tom/None/2020-10-28	1	[{"added": {}}, {"added": {"name": "dataset", "object": "A8932-Datasheet.pdf"}}]	8	1
 275	2020-10-28 14:53:01.702663+00	1	tom None 2020-10-28	2	[]	8	1
@@ -2497,6 +2331,13 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 95	2020-09-03 19:17:40.814297+01	3	Temperature/°C	2	[{"changed": {"fields": ["unit_name"]}}]	\N	1
 96	2020-09-03 19:18:31.397625+01	1	Voltage/V	2	[{"changed": {"fields": ["unit_name", "unit_symbol"]}}]	\N	1
 97	2020-09-03 19:18:54.762396+01	5	Power/W	1	[{"added": {}}]	\N	1
+256	2020-10-27 00:21:30.75437+00	1	My Cell Spec	1	[{"added": {}}]	\N	1
+258	2020-10-27 11:27:15.178955+00	2	My NMC622 2s2p Module	1	[{"added": {}}, {"added": {"name": "thing", "object": "Cell A1"}}, {"added": {"name": "thing", "object": "Cell A2"}}, {"added": {"name": "thing", "object": "Cell B1"}}, {"added": {"name": "thing", "object": "Cell B2"}}]	\N	1
+263	2020-10-27 11:38:38.412709+00	2	My NMC622 2s2p Module	2	[{"added": {"name": "thing", "object": "Cell A1"}}, {"added": {"name": "thing", "object": "Cell A2"}}, {"added": {"name": "thing", "object": "Cell B1"}}, {"added": {"name": "thing", "object": "Cell B2"}}]	\N	1
+268	2020-10-27 11:40:50.472164+00	2	My NMC622 2s2p Module	2	[{"added": {"name": "device", "object": "Cell A1"}}, {"added": {"name": "device", "object": "Cell A2"}}]	\N	1
+269	2020-10-27 11:41:01.29575+00	2	My NMC622 2s2p Module	2	[{"added": {"name": "device", "object": "Cell B1"}}, {"added": {"name": "device", "object": "Cell B2"}}]	\N	1
+271	2020-10-28 11:30:16.70413+00	11	Cell A1	2	[{"changed": {"fields": ["Specification"]}}]	\N	1
+272	2020-10-28 11:30:30.554495+00	2	My NMC622 2s2p Module	2	[{"changed": {"name": "device", "object": "Cell A2", "fields": ["Specification"]}}, {"changed": {"name": "device", "object": "Cell B1", "fields": ["Specification"]}}, {"changed": {"name": "device", "object": "Cell B2", "fields": ["Specification"]}}]	\N	1
 117	2020-10-12 23:22:21.079795+01	1	ExperimentalApparatus object (1)	2	[{"changed": {"fields": ["Attributes"]}}]	\N	1
 118	2020-10-12 23:26:31.741966+01	1	None	2	[]	\N	1
 132	2020-10-15 17:55:03.068903+01	1	Tom's GalvoTron 5000	2	[{"changed": {"fields": ["Name"]}}]	\N	1
@@ -2534,6 +2375,187 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 324	2020-10-30 15:03:15.398613+00	28	Module	2	[{"added": {"name": "device parameter", "object": "Pack Current: I / A"}}]	61	1
 325	2020-10-30 15:05:31.984399+00	22	My NMC622 Cell 1	2	[{"changed": {"fields": ["Name"]}}]	38	1
 326	2020-10-30 15:06:29.93398+00	30	2s2p module batch of 100	1	[{"added": {}}]	38	1
+327	2020-11-01 14:06:01.077976+00	2	BioLogic_full_57G6K9u_5aEH9qc.txt	1	[{"added": {}}]	63	1
+328	2020-11-01 14:09:15.116161+00	2	tom foo 2020-11-01	1	[{"added": {}}, {"added": {"name": "dataset", "object": "BioLogic_full_57G6K9u_5aEH9qc.txt"}}]	8	1
+329	2020-11-01 14:17:47.634037+00	2	tom foo 2020-11-01	2	[]	8	1
+330	2020-11-01 14:33:34.000053+00	3	tom None 2020-11-01	1	[{"added": {}}, {"added": {"name": "dataset", "object": "BioLogic_full_57G6K9u_5aEH9qc.txt"}}]	8	1
+331	2020-11-01 14:39:48.750072+00	1	Imperial College None (1 off) 2020-11-01	1	[{"added": {}}, {"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+332	2020-11-01 14:40:16.732717+00	2	BioLogic_full_57G6K9u_5aEH9qc.txt	2	[{"added": {"name": "Column Mapping", "object": "DataColumn object (1)"}}]	23	1
+333	2020-11-01 14:40:26.130318+00	2	BioLogic_full_57G6K9u_5aEH9qc.txt	2	[{"changed": {"name": "Column Mapping", "object": "DataColumn object (1)", "fields": ["Device"]}}]	23	1
+334	2020-11-01 14:40:35.780654+00	1	Imperial College None (1 off) 2020-11-01	2	[{"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+335	2020-11-01 14:40:42.175008+00	2	BioLogic_full_57G6K9u_5aEH9qc.txt	2	[{"changed": {"name": "Column Mapping", "object": "DataColumn object (1)", "fields": ["Device"]}}]	23	1
+336	2020-11-01 14:41:23.486257+00	2	Imperial College None (1 off) 2020-11-01	3		38	1
+337	2020-11-01 14:41:23.519545+00	3	Imperial College None (1 off) 2020-11-01	3		38	1
+338	2020-11-01 14:42:27.760594+00	3	BioLogic_full_57G6K9u_5aEH9qc.txt	1	[{"added": {}}]	23	1
+339	2020-11-01 14:42:37.519639+00	3	BioLogic_full_57G6K9u_5aEH9qc.txt	2	[]	23	1
+340	2020-11-01 14:42:41.575044+00	3	BioLogic_full_57G6K9u_5aEH9qc.txt	2	[]	23	1
+341	2020-11-01 14:42:55.055273+00	1	bork	1	[{"added": {}}]	61	1
+342	2020-11-01 14:42:59.208785+00	1	bork	2	[]	61	1
+343	2020-11-01 14:43:04.074624+00	3	BioLogic_full_57G6K9u_5aEH9qc.txt	2	[]	23	1
+344	2020-11-01 14:43:08.813336+00	1	Imperial College None (1 off) 2020-11-01	2	[{"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+345	2020-11-01 14:46:31.069975+00	4	Imperial College None (1 off) 2020-11-01	2	[{"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+346	2020-11-01 14:46:37.223763+00	1	Imperial College None (1 off) 2020-11-01	2	[{"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+347	2020-11-01 14:46:50.613405+00	1	Imperial College None (1 off) 2020-11-01	3		38	1
+348	2020-11-01 14:46:50.628821+00	4	Imperial College None (1 off) 2020-11-01	3		38	1
+349	2020-11-01 14:46:50.640182+00	5	Imperial College None (1 off) 2020-11-01	3		38	1
+350	2020-11-01 14:46:50.651077+00	6	Imperial College None (1 off) 2020-11-01	3		38	1
+351	2020-11-01 14:46:55.344219+00	7	Imperial College None (1 off) 2020-11-01	1	[{"added": {}}, {"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+353	2020-11-01 14:47:05.87836+00	8	Imperial College None (1 off) 2020-11-01	3		38	1
+354	2020-11-01 14:47:15.397273+00	9	Imperial College None (1 off) 2020-11-01	1	[{"added": {}}, {"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+355	2020-11-01 14:47:54.795184+00	9	Imperial College None (1 off) 2020-11-01	3		38	1
+356	2020-11-01 14:47:54.823996+00	10	Imperial College None (1 off) 2020-11-01	3		38	1
+357	2020-11-01 15:10:57.566664+00	11	Imperial College None (1 off) 2020-11-01	1	[{"added": {}}, {"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+358	2020-11-01 15:11:14.590871+00	11	Imperial College None (1 off) 2020-11-01	3		38	1
+359	2020-11-01 15:11:14.612191+00	12	Imperial College None (1 off) 2020-11-01	3		38	1
+360	2020-11-01 15:11:20.868189+00	13	Imperial College None (1 off) 2020-11-01	1	[{"added": {}}, {"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+361	2020-11-01 15:11:35.059812+00	13	Imperial College None (1 off) 2020-11-01	3		38	1
+362	2020-11-01 15:11:35.097733+00	14	Imperial College None (1 off) 2020-11-01	3		38	1
+363	2020-11-01 15:11:44.536983+00	15	Imperial College None (1 off) 2020-11-01	1	[{"added": {}}, {"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+364	2020-11-01 15:12:12.547653+00	2	foo	1	[{"added": {}}]	61	1
+365	2020-11-01 15:12:20.168684+00	15	Imperial College None (1 off) 2020-11-01	3		38	1
+366	2020-11-01 15:12:20.195695+00	16	Imperial College None (1 off) 2020-11-01	3		38	1
+367	2020-11-01 15:12:28.654333+00	17	Imperial College foo (1 off) 2020-11-01	1	[{"added": {}}, {"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+368	2020-11-01 15:14:00.502337+00	19	Imperial College None (1 off) 2020-11-01	1	[{"added": {}}, {"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+369	2020-11-01 15:14:15.882377+00	21	Imperial College None (1 off) 2020-11-01	1	[{"added": {}}, {"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+370	2020-11-01 15:15:58.406989+00	23	Imperial College None (1 off) 2020-11-01	1	[{"added": {}}, {"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+371	2020-11-01 15:16:06.508326+00	17	Imperial College foo (1 off) 2020-11-01	3		38	1
+372	2020-11-01 15:16:06.541957+00	18	Imperial College None (1 off) 2020-11-01	3		38	1
+373	2020-11-01 15:16:06.569243+00	19	Imperial College None (1 off) 2020-11-01	3		38	1
+374	2020-11-01 15:16:06.6004+00	20	Imperial College None (1 off) 2020-11-01	3		38	1
+375	2020-11-01 15:16:06.627232+00	21	Imperial College None (1 off) 2020-11-01	3		38	1
+376	2020-11-01 15:16:06.658069+00	22	Imperial College None (1 off) 2020-11-01	3		38	1
+377	2020-11-01 15:16:06.67683+00	23	Imperial College None (1 off) 2020-11-01	3		38	1
+378	2020-11-01 15:16:06.690077+00	24	Imperial College None (1 off) 2020-11-01	3		38	1
+379	2020-11-01 15:16:09.947659+00	25	Imperial College None (1 off) 2020-11-01	1	[{"added": {}}, {"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+380	2020-11-01 15:16:23.323012+00	25	Imperial College None (1 off) 2020-11-01	3		38	1
+381	2020-11-01 15:16:23.339625+00	26	Imperial College None (1 off) 2020-11-01	3		38	1
+382	2020-11-01 15:17:15.635047+00	28	Imperial College None (1 off) 2020-11-01	1	[{"added": {}}, {"added": {"name": "Device or Batch", "object": "Imperial College None (1 off) 2020-11-01"}}]	38	1
+383	2020-11-01 15:17:37.295761+00	27	Imperial College None (1 off) 2020-11-01	3		38	1
+384	2020-11-01 15:17:37.322098+00	28	Imperial College None (1 off) 2020-11-01	3		38	1
+385	2020-11-01 15:17:37.337556+00	29	Imperial College None (1 off) 2020-11-01	3		38	1
+386	2020-11-01 15:17:39.868059+00	30	Imperial College None (1 off) 2020-11-01	1	[{"added": {}}]	38	1
+387	2020-11-01 15:20:20.482383+00	3	None	1	[{"added": {}}]	61	1
+388	2020-11-01 15:20:28.140146+00	1	bork	2	[]	61	1
+389	2020-11-01 15:20:43.758379+00	1	bork	2	[]	61	1
+390	2020-11-01 16:26:13.936009+00	2	tom foo 2020-11-01	2	[{"deleted": {"name": "dataset", "object": "BioLogic_full_57G6K9u_5aEH9qc.txt"}}]	8	1
+391	2020-11-01 16:29:08.983187+00	2	BioLogic_full_57G6K9u_5aEH9qc.txt	3		63	1
+392	2020-11-01 16:29:33.949882+00	4	BioLogic_full_aa5m9sL.txt	1	[{"added": {}}]	63	1
+393	2020-11-01 16:35:14.589558+00	4	BioLogic_full_aa5m9sL.txt	1	[{"added": {}}]	23	1
+394	2020-11-01 16:35:21.070029+00	5	BioLogic_full_aa5m9sL.txt	1	[{"added": {}}]	23	1
+395	2020-11-01 16:37:27.67319+00	2	None	3		23	1
+396	2020-11-01 16:37:27.684001+00	1	None	3		23	1
+397	2020-11-01 17:23:43.861327+00	1	bork	3		61	1
+398	2020-11-01 17:23:43.907393+00	2	foo	3		61	1
+399	2020-11-01 17:23:43.950273+00	3	None	3		61	1
+400	2020-11-01 17:25:16.063612+00	4	Generic Pack	1	[{"added": {}}, {"added": {"name": "device specification", "object": "Generic Module"}}, {"added": {"name": "device parameter", "object": "Capacity: C / Wh"}}]	61	1
+401	2020-11-01 17:26:46.442668+00	5	Generic Module	2	[{"added": {"name": "device parameter", "object": "Capacity: C / Wh"}}]	61	1
+402	2020-11-01 17:27:16.426389+00	5	Generic Module	2	[{"added": {"name": "device specification", "object": "Generic Cell"}}]	61	1
+403	2020-11-01 17:27:37.142627+00	6	Generic Cell	2	[{"added": {"name": "device parameter", "object": "Capacity: C / Wh"}}]	61	1
+404	2020-11-01 17:30:10.24309+00	12	Arbitrary (Arb) / Arb	1	[{"added": {}}]	31	1
+405	2020-11-01 17:30:24.802193+00	12	Arbitrary (Arb) / Arb	2	[{"changed": {"fields": ["UnitName"]}}]	31	1
+406	2020-11-01 17:30:34.805078+00	12	Arbitrary (Arb) / Arb	2	[{"changed": {"fields": ["UnitName"]}}]	31	1
+407	2020-11-01 17:30:41.52961+00	12	Arbitrary (Arb) / Arb	2	[{"changed": {"fields": ["UnitName"]}}]	31	1
+408	2020-11-01 17:31:08.089968+00	8	miscellaneous: x / Arb	1	[{"added": {}}]	32	1
+409	2020-11-01 17:34:50.952972+00	3	tom None 2020-11-01	3		8	1
+410	2020-11-01 17:34:50.967583+00	2	tom foo 2020-11-01	3		8	1
+411	2020-11-01 17:34:58.973983+00	30	Imperial College None (1 off) 2020-11-01	3		38	1
+412	2020-11-01 17:36:29.296296+00	7	My NMC622 Cell	1	[{"added": {}}]	61	1
+413	2020-11-01 17:37:40.648053+00	31	Imperial College None (1 off) 2020-11-01	1	[{"added": {}}]	38	1
+414	2020-11-01 17:37:52.12403+00	31	Imperial College None (1 off) 2020-11-01	3		38	1
+415	2020-11-01 17:41:49.157464+00	32	Imperial College My NMC622 Cell (1 off) 2020-11-01	1	[{"added": {}}]	38	1
+416	2020-11-01 17:43:36.327178+00	5	tom My experiment 2020-11-01	1	[{"added": {}}]	8	1
+417	2020-11-01 17:45:04.963977+00	8	My NMC622 Module	1	[{"added": {}}]	61	1
+418	2020-11-01 17:45:15.293214+00	8	My NMC622 Module	2	[{"changed": {"fields": ["parent", "lft", "rght", "tree_id", "level"]}}]	61	1
+419	2020-11-01 17:45:33.656546+00	8	My NMC622 Module	2	[{"changed": {"fields": ["parent", "lft", "rght", "level"]}}]	61	1
+420	2020-11-01 17:45:38.383806+00	7	My NMC622 Cell	2	[{"changed": {"fields": ["parent", "lft", "rght", "tree_id", "level"]}}]	61	1
+421	2020-11-01 17:45:38.397246+00	7	My NMC622 Cell	2	[{"changed": {"fields": ["parent", "lft", "rght", "tree_id", "level"]}}]	61	1
+422	2020-11-01 17:46:25.83621+00	7	My NMC622 Cell	2	[{"changed": {"fields": ["parent", "lft", "rght", "tree_id", "level"]}}]	61	1
+423	2020-11-01 17:46:29.4334+00	7	My NMC622 Cell	2	[{"changed": {"fields": ["parent", "lft", "rght", "tree_id", "level"]}}]	61	1
+424	2020-11-01 17:51:09.570345+00	56	thing	3		13	1
+425	2020-11-01 17:51:09.582122+00	55	thingcomposition	3		13	1
+426	2020-11-01 17:51:09.58809+00	54	compositedevice	3		13	1
+427	2020-11-01 17:51:09.593842+00	53	moduledevice	3		13	1
+428	2020-11-01 17:51:09.599668+00	52	basemodelwithslug	3		13	1
+217	2020-10-26 14:19:59.406685+00	1	pack	1	[{"added": {}}, {"added": {"name": "thing", "object": "Cell 1"}}, {"added": {"name": "thing", "object": "Cell 2"}}]	\N	1
+218	2020-10-26 14:21:02.988101+00	3	Cell 2	2	[{"changed": {"fields": ["lft", "rght"]}}]	\N	1
+219	2020-10-26 14:21:06.718299+00	3	Cell 2	2	[{"changed": {"fields": ["parent", "lft", "rght", "level"]}}]	\N	1
+220	2020-10-26 14:21:39.75855+00	3	Cell 2	2	[{"changed": {"fields": ["parent", "lft", "rght", "level"]}}]	\N	1
+221	2020-10-26 14:21:44.666408+00	2	Cell 1	2	[{"changed": {"fields": ["lft", "rght"]}}]	\N	1
+222	2020-10-26 14:22:28.077301+00	2	Cell 1	2	[{"changed": {"fields": ["Parent"]}}, {"added": {"name": "thing", "object": "PositiveElectrode"}}]	\N	1
+223	2020-10-26 14:23:59.310044+00	2	Cell 1	2	[{"changed": {"fields": ["Is composite"]}}]	\N	1
+224	2020-10-26 14:24:04.314103+00	1	pack	2	[{"changed": {"fields": ["Is composite"]}}]	\N	1
+225	2020-10-26 14:24:11.597249+00	2	Cell 1	2	[{"changed": {"fields": ["Parent"]}}]	\N	1
+226	2020-10-26 14:25:10.117402+00	3	Cell 2	2	[{"added": {"name": "thing", "object": "PositiveElectrode"}}, {"added": {"name": "thing", "object": "NegativeElectrode"}}]	\N	1
+227	2020-10-26 14:25:18.384065+00	2	Cell 1	2	[{"added": {"name": "thing", "object": "NegativeElectrode"}}]	\N	1
+228	2020-10-26 14:25:43.682137+00	1	2S Pack	2	[{"changed": {"fields": ["Name"]}}]	\N	1
+229	2020-10-26 14:27:04.015632+00	8	My Batch	1	[{"added": {}}]	\N	1
+230	2020-10-26 14:27:11.893738+00	1	2S Pack	2	[{"changed": {"fields": ["Parent"]}}]	\N	1
+231	2020-10-26 14:27:26.371091+00	1	2S Pack	2	[{"changed": {"fields": ["Is specification"]}}]	\N	1
+232	2020-10-26 14:28:49.550933+00	1	2S Module	2	[{"changed": {"fields": ["Name"]}}]	\N	1
+233	2020-10-26 14:30:48.491003+00	8	My Module	2	[{"changed": {"fields": ["Name"]}}]	\N	1
+234	2020-10-26 14:30:56.382136+00	8	My Pack	2	[{"changed": {"fields": ["Name"]}}]	\N	1
+235	2020-10-26 14:31:12.764119+00	8	My Pack	2	[{"changed": {"fields": ["Is specification"]}}]	\N	1
+236	2020-10-26 14:32:00.704136+00	9	Pack Clone	1	[{"added": {}}]	\N	1
+237	2020-10-26 16:21:44.441835+00	6	NegativeElectrode	2	[{"changed": {"fields": ["Is composite"]}}]	\N	1
+238	2020-10-26 16:21:58.668651+00	5	PositiveElectrode	2	[{"changed": {"fields": ["Is composite"]}}]	\N	1
+239	2020-10-26 16:29:08.691665+00	6	NegativeElectrode	2	[{"added": {"name": "thing", "object": "foo"}}]	\N	1
+240	2020-10-26 16:29:41.11374+00	3	Cell 2	2	[{"changed": {"fields": ["Is composite"]}}]	\N	1
+241	2020-10-26 16:30:08.247457+00	8	My Pack	3		\N	1
+242	2020-10-26 16:30:38.113092+00	8	My Pack	3		\N	1
+243	2020-10-26 16:30:38.136902+00	1	2S Module	3		\N	1
+244	2020-10-26 16:30:38.151424+00	3	Cell 2	3		\N	1
+245	2020-10-26 16:30:38.166317+00	5	PositiveElectrode	3		\N	1
+246	2020-10-26 16:30:38.18824+00	6	NegativeElectrode	3		\N	1
+247	2020-10-26 16:30:38.211684+00	10	foo	3		\N	1
+248	2020-10-26 16:30:38.229517+00	2	Cell 1	3		\N	1
+249	2020-10-26 16:30:38.249766+00	4	PositiveElectrode	3		\N	1
+250	2020-10-26 16:30:38.26269+00	7	NegativeElectrode	3		\N	1
+251	2020-10-26 16:30:38.273716+00	9	Pack Clone	3		\N	1
+252	2020-10-26 16:31:06.604435+00	11	My Module	1	[{"added": {}}, {"added": {"name": "thing", "object": "Cell 1"}}, {"added": {"name": "thing", "object": "Cell 2"}}]	\N	1
+253	2020-10-26 16:31:18.650988+00	12	Cell 1	2	[{"changed": {"fields": ["Parent assembly"]}}, {"added": {"name": "thing", "object": "PositiveElectrode"}}]	\N	1
+254	2020-10-26 16:32:25.60542+00	12	Cell 1	2	[{"changed": {"fields": ["Parent assembly"]}}]	\N	1
+255	2020-10-26 16:33:20.829772+00	12	Cell 1	2	[{"changed": {"fields": ["lft", "rght"]}}]	\N	1
+259	2020-10-27 11:27:47.258646+00	3	Cell A1	3		\N	1
+260	2020-10-27 11:27:47.273921+00	4	Cell A2	3		\N	1
+261	2020-10-27 11:27:47.286354+00	5	Cell B1	3		\N	1
+262	2020-10-27 11:27:47.30147+00	6	Cell B2	3		\N	1
+264	2020-10-27 11:38:58.55007+00	7	Cell A1	3		\N	1
+265	2020-10-27 11:38:58.587016+00	8	Cell A2	3		\N	1
+266	2020-10-27 11:38:58.613523+00	9	Cell B1	3		\N	1
+267	2020-10-27 11:38:58.64213+00	10	Cell B2	3		\N	1
+270	2020-10-27 11:43:39.926131+00	12	Cell A2	2	[{"changed": {"fields": ["Status"]}}]	\N	1
+5	2020-08-04 19:28:19.927154+01	1	MyLiPo	1	[{"added": {}}]	\N	1
+3	2020-08-04 19:26:04.905071+01	1	foo	2	[{"changed": {"fields": ["manufacturer"]}}]	\N	1
+12	2020-08-04 19:52:35.233623+01	1	GalvoTron 3000	3		\N	1
+73	2020-08-15 16:27:19.328572+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	\N	1
+74	2020-08-15 16:29:00.149786+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	\N	1
+75	2020-08-15 16:35:13.104076+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	\N	1
+76	2020-08-15 16:44:43.695498+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	\N	1
+77	2020-08-15 22:01:36.300505+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	\N	1
+78	2020-08-15 22:02:36.949811+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	\N	1
+79	2020-08-15 22:04:51.218447+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	\N	1
+80	2020-08-15 22:05:28.350057+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	\N	1
+81	2020-08-15 22:15:17.813728+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	\N	1
+82	2020-08-15 22:15:35.627463+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	\N	1
+86	2020-08-17 13:09:14.120233+01	1	200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt	2	[]	\N	1
+62	2020-08-13 15:42:26.567344+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt	2	[]	\N	1
+63	2020-08-13 15:43:05.748529+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_xETlkXH.mpt	1	[{"added": {}}]	\N	1
+64	2020-08-13 15:43:11.157068+01	2	200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt	2	[]	\N	1
+65	2020-08-13 15:43:45.614216+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_oa7otTL.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	\N	1
+66	2020-08-13 15:46:34.261891+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lj6rngx.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	\N	1
+67	2020-08-13 15:52:59.611491+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lj6rngx.mpt	2	[]	\N	1
+68	2020-08-13 15:53:09.682091+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lvMpGzm.mpt	2	[{"changed": {"fields": ["raw_data_file"]}}]	\N	1
+69	2020-08-13 15:54:23.605556+01	3	200720_C-rate_test_Co5_cells_1-14_D128_CD1_lvMpGzm.mpt	2	[{"changed": {"fields": ["experiment"]}}]	\N	1
+123	2020-10-15 12:49:57.053634+01	1	None	3		\N	1
+124	2020-10-15 13:04:19.151885+01	4	foo	1	[{"added": {}}]	\N	1
+125	2020-10-15 13:04:57.852735+01	4	foo	2	[{"changed": {"fields": ["Raw data file"]}}]	\N	1
+126	2020-10-15 13:05:13.279474+01	4	foo	2	[{"changed": {"fields": ["Raw data file"]}}]	\N	1
+127	2020-10-15 13:09:03.892766+01	6	None	1	[{"added": {}}]	\N	1
+128	2020-10-15 13:09:19.458002+01	6	None	2	[{"changed": {"fields": ["Raw data file"]}}]	\N	1
+129	2020-10-15 13:12:07.30048+01	6	None	2	[{"changed": {"fields": ["Raw data file"]}}]	\N	1
+429	2020-11-01 17:57:20.000469+00	2	Experimenters	2	[{"changed": {"fields": ["Permissions"]}}]	11	1
+430	2020-11-01 17:58:20.641264+00	5	BioLogic_full_aa5m9sL.txt	2	[{"changed": {"fields": ["Experiment"]}}]	23	1
+431	2020-11-01 17:59:14.441735+00	4	BioLogic_full_aa5m9sL.txt	3		23	1
 \.
 
 
@@ -2542,23 +2564,15 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 --
 
 COPY public.django_content_type (id, app_label, model) FROM stdin;
-1	battDB	cell
 8	battDB	experiment
-9	battDB	cellbatch
 10	auth	permission
 11	auth	group
 12	auth	user
 13	contenttypes	contenttype
 14	admin	logentry
 15	sessions	session
-16	battDB	equipmenttype
-17	battDB	cellconfig
-18	battDB	experimentresult
-19	battDB	experimentdata
-21	battDB	celltype
 22	battDB	datarange
 23	battDB	experimentdatafile
-26	dfndb	paper
 27	dfndb	compositionpart
 28	dfndb	compound
 29	dfndb	material
@@ -2569,28 +2583,13 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 34	common	org
 35	common	paper
 36	common	person
-37	battDB	devicetype
 38	battDB	devicebatch
-39	battDB	device
-40	battDB	rawdatafile
-41	battDB	apparatusequipment
-42	common	devicetype
-43	common	device
-44	common	batch
 45	authtoken	token
 46	authtoken	tokenproxy
-47	battDB	batch
 48	dfndb	dataparameter
-49	common	paperauthor
 50	battDB	deviceconfignode
 51	battDB	deviceconfig
-52	common	basemodelwithslug
-53	battDB	moduledevice
-54	battDB	compositedevice
-55	common	thingcomposition
-56	common	thing
 57	battDB	batchdevice
-59	battDB	devicedata
 60	battDB	datacolumn
 61	battDB	devicespecification
 62	battDB	deviceparameter
@@ -2853,6 +2852,15 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 250	battDB	0133_RecreateAllModels	2020-10-31 16:25:33.26896+00
 251	common	0050_ExperimentDataFile	2020-11-01 13:38:07.89016+00
 252	battDB	0134_ExperimentDataFile	2020-11-01 13:38:08.033279+00
+253	battDB	0135_DataColumn	2020-11-01 14:38:27.667945+00
+254	battDB	0136_SlugFieldMaxLen500	2020-11-01 15:08:16.471882+00
+255	common	0051_SlugFieldMaxLen500	2020-11-01 15:08:16.505644+00
+256	dfndb	0036_SlugFieldMaxLen500	2020-11-01 15:08:16.61404+00
+257	battDB	0137_auto_20201101_1652	2020-11-01 16:53:02.334671+00
+259	battDB	0138_deviceparameter_inherit_to_children	2020-11-01 17:26:26.133797+00
+260	battDB	0139_auto_20201101_1739	2020-11-01 17:39:42.081405+00
+261	battDB	0140_remove_devicebatch_name	2020-11-01 17:41:23.088967+00
+262	battDB	0141_remove_experiment_device	2020-11-01 17:42:52.170147+00
 \.
 
 
@@ -2886,7 +2894,7 @@ SELECT pg_catalog.setval('public.auth_group_id_seq', 2, true);
 -- Name: auth_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 112, true);
+SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 168, true);
 
 
 --
@@ -2928,7 +2936,7 @@ SELECT pg_catalog.setval('public."battDB_batchdevice_id_seq"', 1, false);
 -- Name: battDB_datacolumn_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_datacolumn_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_datacolumn_id_seq"', 1, true);
 
 
 --
@@ -2942,7 +2950,7 @@ SELECT pg_catalog.setval('public."battDB_datarange_id_seq"', 1, false);
 -- Name: battDB_devicebatch_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_devicebatch_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_devicebatch_id_seq"', 32, true);
 
 
 --
@@ -2963,28 +2971,28 @@ SELECT pg_catalog.setval('public."battDB_deviceconfignode_id_seq"', 1, false);
 -- Name: battDB_deviceparameter_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_deviceparameter_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_deviceparameter_id_seq"', 3, true);
 
 
 --
 -- Name: battDB_devicespecification_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_devicespecification_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_devicespecification_id_seq"', 8, true);
 
 
 --
 -- Name: battDB_experiment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_experiment_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_experiment_id_seq"', 5, true);
 
 
 --
 -- Name: battDB_experimentdatafile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_experimentdatafile_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_experimentdatafile_id_seq"', 5, true);
 
 
 --
@@ -3012,7 +3020,7 @@ SELECT pg_catalog.setval('public.common_person_id_seq', 2, true);
 -- Name: common_uploadedfile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.common_uploadedfile_id_seq', 1, false);
+SELECT pg_catalog.setval('public.common_uploadedfile_id_seq', 4, true);
 
 
 --
@@ -3061,21 +3069,21 @@ SELECT pg_catalog.setval('public.dfndb_method_id_seq', 4, true);
 -- Name: dfndb_parameter_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_parameter_id_seq', 7, true);
+SELECT pg_catalog.setval('public.dfndb_parameter_id_seq', 8, true);
 
 
 --
 -- Name: dfndb_quantityunit_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 11, true);
+SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 12, true);
 
 
 --
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 326, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 431, true);
 
 
 --
@@ -3089,7 +3097,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 63, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 252, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 262, true);
 
 
 --
@@ -3306,6 +3314,14 @@ ALTER TABLE ONLY public."battDB_devicespecification"
 
 ALTER TABLE ONLY public."battDB_experiment"
     ADD CONSTRAINT "battDB_experiment_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: battDB_experimentdatafile battDB_experimentdatafil_raw_data_file_id_experim_241d6d9d_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experimentdatafile"
+    ADD CONSTRAINT "battDB_experimentdatafil_raw_data_file_id_experim_241d6d9d_uniq" UNIQUE (raw_data_file_id, experiment_id);
 
 
 --
@@ -3662,27 +3678,6 @@ CREATE INDEX "battDB_datarange_dataFile_id_ea79f7c6" ON public."battDB_datarange
 
 
 --
--- Name: battDB_datarange_slug_799df7f1; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_datarange_slug_799df7f1" ON public."battDB_datarange" USING btree (slug);
-
-
---
--- Name: battDB_datarange_slug_799df7f1_like; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_datarange_slug_799df7f1_like" ON public."battDB_datarange" USING btree (slug varchar_pattern_ops);
-
-
---
--- Name: battDB_datarange_user_owner_id_a458c111; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_datarange_user_owner_id_a458c111" ON public."battDB_datarange" USING btree (user_owner_id);
-
-
---
 -- Name: battDB_devicebatch_manufacturer_id_85675f1a; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -3834,13 +3829,6 @@ CREATE INDEX "battDB_devicespecification_tree_id_d687d194" ON public."battDB_dev
 --
 
 CREATE INDEX "battDB_devicespecification_user_owner_id_35f6fdb1" ON public."battDB_devicespecification" USING btree (user_owner_id);
-
-
---
--- Name: battDB_experiment_device_id_0a377596; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_experiment_device_id_0a377596" ON public."battDB_experiment" USING btree (device_id);
 
 
 --
@@ -4284,14 +4272,6 @@ ALTER TABLE ONLY public."battDB_datarange"
 
 
 --
--- Name: battDB_datarange battDB_datarange_user_owner_id_a458c111_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_datarange"
-    ADD CONSTRAINT "battDB_datarange_user_owner_id_a458c111_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: battDB_devicebatch battDB_devicebatch_manufacturer_id_85675f1a_fk_common_org_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -4401,14 +4381,6 @@ ALTER TABLE ONLY public."battDB_devicespecification"
 
 ALTER TABLE ONLY public."battDB_devicespecification"
     ADD CONSTRAINT "battDB_devicespecifi_user_owner_id_35f6fdb1_fk_auth_user" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_experiment battDB_experiment_device_id_0a377596_fk_battDB_de; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experiment"
-    ADD CONSTRAINT "battDB_experiment_device_id_0a377596_fk_battDB_de" FOREIGN KEY (device_id) REFERENCES public."battDB_devicespecification"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

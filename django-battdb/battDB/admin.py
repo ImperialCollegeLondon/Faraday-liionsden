@@ -77,13 +77,13 @@ class ExperimentAdmin(common.admin.BaseAdmin):
 admin.site.register(Experiment, ExperimentAdmin)
 
 
-class DeviceConfigInline(common.admin.TabularInline):
-    model = DeviceConfigNode
-    extra = 2
-
-
-class DeviceConfigAdmin(BaseAdmin):
-    inlines = (DeviceConfigInline,)
+# class DeviceConfigInline(common.admin.TabularInline):
+#     model = DeviceConfigNode
+#     extra = 2
+#
+#
+# class DeviceConfigAdmin(BaseAdmin):
+#     inlines = (DeviceConfigInline,)
 
 
 #admin.site.register([DeviceConfig,], DeviceConfigAdmin)

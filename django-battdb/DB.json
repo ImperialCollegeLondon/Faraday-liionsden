@@ -8,6 +8,207 @@
   }
 },
 {
+  "model": "battDB.devicespecification",
+  "pk": 4,
+  "fields": {
+    "name": "Generic Pack",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-01T17:25:16.059Z",
+    "modified_on": "2020-11-01T17:25:16.059Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "generic-pack",
+    "parent": null,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 1,
+    "rght": 6,
+    "tree_id": 1,
+    "level": 0
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 5,
+  "fields": {
+    "name": "Generic Module",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-11-01T17:25:16.061Z",
+    "modified_on": "2020-11-01T17:27:16.423Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "generic-module",
+    "parent": 4,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 2,
+    "rght": 5,
+    "tree_id": 1,
+    "level": 1
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 6,
+  "fields": {
+    "name": "Generic Cell",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-01T17:27:16.425Z",
+    "modified_on": "2020-11-01T17:27:37.140Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "generic-cell",
+    "parent": 5,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 3,
+    "rght": 4,
+    "tree_id": 1,
+    "level": 2
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 7,
+  "fields": {
+    "name": "My NMC622 Cell",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-01T17:36:29.295Z",
+    "modified_on": "2020-11-01T17:46:29.432Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "my-nmc622-cell",
+    "parent": null,
+    "abstract": false,
+    "complete": true,
+    "device_type": 6,
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 2,
+    "level": 0
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 8,
+  "fields": {
+    "name": "My NMC622 Module",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-01T17:45:04.963Z",
+    "modified_on": "2020-11-01T17:45:33.655Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "my-nmc622-module",
+    "parent": null,
+    "abstract": false,
+    "complete": true,
+    "device_type": 5,
+    "lft": 1,
+    "rght": 4,
+    "tree_id": 3,
+    "level": 0
+  }
+},
+{
+  "model": "battDB.deviceparameter",
+  "pk": 1,
+  "fields": {
+    "name": "Pack capacity",
+    "spec": 4,
+    "parameter": 3,
+    "material": null,
+    "value": null,
+    "inherit_to_children": false
+  }
+},
+{
+  "model": "battDB.deviceparameter",
+  "pk": 2,
+  "fields": {
+    "name": "Module capacity",
+    "spec": 5,
+    "parameter": 3,
+    "material": null,
+    "value": null,
+    "inherit_to_children": false
+  }
+},
+{
+  "model": "battDB.deviceparameter",
+  "pk": 3,
+  "fields": {
+    "name": "Cell Capacity",
+    "spec": 6,
+    "parameter": 3,
+    "material": null,
+    "value": null,
+    "inherit_to_children": false
+  }
+},
+{
+  "model": "battDB.devicebatch",
+  "pk": 32,
+  "fields": {
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-01T17:41:49.156Z",
+    "modified_on": "2020-11-01T17:41:49.156Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "imperial-college-my-nmc622-cell-1-off-2020-11-01",
+    "parent": null,
+    "specification": 7,
+    "manufacturer": 1,
+    "serialNo": "",
+    "batch_size": 1,
+    "manufactured_on": "2020-11-01",
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 1,
+    "level": 0
+  }
+},
+{
+  "model": "battDB.experiment",
+  "pk": 5,
+  "fields": {
+    "name": "My experiment",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-01T17:43:36.325Z",
+    "modified_on": "2020-11-01T17:43:36.325Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "tom-my-experiment-2020-11-01",
+    "date": "2020-11-01",
+    "protocol": 4
+  }
+},
+{
+  "model": "battDB.experimentdatafile",
+  "pk": 5,
+  "fields": {
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-01T16:35:21.068Z",
+    "modified_on": "2020-11-01T17:58:20.640Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "biologic_full_aa5m9sltxt",
+    "raw_data_file": 4,
+    "experiment": 5,
+    "parsed_data": {}
+  }
+},
+{
   "model": "common.org",
   "pk": 1,
   "fields": {
@@ -81,6 +282,16 @@
     "publisher": null,
     "url": "https://ieeexplore.ieee.org/document/771073",
     "PDF": ""
+  }
+},
+{
+  "model": "common.uploadedfile",
+  "pk": 4,
+  "fields": {
+    "created_on": "2020-11-01T16:29:33.948Z",
+    "modified_on": "2020-11-01T16:29:33.948Z",
+    "file": "uploaded_files/BioLogic_full_aa5m9sL.txt",
+    "hash": ""
   }
 },
 {
@@ -416,6 +627,19 @@
   }
 },
 {
+  "model": "dfndb.quantityunit",
+  "pk": 12,
+  "fields": {
+    "quantityName": "Arbitrary",
+    "quantitySymbol": "Arb",
+    "unitName": "Arb",
+    "unitSymbol": "Arb",
+    "is_SI_unit": false,
+    "related_unit": null,
+    "related_scale": null
+  }
+},
+{
   "model": "dfndb.parameter",
   "pk": 1,
   "fields": {
@@ -515,6 +739,22 @@
   }
 },
 {
+  "model": "dfndb.parameter",
+  "pk": 8,
+  "fields": {
+    "name": "miscellaneous",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-01T17:31:08.087Z",
+    "modified_on": "2020-11-01",
+    "attributes": {},
+    "notes": "",
+    "slug": "miscellaneous-x-arb",
+    "symbol": "x",
+    "unit": 12
+  }
+},
+{
   "model": "dfndb.data",
   "pk": 1,
   "fields": {
@@ -568,7 +808,7 @@
   "fields": {
     "action_time": "2020-08-04T18:13:10.226Z",
     "user": 1,
-    "content_type": 9,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "foo",
     "action_flag": 1,
@@ -594,7 +834,7 @@
   "fields": {
     "action_time": "2020-08-04T18:26:04.905Z",
     "user": 1,
-    "content_type": 9,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "foo",
     "action_flag": 2,
@@ -620,7 +860,7 @@
   "fields": {
     "action_time": "2020-08-04T18:28:19.927Z",
     "user": 1,
-    "content_type": 1,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "MyLiPo",
     "action_flag": 1,
@@ -646,7 +886,7 @@
   "fields": {
     "action_time": "2020-08-04T18:42:29.857Z",
     "user": 1,
-    "content_type": 16,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "GalvoTron 3000",
     "action_flag": 1,
@@ -659,7 +899,7 @@
   "fields": {
     "action_time": "2020-08-04T18:45:01.780Z",
     "user": 1,
-    "content_type": 16,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "GalvoTron 3000",
     "action_flag": 1,
@@ -711,7 +951,7 @@
   "fields": {
     "action_time": "2020-08-04T18:52:35.233Z",
     "user": 1,
-    "content_type": 16,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "GalvoTron 3000",
     "action_flag": 3,
@@ -750,7 +990,7 @@
   "fields": {
     "action_time": "2020-08-04T19:17:17.174Z",
     "user": 1,
-    "content_type": 17,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "4s",
     "action_flag": 1,
@@ -1205,7 +1445,7 @@
   "fields": {
     "action_time": "2020-08-13T09:08:11.603Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "BioLogic_full_u455xrV.txt",
     "action_flag": 1,
@@ -1231,7 +1471,7 @@
   "fields": {
     "action_time": "2020-08-13T10:45:05.248Z",
     "user": 3,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "BioLogic_full_u455xrV.txt",
     "action_flag": 2,
@@ -1244,7 +1484,7 @@
   "fields": {
     "action_time": "2020-08-13T10:45:09.003Z",
     "user": 3,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "BioLogic_full_u455xrV.txt",
     "action_flag": 2,
@@ -1257,7 +1497,7 @@
   "fields": {
     "action_time": "2020-08-13T10:45:59.648Z",
     "user": 3,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1.mpt",
     "action_flag": 2,
@@ -1270,7 +1510,7 @@
   "fields": {
     "action_time": "2020-08-13T10:46:07.851Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "bio-logic-data-table.tsv",
     "action_flag": 2,
@@ -1283,7 +1523,7 @@
   "fields": {
     "action_time": "2020-08-13T10:46:37.388Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "BioLogic_full_Bq7ABsZ.txt",
     "action_flag": 2,
@@ -1296,7 +1536,7 @@
   "fields": {
     "action_time": "2020-08-13T10:47:51.783Z",
     "user": 3,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt",
     "action_flag": 1,
@@ -1309,7 +1549,7 @@
   "fields": {
     "action_time": "2020-08-13T12:41:16.801Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt",
     "action_flag": 2,
@@ -1322,7 +1562,7 @@
   "fields": {
     "action_time": "2020-08-13T12:44:28.732Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt",
     "action_flag": 2,
@@ -1335,7 +1575,7 @@
   "fields": {
     "action_time": "2020-08-13T12:45:10.469Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_l9X9cj2.mpt",
     "action_flag": 2,
@@ -1348,7 +1588,7 @@
   "fields": {
     "action_time": "2020-08-13T13:56:13.246Z",
     "user": 3,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt",
     "action_flag": 2,
@@ -1361,7 +1601,7 @@
   "fields": {
     "action_time": "2020-08-13T14:42:26.567Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt",
     "action_flag": 2,
@@ -1374,7 +1614,7 @@
   "fields": {
     "action_time": "2020-08-13T14:43:05.748Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_xETlkXH.mpt",
     "action_flag": 1,
@@ -1387,7 +1627,7 @@
   "fields": {
     "action_time": "2020-08-13T14:43:11.157Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_rRcvu3U.mpt",
     "action_flag": 2,
@@ -1400,7 +1640,7 @@
   "fields": {
     "action_time": "2020-08-13T14:43:45.614Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_oa7otTL.mpt",
     "action_flag": 2,
@@ -1413,7 +1653,7 @@
   "fields": {
     "action_time": "2020-08-13T14:46:34.261Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_lj6rngx.mpt",
     "action_flag": 2,
@@ -1426,7 +1666,7 @@
   "fields": {
     "action_time": "2020-08-13T14:52:59.611Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_lj6rngx.mpt",
     "action_flag": 2,
@@ -1439,7 +1679,7 @@
   "fields": {
     "action_time": "2020-08-13T14:53:09.682Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_lvMpGzm.mpt",
     "action_flag": 2,
@@ -1452,7 +1692,7 @@
   "fields": {
     "action_time": "2020-08-13T14:54:23.605Z",
     "user": 1,
-    "content_type": 18,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_lvMpGzm.mpt",
     "action_flag": 2,
@@ -1478,7 +1718,7 @@
   "fields": {
     "action_time": "2020-08-15T15:26:07.435Z",
     "user": 1,
-    "content_type": 19,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
     "action_flag": 1,
@@ -1491,7 +1731,7 @@
   "fields": {
     "action_time": "2020-08-15T15:26:20.330Z",
     "user": 1,
-    "content_type": 19,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
     "action_flag": 2,
@@ -1504,7 +1744,7 @@
   "fields": {
     "action_time": "2020-08-15T15:27:19.328Z",
     "user": 1,
-    "content_type": 19,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
     "action_flag": 2,
@@ -1517,7 +1757,7 @@
   "fields": {
     "action_time": "2020-08-15T15:29:00.149Z",
     "user": 1,
-    "content_type": 19,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
     "action_flag": 2,
@@ -1530,7 +1770,7 @@
   "fields": {
     "action_time": "2020-08-15T15:35:13.104Z",
     "user": 1,
-    "content_type": 19,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
     "action_flag": 2,
@@ -1543,7 +1783,7 @@
   "fields": {
     "action_time": "2020-08-15T15:44:43.695Z",
     "user": 1,
-    "content_type": 19,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
     "action_flag": 2,
@@ -1556,7 +1796,7 @@
   "fields": {
     "action_time": "2020-08-15T21:01:36.300Z",
     "user": 1,
-    "content_type": 19,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
     "action_flag": 2,
@@ -1569,7 +1809,7 @@
   "fields": {
     "action_time": "2020-08-15T21:02:36.949Z",
     "user": 1,
-    "content_type": 19,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
     "action_flag": 2,
@@ -1582,7 +1822,7 @@
   "fields": {
     "action_time": "2020-08-15T21:04:51.218Z",
     "user": 1,
-    "content_type": 19,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
     "action_flag": 2,
@@ -1595,7 +1835,7 @@
   "fields": {
     "action_time": "2020-08-15T21:05:28.350Z",
     "user": 1,
-    "content_type": 19,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
     "action_flag": 2,
@@ -1608,7 +1848,7 @@
   "fields": {
     "action_time": "2020-08-15T21:15:17.813Z",
     "user": 1,
-    "content_type": 19,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
     "action_flag": 2,
@@ -1621,7 +1861,7 @@
   "fields": {
     "action_time": "2020-08-15T21:15:35.627Z",
     "user": 1,
-    "content_type": 19,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
     "action_flag": 2,
@@ -1660,7 +1900,7 @@
   "fields": {
     "action_time": "2020-08-17T12:09:14.120Z",
     "user": 1,
-    "content_type": 19,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "200720_C-rate_test_Co5_cells_1-14_D128_CD1_a0fZder.mpt",
     "action_flag": 2,
@@ -2115,7 +2355,7 @@
   "fields": {
     "action_time": "2020-10-15T11:49:42.377Z",
     "user": 1,
-    "content_type": 40,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "None",
     "action_flag": 3,
@@ -2128,7 +2368,7 @@
   "fields": {
     "action_time": "2020-10-15T11:49:57.048Z",
     "user": 1,
-    "content_type": 40,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "None",
     "action_flag": 3,
@@ -2141,7 +2381,7 @@
   "fields": {
     "action_time": "2020-10-15T11:49:57.053Z",
     "user": 1,
-    "content_type": 40,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "None",
     "action_flag": 3,
@@ -2154,7 +2394,7 @@
   "fields": {
     "action_time": "2020-10-15T12:04:19.151Z",
     "user": 1,
-    "content_type": 40,
+    "content_type": null,
     "object_id": "4",
     "object_repr": "foo",
     "action_flag": 1,
@@ -2167,7 +2407,7 @@
   "fields": {
     "action_time": "2020-10-15T12:04:57.852Z",
     "user": 1,
-    "content_type": 40,
+    "content_type": null,
     "object_id": "4",
     "object_repr": "foo",
     "action_flag": 2,
@@ -2180,7 +2420,7 @@
   "fields": {
     "action_time": "2020-10-15T12:05:13.279Z",
     "user": 1,
-    "content_type": 40,
+    "content_type": null,
     "object_id": "4",
     "object_repr": "foo",
     "action_flag": 2,
@@ -2193,7 +2433,7 @@
   "fields": {
     "action_time": "2020-10-15T12:09:03.892Z",
     "user": 1,
-    "content_type": 40,
+    "content_type": null,
     "object_id": "6",
     "object_repr": "None",
     "action_flag": 1,
@@ -2206,7 +2446,7 @@
   "fields": {
     "action_time": "2020-10-15T12:09:19.458Z",
     "user": 1,
-    "content_type": 40,
+    "content_type": null,
     "object_id": "6",
     "object_repr": "None",
     "action_flag": 2,
@@ -2219,7 +2459,7 @@
   "fields": {
     "action_time": "2020-10-15T12:12:07.300Z",
     "user": 1,
-    "content_type": 40,
+    "content_type": null,
     "object_id": "6",
     "object_repr": "None",
     "action_flag": 2,
@@ -3129,7 +3369,7 @@
   "fields": {
     "action_time": "2020-10-21T11:34:11.865Z",
     "user": 1,
-    "content_type": 1,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "None",
     "action_flag": 1,
@@ -3155,7 +3395,7 @@
   "fields": {
     "action_time": "2020-10-21T11:36:23.183Z",
     "user": 1,
-    "content_type": 1,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "bob's LiPo",
     "action_flag": 1,
@@ -3168,7 +3408,7 @@
   "fields": {
     "action_time": "2020-10-22T10:13:00.283Z",
     "user": 1,
-    "content_type": 39,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "test 1s LiPo spec",
     "action_flag": 1,
@@ -3181,7 +3421,7 @@
   "fields": {
     "action_time": "2020-10-22T10:13:56.650Z",
     "user": 1,
-    "content_type": 39,
+    "content_type": null,
     "object_id": "4",
     "object_repr": "GalvoTron 5000",
     "action_flag": 1,
@@ -3194,7 +3434,7 @@
   "fields": {
     "action_time": "2020-10-22T10:16:00.880Z",
     "user": 1,
-    "content_type": 39,
+    "content_type": null,
     "object_id": "5",
     "object_repr": "MyCellSpecification",
     "action_flag": 1,
@@ -3207,7 +3447,7 @@
   "fields": {
     "action_time": "2020-10-22T10:16:19.662Z",
     "user": 1,
-    "content_type": 39,
+    "content_type": null,
     "object_id": "5",
     "object_repr": "MyCellSpecification",
     "action_flag": 2,
@@ -3337,7 +3577,7 @@
   "fields": {
     "action_time": "2020-10-26T12:08:07.604Z",
     "user": 1,
-    "content_type": 1,
+    "content_type": null,
     "object_id": "6",
     "object_repr": "a cell",
     "action_flag": 1,
@@ -3350,7 +3590,7 @@
   "fields": {
     "action_time": "2020-10-26T12:11:37.378Z",
     "user": 1,
-    "content_type": 39,
+    "content_type": null,
     "object_id": "7",
     "object_repr": "a module",
     "action_flag": 1,
@@ -3363,7 +3603,7 @@
   "fields": {
     "action_time": "2020-10-26T14:19:59.406Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "pack",
     "action_flag": 1,
@@ -3376,7 +3616,7 @@
   "fields": {
     "action_time": "2020-10-26T14:21:02.988Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "Cell 2",
     "action_flag": 2,
@@ -3389,7 +3629,7 @@
   "fields": {
     "action_time": "2020-10-26T14:21:06.718Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "Cell 2",
     "action_flag": 2,
@@ -3402,7 +3642,7 @@
   "fields": {
     "action_time": "2020-10-26T14:21:39.758Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "Cell 2",
     "action_flag": 2,
@@ -3415,7 +3655,7 @@
   "fields": {
     "action_time": "2020-10-26T14:21:44.666Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "Cell 1",
     "action_flag": 2,
@@ -3428,7 +3668,7 @@
   "fields": {
     "action_time": "2020-10-26T14:22:28.077Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "Cell 1",
     "action_flag": 2,
@@ -3441,7 +3681,7 @@
   "fields": {
     "action_time": "2020-10-26T14:23:59.310Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "Cell 1",
     "action_flag": 2,
@@ -3454,7 +3694,7 @@
   "fields": {
     "action_time": "2020-10-26T14:24:04.314Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "pack",
     "action_flag": 2,
@@ -3467,7 +3707,7 @@
   "fields": {
     "action_time": "2020-10-26T14:24:11.597Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "Cell 1",
     "action_flag": 2,
@@ -3480,7 +3720,7 @@
   "fields": {
     "action_time": "2020-10-26T14:25:10.117Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "Cell 2",
     "action_flag": 2,
@@ -3493,7 +3733,7 @@
   "fields": {
     "action_time": "2020-10-26T14:25:18.384Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "Cell 1",
     "action_flag": 2,
@@ -3506,7 +3746,7 @@
   "fields": {
     "action_time": "2020-10-26T14:25:43.682Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "2S Pack",
     "action_flag": 2,
@@ -3519,7 +3759,7 @@
   "fields": {
     "action_time": "2020-10-26T14:27:04.015Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "8",
     "object_repr": "My Batch",
     "action_flag": 1,
@@ -3532,7 +3772,7 @@
   "fields": {
     "action_time": "2020-10-26T14:27:11.893Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "2S Pack",
     "action_flag": 2,
@@ -3545,7 +3785,7 @@
   "fields": {
     "action_time": "2020-10-26T14:27:26.371Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "2S Pack",
     "action_flag": 2,
@@ -3558,7 +3798,7 @@
   "fields": {
     "action_time": "2020-10-26T14:28:49.550Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "2S Module",
     "action_flag": 2,
@@ -3571,7 +3811,7 @@
   "fields": {
     "action_time": "2020-10-26T14:30:48.491Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "8",
     "object_repr": "My Module",
     "action_flag": 2,
@@ -3584,7 +3824,7 @@
   "fields": {
     "action_time": "2020-10-26T14:30:56.382Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "8",
     "object_repr": "My Pack",
     "action_flag": 2,
@@ -3597,7 +3837,7 @@
   "fields": {
     "action_time": "2020-10-26T14:31:12.764Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "8",
     "object_repr": "My Pack",
     "action_flag": 2,
@@ -3610,7 +3850,7 @@
   "fields": {
     "action_time": "2020-10-26T14:32:00.704Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "9",
     "object_repr": "Pack Clone",
     "action_flag": 1,
@@ -3623,7 +3863,7 @@
   "fields": {
     "action_time": "2020-10-26T16:21:44.441Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "6",
     "object_repr": "NegativeElectrode",
     "action_flag": 2,
@@ -3636,7 +3876,7 @@
   "fields": {
     "action_time": "2020-10-26T16:21:58.668Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "5",
     "object_repr": "PositiveElectrode",
     "action_flag": 2,
@@ -3649,7 +3889,7 @@
   "fields": {
     "action_time": "2020-10-26T16:29:08.691Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "6",
     "object_repr": "NegativeElectrode",
     "action_flag": 2,
@@ -3662,7 +3902,7 @@
   "fields": {
     "action_time": "2020-10-26T16:29:41.113Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "Cell 2",
     "action_flag": 2,
@@ -3675,7 +3915,7 @@
   "fields": {
     "action_time": "2020-10-26T16:30:08.247Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "8",
     "object_repr": "My Pack",
     "action_flag": 3,
@@ -3688,7 +3928,7 @@
   "fields": {
     "action_time": "2020-10-26T16:30:38.113Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "8",
     "object_repr": "My Pack",
     "action_flag": 3,
@@ -3701,7 +3941,7 @@
   "fields": {
     "action_time": "2020-10-26T16:30:38.136Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "2S Module",
     "action_flag": 3,
@@ -3714,7 +3954,7 @@
   "fields": {
     "action_time": "2020-10-26T16:30:38.151Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "Cell 2",
     "action_flag": 3,
@@ -3727,7 +3967,7 @@
   "fields": {
     "action_time": "2020-10-26T16:30:38.166Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "5",
     "object_repr": "PositiveElectrode",
     "action_flag": 3,
@@ -3740,7 +3980,7 @@
   "fields": {
     "action_time": "2020-10-26T16:30:38.188Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "6",
     "object_repr": "NegativeElectrode",
     "action_flag": 3,
@@ -3753,7 +3993,7 @@
   "fields": {
     "action_time": "2020-10-26T16:30:38.211Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "10",
     "object_repr": "foo",
     "action_flag": 3,
@@ -3766,7 +4006,7 @@
   "fields": {
     "action_time": "2020-10-26T16:30:38.229Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "Cell 1",
     "action_flag": 3,
@@ -3779,7 +4019,7 @@
   "fields": {
     "action_time": "2020-10-26T16:30:38.249Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "4",
     "object_repr": "PositiveElectrode",
     "action_flag": 3,
@@ -3792,7 +4032,7 @@
   "fields": {
     "action_time": "2020-10-26T16:30:38.262Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "7",
     "object_repr": "NegativeElectrode",
     "action_flag": 3,
@@ -3805,7 +4045,7 @@
   "fields": {
     "action_time": "2020-10-26T16:30:38.273Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "9",
     "object_repr": "Pack Clone",
     "action_flag": 3,
@@ -3818,7 +4058,7 @@
   "fields": {
     "action_time": "2020-10-26T16:31:06.604Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "11",
     "object_repr": "My Module",
     "action_flag": 1,
@@ -3831,7 +4071,7 @@
   "fields": {
     "action_time": "2020-10-26T16:31:18.650Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "12",
     "object_repr": "Cell 1",
     "action_flag": 2,
@@ -3844,7 +4084,7 @@
   "fields": {
     "action_time": "2020-10-26T16:32:25.605Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "12",
     "object_repr": "Cell 1",
     "action_flag": 2,
@@ -3857,7 +4097,7 @@
   "fields": {
     "action_time": "2020-10-26T16:33:20.829Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "12",
     "object_repr": "Cell 1",
     "action_flag": 2,
@@ -3870,7 +4110,7 @@
   "fields": {
     "action_time": "2020-10-27T00:21:30.754Z",
     "user": 1,
-    "content_type": 39,
+    "content_type": null,
     "object_id": "1",
     "object_repr": "My Cell Spec",
     "action_flag": 1,
@@ -3896,7 +4136,7 @@
   "fields": {
     "action_time": "2020-10-27T11:27:15.178Z",
     "user": 1,
-    "content_type": 39,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "My NMC622 2s2p Module",
     "action_flag": 1,
@@ -3909,7 +4149,7 @@
   "fields": {
     "action_time": "2020-10-27T11:27:47.258Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "3",
     "object_repr": "Cell A1",
     "action_flag": 3,
@@ -3922,7 +4162,7 @@
   "fields": {
     "action_time": "2020-10-27T11:27:47.273Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "4",
     "object_repr": "Cell A2",
     "action_flag": 3,
@@ -3935,7 +4175,7 @@
   "fields": {
     "action_time": "2020-10-27T11:27:47.286Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "5",
     "object_repr": "Cell B1",
     "action_flag": 3,
@@ -3948,7 +4188,7 @@
   "fields": {
     "action_time": "2020-10-27T11:27:47.301Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "6",
     "object_repr": "Cell B2",
     "action_flag": 3,
@@ -3961,7 +4201,7 @@
   "fields": {
     "action_time": "2020-10-27T11:38:38.412Z",
     "user": 1,
-    "content_type": 39,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "My NMC622 2s2p Module",
     "action_flag": 2,
@@ -3974,7 +4214,7 @@
   "fields": {
     "action_time": "2020-10-27T11:38:58.550Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "7",
     "object_repr": "Cell A1",
     "action_flag": 3,
@@ -3987,7 +4227,7 @@
   "fields": {
     "action_time": "2020-10-27T11:38:58.587Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "8",
     "object_repr": "Cell A2",
     "action_flag": 3,
@@ -4000,7 +4240,7 @@
   "fields": {
     "action_time": "2020-10-27T11:38:58.613Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "9",
     "object_repr": "Cell B1",
     "action_flag": 3,
@@ -4013,7 +4253,7 @@
   "fields": {
     "action_time": "2020-10-27T11:38:58.642Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "10",
     "object_repr": "Cell B2",
     "action_flag": 3,
@@ -4026,7 +4266,7 @@
   "fields": {
     "action_time": "2020-10-27T11:40:50.472Z",
     "user": 1,
-    "content_type": 39,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "My NMC622 2s2p Module",
     "action_flag": 2,
@@ -4039,7 +4279,7 @@
   "fields": {
     "action_time": "2020-10-27T11:41:01.295Z",
     "user": 1,
-    "content_type": 39,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "My NMC622 2s2p Module",
     "action_flag": 2,
@@ -4052,7 +4292,7 @@
   "fields": {
     "action_time": "2020-10-27T11:43:39.926Z",
     "user": 1,
-    "content_type": 56,
+    "content_type": null,
     "object_id": "12",
     "object_repr": "Cell A2",
     "action_flag": 2,
@@ -4065,7 +4305,7 @@
   "fields": {
     "action_time": "2020-10-28T11:30:16.704Z",
     "user": 1,
-    "content_type": 39,
+    "content_type": null,
     "object_id": "11",
     "object_repr": "Cell A1",
     "action_flag": 2,
@@ -4078,7 +4318,7 @@
   "fields": {
     "action_time": "2020-10-28T11:30:30.554Z",
     "user": 1,
-    "content_type": 39,
+    "content_type": null,
     "object_id": "2",
     "object_repr": "My NMC622 2s2p Module",
     "action_flag": 2,
@@ -4788,39 +5028,1368 @@
   }
 },
 {
-  "model": "auth.permission",
-  "pk": 1,
+  "model": "admin.logentry",
+  "pk": 327,
   "fields": {
-    "name": "Can add cell",
-    "content_type": 1,
-    "codename": "add_cell"
+    "action_time": "2020-11-01T14:06:01.077Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "2",
+    "object_repr": "BioLogic_full_57G6K9u_5aEH9qc.txt",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
   }
 },
 {
-  "model": "auth.permission",
-  "pk": 2,
+  "model": "admin.logentry",
+  "pk": 328,
   "fields": {
-    "name": "Can change cell",
-    "content_type": 1,
-    "codename": "change_cell"
+    "action_time": "2020-11-01T14:09:15.116Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "tom foo 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"dataset\", \"object\": \"BioLogic_full_57G6K9u_5aEH9qc.txt\"}}]"
   }
 },
 {
-  "model": "auth.permission",
-  "pk": 3,
+  "model": "admin.logentry",
+  "pk": 329,
   "fields": {
-    "name": "Can delete cell",
-    "content_type": 1,
-    "codename": "delete_cell"
+    "action_time": "2020-11-01T14:17:47.634Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "tom foo 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[]"
   }
 },
 {
-  "model": "auth.permission",
-  "pk": 4,
+  "model": "admin.logentry",
+  "pk": 330,
   "fields": {
-    "name": "Can view cell",
-    "content_type": 1,
-    "codename": "view_cell"
+    "action_time": "2020-11-01T14:33:34.000Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "tom None 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"dataset\", \"object\": \"BioLogic_full_57G6K9u_5aEH9qc.txt\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 331,
+  "fields": {
+    "action_time": "2020-11-01T14:39:48.750Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "1",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 332,
+  "fields": {
+    "action_time": "2020-11-01T14:40:16.732Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "2",
+    "object_repr": "BioLogic_full_57G6K9u_5aEH9qc.txt",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"Column Mapping\", \"object\": \"DataColumn object (1)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 333,
+  "fields": {
+    "action_time": "2020-11-01T14:40:26.130Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "2",
+    "object_repr": "BioLogic_full_57G6K9u_5aEH9qc.txt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"Column Mapping\", \"object\": \"DataColumn object (1)\", \"fields\": [\"Device\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 334,
+  "fields": {
+    "action_time": "2020-11-01T14:40:35.780Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "1",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 335,
+  "fields": {
+    "action_time": "2020-11-01T14:40:42.175Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "2",
+    "object_repr": "BioLogic_full_57G6K9u_5aEH9qc.txt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"Column Mapping\", \"object\": \"DataColumn object (1)\", \"fields\": [\"Device\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 336,
+  "fields": {
+    "action_time": "2020-11-01T14:41:23.486Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "2",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 337,
+  "fields": {
+    "action_time": "2020-11-01T14:41:23.519Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "3",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 338,
+  "fields": {
+    "action_time": "2020-11-01T14:42:27.760Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "3",
+    "object_repr": "BioLogic_full_57G6K9u_5aEH9qc.txt",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 339,
+  "fields": {
+    "action_time": "2020-11-01T14:42:37.519Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "3",
+    "object_repr": "BioLogic_full_57G6K9u_5aEH9qc.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 340,
+  "fields": {
+    "action_time": "2020-11-01T14:42:41.575Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "3",
+    "object_repr": "BioLogic_full_57G6K9u_5aEH9qc.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 341,
+  "fields": {
+    "action_time": "2020-11-01T14:42:55.055Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "1",
+    "object_repr": "bork",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 342,
+  "fields": {
+    "action_time": "2020-11-01T14:42:59.208Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "1",
+    "object_repr": "bork",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 343,
+  "fields": {
+    "action_time": "2020-11-01T14:43:04.074Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "3",
+    "object_repr": "BioLogic_full_57G6K9u_5aEH9qc.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 344,
+  "fields": {
+    "action_time": "2020-11-01T14:43:08.813Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "1",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 345,
+  "fields": {
+    "action_time": "2020-11-01T14:46:31.069Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "4",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 346,
+  "fields": {
+    "action_time": "2020-11-01T14:46:37.223Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "1",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 347,
+  "fields": {
+    "action_time": "2020-11-01T14:46:50.613Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "1",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 348,
+  "fields": {
+    "action_time": "2020-11-01T14:46:50.628Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "4",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 349,
+  "fields": {
+    "action_time": "2020-11-01T14:46:50.640Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "5",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 350,
+  "fields": {
+    "action_time": "2020-11-01T14:46:50.651Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "6",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 351,
+  "fields": {
+    "action_time": "2020-11-01T14:46:55.344Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "7",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 352,
+  "fields": {
+    "action_time": "2020-11-01T14:47:05.838Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "7",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 353,
+  "fields": {
+    "action_time": "2020-11-01T14:47:05.878Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "8",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 354,
+  "fields": {
+    "action_time": "2020-11-01T14:47:15.397Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "9",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 355,
+  "fields": {
+    "action_time": "2020-11-01T14:47:54.795Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "9",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 356,
+  "fields": {
+    "action_time": "2020-11-01T14:47:54.823Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "10",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 357,
+  "fields": {
+    "action_time": "2020-11-01T15:10:57.566Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "11",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 358,
+  "fields": {
+    "action_time": "2020-11-01T15:11:14.590Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "11",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 359,
+  "fields": {
+    "action_time": "2020-11-01T15:11:14.612Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "12",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 360,
+  "fields": {
+    "action_time": "2020-11-01T15:11:20.868Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "13",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 361,
+  "fields": {
+    "action_time": "2020-11-01T15:11:35.059Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "13",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 362,
+  "fields": {
+    "action_time": "2020-11-01T15:11:35.097Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "14",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 363,
+  "fields": {
+    "action_time": "2020-11-01T15:11:44.536Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "15",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 364,
+  "fields": {
+    "action_time": "2020-11-01T15:12:12.547Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "2",
+    "object_repr": "foo",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 365,
+  "fields": {
+    "action_time": "2020-11-01T15:12:20.168Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "15",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 366,
+  "fields": {
+    "action_time": "2020-11-01T15:12:20.195Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "16",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 367,
+  "fields": {
+    "action_time": "2020-11-01T15:12:28.654Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "17",
+    "object_repr": "Imperial College foo (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 368,
+  "fields": {
+    "action_time": "2020-11-01T15:14:00.502Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "19",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 369,
+  "fields": {
+    "action_time": "2020-11-01T15:14:15.882Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "21",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 370,
+  "fields": {
+    "action_time": "2020-11-01T15:15:58.406Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "23",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 371,
+  "fields": {
+    "action_time": "2020-11-01T15:16:06.508Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "17",
+    "object_repr": "Imperial College foo (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 372,
+  "fields": {
+    "action_time": "2020-11-01T15:16:06.541Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "18",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 373,
+  "fields": {
+    "action_time": "2020-11-01T15:16:06.569Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "19",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 374,
+  "fields": {
+    "action_time": "2020-11-01T15:16:06.600Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "20",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 375,
+  "fields": {
+    "action_time": "2020-11-01T15:16:06.627Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "21",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 376,
+  "fields": {
+    "action_time": "2020-11-01T15:16:06.658Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "22",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 377,
+  "fields": {
+    "action_time": "2020-11-01T15:16:06.676Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "23",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 378,
+  "fields": {
+    "action_time": "2020-11-01T15:16:06.690Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "24",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 379,
+  "fields": {
+    "action_time": "2020-11-01T15:16:09.947Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "25",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 380,
+  "fields": {
+    "action_time": "2020-11-01T15:16:23.323Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "25",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 381,
+  "fields": {
+    "action_time": "2020-11-01T15:16:23.339Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "26",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 382,
+  "fields": {
+    "action_time": "2020-11-01T15:17:15.635Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "28",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"Device or Batch\", \"object\": \"Imperial College None (1 off) 2020-11-01\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 383,
+  "fields": {
+    "action_time": "2020-11-01T15:17:37.295Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "27",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 384,
+  "fields": {
+    "action_time": "2020-11-01T15:17:37.322Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "28",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 385,
+  "fields": {
+    "action_time": "2020-11-01T15:17:37.337Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "29",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 386,
+  "fields": {
+    "action_time": "2020-11-01T15:17:39.868Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "30",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 387,
+  "fields": {
+    "action_time": "2020-11-01T15:20:20.482Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "3",
+    "object_repr": "None",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 388,
+  "fields": {
+    "action_time": "2020-11-01T15:20:28.140Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "1",
+    "object_repr": "bork",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 389,
+  "fields": {
+    "action_time": "2020-11-01T15:20:43.758Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "1",
+    "object_repr": "bork",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 390,
+  "fields": {
+    "action_time": "2020-11-01T16:26:13.936Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "tom foo 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"deleted\": {\"name\": \"dataset\", \"object\": \"BioLogic_full_57G6K9u_5aEH9qc.txt\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 391,
+  "fields": {
+    "action_time": "2020-11-01T16:29:08.983Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "2",
+    "object_repr": "BioLogic_full_57G6K9u_5aEH9qc.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 392,
+  "fields": {
+    "action_time": "2020-11-01T16:29:33.949Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "4",
+    "object_repr": "BioLogic_full_aa5m9sL.txt",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 393,
+  "fields": {
+    "action_time": "2020-11-01T16:35:14.589Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "4",
+    "object_repr": "BioLogic_full_aa5m9sL.txt",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 394,
+  "fields": {
+    "action_time": "2020-11-01T16:35:21.070Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "5",
+    "object_repr": "BioLogic_full_aa5m9sL.txt",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 395,
+  "fields": {
+    "action_time": "2020-11-01T16:37:27.673Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "2",
+    "object_repr": "None",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 396,
+  "fields": {
+    "action_time": "2020-11-01T16:37:27.684Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "1",
+    "object_repr": "None",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 397,
+  "fields": {
+    "action_time": "2020-11-01T17:23:43.861Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "1",
+    "object_repr": "bork",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 398,
+  "fields": {
+    "action_time": "2020-11-01T17:23:43.907Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "2",
+    "object_repr": "foo",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 399,
+  "fields": {
+    "action_time": "2020-11-01T17:23:43.950Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "3",
+    "object_repr": "None",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 400,
+  "fields": {
+    "action_time": "2020-11-01T17:25:16.063Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "4",
+    "object_repr": "Generic Pack",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"device specification\", \"object\": \"Generic Module\"}}, {\"added\": {\"name\": \"device parameter\", \"object\": \"Capacity: C / Wh\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 401,
+  "fields": {
+    "action_time": "2020-11-01T17:26:46.442Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "5",
+    "object_repr": "Generic Module",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device parameter\", \"object\": \"Capacity: C / Wh\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 402,
+  "fields": {
+    "action_time": "2020-11-01T17:27:16.426Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "5",
+    "object_repr": "Generic Module",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device specification\", \"object\": \"Generic Cell\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 403,
+  "fields": {
+    "action_time": "2020-11-01T17:27:37.142Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "6",
+    "object_repr": "Generic Cell",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device parameter\", \"object\": \"Capacity: C / Wh\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 404,
+  "fields": {
+    "action_time": "2020-11-01T17:30:10.243Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "12",
+    "object_repr": "Arbitrary (Arb) / Arb",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 405,
+  "fields": {
+    "action_time": "2020-11-01T17:30:24.802Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "12",
+    "object_repr": "Arbitrary (Arb) / Arb",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"UnitName\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 406,
+  "fields": {
+    "action_time": "2020-11-01T17:30:34.805Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "12",
+    "object_repr": "Arbitrary (Arb) / Arb",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"UnitName\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 407,
+  "fields": {
+    "action_time": "2020-11-01T17:30:41.529Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "12",
+    "object_repr": "Arbitrary (Arb) / Arb",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"UnitName\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 408,
+  "fields": {
+    "action_time": "2020-11-01T17:31:08.089Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "8",
+    "object_repr": "miscellaneous: x / Arb",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 409,
+  "fields": {
+    "action_time": "2020-11-01T17:34:50.952Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "3",
+    "object_repr": "tom None 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 410,
+  "fields": {
+    "action_time": "2020-11-01T17:34:50.967Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "2",
+    "object_repr": "tom foo 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 411,
+  "fields": {
+    "action_time": "2020-11-01T17:34:58.973Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "30",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 412,
+  "fields": {
+    "action_time": "2020-11-01T17:36:29.296Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "7",
+    "object_repr": "My NMC622 Cell",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 413,
+  "fields": {
+    "action_time": "2020-11-01T17:37:40.648Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "31",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 414,
+  "fields": {
+    "action_time": "2020-11-01T17:37:52.124Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "31",
+    "object_repr": "Imperial College None (1 off) 2020-11-01",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 415,
+  "fields": {
+    "action_time": "2020-11-01T17:41:49.157Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (1 off) 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 416,
+  "fields": {
+    "action_time": "2020-11-01T17:43:36.327Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "5",
+    "object_repr": "tom My experiment 2020-11-01",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 417,
+  "fields": {
+    "action_time": "2020-11-01T17:45:04.963Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "8",
+    "object_repr": "My NMC622 Module",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 418,
+  "fields": {
+    "action_time": "2020-11-01T17:45:15.293Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "8",
+    "object_repr": "My NMC622 Module",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"parent\", \"lft\", \"rght\", \"tree_id\", \"level\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 419,
+  "fields": {
+    "action_time": "2020-11-01T17:45:33.656Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "8",
+    "object_repr": "My NMC622 Module",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"parent\", \"lft\", \"rght\", \"level\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 420,
+  "fields": {
+    "action_time": "2020-11-01T17:45:38.383Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "7",
+    "object_repr": "My NMC622 Cell",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"parent\", \"lft\", \"rght\", \"tree_id\", \"level\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 421,
+  "fields": {
+    "action_time": "2020-11-01T17:45:38.397Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "7",
+    "object_repr": "My NMC622 Cell",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"parent\", \"lft\", \"rght\", \"tree_id\", \"level\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 422,
+  "fields": {
+    "action_time": "2020-11-01T17:46:25.836Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "7",
+    "object_repr": "My NMC622 Cell",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"parent\", \"lft\", \"rght\", \"tree_id\", \"level\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 423,
+  "fields": {
+    "action_time": "2020-11-01T17:46:29.433Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "7",
+    "object_repr": "My NMC622 Cell",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"parent\", \"lft\", \"rght\", \"tree_id\", \"level\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 424,
+  "fields": {
+    "action_time": "2020-11-01T17:51:09.570Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "56",
+    "object_repr": "thing",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 425,
+  "fields": {
+    "action_time": "2020-11-01T17:51:09.582Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "55",
+    "object_repr": "thingcomposition",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 426,
+  "fields": {
+    "action_time": "2020-11-01T17:51:09.588Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "54",
+    "object_repr": "compositedevice",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 427,
+  "fields": {
+    "action_time": "2020-11-01T17:51:09.593Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "53",
+    "object_repr": "moduledevice",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 428,
+  "fields": {
+    "action_time": "2020-11-01T17:51:09.599Z",
+    "user": 1,
+    "content_type": 13,
+    "object_id": "52",
+    "object_repr": "basemodelwithslug",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 429,
+  "fields": {
+    "action_time": "2020-11-01T17:57:20.000Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "2",
+    "object_repr": "Experimenters",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Permissions\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 430,
+  "fields": {
+    "action_time": "2020-11-01T17:58:20.641Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "5",
+    "object_repr": "BioLogic_full_aa5m9sL.txt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Experiment\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 431,
+  "fields": {
+    "action_time": "2020-11-01T17:59:14.441Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "4",
+    "object_repr": "BioLogic_full_aa5m9sL.txt",
+    "action_flag": 3,
+    "change_message": ""
   }
 },
 {
@@ -4857,42 +6426,6 @@
     "name": "Can view experiment",
     "content_type": 8,
     "codename": "view_experiment"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 33,
-  "fields": {
-    "name": "Can add cell batch",
-    "content_type": 9,
-    "codename": "add_cellbatch"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 34,
-  "fields": {
-    "name": "Can change cell batch",
-    "content_type": 9,
-    "codename": "change_cellbatch"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 35,
-  "fields": {
-    "name": "Can delete cell batch",
-    "content_type": 9,
-    "codename": "delete_cellbatch"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 36,
-  "fields": {
-    "name": "Can view cell batch",
-    "content_type": 9,
-    "codename": "view_cellbatch"
   }
 },
 {
@@ -5113,186 +6646,6 @@
 },
 {
   "model": "auth.permission",
-  "pk": 61,
-  "fields": {
-    "name": "Can add equipment type",
-    "content_type": 16,
-    "codename": "add_equipmenttype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 62,
-  "fields": {
-    "name": "Can change equipment type",
-    "content_type": 16,
-    "codename": "change_equipmenttype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 63,
-  "fields": {
-    "name": "Can delete equipment type",
-    "content_type": 16,
-    "codename": "delete_equipmenttype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 64,
-  "fields": {
-    "name": "Can view equipment type",
-    "content_type": 16,
-    "codename": "view_equipmenttype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 65,
-  "fields": {
-    "name": "Can add cell config",
-    "content_type": 17,
-    "codename": "add_cellconfig"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 66,
-  "fields": {
-    "name": "Can change cell config",
-    "content_type": 17,
-    "codename": "change_cellconfig"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 67,
-  "fields": {
-    "name": "Can delete cell config",
-    "content_type": 17,
-    "codename": "delete_cellconfig"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 68,
-  "fields": {
-    "name": "Can view cell config",
-    "content_type": 17,
-    "codename": "view_cellconfig"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 69,
-  "fields": {
-    "name": "Can add experiment result",
-    "content_type": 18,
-    "codename": "add_experimentresult"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 70,
-  "fields": {
-    "name": "Can change experiment result",
-    "content_type": 18,
-    "codename": "change_experimentresult"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 71,
-  "fields": {
-    "name": "Can delete experiment result",
-    "content_type": 18,
-    "codename": "delete_experimentresult"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 72,
-  "fields": {
-    "name": "Can view experiment result",
-    "content_type": 18,
-    "codename": "view_experimentresult"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 73,
-  "fields": {
-    "name": "Can add experiment data",
-    "content_type": 19,
-    "codename": "add_experimentdata"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 74,
-  "fields": {
-    "name": "Can change experiment data",
-    "content_type": 19,
-    "codename": "change_experimentdata"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 75,
-  "fields": {
-    "name": "Can delete experiment data",
-    "content_type": 19,
-    "codename": "delete_experimentdata"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 76,
-  "fields": {
-    "name": "Can view experiment data",
-    "content_type": 19,
-    "codename": "view_experimentdata"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 81,
-  "fields": {
-    "name": "Can add cell type",
-    "content_type": 21,
-    "codename": "add_celltype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 82,
-  "fields": {
-    "name": "Can change cell type",
-    "content_type": 21,
-    "codename": "change_celltype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 83,
-  "fields": {
-    "name": "Can delete cell type",
-    "content_type": 21,
-    "codename": "delete_celltype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 84,
-  "fields": {
-    "name": "Can view cell type",
-    "content_type": 21,
-    "codename": "view_celltype"
-  }
-},
-{
-  "model": "auth.permission",
   "pk": 85,
   "fields": {
     "name": "Can add data range",
@@ -5361,42 +6714,6 @@
     "name": "Can view experiment data file",
     "content_type": 23,
     "codename": "view_experimentdatafile"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 101,
-  "fields": {
-    "name": "Can add paper",
-    "content_type": 26,
-    "codename": "add_paper"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 102,
-  "fields": {
-    "name": "Can change paper",
-    "content_type": 26,
-    "codename": "change_paper"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 103,
-  "fields": {
-    "name": "Can delete paper",
-    "content_type": 26,
-    "codename": "delete_paper"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 104,
-  "fields": {
-    "name": "Can view paper",
-    "content_type": 26,
-    "codename": "view_paper"
   }
 },
 {
@@ -5761,42 +7078,6 @@
 },
 {
   "model": "auth.permission",
-  "pk": 145,
-  "fields": {
-    "name": "Can add device type",
-    "content_type": 37,
-    "codename": "add_devicetype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 146,
-  "fields": {
-    "name": "Can change device type",
-    "content_type": 37,
-    "codename": "change_devicetype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 147,
-  "fields": {
-    "name": "Can delete device type",
-    "content_type": 37,
-    "codename": "delete_devicetype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 148,
-  "fields": {
-    "name": "Can view device type",
-    "content_type": 37,
-    "codename": "view_devicetype"
-  }
-},
-{
-  "model": "auth.permission",
   "pk": 149,
   "fields": {
     "name": "Can add device batch",
@@ -5829,222 +7110,6 @@
     "name": "Can view device batch",
     "content_type": 38,
     "codename": "view_devicebatch"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 153,
-  "fields": {
-    "name": "Can add device",
-    "content_type": 39,
-    "codename": "add_device"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 154,
-  "fields": {
-    "name": "Can change device",
-    "content_type": 39,
-    "codename": "change_device"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 155,
-  "fields": {
-    "name": "Can delete device",
-    "content_type": 39,
-    "codename": "delete_device"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 156,
-  "fields": {
-    "name": "Can view device",
-    "content_type": 39,
-    "codename": "view_device"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 157,
-  "fields": {
-    "name": "Can add raw data file",
-    "content_type": 40,
-    "codename": "add_rawdatafile"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 158,
-  "fields": {
-    "name": "Can change raw data file",
-    "content_type": 40,
-    "codename": "change_rawdatafile"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 159,
-  "fields": {
-    "name": "Can delete raw data file",
-    "content_type": 40,
-    "codename": "delete_rawdatafile"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 160,
-  "fields": {
-    "name": "Can view raw data file",
-    "content_type": 40,
-    "codename": "view_rawdatafile"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 161,
-  "fields": {
-    "name": "Can add apparatus equipment",
-    "content_type": 41,
-    "codename": "add_apparatusequipment"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 162,
-  "fields": {
-    "name": "Can change apparatus equipment",
-    "content_type": 41,
-    "codename": "change_apparatusequipment"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 163,
-  "fields": {
-    "name": "Can delete apparatus equipment",
-    "content_type": 41,
-    "codename": "delete_apparatusequipment"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 164,
-  "fields": {
-    "name": "Can view apparatus equipment",
-    "content_type": 41,
-    "codename": "view_apparatusequipment"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 165,
-  "fields": {
-    "name": "Can add device type",
-    "content_type": 42,
-    "codename": "add_devicetype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 166,
-  "fields": {
-    "name": "Can change device type",
-    "content_type": 42,
-    "codename": "change_devicetype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 167,
-  "fields": {
-    "name": "Can delete device type",
-    "content_type": 42,
-    "codename": "delete_devicetype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 168,
-  "fields": {
-    "name": "Can view device type",
-    "content_type": 42,
-    "codename": "view_devicetype"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 169,
-  "fields": {
-    "name": "Can add device",
-    "content_type": 43,
-    "codename": "add_device"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 170,
-  "fields": {
-    "name": "Can change device",
-    "content_type": 43,
-    "codename": "change_device"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 171,
-  "fields": {
-    "name": "Can delete device",
-    "content_type": 43,
-    "codename": "delete_device"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 172,
-  "fields": {
-    "name": "Can view device",
-    "content_type": 43,
-    "codename": "view_device"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 173,
-  "fields": {
-    "name": "Can add batch",
-    "content_type": 44,
-    "codename": "add_batch"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 174,
-  "fields": {
-    "name": "Can change batch",
-    "content_type": 44,
-    "codename": "change_batch"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 175,
-  "fields": {
-    "name": "Can delete batch",
-    "content_type": 44,
-    "codename": "delete_batch"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 176,
-  "fields": {
-    "name": "Can view batch",
-    "content_type": 44,
-    "codename": "view_batch"
   }
 },
 {
@@ -6121,42 +7186,6 @@
 },
 {
   "model": "auth.permission",
-  "pk": 185,
-  "fields": {
-    "name": "Can add batch",
-    "content_type": 47,
-    "codename": "add_batch"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 186,
-  "fields": {
-    "name": "Can change batch",
-    "content_type": 47,
-    "codename": "change_batch"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 187,
-  "fields": {
-    "name": "Can delete batch",
-    "content_type": 47,
-    "codename": "delete_batch"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 188,
-  "fields": {
-    "name": "Can view batch",
-    "content_type": 47,
-    "codename": "view_batch"
-  }
-},
-{
-  "model": "auth.permission",
   "pk": 189,
   "fields": {
     "name": "Can add data parameter",
@@ -6189,42 +7218,6 @@
     "name": "Can view data parameter",
     "content_type": 48,
     "codename": "view_dataparameter"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 193,
-  "fields": {
-    "name": "Can add paper author",
-    "content_type": 49,
-    "codename": "add_paperauthor"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 194,
-  "fields": {
-    "name": "Can change paper author",
-    "content_type": 49,
-    "codename": "change_paperauthor"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 195,
-  "fields": {
-    "name": "Can delete paper author",
-    "content_type": 49,
-    "codename": "delete_paperauthor"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 196,
-  "fields": {
-    "name": "Can view paper author",
-    "content_type": 49,
-    "codename": "view_paperauthor"
   }
 },
 {
@@ -6301,186 +7294,6 @@
 },
 {
   "model": "auth.permission",
-  "pk": 205,
-  "fields": {
-    "name": "Can add base model with slug",
-    "content_type": 52,
-    "codename": "add_basemodelwithslug"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 206,
-  "fields": {
-    "name": "Can change base model with slug",
-    "content_type": 52,
-    "codename": "change_basemodelwithslug"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 207,
-  "fields": {
-    "name": "Can delete base model with slug",
-    "content_type": 52,
-    "codename": "delete_basemodelwithslug"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 208,
-  "fields": {
-    "name": "Can view base model with slug",
-    "content_type": 52,
-    "codename": "view_basemodelwithslug"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 209,
-  "fields": {
-    "name": "Can add module device",
-    "content_type": 53,
-    "codename": "add_moduledevice"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 210,
-  "fields": {
-    "name": "Can change module device",
-    "content_type": 53,
-    "codename": "change_moduledevice"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 211,
-  "fields": {
-    "name": "Can delete module device",
-    "content_type": 53,
-    "codename": "delete_moduledevice"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 212,
-  "fields": {
-    "name": "Can view module device",
-    "content_type": 53,
-    "codename": "view_moduledevice"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 213,
-  "fields": {
-    "name": "Can add composite device",
-    "content_type": 54,
-    "codename": "add_compositedevice"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 214,
-  "fields": {
-    "name": "Can change composite device",
-    "content_type": 54,
-    "codename": "change_compositedevice"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 215,
-  "fields": {
-    "name": "Can delete composite device",
-    "content_type": 54,
-    "codename": "delete_compositedevice"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 216,
-  "fields": {
-    "name": "Can view composite device",
-    "content_type": 54,
-    "codename": "view_compositedevice"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 217,
-  "fields": {
-    "name": "Can add thing composition",
-    "content_type": 55,
-    "codename": "add_thingcomposition"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 218,
-  "fields": {
-    "name": "Can change thing composition",
-    "content_type": 55,
-    "codename": "change_thingcomposition"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 219,
-  "fields": {
-    "name": "Can delete thing composition",
-    "content_type": 55,
-    "codename": "delete_thingcomposition"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 220,
-  "fields": {
-    "name": "Can view thing composition",
-    "content_type": 55,
-    "codename": "view_thingcomposition"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 221,
-  "fields": {
-    "name": "Can add thing",
-    "content_type": 56,
-    "codename": "add_thing"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 222,
-  "fields": {
-    "name": "Can change thing",
-    "content_type": 56,
-    "codename": "change_thing"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 223,
-  "fields": {
-    "name": "Can delete thing",
-    "content_type": 56,
-    "codename": "delete_thing"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 224,
-  "fields": {
-    "name": "Can view thing",
-    "content_type": 56,
-    "codename": "view_thing"
-  }
-},
-{
-  "model": "auth.permission",
   "pk": 225,
   "fields": {
     "name": "Can add batch device",
@@ -6513,42 +7326,6 @@
     "name": "Can view batch device",
     "content_type": 57,
     "codename": "view_batchdevice"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 233,
-  "fields": {
-    "name": "Can add Data File to Device Mapping",
-    "content_type": 59,
-    "codename": "add_devicedata"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 234,
-  "fields": {
-    "name": "Can change Data File to Device Mapping",
-    "content_type": 59,
-    "codename": "change_devicedata"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 235,
-  "fields": {
-    "name": "Can delete Data File to Device Mapping",
-    "content_type": 59,
-    "codename": "delete_devicedata"
-  }
-},
-{
-  "model": "auth.permission",
-  "pk": 236,
-  "fields": {
-    "name": "Can view Data File to Device Mapping",
-    "content_type": 59,
-    "codename": "view_devicedata"
   }
 },
 {
@@ -6717,22 +7494,6 @@
       46,
       47,
       48,
-      1,
-      2,
-      3,
-      4,
-      33,
-      34,
-      35,
-      36,
-      65,
-      66,
-      67,
-      68,
-      61,
-      62,
-      63,
-      64,
       29,
       30,
       31,
@@ -6754,26 +7515,66 @@
   "fields": {
     "name": "Experimenters",
     "permissions": [
-      1,
-      2,
-      3,
-      4,
-      33,
-      34,
-      35,
-      36,
-      65,
-      66,
-      67,
-      68,
-      61,
-      62,
-      63,
-      64,
+      225,
+      226,
+      227,
+      228,
+      237,
+      238,
+      239,
+      240,
+      85,
+      86,
+      87,
+      88,
+      149,
+      150,
+      151,
+      152,
+      201,
+      202,
+      203,
+      204,
+      197,
+      198,
+      199,
+      200,
+      245,
+      246,
+      247,
+      248,
+      244,
       29,
       30,
       31,
-      32
+      32,
+      89,
+      90,
+      91,
+      92,
+      136,
+      137,
+      138,
+      139,
+      140,
+      144,
+      249,
+      252,
+      105,
+      108,
+      112,
+      129,
+      130,
+      131,
+      132,
+      192,
+      116,
+      117,
+      118,
+      120,
+      125,
+      128,
+      124
     ]
   }
 },
@@ -6827,22 +7628,6 @@
       46,
       47,
       48,
-      1,
-      2,
-      3,
-      4,
-      33,
-      34,
-      35,
-      36,
-      65,
-      66,
-      67,
-      68,
-      61,
-      62,
-      63,
-      64,
       29,
       30,
       31,
@@ -6898,16 +7683,9 @@
       44,
       40,
       48,
-      4,
-      36,
-      68,
-      84,
       88,
-      64,
       32,
-      76,
       92,
-      72,
       136,
       140,
       144,
@@ -6917,7 +7695,6 @@
       132,
       116,
       120,
-      104,
       128,
       124,
       60
@@ -6926,26 +7703,10 @@
 },
 {
   "model": "contenttypes.contenttype",
-  "pk": 1,
-  "fields": {
-    "app_label": "battDB",
-    "model": "cell"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
   "pk": 8,
   "fields": {
     "app_label": "battDB",
     "model": "experiment"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 9,
-  "fields": {
-    "app_label": "battDB",
-    "model": "cellbatch"
   }
 },
 {
@@ -6998,46 +7759,6 @@
 },
 {
   "model": "contenttypes.contenttype",
-  "pk": 16,
-  "fields": {
-    "app_label": "battDB",
-    "model": "equipmenttype"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 17,
-  "fields": {
-    "app_label": "battDB",
-    "model": "cellconfig"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 18,
-  "fields": {
-    "app_label": "battDB",
-    "model": "experimentresult"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 19,
-  "fields": {
-    "app_label": "battDB",
-    "model": "experimentdata"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 21,
-  "fields": {
-    "app_label": "battDB",
-    "model": "celltype"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
   "pk": 22,
   "fields": {
     "app_label": "battDB",
@@ -7050,14 +7771,6 @@
   "fields": {
     "app_label": "battDB",
     "model": "experimentdatafile"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 26,
-  "fields": {
-    "app_label": "dfndb",
-    "model": "paper"
   }
 },
 {
@@ -7142,66 +7855,10 @@
 },
 {
   "model": "contenttypes.contenttype",
-  "pk": 37,
-  "fields": {
-    "app_label": "battDB",
-    "model": "devicetype"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
   "pk": 38,
   "fields": {
     "app_label": "battDB",
     "model": "devicebatch"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 39,
-  "fields": {
-    "app_label": "battDB",
-    "model": "device"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 40,
-  "fields": {
-    "app_label": "battDB",
-    "model": "rawdatafile"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 41,
-  "fields": {
-    "app_label": "battDB",
-    "model": "apparatusequipment"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 42,
-  "fields": {
-    "app_label": "common",
-    "model": "devicetype"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 43,
-  "fields": {
-    "app_label": "common",
-    "model": "device"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 44,
-  "fields": {
-    "app_label": "common",
-    "model": "batch"
   }
 },
 {
@@ -7222,26 +7879,10 @@
 },
 {
   "model": "contenttypes.contenttype",
-  "pk": 47,
-  "fields": {
-    "app_label": "battDB",
-    "model": "batch"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
   "pk": 48,
   "fields": {
     "app_label": "dfndb",
     "model": "dataparameter"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 49,
-  "fields": {
-    "app_label": "common",
-    "model": "paperauthor"
   }
 },
 {
@@ -7262,58 +7903,10 @@
 },
 {
   "model": "contenttypes.contenttype",
-  "pk": 52,
-  "fields": {
-    "app_label": "common",
-    "model": "basemodelwithslug"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 53,
-  "fields": {
-    "app_label": "battDB",
-    "model": "moduledevice"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 54,
-  "fields": {
-    "app_label": "battDB",
-    "model": "compositedevice"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 55,
-  "fields": {
-    "app_label": "common",
-    "model": "thingcomposition"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 56,
-  "fields": {
-    "app_label": "common",
-    "model": "thing"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
   "pk": 57,
   "fields": {
     "app_label": "battDB",
     "model": "batchdevice"
-  }
-},
-{
-  "model": "contenttypes.contenttype",
-  "pk": 59,
-  "fields": {
-    "app_label": "battDB",
-    "model": "devicedata"
   }
 },
 {

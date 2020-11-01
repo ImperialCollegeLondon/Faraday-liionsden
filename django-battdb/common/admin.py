@@ -8,11 +8,11 @@ import django.forms
 
 from django.contrib.auth.models import Permission, ContentType
 
-class PermissionsAdmin(admin.ModelAdmin):
-    list_filter = ['content_type']
-
-admin.site.register(Permission, PermissionsAdmin)
-admin.site.register(ContentType)
+# class PermissionsAdmin(admin.ModelAdmin):
+#     list_filter = ['content_type']
+#
+# admin.site.register(Permission, PermissionsAdmin)
+# admin.site.register(ContentType)
 
 admin.site.site_header = 'The Faraday Institution - Liionsden Electrochemistry Database'
 admin.site.site_title = 'Liionsden Admin'
