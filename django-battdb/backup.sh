@@ -3,7 +3,9 @@
 
 if [ "$1" == "-restore" ]
 then
-  echo "Restore database. This will drop changes and import from DB.sql. Are you sure? Ctrl-C to cancel."
+  echo "Restore database. This will drop changes and import from DB.sql. "
+  echo "WARNING! YOU MUST CLOSE ALL DJANGO INSTANCES OR THIS WILL BREAK EVERTHING HORRIBLY"
+  echo "Are you sure? Ctrl-C to cancel."
   read FOO
   echo "Dropping database"
   dropdb battdb

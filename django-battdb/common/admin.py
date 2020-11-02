@@ -3,6 +3,16 @@ from django.contrib.postgres.fields import JSONField
 # from jsoneditor.forms import JSONEditor
 
 from .models import *
+import mptt
+import django.forms
+
+from django.contrib.auth.models import Permission, ContentType
+
+# class PermissionsAdmin(admin.ModelAdmin):
+#     list_filter = ['content_type']
+#
+# admin.site.register(Permission, PermissionsAdmin)
+# admin.site.register(ContentType)
 
 admin.site.site_header = 'The Faraday Institution - Liionsden Electrochemistry Database'
 admin.site.site_title = 'Liionsden Admin'
@@ -21,17 +31,30 @@ class PersonAdmin(admin.ModelAdmin):
 #  User,
 # ], PersonAdmin)
 
-
-class BaseAdmin(admin.ModelAdmin):
-    list_display = (["__str__", "user_owner", "status", "created_on", "modified_on"])
-    list_filter = (["status"])
-    readonly_fields = ['created_on', 'modified_on']
-    generic_fields = {'name', 'notes', 'status', 'user_owner', 'attributes'}
-
+class ChangeformMixin():
     def get_changeform_initial_data(self, request):
         get_data = super().get_changeform_initial_data(request)
         get_data['user_owner'] = request.user.pk
         return get_data
+    show_change_link = True
+    formfield_overrides = {
+        models.TextField: {'widget': django.forms.Textarea(
+                           attrs={'rows': 3,
+                                  'cols': 40,
+                                  'style': 'height: 3em;'})},
+        models.JSONField: {'widget': django.forms.Textarea(
+            attrs={'rows': 3,
+                   'cols': 40,
+                   'style': 'height: 3em;'})},
+    }
+
+class BaseAdmin(ChangeformMixin, admin.ModelAdmin):
+    list_display = (["__str__", "user_owner", "status", "created_on", "modified_on"])
+    list_filter = (["status"])
+    readonly_fields = ['created_on', 'modified_on', 'slug']
+    generic_fields = {'name', 'notes', 'status', 'user_owner', 'attributes'}
+
+
 
     # this works, but it messes up field ordering due to conversion to sets
     # def get_fieldsets(self, request, obj=None):
@@ -59,16 +82,9 @@ admin.site.register([
 ], OrgAdmin)
 
 
-class PaperAuthorInline(admin.TabularInline):
-    model = PaperAuthor
-    extra = 2
-
-
 class PaperAdmin(BaseAdmin):
-    inlines = (PaperAuthorInline,)
-    list_display = ["title", "tag", "DOI", "year", "has_pdf"]
+    list_display = ["title", "DOI", "year", "has_pdf"]
     list_filter = ["year", "publisher", "authors"]
-    readonly_fields = ['created_on', 'tag']
 
 
 admin.site.register([
@@ -85,3 +101,29 @@ class PersonAdmin(admin.ModelAdmin):
 admin.site.register([
     Person,
 ], PersonAdmin)
+
+
+class TabularInline(ChangeformMixin, admin.TabularInline):
+    pass
+
+
+
+
+class CompositeBaseInLine(TabularInline):
+    fk_name = "parent"
+    verbose_name_plural = "Composition"
+    extra = 1
+    verbose_name_plural = "Child Objects"
+
+
+
+
+class HasMPTTAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
+    inlines = [CompositeBaseInLine,]
+
+
+class FileAdmin(admin.ModelAdmin):
+    readonly_fields = ['created_on', 'modified_on', 'hash']
+
+
+admin.site.register(UploadedFile, FileAdmin)

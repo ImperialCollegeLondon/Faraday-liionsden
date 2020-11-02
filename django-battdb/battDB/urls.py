@@ -6,17 +6,17 @@ from .views import *
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('viewData/<int:pk>', ExperimentDataView.as_view(), name='viewData'),
-    path('viewDataRange/<int:pk>', DataRangeView.as_view(), name='viewDataRange'),
+    # path('viewData/<int:pk>', ExperimentDataView.as_view(), name='viewData'),
+    # path('viewDataRange/<int:pk>', DataRangeView.as_view(), name='viewDataRange'),
     #path('process/<int:pk>', ProcessExperimentView.as_view(), name='Process'),
     path('exps', ExperimentsView.as_view(), name='Experiments'),
-    path('files', AllFilesView.as_view(), name='Files'),
-    path('ranges', AllRangesView.as_view(), name='Data Ranges'),
+    # path('files', AllFilesView.as_view(), name='Files'),
+    # path('ranges', AllRangesView.as_view(), name='Data Ranges'),
     path('exp/<slug:owner>/<slug:name>/<slug:date>', ExperimentView.as_view(), name='Experiment'),
     #path('exp/<slug:slug>', ExperimentView.as_view(), name='Experiment'),
     path('exp/<int:pk>', ExperimentView.as_view(), name='Experiment'),
-    path('create_exp/', CreateExperimentView.as_view(), name='add_experiment'),
+    #path('create_exp/', CreateExperimentView.as_view(), name='add_experiment'),
     #url(r'^getData/', get_data),
     url(r'^plotData/', plotData),
-    path('upload/', UploadFileView.as_view(), name='upload_file'),
+    path('upload/<str:filename>', UploadFileView.as_view(), name='upload_file'),
 ]

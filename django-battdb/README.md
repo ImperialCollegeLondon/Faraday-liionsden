@@ -39,3 +39,9 @@ Thoughts
     * liionsden?
     * galvanalyser?
     * battDB?
+
+
+StackOverflows
+-------------
+* https://stackoverflow.com/questions/30246457/using-django-admin-how-can-i-make-sure-users-can-only-access-objects-they-own
+* https://stackoverflow.com/questions/23779250/using-proxy-model-in-django-admin-to-customize-change-list-view

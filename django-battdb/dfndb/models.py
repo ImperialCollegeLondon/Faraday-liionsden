@@ -71,15 +71,15 @@ class CompositionPart(models.Model):
 
 class Method(cm.BaseModel):
     """
-    A
+    Description of experimental / modelling method types
     """
-    # what does the 'method class' do??
-    # in any case it's a bad idea to have something called class, it gets confusing
-    # Using 'choices' will cause Django to use multiple choice validators & drop down menus
-    # see: https://docs.djangoproject.com/en/3.1/ref/models/fields/#choices
+    METHOD_TYPE_MODELLING = 1000
+    METHOD_TYPE_EXPERIMENTAL = 2000
+    METHOD_TYPE_BOTH = 3000
     METHOD_TYPE_CHOICES = [
-        (1, 'Experimental'),
-        (2, 'Modelling'),
+        (METHOD_TYPE_EXPERIMENTAL, 'Experimental'),
+        (METHOD_TYPE_MODELLING, 'Modelling'),
+        (METHOD_TYPE_BOTH, 'Both'),
     ]
     type = models.IntegerField(choices=METHOD_TYPE_CHOICES)
     description = models.TextField(blank=True, help_text="Method description in PyBaMM format")
@@ -108,18 +108,27 @@ class QuantityUnit(models.Model):
 
 
 class Parameter(cm.BaseModel):
-    symbol = models.CharField(max_length=40, unique=True)
+    """
+    Experiment or simulation parameters. E.g. electrode thickness, electrolyte concentration etc.<br>
+    Use the notes field to explain what this parameter is for. Use the JSON field to add machine-readable metadata.
+    """
+    symbol = models.CharField(max_length=40,  help_text="Parameter symbol. Will be decoded as LaTeX")
     unit = models.ForeignKey(QuantityUnit, blank=True, null=True, on_delete=models.SET_NULL)
-    notes = models.TextField(blank=True)
+
+    class Meta:
+        unique_together = ('symbol', 'unit')
 
     def __str__(self):
         return "%s: %s / %s" % (self.name, self.symbol, self.unit.unitSymbol)
 
 
 class Data(cm.BaseModel):
+    """
+    Experiment or simulation data.
+    """
     paper = models.ForeignKey(cm.Paper, on_delete=models.CASCADE, null=True, blank=True)
     parameter = models.ManyToManyField(Parameter, through='DataParameter')
-    data = models.JSONField()
+    #data = models.JSONField()
 
     # other fields to be added... I'm not sure what the numrange fields are for?
     class Meta:
@@ -144,9 +153,11 @@ class DataParameter(models.Model):
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
     type = models.PositiveSmallIntegerField(choices=PARAM_TYPE, default=PARAM_TYPE_NONE)
     material = models.ForeignKey(Material, on_delete=models.CASCADE, blank=True, null=True)
+    value = models.JSONField(blank=True, null=True)
 
-    # def __str__(self):
-    #     return "%s%d" % (self.compound.formula, self.amount)
+    def __str__(self):
+        return str(self.parameter)
 
-    # class Meta:
-    #     unique_together = ('data', 'parameter')
+    class Meta:
+        unique_together = ('data', 'parameter', 'material')
+
