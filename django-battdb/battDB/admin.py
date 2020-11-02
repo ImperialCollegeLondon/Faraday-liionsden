@@ -77,16 +77,16 @@ class ExperimentAdmin(common.admin.BaseAdmin):
 admin.site.register(Experiment, ExperimentAdmin)
 
 
-# class DeviceConfigInline(common.admin.TabularInline):
-#     model = DeviceConfigNode
-#     extra = 2
-#
-#
-# class DeviceConfigAdmin(BaseAdmin):
-#     inlines = (DeviceConfigInline,)
+class DeviceConfigInline(common.admin.TabularInline):
+    model = DeviceConfigNode
+    extra = 2
 
 
-#admin.site.register([DeviceConfig,], DeviceConfigAdmin)
+class DeviceConfigAdmin(BaseAdmin):
+    inlines = (DeviceConfigInline,)
+
+
+admin.site.register([DeviceConfig,], DeviceConfigAdmin)
 
 # class ModuleDeviceInline(admin.TabularInline):
 #     model = ModuleDevice
@@ -116,7 +116,7 @@ class DataRangeInline(common.admin.TabularInline):
 class DataAdmin(BaseAdmin):
     inlines = [DeviceDataInline, DataRangeInline, ]
     list_display = BaseAdmin.list_display + ['get_experiment_link', 'file_exists', 'is_parsed']
-    readonly_fields = BaseAdmin.readonly_fields + ['get_experiment_link', 'file_hash', 'columns']
+    readonly_fields = BaseAdmin.readonly_fields + ['parsed_data', 'get_experiment_link', 'file_hash', 'columns']
     #form=DataFileForm
 
     def get_experiment_link(self, obj):
@@ -134,4 +134,6 @@ class DataAdmin(BaseAdmin):
 
 admin.site.register([ExperimentDataFile], DataAdmin)
 
+
+admin.site.register([Equipment, DataParser], BaseAdmin)
 

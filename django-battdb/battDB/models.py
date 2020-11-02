@@ -4,9 +4,11 @@ from django.db import models
 from django.db.models import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 import common.models as cm
 import dfndb.models as dfn
+import pandas.errors
 from .migration_dummy import *
 from datetime import datetime
 import django.core.exceptions
@@ -331,16 +333,28 @@ class DeviceConfigNode(models.Model):
 # }
 
 
-# class DataParser(models.Model):
-#     pass
 
-# class Equipment(cm.BaseModel):
-#     specification = models.ForeignKey(DeviceSpecification, null=True, blank=False, on_delete=models.SET_NULL,
-#                                       limit_choices_to={'abstract': False},
-#                                       help_text="Batch Specification")
-#     manufacturer = models.ForeignKey(cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True)
-#     serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
-#                                 "Batch number, optionally indicate serial number format")
+class DataParser(cm.BaseModel):
+    """
+    Parsers for experimental device data. <BR>
+    TODO: In future, these could be user-defined in Python code via this interface (with appropriate permissions) <BR>
+     This would require all parsing to be done in a sandboxed environment on a separate server (which it should anyway)
+    """
+    module = models.CharField(max_length=100, default="", blank=True,
+                              help_text="Python module to run this parser")
+
+class Equipment(cm.BaseModel):
+    """
+    Definitions of equipment such as cycler machines
+    """
+    specification = models.ForeignKey(DeviceSpecification, null=True, blank=False, on_delete=models.SET_NULL,
+                                      limit_choices_to={'abstract': False},
+                                      help_text="Batch Specification")
+    manufacturer = models.ForeignKey(cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True)
+    serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
+                                "Batch number, optionally indicate serial number format")
+    dataParser = models.ForeignKey(DataParser, null=True, blank=True, on_delete=models.SET_NULL,
+                                   help_text="Default parser for this equipment's data")
 
 
 class Experiment(cm.BaseModel):
@@ -354,13 +368,15 @@ class Experiment(cm.BaseModel):
     # device = models.ForeignKey(DeviceSpecification, related_name='used_in', null=True, blank=True,
     #                            on_delete=models.SET_NULL,
     #                            limit_choices_to={'abstract': False, 'complete': True})
-    #config = models.ForeignKey(DeviceConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='used_in')
+    config = models.ForeignKey(DeviceConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='used_in')
     protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
-                                 limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL})
+                                 limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL},
+                                 help_text="Test protocol used in this experiment")
     data_files = models.ManyToManyField(cm.UploadedFile, through="ExperimentDataFile")
 
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
+
     def __str__(self):
         return str(self.user_owner) + " " + str(self.name) + " " + str(self.date)
 
@@ -396,7 +412,12 @@ class ExperimentDataFile(cm.BaseModelNoName):
 
     mappings = models.ManyToManyField(DeviceBatch, through='DataColumn', blank=True, related_name='data_files')
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
-    parsed_data = models.JSONField(editable=False, default=dict)
+    use_parser = models.ForeignKey(DataParser, null=True, blank=True, on_delete=models.SET_NULL,
+                                   help_text="Parser to use for this DataFile")
+    parsed_metadata = models.JSONField(editable=False, default=dict,
+                                       help_text="metadata automatically extracted from the file")
+    parsed_data = models.JSONField(editable=False, default=dict,
+                                   help_text="Data automatically extracted from the file")
     #cycler_machine = models.ForeignKey(DeviceBatch, null=True, on_delete=models.SET_NULL)
 
     #import_columns = models.ManyToManyField(dfn.Parameter, blank=True)
@@ -407,10 +428,13 @@ class ExperimentDataFile(cm.BaseModelNoName):
         return 0
 
     def columns(self):
-        return []
+        try:
+            return self.parsed_metadata['columns']
+        except KeyError:
+            return []
 
     def is_parsed(self):
-        return self.num_cycles() > 0
+        return len(self.parsed_data) > 0
     is_parsed.boolean = True
 
     def file_exists(self):
@@ -420,7 +444,7 @@ class ExperimentDataFile(cm.BaseModelNoName):
     file_exists.boolean = True
 
     def file_hash(self):
-        return self.raw_data_file.file_hash()
+        return self.raw_data_file.hash
 
 
 
@@ -493,22 +517,22 @@ def data_pre_save(sender, instance, *args, **kwargs):
 
     try:
         print("result_post_save: Sender: %s, Instance: %s, args: %s, kwargs: %s, base_loc: %s, Filename: %s" % (
-            sender, instance, args, kwargs, instance.raw_data_file.storage.base_location, instance.raw_data_file.name))
-        filepath = "/".join([instance.raw_data_file.storage.base_location, instance.raw_data_file.name])
+            sender, instance, args, kwargs, instance.raw_data_file.file.storage.base_location, instance.raw_data_file.file.name))
+        filepath = "/".join([instance.raw_data_file.file.storage.base_location, instance.raw_data_file.file.name])
         # TODO: Work out which type of file it is and call the correct parser!
         parser = BiologicCSVnTSVParser(filepath)
         (instance.metadata, columns) = (parser.get_metadata())
-        instance.metadata['Columns'] = columns
-        instance.data['rows'] = [None] * instance.metadata['num_rows']
+        instance.parsed_metadata['Columns'] = columns
+        instance.parsed_data['rows'] = [None] * instance.metadata['num_rows']
         gen = parser.get_data_generator_for_columns(columns, 10)
         print(gen)
         for (idx, row) in enumerate(gen):
             print(row)
-            instance.data['rows'][idx] = list(row.values())
-        instance.data['columns'] = list(row.keys())
-    except Exception as e:
+            instance.parsed_data['rows'][idx] = list(row.values())
+        instance.parsed_data['columns'] = list(row.keys())
+    except pandas.errors.ParserError as e:
         print(e)
-        traceback.print_exc()
+        raise ValidationError(e)
 
     # save again after setting metadata but don't get into a recursion loop!
     try:
