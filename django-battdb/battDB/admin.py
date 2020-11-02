@@ -42,7 +42,8 @@ class BatchDeviceInline(common.admin.TabularInline):
 class DeviceBatchInline(common.admin.TabularInline):
     model = DeviceBatch
     extra = 0
-    verbose_name = "member"
+    verbose_name = "sub-device"
+    verbose_name_plural = "Sub-devices"
     exclude = ['attributes']
 
 

@@ -11,20 +11,20 @@
   "model": "battDB.devicespecification",
   "pk": 4,
   "fields": {
-    "name": "Generic Pack",
+    "name": "Pack",
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-11-01T17:25:16.059Z",
-    "modified_on": "2020-11-01T17:25:16.059Z",
+    "modified_on": "2020-11-02T12:52:59.705Z",
     "attributes": {},
     "notes": "",
-    "slug": "generic-pack",
+    "slug": "pack",
     "parent": null,
     "abstract": true,
-    "complete": false,
+    "complete": true,
     "device_type": null,
     "lft": 1,
-    "rght": 6,
+    "rght": 26,
     "tree_id": 1,
     "level": 0
   }
@@ -33,20 +33,20 @@
   "model": "battDB.devicespecification",
   "pk": 5,
   "fields": {
-    "name": "Generic Module",
+    "name": "Module",
     "status": 10,
     "user_owner": null,
     "created_on": "2020-11-01T17:25:16.061Z",
-    "modified_on": "2020-11-01T17:27:16.423Z",
+    "modified_on": "2020-11-02T12:52:36.098Z",
     "attributes": {},
     "notes": "",
-    "slug": "generic-module",
+    "slug": "module",
     "parent": 4,
     "abstract": true,
-    "complete": false,
+    "complete": true,
     "device_type": null,
     "lft": 2,
-    "rght": 5,
+    "rght": 23,
     "tree_id": 1,
     "level": 1
   }
@@ -55,20 +55,20 @@
   "model": "battDB.devicespecification",
   "pk": 6,
   "fields": {
-    "name": "Generic Cell",
+    "name": "Cell",
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-11-01T17:27:16.425Z",
-    "modified_on": "2020-11-01T17:27:37.140Z",
+    "modified_on": "2020-11-02T12:42:33.456Z",
     "attributes": {},
     "notes": "",
-    "slug": "generic-cell",
+    "slug": "cell",
     "parent": 5,
     "abstract": true,
-    "complete": false,
+    "complete": true,
     "device_type": null,
     "lft": 3,
-    "rght": 4,
+    "rght": 20,
     "tree_id": 1,
     "level": 2
   }
@@ -115,6 +115,226 @@
     "rght": 4,
     "tree_id": 3,
     "level": 0
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 9,
+  "fields": {
+    "name": "Positive Electrode",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-11-02T12:16:18.676Z",
+    "modified_on": "2020-11-02T12:18:39.030Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "positive-electrode",
+    "parent": 6,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 4,
+    "rght": 7,
+    "tree_id": 1,
+    "level": 3
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 10,
+  "fields": {
+    "name": "Negative Electrode",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-11-02T12:16:18.677Z",
+    "modified_on": "2020-11-02T12:19:21.467Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "negative-electrode",
+    "parent": 6,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 8,
+    "rght": 11,
+    "tree_id": 1,
+    "level": 3
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 11,
+  "fields": {
+    "name": "Separator",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-11-02T12:16:18.679Z",
+    "modified_on": "2020-11-02T12:20:17.379Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "separator",
+    "parent": 6,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 12,
+    "rght": 15,
+    "tree_id": 1,
+    "level": 3
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 12,
+  "fields": {
+    "name": "Electrolyte",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-11-02T12:16:18.680Z",
+    "modified_on": "2020-11-02T12:16:18.680Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "electrolyte",
+    "parent": 6,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 16,
+    "rght": 17,
+    "tree_id": 1,
+    "level": 3
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 13,
+  "fields": {
+    "name": "Pos. E'trode Material",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-11-02T12:18:39.032Z",
+    "modified_on": "2020-11-02T12:19:46.361Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "pos-etrode-material",
+    "parent": 9,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 5,
+    "rght": 6,
+    "tree_id": 1,
+    "level": 4
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 14,
+  "fields": {
+    "name": "Neg. E'trode Material",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-11-02T12:19:21.469Z",
+    "modified_on": "2020-11-02T12:19:21.469Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "neg-etrode-material",
+    "parent": 10,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 9,
+    "rght": 10,
+    "tree_id": 1,
+    "level": 4
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 15,
+  "fields": {
+    "name": "Separator Material",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-11-02T12:20:17.381Z",
+    "modified_on": "2020-11-02T12:20:17.381Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "separator-material",
+    "parent": 11,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 13,
+    "rght": 14,
+    "tree_id": 1,
+    "level": 4
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 16,
+  "fields": {
+    "name": "Cell Casing",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-11-02T12:20:56.097Z",
+    "modified_on": "2020-11-02T12:20:56.097Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "cell-casing",
+    "parent": 6,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 18,
+    "rght": 19,
+    "tree_id": 1,
+    "level": 3
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 17,
+  "fields": {
+    "name": "Terminal",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-11-02T12:52:36.100Z",
+    "modified_on": "2020-11-02T12:52:36.100Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "terminal",
+    "parent": 5,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 21,
+    "rght": 22,
+    "tree_id": 1,
+    "level": 2
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 18,
+  "fields": {
+    "name": "Connector",
+    "status": 10,
+    "user_owner": null,
+    "created_on": "2020-11-02T12:52:59.707Z",
+    "modified_on": "2020-11-02T13:01:53.108Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "connector",
+    "parent": 4,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 24,
+    "rght": 25,
+    "tree_id": 1,
+    "level": 1
   }
 },
 {
@@ -174,6 +394,97 @@
     "rght": 2,
     "tree_id": 1,
     "level": 0
+  }
+},
+{
+  "model": "battDB.deviceconfig",
+  "pk": 4,
+  "fields": {
+    "name": "2s2p module",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-02T12:35:00.339Z",
+    "modified_on": "2020-11-02T12:56:54.504Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "2s2p-module"
+  }
+},
+{
+  "model": "battDB.deviceconfignode",
+  "pk": 9,
+  "fields": {
+    "device": 6,
+    "config": 4,
+    "device_position_id": "A1",
+    "pos_netname": "V1",
+    "neg_netname": "V0"
+  }
+},
+{
+  "model": "battDB.deviceconfignode",
+  "pk": 10,
+  "fields": {
+    "device": 6,
+    "config": 4,
+    "device_position_id": "A2",
+    "pos_netname": "V1",
+    "neg_netname": "V0"
+  }
+},
+{
+  "model": "battDB.deviceconfignode",
+  "pk": 11,
+  "fields": {
+    "device": 6,
+    "config": 4,
+    "device_position_id": "B1",
+    "pos_netname": "V2",
+    "neg_netname": "V1"
+  }
+},
+{
+  "model": "battDB.deviceconfignode",
+  "pk": 12,
+  "fields": {
+    "device": 6,
+    "config": 4,
+    "device_position_id": "B2",
+    "pos_netname": "V2",
+    "neg_netname": "V1"
+  }
+},
+{
+  "model": "battDB.deviceconfignode",
+  "pk": 14,
+  "fields": {
+    "device": 17,
+    "config": 4,
+    "device_position_id": "+",
+    "pos_netname": "V2",
+    "neg_netname": null
+  }
+},
+{
+  "model": "battDB.deviceconfignode",
+  "pk": 15,
+  "fields": {
+    "device": 17,
+    "config": 4,
+    "device_position_id": "-",
+    "pos_netname": "V0",
+    "neg_netname": null
+  }
+},
+{
+  "model": "battDB.deviceconfignode",
+  "pk": 16,
+  "fields": {
+    "device": 17,
+    "config": 4,
+    "device_position_id": "T",
+    "pos_netname": "V1",
+    "neg_netname": null
   }
 },
 {
@@ -11836,6 +12147,370 @@
     "object_repr": "BioLogic_full.txt",
     "action_flag": 2,
     "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 456,
+  "fields": {
+    "action_time": "2020-11-02T12:00:07.293Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "6",
+    "object_repr": "Cell",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 457,
+  "fields": {
+    "action_time": "2020-11-02T12:00:20.870Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "4",
+    "object_repr": "Pack",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 458,
+  "fields": {
+    "action_time": "2020-11-02T12:00:27.954Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "5",
+    "object_repr": "Module",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 459,
+  "fields": {
+    "action_time": "2020-11-02T12:13:32.257Z",
+    "user": 1,
+    "content_type": 51,
+    "object_id": "1",
+    "object_repr": "2s2p arrangement",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"device config node\", \"object\": \"2s2p arrangement/NoneNone\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 460,
+  "fields": {
+    "action_time": "2020-11-02T12:16:18.681Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "6",
+    "object_repr": "Cell",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device specification\", \"object\": \"Positive Electrode\"}}, {\"added\": {\"name\": \"device specification\", \"object\": \"Negative Electrode\"}}, {\"added\": {\"name\": \"device specification\", \"object\": \"Separator\"}}, {\"added\": {\"name\": \"device specification\", \"object\": \"Electrolyte\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 461,
+  "fields": {
+    "action_time": "2020-11-02T12:18:39.034Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "9",
+    "object_repr": "Positive Electrode",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device specification\", \"object\": \"Positive Electrode Material\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 462,
+  "fields": {
+    "action_time": "2020-11-02T12:19:21.470Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "10",
+    "object_repr": "Negative Electrode",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device specification\", \"object\": \"Neg. E'trode Material\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 463,
+  "fields": {
+    "action_time": "2020-11-02T12:19:46.362Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "13",
+    "object_repr": "Pos. E'trode Material",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 464,
+  "fields": {
+    "action_time": "2020-11-02T12:20:17.381Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "11",
+    "object_repr": "Separator",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device specification\", \"object\": \"Separator Material\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 465,
+  "fields": {
+    "action_time": "2020-11-02T12:20:56.097Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "6",
+    "object_repr": "Cell",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device specification\", \"object\": \"Cell Casing\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 466,
+  "fields": {
+    "action_time": "2020-11-02T12:21:50.620Z",
+    "user": 1,
+    "content_type": 51,
+    "object_id": "1",
+    "object_repr": "2s2p arrangement",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device config node\", \"object\": \"2s2p arrangement/NoneNone\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 467,
+  "fields": {
+    "action_time": "2020-11-02T12:22:29.693Z",
+    "user": 1,
+    "content_type": 51,
+    "object_id": "1",
+    "object_repr": "2s2p arrangement",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"device config node\", \"object\": \"2s2p arrangement/None+\", \"fields\": [\"Device position id\", \"Device terminal name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 468,
+  "fields": {
+    "action_time": "2020-11-02T12:22:56.461Z",
+    "user": 1,
+    "content_type": 51,
+    "object_id": "1",
+    "object_repr": "2s2p arrangement",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"device config node\", \"object\": \"2s2p arrangement/V1+\", \"fields\": [\"Net name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 469,
+  "fields": {
+    "action_time": "2020-11-02T12:25:59.376Z",
+    "user": 1,
+    "content_type": 51,
+    "object_id": "1",
+    "object_repr": "2s2p arrangement",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 470,
+  "fields": {
+    "action_time": "2020-11-02T12:35:00.341Z",
+    "user": 1,
+    "content_type": 51,
+    "object_id": "4",
+    "object_repr": "2s2p module arrangement",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"device config node\", \"object\": \"2s2p module arrangement/Cell_A1\"}}, {\"added\": {\"name\": \"device config node\", \"object\": \"2s2p module arrangement/Cell_A2\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 471,
+  "fields": {
+    "action_time": "2020-11-02T12:36:30.132Z",
+    "user": 1,
+    "content_type": 51,
+    "object_id": "4",
+    "object_repr": "2s2p module arrangement",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device config node\", \"object\": \"2s2p module arrangement/Cell_B1\"}}, {\"added\": {\"name\": \"device config node\", \"object\": \"2s2p module arrangement/Cell_B2\"}}, {\"added\": {\"name\": \"device config node\", \"object\": \"2s2p module arrangement/Module_DEVICE\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 472,
+  "fields": {
+    "action_time": "2020-11-02T12:42:33.456Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "6",
+    "object_repr": "Cell",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Complete\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 473,
+  "fields": {
+    "action_time": "2020-11-02T12:42:40.327Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "5",
+    "object_repr": "Module",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Complete\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 474,
+  "fields": {
+    "action_time": "2020-11-02T12:42:46.849Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "4",
+    "object_repr": "Pack",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Complete\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 475,
+  "fields": {
+    "action_time": "2020-11-02T12:50:39.396Z",
+    "user": 1,
+    "content_type": 51,
+    "object_id": "4",
+    "object_repr": "2s2p module",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 476,
+  "fields": {
+    "action_time": "2020-11-02T12:51:41.166Z",
+    "user": 1,
+    "content_type": 51,
+    "object_id": "4",
+    "object_repr": "2s2p module",
+    "action_flag": 2,
+    "change_message": "[{\"deleted\": {\"name\": \"device config node\", \"object\": \"2s2p module/Module_DEVICE\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 477,
+  "fields": {
+    "action_time": "2020-11-02T12:52:36.101Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "5",
+    "object_repr": "Module",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device specification\", \"object\": \"Terminal\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 478,
+  "fields": {
+    "action_time": "2020-11-02T12:52:59.707Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "4",
+    "object_repr": "Pack",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device specification\", \"object\": \"Connector\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 479,
+  "fields": {
+    "action_time": "2020-11-02T12:54:35.471Z",
+    "user": 1,
+    "content_type": 51,
+    "object_id": "4",
+    "object_repr": "2s2p module",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device config node\", \"object\": \"2s2p module/Terminal_DEVICE\"}}, {\"added\": {\"name\": \"device config node\", \"object\": \"2s2p module/Terminal_DEVICE\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 480,
+  "fields": {
+    "action_time": "2020-11-02T12:55:22.476Z",
+    "user": 1,
+    "content_type": 51,
+    "object_id": "4",
+    "object_repr": "2s2p module",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"device config node\", \"object\": \"2s2p module/Terminal_DEVICE\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 481,
+  "fields": {
+    "action_time": "2020-11-02T12:55:45.343Z",
+    "user": 1,
+    "content_type": 51,
+    "object_id": "4",
+    "object_repr": "2s2p module",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"device config node\", \"object\": \"2s2p module/Terminal_MODULE\", \"fields\": [\"Device position id\"]}}, {\"changed\": {\"name\": \"device config node\", \"object\": \"2s2p module/Terminal_MODULE\", \"fields\": [\"Device position id\"]}}, {\"changed\": {\"name\": \"device config node\", \"object\": \"2s2p module/Terminal_MODULE\", \"fields\": [\"Device position id\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 482,
+  "fields": {
+    "action_time": "2020-11-02T12:56:54.506Z",
+    "user": 1,
+    "content_type": 51,
+    "object_id": "4",
+    "object_repr": "2s2p module",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"device config node\", \"object\": \"2s2p module/Terminal_+\", \"fields\": [\"Device position id\", \"Pos netname\"]}}, {\"changed\": {\"name\": \"device config node\", \"object\": \"2s2p module/Terminal_-\", \"fields\": [\"Device position id\", \"Pos netname\", \"Neg netname\"]}}, {\"changed\": {\"name\": \"device config node\", \"object\": \"2s2p module/Terminal_T\", \"fields\": [\"Device position id\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 483,
+  "fields": {
+    "action_time": "2020-11-02T13:01:53.109Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "18",
+    "object_repr": "Connector",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Abstract Specification\"]}}]"
   }
 },
 {

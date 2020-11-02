@@ -56,7 +56,8 @@ import hashlib
 
 class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
     """
-    A device specification.
+    A device specification is a template for creating a devcice or batch of devices in the system. <BR>
+    Specifications are structured as a tree, so that each device can be composed of sub- devices
     """
     # TYPE_CHOICES = [
     #     ("component", "Component part of a cell"),
@@ -115,7 +116,7 @@ class DeviceParameter(cm.HasName):
 
 class DeviceBatch(cm.BaseModelNoName, cm.HasMPTT):
     """
-    Describes a batch of things produced to the same type specification
+    A device or batch of devices is a physical, tangible thing produced to a given specification.
     """
     specification = models.ForeignKey(DeviceSpecification, null=True, blank=False, on_delete=models.SET_NULL,
                                       limit_choices_to={'abstract': False},
@@ -185,22 +186,19 @@ class DeviceConfigNode(models.Model):
            limit_choices_to={'config':config} would result in an error.
            Maybe there is a flaw in my database design here? This might not need to be a ManyToMany 'through' table.
     """
-    device = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE, limit_choices_to={'abstract': False},
-                               help_text="Related device specification e.g. cell or sensor. Must have is_template=True")
+    device = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE, limit_choices_to={'abstract': True},
+                               help_text="Related device specification e.g. cell or sensor.")
     config = models.ForeignKey(DeviceConfig, on_delete=models.CASCADE,
                                help_text="Config instance to which this node belongs")
     device_position_id = models.CharField(max_length=20, null=True, blank=True,
                                           help_text="Position of device in pack e.g. 1 - identifies this device")
-    next = models.ForeignKey('DeviceConfigNode', null=True, blank=True, on_delete=models.SET_NULL,
-                             help_text="Connected node in chain. Must be part of the same config."
-                                       "In a series pack, this would be the negative terminal of the next cell")
-    device_terminal_name = models.CharField(max_length=10, null=True, blank=True, help_text=
-                                            "Name of device port or terminal. e.g. 'Anode'")
-    net_name = models.CharField(max_length=20, null=True, blank=True,
-                                help_text="Name of electrical signal e.g. cell_1_v")
+    pos_netname = models.CharField(max_length=20, null=True, blank=True,
+                                   help_text="Name of electrical signal at positive terminal e.g. cell_1_v")
+    neg_netname = models.CharField(max_length=20, null=True, blank=True,
+                                   help_text="Name of electrical signal at negative terminal e.g. pack_-ve")
 
     def __str__(self):
-        return str(self.config) + "/" + str(self.net_name) + str(self.device_terminal_name)
+        return str(self.config) + "/" + str(self.device) + "_" + str(self.device_position_id)
 
 
 
@@ -355,6 +353,9 @@ class Equipment(cm.BaseModel):
                                 "Batch number, optionally indicate serial number format")
     dataParser = models.ForeignKey(DataParser, null=True, blank=True, on_delete=models.SET_NULL,
                                    help_text="Default parser for this equipment's data")
+
+    class Meta:
+        verbose_name_plural="Equipment"
 
 
 class Experiment(cm.BaseModel):

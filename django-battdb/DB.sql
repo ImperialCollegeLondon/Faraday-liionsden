@@ -523,11 +523,10 @@ ALTER SEQUENCE public."battDB_deviceconfig_id_seq" OWNED BY public."battDB_devic
 CREATE TABLE public."battDB_deviceconfignode" (
     id integer NOT NULL,
     device_position_id character varying(20),
-    device_terminal_name character varying(10),
-    net_name character varying(20),
-    next_id integer,
     device_id integer NOT NULL,
-    config_id integer NOT NULL
+    config_id integer NOT NULL,
+    neg_netname character varying(20),
+    pos_netname character varying(20)
 );
 
 
@@ -2033,6 +2032,7 @@ COPY public."battDB_devicebatch" (id, status, created_on, modified_on, attribute
 --
 
 COPY public."battDB_deviceconfig" (id, name, status, created_on, modified_on, attributes, notes, slug, user_owner_id) FROM stdin;
+4	2s2p module	10	2020-11-02 12:35:00.339675+00	2020-11-02 12:56:54.504165+00	{}		2s2p-module	1
 \.
 
 
@@ -2040,7 +2040,14 @@ COPY public."battDB_deviceconfig" (id, name, status, created_on, modified_on, at
 -- Data for Name: battDB_deviceconfignode; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_deviceconfignode" (id, device_position_id, device_terminal_name, net_name, next_id, device_id, config_id) FROM stdin;
+COPY public."battDB_deviceconfignode" (id, device_position_id, device_id, config_id, neg_netname, pos_netname) FROM stdin;
+9	A1	6	4	V0	V1
+10	A2	6	4	V0	V1
+11	B1	6	4	V1	V2
+12	B2	6	4	V1	V2
+14	+	17	4	\N	V2
+15	-	17	4	\N	V0
+16	T	17	4	\N	V1
 \.
 
 
@@ -2060,11 +2067,21 @@ COPY public."battDB_deviceparameter" (id, name, value, material_id, parameter_id
 --
 
 COPY public."battDB_devicespecification" (id, name, status, created_on, modified_on, attributes, notes, slug, abstract, complete, lft, rght, tree_id, level, device_type_id, parent_id, user_owner_id) FROM stdin;
+9	Positive Electrode	10	2020-11-02 12:16:18.676514+00	2020-11-02 12:18:39.030117+00	{}		positive-electrode	t	f	4	7	1	3	\N	6	\N
+10	Negative Electrode	10	2020-11-02 12:16:18.677955+00	2020-11-02 12:19:21.467412+00	{}		negative-electrode	t	f	8	11	1	3	\N	6	\N
+14	Neg. E'trode Material	10	2020-11-02 12:19:21.469428+00	2020-11-02 12:19:21.469438+00	{}		neg-etrode-material	t	f	9	10	1	4	\N	10	\N
+13	Pos. E'trode Material	10	2020-11-02 12:18:39.032358+00	2020-11-02 12:19:46.361764+00	{}		pos-etrode-material	t	f	5	6	1	4	\N	9	\N
+12	Electrolyte	10	2020-11-02 12:16:18.680618+00	2020-11-02 12:16:18.680627+00	{}		electrolyte	t	f	16	17	1	3	\N	6	\N
+11	Separator	10	2020-11-02 12:16:18.679339+00	2020-11-02 12:20:17.379271+00	{}		separator	t	f	12	15	1	3	\N	6	\N
+15	Separator Material	10	2020-11-02 12:20:17.381227+00	2020-11-02 12:20:17.381239+00	{}		separator-material	t	f	13	14	1	4	\N	11	\N
+16	Cell Casing	10	2020-11-02 12:20:56.097147+00	2020-11-02 12:20:56.097157+00	{}		cell-casing	t	f	18	19	1	3	\N	6	\N
+6	Cell	10	2020-11-01 17:27:16.425737+00	2020-11-02 12:42:33.456044+00	{}		cell	t	t	3	20	1	2	\N	5	1
 8	My NMC622 Module	10	2020-11-01 17:45:04.963155+00	2020-11-01 17:45:33.655848+00	{}		my-nmc622-module	f	t	1	4	3	0	5	\N	1
-4	Generic Pack	10	2020-11-01 17:25:16.059603+00	2020-11-01 17:25:16.059616+00	{}		generic-pack	t	f	1	6	1	0	\N	\N	1
-5	Generic Module	10	2020-11-01 17:25:16.061485+00	2020-11-01 17:27:16.423826+00	{}		generic-module	t	f	2	5	1	1	\N	4	\N
-6	Generic Cell	10	2020-11-01 17:27:16.425737+00	2020-11-01 17:27:37.140492+00	{}		generic-cell	t	f	3	4	1	2	\N	5	1
+5	Module	10	2020-11-01 17:25:16.061485+00	2020-11-02 12:52:36.098468+00	{}		module	t	t	2	23	1	1	\N	4	\N
+17	Terminal	10	2020-11-02 12:52:36.100321+00	2020-11-02 12:52:36.100332+00	{}		terminal	t	f	21	22	1	2	\N	5	\N
+4	Pack	10	2020-11-01 17:25:16.059603+00	2020-11-02 12:52:59.705284+00	{}		pack	t	t	1	26	1	0	\N	\N	1
 7	My NMC622 Cell	10	2020-11-01 17:36:29.295484+00	2020-11-01 17:46:29.432615+00	{}		my-nmc622-cell	f	t	1	2	2	0	6	\N	1
+18	Connector	10	2020-11-02 12:52:59.707199+00	2020-11-02 13:01:53.108119+00	{}		connector	t	f	24	25	1	1	\N	4	\N
 \.
 
 
@@ -2712,6 +2729,34 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 453	2020-11-02 11:01:41.654257+00	8	BioLogic_full.txt	1	[{"added": {}}]	23	1
 454	2020-11-02 11:04:56.698638+00	8	BioLogic_full.txt	2	[]	23	1
 455	2020-11-02 11:05:46.903776+00	8	BioLogic_full.txt	2	[]	23	1
+456	2020-11-02 12:00:07.29328+00	6	Cell	2	[{"changed": {"fields": ["Name"]}}]	61	1
+457	2020-11-02 12:00:20.870684+00	4	Pack	2	[{"changed": {"fields": ["Name"]}}]	61	1
+458	2020-11-02 12:00:27.954151+00	5	Module	2	[{"changed": {"fields": ["Name"]}}]	61	1
+459	2020-11-02 12:13:32.257089+00	1	2s2p arrangement	1	[{"added": {}}, {"added": {"name": "device config node", "object": "2s2p arrangement/NoneNone"}}]	51	1
+460	2020-11-02 12:16:18.681188+00	6	Cell	2	[{"added": {"name": "device specification", "object": "Positive Electrode"}}, {"added": {"name": "device specification", "object": "Negative Electrode"}}, {"added": {"name": "device specification", "object": "Separator"}}, {"added": {"name": "device specification", "object": "Electrolyte"}}]	61	1
+461	2020-11-02 12:18:39.034302+00	9	Positive Electrode	2	[{"added": {"name": "device specification", "object": "Positive Electrode Material"}}]	61	1
+462	2020-11-02 12:19:21.470078+00	10	Negative Electrode	2	[{"added": {"name": "device specification", "object": "Neg. E'trode Material"}}]	61	1
+463	2020-11-02 12:19:46.362799+00	13	Pos. E'trode Material	2	[{"changed": {"fields": ["Name"]}}]	61	1
+464	2020-11-02 12:20:17.381855+00	11	Separator	2	[{"added": {"name": "device specification", "object": "Separator Material"}}]	61	1
+465	2020-11-02 12:20:56.097846+00	6	Cell	2	[{"added": {"name": "device specification", "object": "Cell Casing"}}]	61	1
+466	2020-11-02 12:21:50.620177+00	1	2s2p arrangement	2	[{"added": {"name": "device config node", "object": "2s2p arrangement/NoneNone"}}]	51	1
+467	2020-11-02 12:22:29.693808+00	1	2s2p arrangement	2	[{"changed": {"name": "device config node", "object": "2s2p arrangement/None+", "fields": ["Device position id", "Device terminal name"]}}]	51	1
+468	2020-11-02 12:22:56.461409+00	1	2s2p arrangement	2	[{"changed": {"name": "device config node", "object": "2s2p arrangement/V1+", "fields": ["Net name"]}}]	51	1
+469	2020-11-02 12:25:59.376162+00	1	2s2p arrangement	3		51	1
+470	2020-11-02 12:35:00.341082+00	4	2s2p module arrangement	1	[{"added": {}}, {"added": {"name": "device config node", "object": "2s2p module arrangement/Cell_A1"}}, {"added": {"name": "device config node", "object": "2s2p module arrangement/Cell_A2"}}]	51	1
+471	2020-11-02 12:36:30.132803+00	4	2s2p module arrangement	2	[{"added": {"name": "device config node", "object": "2s2p module arrangement/Cell_B1"}}, {"added": {"name": "device config node", "object": "2s2p module arrangement/Cell_B2"}}, {"added": {"name": "device config node", "object": "2s2p module arrangement/Module_DEVICE"}}]	51	1
+472	2020-11-02 12:42:33.456941+00	6	Cell	2	[{"changed": {"fields": ["Complete"]}}]	61	1
+473	2020-11-02 12:42:40.327458+00	5	Module	2	[{"changed": {"fields": ["Complete"]}}]	61	1
+474	2020-11-02 12:42:46.849029+00	4	Pack	2	[{"changed": {"fields": ["Complete"]}}]	61	1
+475	2020-11-02 12:50:39.396617+00	4	2s2p module	2	[{"changed": {"fields": ["Name"]}}]	51	1
+476	2020-11-02 12:51:41.166881+00	4	2s2p module	2	[{"deleted": {"name": "device config node", "object": "2s2p module/Module_DEVICE"}}]	51	1
+477	2020-11-02 12:52:36.101022+00	5	Module	2	[{"added": {"name": "device specification", "object": "Terminal"}}]	61	1
+478	2020-11-02 12:52:59.707838+00	4	Pack	2	[{"added": {"name": "device specification", "object": "Connector"}}]	61	1
+479	2020-11-02 12:54:35.47199+00	4	2s2p module	2	[{"added": {"name": "device config node", "object": "2s2p module/Terminal_DEVICE"}}, {"added": {"name": "device config node", "object": "2s2p module/Terminal_DEVICE"}}]	51	1
+480	2020-11-02 12:55:22.47645+00	4	2s2p module	2	[{"added": {"name": "device config node", "object": "2s2p module/Terminal_DEVICE"}}]	51	1
+481	2020-11-02 12:55:45.343907+00	4	2s2p module	2	[{"changed": {"name": "device config node", "object": "2s2p module/Terminal_MODULE", "fields": ["Device position id"]}}, {"changed": {"name": "device config node", "object": "2s2p module/Terminal_MODULE", "fields": ["Device position id"]}}, {"changed": {"name": "device config node", "object": "2s2p module/Terminal_MODULE", "fields": ["Device position id"]}}]	51	1
+482	2020-11-02 12:56:54.506224+00	4	2s2p module	2	[{"changed": {"name": "device config node", "object": "2s2p module/Terminal_+", "fields": ["Device position id", "Pos netname"]}}, {"changed": {"name": "device config node", "object": "2s2p module/Terminal_-", "fields": ["Device position id", "Pos netname", "Neg netname"]}}, {"changed": {"name": "device config node", "object": "2s2p module/Terminal_T", "fields": ["Device position id"]}}]	51	1
+483	2020-11-02 13:01:53.109177+00	18	Connector	2	[{"changed": {"fields": ["Abstract Specification"]}}]	61	1
 \.
 
 
@@ -3023,6 +3068,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 264	battDB	0143_dataparser_module	2020-11-02 10:42:03.985212+00
 265	battDB	0144_experimentDataMetadata	2020-11-02 11:04:51.006601+00
 266	battDB	0145_experiment_config	2020-11-02 11:46:37.729243+00
+267	battDB	0146_DeviceConfigNetNames	2020-11-02 12:31:13.891521+00
 \.
 
 
@@ -3126,14 +3172,14 @@ SELECT pg_catalog.setval('public."battDB_devicebatch_id_seq"', 32, true);
 -- Name: battDB_deviceconfig_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_deviceconfig_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_deviceconfig_id_seq"', 4, true);
 
 
 --
 -- Name: battDB_deviceconfignode_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_deviceconfignode_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_deviceconfignode_id_seq"', 16, true);
 
 
 --
@@ -3147,7 +3193,7 @@ SELECT pg_catalog.setval('public."battDB_deviceparameter_id_seq"', 3, true);
 -- Name: battDB_devicespecification_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_devicespecification_id_seq"', 8, true);
+SELECT pg_catalog.setval('public."battDB_devicespecification_id_seq"', 18, true);
 
 
 --
@@ -3259,7 +3305,7 @@ SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 12, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 455, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 483, true);
 
 
 --
@@ -3273,7 +3319,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 65, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 266, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 267, true);
 
 
 --
@@ -3975,13 +4021,6 @@ CREATE INDEX "battDB_deviceconfignode_device_id_21bed58f" ON public."battDB_devi
 
 
 --
--- Name: battDB_deviceconfignode_next_id_8ac05430; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_deviceconfignode_next_id_8ac05430" ON public."battDB_deviceconfignode" USING btree (next_id);
-
-
---
 -- Name: battDB_deviceparameter_material_id_0e7af7bd; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -4602,14 +4641,6 @@ ALTER TABLE ONLY public."battDB_deviceconfignode"
 
 ALTER TABLE ONLY public."battDB_deviceconfignode"
     ADD CONSTRAINT "battDB_deviceconfign_device_id_21bed58f_fk_battDB_de" FOREIGN KEY (device_id) REFERENCES public."battDB_devicespecification"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_deviceconfignode battDB_deviceconfign_next_id_8ac05430_fk_battDB_de; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_deviceconfignode"
-    ADD CONSTRAINT "battDB_deviceconfign_next_id_8ac05430_fk_battDB_de" FOREIGN KEY (next_id) REFERENCES public."battDB_deviceconfignode"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
