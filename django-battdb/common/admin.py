@@ -123,7 +123,7 @@ class HasMPTTAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
     inlines = [CompositeBaseInLine,]
 
 
-class FileAdmin(admin.ModelAdmin):
+class FileAdmin(ChangeformMixin, admin.ModelAdmin):
     readonly_fields = ['created_on', 'modified_on', 'exists', 'hash']
     list_display = ["__str__", "user_owner", "status"] + readonly_fields
 

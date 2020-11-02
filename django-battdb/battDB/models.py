@@ -414,8 +414,16 @@ class ExperimentDataFile(cm.BaseModelNoName):
 
     mappings = models.ManyToManyField(DeviceBatch, through='DataColumn', blank=True, related_name='data_files')
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
-    use_parser = models.ForeignKey(DataParser, null=True, blank=True, on_delete=models.SET_NULL,
-                                   help_text="Parser to use for this DataFile")
+    PARSER_CHOICES = [("none", "None"), ("auto", "Auto-detect"),
+                      ("csv", "Generic CSV/TSV"),
+                      ("biologic", "Biologic CSV/TSV/MPT"),
+                      ("maccor", "Maccor XLS/XLSX"),
+                      ("ivium", "Ivium TXT"),
+                      ("novonix", "Novonix TXT"),
+                      ]
+    use_parser = models.CharField(max_length=20, default="auto",
+                                  choices=PARSER_CHOICES,
+                                  help_text="Parser to use for this DataFile")
     parsed_metadata = models.JSONField(editable=False, default=dict,
                                        help_text="metadata automatically extracted from the file")
     parsed_data = models.JSONField(editable=False, default=dict,
@@ -429,12 +437,18 @@ class ExperimentDataFile(cm.BaseModelNoName):
     def num_cycles(self):
         return 0
 
+    def num_rows(self):
+        return len(self.parsed_data)
+
     def columns(self):
         try:
             cols = self.parsed_metadata['columns']
             return [k for k in cols.keys()]
         except KeyError:
             return []
+
+    def num_cols(self):
+        return len(self.columns())
 
     def is_parsed(self):
         return len(self.parsed_data) > 0
@@ -450,8 +464,9 @@ class ExperimentDataFile(cm.BaseModelNoName):
         return self.raw_data_file.hash
 
     def clean(self):
-        parse_data_file(self)
-        super(ExperimentDataFile, self).clean(self)
+        if(self.file_exists()):
+            parse_data_file(self, use_parser=self.use_parser)
+        super().clean()
 
     def __str__(self):
         return str(self.raw_data_file)

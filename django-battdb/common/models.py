@@ -283,7 +283,12 @@ class Paper(HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedMod
 
 
 class UploadedFile(HasCreatedModifiedDates, HasOwner, HasStatus):
-    file = models.FileField(upload_to='uploaded_files', null=False)
+    """
+    A list of user-uploaded files. <BR>
+    FIXME: This is pretty insecure - File format & size is not yet enforced, so any kind of file can be uploaded,
+     including Python scripts, very large binary files, etc.
+    """
+    file = models.FileField(upload_to='uploaded_files', null=False, )
     hash = models.CharField(max_length=64, null=False, unique=True, editable=False,
                             help_text="SHA-1 Hash of uploaded file. You cannot upload the same file twice.")
 
