@@ -335,15 +335,8 @@ ALTER SEQUENCE public."battDB_datacolumn_id_seq" OWNED BY public."battDB_datacol
 CREATE TABLE public."battDB_dataparser" (
     id integer NOT NULL,
     name character varying(128),
-    status smallint NOT NULL,
-    created_on timestamp with time zone NOT NULL,
-    modified_on timestamp with time zone NOT NULL,
-    attributes jsonb NOT NULL,
-    notes text,
-    slug character varying(500) NOT NULL,
-    user_owner_id integer,
     module character varying(100) NOT NULL,
-    CONSTRAINT "battDB_dataparser_status_check" CHECK ((status >= 0))
+    notes text
 );
 
 
@@ -2010,7 +2003,10 @@ COPY public."battDB_datacolumn" (id, column_name, batch_id, data_id, device_id, 
 -- Data for Name: battDB_dataparser; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_dataparser" (id, name, status, created_on, modified_on, attributes, notes, slug, user_owner_id, module) FROM stdin;
+COPY public."battDB_dataparser" (id, name, module, notes) FROM stdin;
+3	Novonix		\N
+4	Maccor	maccor_parser.py	
+2	Biologic	biologic_parser.py	
 \.
 
 
@@ -2167,6 +2163,7 @@ COPY public.common_uploadedfile (id, created_on, modified_on, file, hash, status
 17	2020-11-01 18:20:38.799315+00	2020-11-01 18:20:38.806274+00	uploaded_files/mug.jpeg	f5009ba783fd94b0a410738e13dafa14	10	\N
 18	2020-11-02 10:59:35.647447+00	2020-11-02 10:59:35.647505+00	uploaded_files/BioLogic_full.txt	abf6e42283668f8ba9094a0f85411f64	10	\N
 19	2020-11-02 14:40:08.578715+00	2020-11-02 14:40:08.578729+00	uploaded_files/Ivium_Cell1.txt	b35947d7bc5b1f3533bd8b0504984a49	10	\N
+20	2020-11-02 16:31:11.964061+00	2020-11-02 16:31:11.964075+00	uploaded_files/sample_Maccor.xlsx	bc6f07013a09fed8658411f5c894ed40	10	1
 \.
 
 
@@ -2767,6 +2764,11 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 488	2020-11-02 15:43:35.770424+00	12	BioLogic_full.txt	3		23	1
 489	2020-11-02 15:43:47.259844+00	8	BioLogic_full.txt	3		23	1
 490	2020-11-02 15:44:02.427224+00	5	mug.jpeg	3		23	1
+491	2020-11-02 16:19:26.042091+00	2	Biologix	1	[{"added": {}}]	64	1
+492	2020-11-02 16:19:31.170868+00	3	Novonix	1	[{"added": {}}]	64	1
+493	2020-11-02 16:25:43.667774+00	4	Maccor	1	[{"added": {}}]	64	1
+494	2020-11-02 16:26:03.385516+00	2	Biologic	2	[{"changed": {"fields": ["Name", "Module"]}}]	64	1
+495	2020-11-02 16:31:11.965227+00	20	sample_Maccor.xlsx	1	[{"added": {}}]	63	1
 \.
 
 
@@ -3082,6 +3084,9 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 268	battDB	0147_DataEquipment	2020-11-02 14:43:27.559735+00
 269	battDB	0148_auto_20201102_1552	2020-11-02 15:53:04.101124+00
 270	common	0052_auto_20201102_1552	2020-11-02 15:53:04.149477+00
+271	battDB	0149_DataParser_No_BaseModel	2020-11-02 16:19:23.59724+00
+272	battDB	0150_dataparser_notes	2020-11-02 16:20:04.637337+00
+273	battDB	0151_auto_20201102_1621	2020-11-02 16:21:41.149622+00
 \.
 
 
@@ -3165,7 +3170,7 @@ SELECT pg_catalog.setval('public."battDB_datacolumn_id_seq"', 1, true);
 -- Name: battDB_dataparser_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_dataparser_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_dataparser_id_seq"', 4, true);
 
 
 --
@@ -3228,7 +3233,7 @@ SELECT pg_catalog.setval('public."battDB_experiment_id_seq"', 5, true);
 -- Name: battDB_experimentdatafile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_experimentdatafile_id_seq"', 12, true);
+SELECT pg_catalog.setval('public."battDB_experimentdatafile_id_seq"', 15, true);
 
 
 --
@@ -3256,7 +3261,7 @@ SELECT pg_catalog.setval('public.common_person_id_seq', 2, true);
 -- Name: common_uploadedfile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.common_uploadedfile_id_seq', 19, true);
+SELECT pg_catalog.setval('public.common_uploadedfile_id_seq', 20, true);
 
 
 --
@@ -3319,7 +3324,7 @@ SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 12, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 490, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 495, true);
 
 
 --
@@ -3333,7 +3338,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 65, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 270, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 273, true);
 
 
 --
@@ -3920,27 +3925,6 @@ CREATE INDEX "battDB_datacolumn_device_id_bee39a70" ON public."battDB_datacolumn
 --
 
 CREATE INDEX "battDB_datacolumn_parameter_id_1d518565" ON public."battDB_datacolumn" USING btree (parameter_id);
-
-
---
--- Name: battDB_dataparser_slug_cf51d23f; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_dataparser_slug_cf51d23f" ON public."battDB_dataparser" USING btree (slug);
-
-
---
--- Name: battDB_dataparser_slug_cf51d23f_like; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_dataparser_slug_cf51d23f_like" ON public."battDB_dataparser" USING btree (slug varchar_pattern_ops);
-
-
---
--- Name: battDB_dataparser_user_owner_id_54aee460; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_dataparser_user_owner_id_54aee460" ON public."battDB_dataparser" USING btree (user_owner_id);
 
 
 --
@@ -4597,14 +4581,6 @@ ALTER TABLE ONLY public."battDB_datacolumn"
 
 ALTER TABLE ONLY public."battDB_datacolumn"
     ADD CONSTRAINT "battDB_datacolumn_parameter_id_1d518565_fk_dfndb_parameter_id" FOREIGN KEY (parameter_id) REFERENCES public.dfndb_parameter(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_dataparser battDB_dataparser_user_owner_id_54aee460_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_dataparser"
-    ADD CONSTRAINT "battDB_dataparser_user_owner_id_54aee460_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

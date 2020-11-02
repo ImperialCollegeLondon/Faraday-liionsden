@@ -5,13 +5,14 @@ from django.db.models import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.urls import reverse
 from django.core.exceptions import ValidationError
-from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
+
 import common.models as cm
 import dfndb.models as dfn
-import pandas.errors
+
 from .migration_dummy import *
 from datetime import datetime
 import django.core.exceptions
+from .utils import *
 
 import hashlib
 
@@ -332,13 +333,13 @@ class DeviceConfigNode(models.Model):
 
 
 
-class DataParser(cm.BaseModel):
+class DataParser(cm.HasName, cm.HasNotes):
     """
     Parsers for experimental device data. <BR>
     TODO: In future, these could be user-defined in Python code via this interface (with appropriate permissions) <BR>
      This would require all parsing to be done in a sandboxed environment on a separate server (which it should anyway)
     """
-    module = models.CharField(max_length=100, default="", blank=True,
+    module = models.FileField(max_length=100, default="", blank=True,
                               help_text="Python module to run this parser")
 
 class Equipment(cm.BaseModel):
@@ -448,7 +449,9 @@ class ExperimentDataFile(cm.BaseModelNoName):
     def file_hash(self):
         return self.raw_data_file.hash
 
-
+    def clean(self):
+        parse_data_file(self)
+        super(ExperimentDataFile, self).clean(self)
 
     def __str__(self):
         return str(self.raw_data_file)
@@ -508,45 +511,12 @@ class DataRange(cm.HasAttributes, cm.HasName, cm.HasNotes, cm.HasCreatedModified
         verbose_name_plural = "Data Ranges"
 
 
-# When saving a data file, call this to parse the data.
-# TODO, move this out of models.py
-def data_pre_save(sender, instance, *args, **kwargs):
-    if not instance:
-        return
-    if hasattr(instance, '_dirty'):
-        print("moo")
-        return
-
-    try:
-        print("result_post_save: Sender: %s, Instance: %s, args: %s, kwargs: %s, base_loc: %s, Filename: %s" % (
-            sender, instance, args, kwargs, instance.raw_data_file.file.storage.base_location, instance.raw_data_file.file.name))
-        filepath = "/".join([instance.raw_data_file.file.storage.base_location, instance.raw_data_file.file.name])
-        # TODO: Work out which type of file it is and call the correct parser!
-        parser = BiologicCSVnTSVParser(filepath)
-        (instance.metadata, columns) = (parser.get_metadata())
-        instance.parsed_metadata['columns'] = columns
-        instance.parsed_data['rows'] = [None] * instance.metadata['num_rows']
-        gen = parser.get_data_generator_for_columns(columns, 10)
-        print(gen)
-        for (idx, row) in enumerate(gen):
-            print(row)
-            instance.parsed_data['rows'][idx] = list(row.values())
-        instance.parsed_data['columns'] = list(row.keys())
-    except pandas.errors.ParserError as e:
-        print(e)
-        raise ValidationError(e)
-
-    # save again after setting metadata but don't get into a recursion loop!
-    try:
-        instance._dirty = True
-        instance.save()
-    finally:
-        del instance._dirty
 
 
-from django.dispatch import Signal
-from django.db.models import signals
 
-signals.post_save.connect(data_pre_save, sender=ExperimentDataFile)
+# from django.dispatch import Signal
+# from django.db.models import signals
+#
+# signals.post_save.connect(data_pre_save, sender=ExperimentDataFile)
 
 

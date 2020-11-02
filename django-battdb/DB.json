@@ -488,6 +488,33 @@
   }
 },
 {
+  "model": "battDB.dataparser",
+  "pk": 2,
+  "fields": {
+    "name": "Biologic",
+    "notes": "",
+    "module": "biologic_parser.py"
+  }
+},
+{
+  "model": "battDB.dataparser",
+  "pk": 3,
+  "fields": {
+    "name": "Novonix",
+    "notes": null,
+    "module": ""
+  }
+},
+{
+  "model": "battDB.dataparser",
+  "pk": 4,
+  "fields": {
+    "name": "Maccor",
+    "notes": "",
+    "module": "maccor_parser.py"
+  }
+},
+{
   "model": "battDB.experiment",
   "pk": 5,
   "fields": {
@@ -614,6 +641,18 @@
     "modified_on": "2020-11-02T14:40:08.578Z",
     "file": "uploaded_files/Ivium_Cell1.txt",
     "hash": "b35947d7bc5b1f3533bd8b0504984a49"
+  }
+},
+{
+  "model": "common.uploadedfile",
+  "pk": 20,
+  "fields": {
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-02T16:31:11.964Z",
+    "modified_on": "2020-11-02T16:31:11.964Z",
+    "file": "uploaded_files/sample_Maccor.xlsx",
+    "hash": "bc6f07013a09fed8658411f5c894ed40"
   }
 },
 {
@@ -7479,6 +7518,71 @@
     "object_repr": "mug.jpeg",
     "action_flag": 3,
     "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 491,
+  "fields": {
+    "action_time": "2020-11-02T16:19:26.042Z",
+    "user": 1,
+    "content_type": 64,
+    "object_id": "2",
+    "object_repr": "Biologix",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 492,
+  "fields": {
+    "action_time": "2020-11-02T16:19:31.170Z",
+    "user": 1,
+    "content_type": 64,
+    "object_id": "3",
+    "object_repr": "Novonix",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 493,
+  "fields": {
+    "action_time": "2020-11-02T16:25:43.667Z",
+    "user": 1,
+    "content_type": 64,
+    "object_id": "4",
+    "object_repr": "Maccor",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 494,
+  "fields": {
+    "action_time": "2020-11-02T16:26:03.385Z",
+    "user": 1,
+    "content_type": 64,
+    "object_id": "2",
+    "object_repr": "Biologic",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\", \"Module\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 495,
+  "fields": {
+    "action_time": "2020-11-02T16:31:11.965Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "20",
+    "object_repr": "sample_Maccor.xlsx",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
   }
 },
 {

@@ -84,10 +84,7 @@ class MaccorXLSParser(Parser, ABC):
             sheet = self.workbook.sheet_by_index(sheet_id)
             total_rows += sheet.nrows - 2
             for col in numeric_columns[:]:
-                #try:
                 unique_vals = set([float(x) for x in sheet.col_values(col, data_start)])
-                #except ValueError as e:
-
                 unique_vals.discard(0)
                 if len(unique_vals) > 0:
                     column_has_data[col] = True
