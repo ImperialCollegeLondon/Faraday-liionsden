@@ -24,6 +24,7 @@ from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser
 from rest_framework import authentication, permissions
 from rest_framework.generics import CreateAPIView, GenericAPIView
+from common.models import UploadedFile
 
 np.random.seed(9615)
 
@@ -246,7 +247,7 @@ def plotData(request):
 
 
 class UploadFileView(GenericAPIView):
-    queryset = ExperimentDataFile.objects.all()
+    queryset = UploadedFile.objects.all()
     parser_classes = (FileUploadParser,)
     #serializer_class = DataFileSerializer
     # authentication_classes = [authentication.TokenAuthentication]
@@ -257,11 +258,11 @@ class UploadFileView(GenericAPIView):
             raise ParseError("Empty content")
 
         f = request.data['file']
-        obj = ExperimentDataFile()
-        obj.raw_data_file.save(filename, f, save=True)
-
-        # obj.user_owner = request.user
-        # obj.save()
+        obj = UploadedFile()
+        obj.file.save(filename, f, save=True)
+        obj.user_owner = request.user
+        obj.clean()
+        obj.save()
         return Response(status=status.HTTP_201_CREATED)
 
     def get(self, request, format=None):

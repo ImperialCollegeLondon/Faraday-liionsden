@@ -107,6 +107,10 @@ class DeviceParameter(cm.HasName):
         unique_together = [('spec', 'parameter', 'material'), ('spec', 'name')]
 
 
+
+
+
+
 class DeviceBatch(cm.BaseModelNoName, cm.HasMPTT):
     """
     Describes a batch of things produced to the same type specification
@@ -327,7 +331,16 @@ class DeviceConfigNode(models.Model):
 # }
 
 
+# class DataParser(models.Model):
+#     pass
 
+# class Equipment(cm.BaseModel):
+#     specification = models.ForeignKey(DeviceSpecification, null=True, blank=False, on_delete=models.SET_NULL,
+#                                       limit_choices_to={'abstract': False},
+#                                       help_text="Batch Specification")
+#     manufacturer = models.ForeignKey(cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True)
+#     serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
+#                                 "Batch number, optionally indicate serial number format")
 
 
 class Experiment(cm.BaseModel):
@@ -384,6 +397,7 @@ class ExperimentDataFile(cm.BaseModelNoName):
     mappings = models.ManyToManyField(DeviceBatch, through='DataColumn', blank=True, related_name='data_files')
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
     parsed_data = models.JSONField(editable=False, default=dict)
+    #cycler_machine = models.ForeignKey(DeviceBatch, null=True, on_delete=models.SET_NULL)
 
     #import_columns = models.ManyToManyField(dfn.Parameter, blank=True)
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
@@ -474,6 +488,7 @@ def data_pre_save(sender, instance, *args, **kwargs):
     if not instance:
         return
     if hasattr(instance, '_dirty'):
+        print("moo")
         return
 
     try:

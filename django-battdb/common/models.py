@@ -287,8 +287,9 @@ class UploadedFile(HasCreatedModifiedDates):
     hash = models.CharField(max_length=64, null=False, unique=True)
 
     def clean(self):
-        self.file_hash = hash_file(self.file)
-        return super().clean()
+        self.hash = hash_file(self.file)
+        print(self.hash)
+        return super(UploadedFile, self).clean()
 
     def __str__(self):
         return os.path.basename(self.file.name)

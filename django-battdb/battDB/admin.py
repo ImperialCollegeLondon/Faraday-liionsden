@@ -117,6 +117,7 @@ class DataAdmin(BaseAdmin):
     inlines = [DeviceDataInline, DataRangeInline, ]
     list_display = BaseAdmin.list_display + ['get_experiment_link', 'file_exists', 'is_parsed']
     readonly_fields = BaseAdmin.readonly_fields + ['get_experiment_link', 'file_hash', 'columns']
+    #form=DataFileForm
 
     def get_experiment_link(self, obj):
         if hasattr(obj,'experiment') and obj.experiment is not None:
