@@ -1960,7 +1960,7 @@ COPY public."battDB_experiment" (id, name, status, created_on, modified_on, attr
 --
 
 COPY public."battDB_experimentdatafile" (id, status, created_on, modified_on, attributes, notes, slug, raw_data_file_id, parsed_data, experiment_id, user_owner_id) FROM stdin;
-5	10	2020-11-01 16:35:21.068347+00	2020-11-01 17:58:20.640301+00	{}		biologic_full_aa5m9sltxt	4	{}	5	1
+5	10	2020-11-01 16:35:21.068347+00	2020-11-02 01:32:43.910754+00	{}		mugjpeg	17	{}	5	1
 \.
 
 
@@ -2014,7 +2014,7 @@ COPY public.common_person (id, org_id, user_id, "longName", "shortName") FROM st
 --
 
 COPY public.common_uploadedfile (id, created_on, modified_on, file, hash) FROM stdin;
-4	2020-11-01 16:29:33.94877+00	2020-11-01 16:29:33.948786+00	uploaded_files/BioLogic_full_aa5m9sL.txt	
+17	2020-11-01 18:20:38.799315+00	2020-11-01 18:20:38.806274+00	uploaded_files/mug.jpeg	f5009ba783fd94b0a410738e13dafa14
 \.
 
 
@@ -2556,6 +2556,20 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 429	2020-11-01 17:57:20.000469+00	2	Experimenters	2	[{"changed": {"fields": ["Permissions"]}}]	11	1
 430	2020-11-01 17:58:20.641264+00	5	BioLogic_full_aa5m9sL.txt	2	[{"changed": {"fields": ["Experiment"]}}]	23	1
 431	2020-11-01 17:59:14.441735+00	4	BioLogic_full_aa5m9sL.txt	3		23	1
+432	2020-11-01 18:16:16.008256+00	4	BioLogic_full_aa5m9sL.txt	3		63	1
+433	2020-11-01 18:16:57.042576+00	11	fooo_DQmKXFM.bork	3		63	1
+434	2020-11-01 18:17:13.966111+00	12	fooo_NcJZZ7Y.bork	3		63	1
+435	2020-11-01 18:19:06.967877+00	15	fooo_kbMdTS4.bork	3		63	1
+436	2020-11-01 18:19:10.54575+00	14	fooo_9DyQn70.bork	3		63	1
+437	2020-11-01 18:20:31.85637+00	16	fooo_DCjYSeo.bork	3		63	1
+438	2020-11-01 18:58:40.518335+00	5	None	2	[{"changed": {"fields": ["files"]}}]	23	1
+439	2020-11-01 18:58:49.216786+00	5	None	2	[{"changed": {"fields": ["files"]}}]	23	1
+440	2020-11-01 18:59:15.26785+00	5	mug.jpeg	2	[{"changed": {"fields": ["Raw data file"]}}]	23	1
+441	2020-11-02 01:30:55.135047+00	5	mug.jpeg	2	[]	23	1
+442	2020-11-02 01:31:02.74165+00	5	mug.jpeg	2	[]	23	1
+443	2020-11-02 01:31:06.981653+00	5	mug.jpeg	2	[]	23	1
+444	2020-11-02 01:31:47.696071+00	5	mug.jpeg	2	[]	23	1
+445	2020-11-02 01:32:43.911531+00	5	mug.jpeg	2	[]	23	1
 \.
 
 
@@ -3020,7 +3034,7 @@ SELECT pg_catalog.setval('public.common_person_id_seq', 2, true);
 -- Name: common_uploadedfile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.common_uploadedfile_id_seq', 4, true);
+SELECT pg_catalog.setval('public.common_uploadedfile_id_seq', 17, true);
 
 
 --
@@ -3083,7 +3097,7 @@ SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 12, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 431, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 445, true);
 
 
 --
