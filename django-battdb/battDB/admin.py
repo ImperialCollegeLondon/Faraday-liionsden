@@ -115,10 +115,16 @@ class DataRangeInline(common.admin.TabularInline):
     extra = 0
 
 class DataAdmin(BaseAdmin):
+    """
+    FIXME: This class exhibits an n+1 query antipattern. For each row returned, 2 additional queries are fired.
+     This should be done with a JOIN instead.
+    """
     inlines = [DeviceDataInline, DataRangeInline, ]
-    list_display = BaseAdmin.list_display + ['get_experiment_link', 'file_exists', 'is_parsed']
-    readonly_fields = BaseAdmin.readonly_fields + ['parsed_data', 'get_experiment_link', 'file_hash', 'columns']
-    #form=DataFileForm
+    list_display = ['__str__', 'get_file_link', 'get_experiment_link', 'file_exists', 'is_parsed'] + BaseAdmin.list_display_extra
+    list_filter = ['experiment'] + BaseAdmin.list_filter
+    readonly_fields = BaseAdmin.readonly_fields + ['is_parsed', 'get_experiment_link', 'file_hash', 'columns']
+    # form=DataFileForm
+
 
     def get_experiment_link(self, obj):
         if hasattr(obj,'experiment') and obj.experiment is not None:
@@ -130,7 +136,14 @@ class DataAdmin(BaseAdmin):
             return "N/A"
     get_experiment_link.short_description="Experiment"
 
-
+    def get_file_link(self, obj):
+        if hasattr(obj, 'raw_data_file') and obj.raw_data_file is not None:
+            return mark_safe(u'''
+            <button type="button"> <a href="%s">View</a> </button>
+            ''' % obj.raw_data_file.file.url)
+        else:
+            return "N/A"
+    get_file_link.short_description = "View Original File"
 
 
 admin.site.register([ExperimentDataFile], DataAdmin)

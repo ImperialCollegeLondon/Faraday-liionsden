@@ -282,9 +282,10 @@ class Paper(HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedMod
         return slugify(str(self.title) + "-" + str(self.year))
 
 
-class UploadedFile(HasCreatedModifiedDates):
+class UploadedFile(HasCreatedModifiedDates, HasOwner, HasStatus):
     file = models.FileField(upload_to='uploaded_files', null=False)
-    hash = models.CharField(max_length=64, null=False, unique=True)
+    hash = models.CharField(max_length=64, null=False, unique=True, editable=False,
+                            help_text="SHA-1 Hash of uploaded file. You cannot upload the same file twice.")
 
     def clean(self):
         self.hash = hash_file(self.file)
@@ -296,6 +297,5 @@ class UploadedFile(HasCreatedModifiedDates):
 
     def exists(self):
         return self.file.storage.exists(self.file.name)
-
     exists.boolean = True
 

@@ -419,7 +419,7 @@ class ExperimentDataFile(cm.BaseModelNoName):
                                        help_text="metadata automatically extracted from the file")
     parsed_data = models.JSONField(editable=False, default=dict,
                                    help_text="Data automatically extracted from the file")
-    #cycler_machine = models.ForeignKey(DeviceBatch, null=True, on_delete=models.SET_NULL)
+    machine = models.ForeignKey(Equipment, null=True, blank=True, on_delete=models.SET_NULL)
 
     #import_columns = models.ManyToManyField(dfn.Parameter, blank=True)
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
@@ -430,7 +430,8 @@ class ExperimentDataFile(cm.BaseModelNoName):
 
     def columns(self):
         try:
-            return self.parsed_metadata['columns']
+            cols = self.parsed_metadata['columns']
+            return [k for k in cols.keys()]
         except KeyError:
             return []
 
@@ -523,7 +524,7 @@ def data_pre_save(sender, instance, *args, **kwargs):
         # TODO: Work out which type of file it is and call the correct parser!
         parser = BiologicCSVnTSVParser(filepath)
         (instance.metadata, columns) = (parser.get_metadata())
-        instance.parsed_metadata['Columns'] = columns
+        instance.parsed_metadata['columns'] = columns
         instance.parsed_data['rows'] = [None] * instance.metadata['num_rows']
         gen = parser.get_data_generator_for_columns(columns, 10)
         print(gen)

@@ -49,7 +49,8 @@ class ChangeformMixin():
     }
 
 class BaseAdmin(ChangeformMixin, admin.ModelAdmin):
-    list_display = (["__str__", "user_owner", "status", "created_on", "modified_on"])
+    list_display_extra = (["user_owner", "status", "created_on", "modified_on"])
+    list_display = ["__str__"] + list_display_extra
     list_filter = (["status"])
     readonly_fields = ['created_on', 'modified_on', 'slug']
     generic_fields = {'name', 'notes', 'status', 'user_owner', 'attributes'}
@@ -123,7 +124,8 @@ class HasMPTTAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
 
 
 class FileAdmin(admin.ModelAdmin):
-    readonly_fields = ['created_on', 'modified_on', 'hash']
+    readonly_fields = ['created_on', 'modified_on', 'exists', 'hash']
+    list_display = ["__str__", "user_owner", "status"] + readonly_fields
 
 
 admin.site.register(UploadedFile, FileAdmin)
