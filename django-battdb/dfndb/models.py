@@ -75,13 +75,13 @@ class Method(cm.BaseModel):
     """
     METHOD_TYPE_MODELLING = 1000
     METHOD_TYPE_EXPERIMENTAL = 2000
-    METHOD_TYPE_BOTH = 3000
+    METHOD_TYPE_MANUFACTURE = 3000
     METHOD_TYPE_CHOICES = [
         (METHOD_TYPE_EXPERIMENTAL, 'Experimental'),
         (METHOD_TYPE_MODELLING, 'Modelling'),
-        (METHOD_TYPE_BOTH, 'Both'),
+        (METHOD_TYPE_MANUFACTURE, 'Manufacture'),
     ]
-    type = models.IntegerField(choices=METHOD_TYPE_CHOICES)
+    type = models.IntegerField(choices=METHOD_TYPE_CHOICES, default=METHOD_TYPE_MODELLING)
     description = models.TextField(blank=True, help_text="Method description in PyBaMM format")
 
 

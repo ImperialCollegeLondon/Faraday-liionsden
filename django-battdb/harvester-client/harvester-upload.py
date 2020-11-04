@@ -6,17 +6,20 @@ import sys
 import os
 
 
-token = "52f1021a6e32e4202acab1c5c19f0067cc1ce38a"
+class HarvesterUploader:
 
-arg = sys.argv[1]
-(dirname, filename) = os.path.split(arg)
-url = "http://127.0.0.1:8000/battDB/upload/" + filename
+    token = "52f1021a6e32e4202acab1c5c19f0067cc1ce38a"
 
-headers = {'Authorization': 'Token ' + token, "Content-Type": "application/octet-stream"}
-           # "Content-Disposition": "attachment; filename=foo"}
+    def upload_file(pathname):
 
-#Call REST API
-response = requests.put(url, data=open(arg,'rb'), headers=headers)
+        (dirname, filename) = os.path.split(pathname)
+        url = "http://127.0.0.1:8000/battDB/upload/" + filename
 
-#Print Response
-print(response.text)
+        headers = {'Authorization': 'Token ' + token, "Content-Type": "application/octet-stream"}
+        # "Content-Disposition": "attachment; filename=foo"}
+
+        # Call REST API
+        response = requests.put(url, data=open(arg,'rb'), headers=headers)
+
+        # Print Response
+        print(response.text)

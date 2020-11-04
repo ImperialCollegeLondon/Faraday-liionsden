@@ -126,6 +126,9 @@ class DeviceBatch(cm.BaseModelNoName, cm.HasMPTT):
     serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
                                 "Batch number, optionally indicate serial number format")
     batch_size = models.PositiveSmallIntegerField(default=1)
+    manufacturing_protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
+                                               limit_choices_to={'type': dfn.Method.METHOD_TYPE_MANUFACTURE},
+                                               help_text="Test protocol used in this experiment")
     manufactured_on = models.DateField(default=datetime.now)
 
     def __str__(self):
@@ -342,6 +345,11 @@ class DataParser(cm.HasName, cm.HasNotes):
     module = models.FileField(max_length=100, default="", blank=True,
                               help_text="Python module to run this parser")
 
+
+class FileFolder(cm.BaseModel, cm.HasMPTT):
+    pass
+
+
 class Equipment(cm.BaseModel):
     """
     Definitions of equipment such as cycler machines
@@ -429,6 +437,7 @@ class ExperimentDataFile(cm.BaseModelNoName):
     parsed_data = models.JSONField(editable=False, default=dict,
                                    help_text="Data automatically extracted from the file")
     machine = models.ForeignKey(Equipment, null=True, blank=True, on_delete=models.SET_NULL)
+    folder = models.ForeignKey(FileFolder, null=True, blank=True, on_delete=models.SET_NULL)
 
     #import_columns = models.ManyToManyField(dfn.Parameter, blank=True)
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
