@@ -389,6 +389,7 @@
     "manufacturer": 1,
     "serialNo": "",
     "batch_size": 1,
+    "manufacturing_protocol": null,
     "manufactured_on": "2020-11-01",
     "lft": 1,
     "rght": 2,
@@ -515,6 +516,44 @@
   }
 },
 {
+  "model": "battDB.filefolder",
+  "pk": 1,
+  "fields": {
+    "name": "My Folder",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-04T09:38:43.228Z",
+    "modified_on": "2020-11-04T09:38:43.228Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "my-folder",
+    "parent": null,
+    "lft": 1,
+    "rght": 4,
+    "tree_id": 1,
+    "level": 0
+  }
+},
+{
+  "model": "battDB.filefolder",
+  "pk": 2,
+  "fields": {
+    "name": "Another Folder",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-04T09:38:58.362Z",
+    "modified_on": "2020-11-04T09:38:58.362Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "another-folder",
+    "parent": 1,
+    "lft": 2,
+    "rght": 3,
+    "tree_id": 1,
+    "level": 1
+  }
+},
+{
   "model": "battDB.experiment",
   "pk": 5,
   "fields": {
@@ -547,7 +586,8 @@
     "use_parser": "auto",
     "parsed_metadata": {},
     "parsed_data": {},
-    "machine": null
+    "machine": null,
+    "folder": null
   }
 },
 {
@@ -557,12 +597,12 @@
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-11-02T18:07:10.755Z",
-    "modified_on": "2020-11-02T18:12:31.850Z",
+    "modified_on": "2020-11-02T18:18:03.675Z",
     "attributes": {},
     "notes": "",
     "slug": "biologic_fulltxt",
     "raw_data_file": 18,
-    "experiment": null,
+    "experiment": 5,
     "use_parser": "biologic",
     "parsed_metadata": {
       "columns": {
@@ -5764,7 +5804,8 @@
         148
       ]
     ],
-    "machine": null
+    "machine": null,
+    "folder": null
   }
 },
 {
@@ -12899,6 +12940,84 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 501,
+  "fields": {
+    "action_time": "2020-11-02T18:18:03.680Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "17",
+    "object_repr": "BioLogic_full.txt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Experiment\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 502,
+  "fields": {
+    "action_time": "2020-11-04T09:38:43.229Z",
+    "user": 1,
+    "content_type": 67,
+    "object_id": "1",
+    "object_repr": "My Folder",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 503,
+  "fields": {
+    "action_time": "2020-11-04T09:38:58.362Z",
+    "user": 1,
+    "content_type": 67,
+    "object_id": "2",
+    "object_repr": "Another Folder",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 504,
+  "fields": {
+    "action_time": "2020-11-04T11:58:58.791Z",
+    "user": 1,
+    "content_type": 11,
+    "object_id": "3",
+    "object_repr": "Equipment",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 505,
+  "fields": {
+    "action_time": "2020-11-04T11:59:55.778Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "8",
+    "object_repr": "cycler-foobar5000",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 506,
+  "fields": {
+    "action_time": "2020-11-04T12:00:07.959Z",
+    "user": 1,
+    "content_type": 12,
+    "object_id": "8",
+    "object_repr": "cycler-foobar5000",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Groups\"]}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 29,
   "fields": {
@@ -14051,6 +14170,78 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 261,
+  "fields": {
+    "name": "Can add folder",
+    "content_type": 66,
+    "codename": "add_folder"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 262,
+  "fields": {
+    "name": "Can change folder",
+    "content_type": 66,
+    "codename": "change_folder"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 263,
+  "fields": {
+    "name": "Can delete folder",
+    "content_type": 66,
+    "codename": "delete_folder"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 264,
+  "fields": {
+    "name": "Can view folder",
+    "content_type": 66,
+    "codename": "view_folder"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 265,
+  "fields": {
+    "name": "Can add file folder",
+    "content_type": 67,
+    "codename": "add_filefolder"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 266,
+  "fields": {
+    "name": "Can change file folder",
+    "content_type": 67,
+    "codename": "change_filefolder"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 267,
+  "fields": {
+    "name": "Can delete file folder",
+    "content_type": 67,
+    "codename": "delete_filefolder"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 268,
+  "fields": {
+    "name": "Can view file folder",
+    "content_type": 67,
+    "codename": "view_filefolder"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -14153,6 +14344,16 @@
       125,
       128,
       124
+    ]
+  }
+},
+{
+  "model": "auth.group",
+  "pk": 3,
+  "fields": {
+    "name": "Equipment",
+    "permissions": [
+      89
     ]
   }
 },
@@ -14277,6 +14478,26 @@
       124,
       60
     ]
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 8,
+  "fields": {
+    "password": "pbkdf2_sha256$216000$rtzqcHSiEh62$Dzt8NBZjs+1qEmcZRFNHE3c1pMi7CAFMMRK04c52UWg=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "cycler-foobar5000",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2020-11-04T11:59:55Z",
+    "groups": [
+      3
+    ],
+    "user_permissions": []
   }
 },
 {
@@ -14533,6 +14754,22 @@
   "fields": {
     "app_label": "battDB",
     "model": "equipment"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 66,
+  "fields": {
+    "app_label": "battDB",
+    "model": "folder"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 67,
+  "fields": {
+    "app_label": "battDB",
+    "model": "filefolder"
   }
 },
 {
