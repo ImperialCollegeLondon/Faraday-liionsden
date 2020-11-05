@@ -8,6 +8,14 @@
   }
 },
 {
+  "model": "authtoken.token",
+  "pk": "c2fdceacffa198fd09d3f5baa7821b14f0ce0f22",
+  "fields": {
+    "user": 8,
+    "created": "2020-11-04T12:41:17.743Z"
+  }
+},
+{
   "model": "battDB.devicespecification",
   "pk": 4,
   "fields": {
@@ -338,6 +346,50 @@
   }
 },
 {
+  "model": "battDB.devicespecification",
+  "pk": 19,
+  "fields": {
+    "name": "Cycler Machine",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-04T12:38:04.208Z",
+    "modified_on": "2020-11-04T12:38:04.208Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "cycler-machine",
+    "parent": null,
+    "abstract": true,
+    "complete": false,
+    "device_type": null,
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 4,
+    "level": 0
+  }
+},
+{
+  "model": "battDB.devicespecification",
+  "pk": 20,
+  "fields": {
+    "name": "Tom's GalvoTron 5000",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-04T12:39:23.301Z",
+    "modified_on": "2020-11-04T12:39:23.301Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "toms-galvotron-5000",
+    "parent": null,
+    "abstract": false,
+    "complete": true,
+    "device_type": 19,
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 5,
+    "level": 0
+  }
+},
+{
   "model": "battDB.deviceparameter",
   "pk": 1,
   "fields": {
@@ -551,6 +603,24 @@
     "rght": 3,
     "tree_id": 1,
     "level": 1
+  }
+},
+{
+  "model": "battDB.equipment",
+  "pk": 1,
+  "fields": {
+    "name": "GalvoTron 5000",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-04T12:39:37.006Z",
+    "modified_on": "2020-11-04T12:39:37.006Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "galvotron-5000",
+    "specification": 20,
+    "manufacturer": 1,
+    "serialNo": "",
+    "dataParser": 3
   }
 },
 {
@@ -5806,6 +5876,26 @@
     ],
     "machine": null,
     "folder": null
+  }
+},
+{
+  "model": "battDB.harvester",
+  "pk": 1,
+  "fields": {
+    "name": null,
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-04T12:40:28.873Z",
+    "modified_on": "2020-11-04T12:42:01.930Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "none",
+    "upload_to_folder": 2,
+    "attach_to_experiment": 5,
+    "attach_to_equipment": 1,
+    "user_token": "c2fdceacffa198fd09d3f5baa7821b14f0ce0f22",
+    "file_types": "*.csv",
+    "parser": "csv"
   }
 },
 {
@@ -13018,6 +13108,84 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 507,
+  "fields": {
+    "action_time": "2020-11-04T12:38:04.209Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "19",
+    "object_repr": "Cycler Machine",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 508,
+  "fields": {
+    "action_time": "2020-11-04T12:39:23.301Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "20",
+    "object_repr": "Tom's GalvoTron 5000",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 509,
+  "fields": {
+    "action_time": "2020-11-04T12:39:37.007Z",
+    "user": 1,
+    "content_type": 65,
+    "object_id": "1",
+    "object_repr": "GalvoTron 5000",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 510,
+  "fields": {
+    "action_time": "2020-11-04T12:40:28.874Z",
+    "user": 1,
+    "content_type": 68,
+    "object_id": "1",
+    "object_repr": "None",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 511,
+  "fields": {
+    "action_time": "2020-11-04T12:41:17.751Z",
+    "user": 1,
+    "content_type": 46,
+    "object_id": "8",
+    "object_repr": "c2fdceacffa198fd09d3f5baa7821b14f0ce0f22",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 512,
+  "fields": {
+    "action_time": "2020-11-04T12:42:01.931Z",
+    "user": 1,
+    "content_type": 68,
+    "object_id": "1",
+    "object_repr": "None",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"User token\"]}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 29,
   "fields": {
@@ -14242,6 +14410,42 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 269,
+  "fields": {
+    "name": "Can add harvester",
+    "content_type": 68,
+    "codename": "add_harvester"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 270,
+  "fields": {
+    "name": "Can change harvester",
+    "content_type": 68,
+    "codename": "change_harvester"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 271,
+  "fields": {
+    "name": "Can delete harvester",
+    "content_type": 68,
+    "codename": "delete_harvester"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 272,
+  "fields": {
+    "name": "Can view harvester",
+    "content_type": 68,
+    "codename": "view_harvester"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -14770,6 +14974,14 @@
   "fields": {
     "app_label": "battDB",
     "model": "filefolder"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 68,
+  "fields": {
+    "app_label": "battDB",
+    "model": "harvester"
   }
 },
 {

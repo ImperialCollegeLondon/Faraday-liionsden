@@ -832,6 +832,54 @@ ALTER SEQUENCE public."battDB_filefolder_id_seq" OWNED BY public."battDB_filefol
 
 
 --
+-- Name: battDB_harvester; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public."battDB_harvester" (
+    id integer NOT NULL,
+    name character varying(128),
+    status smallint NOT NULL,
+    created_on timestamp with time zone NOT NULL,
+    modified_on timestamp with time zone NOT NULL,
+    attributes jsonb NOT NULL,
+    notes text,
+    slug character varying(500) NOT NULL,
+    file_types character varying(20) NOT NULL,
+    parser character varying(20) NOT NULL,
+    attach_to_equipment_id integer,
+    attach_to_experiment_id integer,
+    upload_to_folder_id integer NOT NULL,
+    user_owner_id integer,
+    user_token_id character varying(40) NOT NULL,
+    CONSTRAINT "battDB_harvester_status_check" CHECK ((status >= 0))
+);
+
+
+ALTER TABLE public."battDB_harvester" OWNER TO towen;
+
+--
+-- Name: battDB_harvester_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public."battDB_harvester_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."battDB_harvester_id_seq" OWNER TO towen;
+
+--
+-- Name: battDB_harvester_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public."battDB_harvester_id_seq" OWNED BY public."battDB_harvester".id;
+
+
+--
 -- Name: battDB_module; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -1612,6 +1660,13 @@ ALTER TABLE ONLY public."battDB_filefolder" ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: battDB_harvester id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_harvester" ALTER COLUMN id SET DEFAULT nextval('public."battDB_harvester_id_seq"'::regclass);
+
+
+--
 -- Name: common_org id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
@@ -1865,6 +1920,10 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 58	Can change session	15	change_session
 59	Can delete session	15	delete_session
 60	Can view session	15	view_session
+269	Can add harvester	68	add_harvester
+270	Can change harvester	68	change_harvester
+271	Can delete harvester	68	delete_harvester
+272	Can view harvester	68	view_harvester
 85	Can add data range	22	add_datarange
 86	Can change data range	22	change_datarange
 87	Can delete data range	22	delete_datarange
@@ -2052,6 +2111,7 @@ COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
 
 COPY public.authtoken_token (key, created, user_id) FROM stdin;
 52f1021a6e32e4202acab1c5c19f0067cc1ce38a	2020-10-14 15:46:13.411002+01	1
+c2fdceacffa198fd09d3f5baa7821b14f0ce0f22	2020-11-04 12:41:17.743212+00	8
 \.
 
 
@@ -2154,6 +2214,8 @@ COPY public."battDB_devicespecification" (id, name, status, created_on, modified
 4	Pack	10	2020-11-01 17:25:16.059603+00	2020-11-02 12:52:59.705284+00	{}		pack	t	t	1	26	1	0	\N	\N	1
 7	My NMC622 Cell	10	2020-11-01 17:36:29.295484+00	2020-11-01 17:46:29.432615+00	{}		my-nmc622-cell	f	t	1	2	2	0	6	\N	1
 18	Connector	10	2020-11-02 12:52:59.707199+00	2020-11-02 13:01:53.108119+00	{}		connector	t	f	24	25	1	1	\N	4	\N
+19	Cycler Machine	10	2020-11-04 12:38:04.208567+00	2020-11-04 12:38:04.208583+00	{}		cycler-machine	t	f	1	2	4	0	\N	\N	1
+20	Tom's GalvoTron 5000	10	2020-11-04 12:39:23.301061+00	2020-11-04 12:39:23.301079+00	{}		toms-galvotron-5000	f	t	1	2	5	0	19	\N	1
 \.
 
 
@@ -2162,6 +2224,7 @@ COPY public."battDB_devicespecification" (id, name, status, created_on, modified
 --
 
 COPY public."battDB_equipment" (id, name, status, created_on, modified_on, attributes, notes, slug, "serialNo", "dataParser_id", manufacturer_id, specification_id, user_owner_id) FROM stdin;
+1	GalvoTron 5000	10	2020-11-04 12:39:37.006194+00	2020-11-04 12:39:37.006214+00	{}		galvotron-5000		3	1	20	1
 \.
 
 
@@ -2191,6 +2254,15 @@ COPY public."battDB_experimentdatafile" (id, status, created_on, modified_on, at
 COPY public."battDB_filefolder" (id, name, status, created_on, modified_on, attributes, notes, slug, lft, rght, tree_id, level, parent_id, user_owner_id) FROM stdin;
 1	My Folder	10	2020-11-04 09:38:43.228605+00	2020-11-04 09:38:43.228628+00	{}		my-folder	1	4	1	0	\N	1
 2	Another Folder	10	2020-11-04 09:38:58.362381+00	2020-11-04 09:38:58.362395+00	{}		another-folder	2	3	1	1	1	1
+\.
+
+
+--
+-- Data for Name: battDB_harvester; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public."battDB_harvester" (id, name, status, created_on, modified_on, attributes, notes, slug, file_types, parser, attach_to_equipment_id, attach_to_experiment_id, upload_to_folder_id, user_owner_id, user_token_id) FROM stdin;
+1	\N	10	2020-11-04 12:40:28.873201+00	2020-11-04 12:42:01.93054+00	{}		none	*.csv	csv	1	5	2	1	c2fdceacffa198fd09d3f5baa7821b14f0ce0f22
 \.
 
 
@@ -2865,6 +2937,12 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 504	2020-11-04 11:58:58.791241+00	3	Equipment	1	[{"added": {}}]	11	1
 505	2020-11-04 11:59:55.778816+00	8	cycler-foobar5000	1	[{"added": {}}]	12	1
 506	2020-11-04 12:00:07.959583+00	8	cycler-foobar5000	2	[{"changed": {"fields": ["Groups"]}}]	12	1
+507	2020-11-04 12:38:04.209464+00	19	Cycler Machine	1	[{"added": {}}]	61	1
+508	2020-11-04 12:39:23.301945+00	20	Tom's GalvoTron 5000	1	[{"added": {}}]	61	1
+509	2020-11-04 12:39:37.007503+00	1	GalvoTron 5000	1	[{"added": {}}]	65	1
+510	2020-11-04 12:40:28.874625+00	1	None	1	[{"added": {}}]	68	1
+511	2020-11-04 12:41:17.751425+00	8	c2fdceacffa198fd09d3f5baa7821b14f0ce0f22	1	[{"added": {}}]	46	1
+512	2020-11-04 12:42:01.931545+00	1	None	2	[{"changed": {"fields": ["User token"]}}]	68	1
 \.
 
 
@@ -2907,6 +2985,7 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 65	battDB	equipment
 66	battDB	folder
 67	battDB	filefolder
+68	battDB	harvester
 \.
 
 
@@ -3190,6 +3269,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 276	dfndb	0037_ManufacturingProtocol	2020-11-03 15:46:45.145427+00
 277	battDB	0154_ManufacturingProtocol	2020-11-03 15:46:45.202334+00
 279	battDB	0155_FileFolder	2020-11-04 09:37:42.759265+00
+280	battDB	0156_Harvester	2020-11-04 12:35:42.037459+00
 \.
 
 
@@ -3231,7 +3311,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 169, true);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 268, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 272, true);
 
 
 --
@@ -3315,14 +3395,14 @@ SELECT pg_catalog.setval('public."battDB_deviceparameter_id_seq"', 3, true);
 -- Name: battDB_devicespecification_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_devicespecification_id_seq"', 18, true);
+SELECT pg_catalog.setval('public."battDB_devicespecification_id_seq"', 20, true);
 
 
 --
 -- Name: battDB_equipment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_equipment_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_equipment_id_seq"', 1, true);
 
 
 --
@@ -3344,6 +3424,13 @@ SELECT pg_catalog.setval('public."battDB_experimentdatafile_id_seq"', 17, true);
 --
 
 SELECT pg_catalog.setval('public."battDB_filefolder_id_seq"', 2, true);
+
+
+--
+-- Name: battDB_harvester_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public."battDB_harvester_id_seq"', 1, true);
 
 
 --
@@ -3434,21 +3521,21 @@ SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 12, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 506, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 512, true);
 
 
 --
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 67, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 68, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 279, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 280, true);
 
 
 --
@@ -3705,6 +3792,14 @@ ALTER TABLE ONLY public."battDB_experimentdatafile"
 
 ALTER TABLE ONLY public."battDB_filefolder"
     ADD CONSTRAINT "battDB_filefolder_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: battDB_harvester battDB_harvester_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_harvester"
+    ADD CONSTRAINT "battDB_harvester_pkey" PRIMARY KEY (id);
 
 
 --
@@ -4368,6 +4463,62 @@ CREATE INDEX "battDB_filefolder_user_owner_id_a306e59e" ON public."battDB_filefo
 
 
 --
+-- Name: battDB_harvester_attach_to_equipment_id_43c580f1; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_harvester_attach_to_equipment_id_43c580f1" ON public."battDB_harvester" USING btree (attach_to_equipment_id);
+
+
+--
+-- Name: battDB_harvester_attach_to_experiment_id_785e6338; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_harvester_attach_to_experiment_id_785e6338" ON public."battDB_harvester" USING btree (attach_to_experiment_id);
+
+
+--
+-- Name: battDB_harvester_slug_23fa0482; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_harvester_slug_23fa0482" ON public."battDB_harvester" USING btree (slug);
+
+
+--
+-- Name: battDB_harvester_slug_23fa0482_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_harvester_slug_23fa0482_like" ON public."battDB_harvester" USING btree (slug varchar_pattern_ops);
+
+
+--
+-- Name: battDB_harvester_upload_to_folder_id_75ff5a40; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_harvester_upload_to_folder_id_75ff5a40" ON public."battDB_harvester" USING btree (upload_to_folder_id);
+
+
+--
+-- Name: battDB_harvester_user_owner_id_1e9ff937; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_harvester_user_owner_id_1e9ff937" ON public."battDB_harvester" USING btree (user_owner_id);
+
+
+--
+-- Name: battDB_harvester_user_token_id_ffbb248a; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_harvester_user_token_id_ffbb248a" ON public."battDB_harvester" USING btree (user_token_id);
+
+
+--
+-- Name: battDB_harvester_user_token_id_ffbb248a_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_harvester_user_token_id_ffbb248a_like" ON public."battDB_harvester" USING btree (user_token_id varchar_pattern_ops);
+
+
+--
 -- Name: common_org_name_062cae2a_like; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -4973,6 +5124,46 @@ ALTER TABLE ONLY public."battDB_filefolder"
 
 ALTER TABLE ONLY public."battDB_filefolder"
     ADD CONSTRAINT "battDB_filefolder_user_owner_id_a306e59e_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_harvester battDB_harvester_attach_to_equipment__43c580f1_fk_battDB_eq; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_harvester"
+    ADD CONSTRAINT "battDB_harvester_attach_to_equipment__43c580f1_fk_battDB_eq" FOREIGN KEY (attach_to_equipment_id) REFERENCES public."battDB_equipment"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_harvester battDB_harvester_attach_to_experiment_785e6338_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_harvester"
+    ADD CONSTRAINT "battDB_harvester_attach_to_experiment_785e6338_fk_battDB_ex" FOREIGN KEY (attach_to_experiment_id) REFERENCES public."battDB_experiment"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_harvester battDB_harvester_upload_to_folder_id_75ff5a40_fk_battDB_fi; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_harvester"
+    ADD CONSTRAINT "battDB_harvester_upload_to_folder_id_75ff5a40_fk_battDB_fi" FOREIGN KEY (upload_to_folder_id) REFERENCES public."battDB_filefolder"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_harvester battDB_harvester_user_owner_id_1e9ff937_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_harvester"
+    ADD CONSTRAINT "battDB_harvester_user_owner_id_1e9ff937_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_harvester battDB_harvester_user_token_id_ffbb248a_fk_authtoken_token_key; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_harvester"
+    ADD CONSTRAINT "battDB_harvester_user_token_id_ffbb248a_fk_authtoken_token_key" FOREIGN KEY (user_token_id) REFERENCES public.authtoken_token(key) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
