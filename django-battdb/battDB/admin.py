@@ -149,7 +149,7 @@ class DataAdmin(BaseAdmin):
 admin.site.register([ExperimentDataFile], DataAdmin)
 
 
-admin.site.register([Equipment, ], BaseAdmin)
+admin.site.register([Equipment, Harvester], BaseAdmin)
 
 # class DataParserAdmin(admin.ModelAdmin):
 #     pass
