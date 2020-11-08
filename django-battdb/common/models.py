@@ -304,3 +304,14 @@ class UploadedFile(HasCreatedModifiedDates, HasOwner, HasStatus):
         return self.file.storage.exists(self.file.name)
     exists.boolean = True
 
+    def size(self):
+        size_bytes = self.file.storage.size(self.file.name)
+        if size_bytes < 1024:
+            return "%dB" % size_bytes
+        elif size_bytes < 1024**2:
+            return "%2.2fkB" % (size_bytes/1024.0)
+        elif size_bytes < 1024**3:
+            return "%2.2fMB" % (size_bytes / (1024.0**2))
+        else:
+            return "%2.2fGB" % (size_bytes / (1024.0**3))
+

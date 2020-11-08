@@ -124,7 +124,7 @@ class HasMPTTAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
 
 
 class FileAdmin(ChangeformMixin, admin.ModelAdmin):
-    readonly_fields = ['created_on', 'modified_on', 'exists', 'hash']
+    readonly_fields = ['size', 'created_on', 'modified_on', 'exists', 'hash']
     list_display = ["__str__", "user_owner", "status"] + readonly_fields
 
 

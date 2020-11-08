@@ -9,10 +9,10 @@ class DummyParser(Parser):
         self.file_path = file_path
 
     def get_metadata(self):
-        return ({'num_rows': 1}, {"dummy column":{}})
+        return ({'num_rows': 0}, {})
 
     def get_data_generator_for_columns(self, columns=[], first_data_row=0, col_mapping={}):
-        return [{'dummy column':0}]
+        return []
 
 
 # When saving a data file, call this to parse the data.
@@ -32,8 +32,9 @@ def parse_data_file(instance, use_parser):
         parser = DummyParser(filepath)
         if use_parser == "biologic":
             parser = BiologicCSVnTSVParser(filepath)
-        if use_parser == "maccor":
+        elif use_parser == "maccor":
             parser = MaccorXLSParser(filepath)
+
         (instance.metadata, columns) = (parser.get_metadata())
         instance.parsed_metadata['columns'] = columns
         instance.parsed_data = [None] * instance.metadata['num_rows']

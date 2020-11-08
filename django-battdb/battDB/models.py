@@ -445,6 +445,9 @@ class ExperimentDataFile(cm.BaseModelNoName):
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
 
+    def size(self):
+        return self.raw_data_file.size()
+
     def num_cycles(self):
         return 0
 
@@ -457,6 +460,9 @@ class ExperimentDataFile(cm.BaseModelNoName):
             return [k for k in cols.keys()]
         except KeyError:
             return []
+
+    def num_ranges(self):
+        return self.ranges.count()
 
     def num_cols(self):
         return len(self.columns())

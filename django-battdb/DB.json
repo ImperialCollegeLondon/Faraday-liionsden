@@ -647,15 +647,17 @@
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-11-02T17:02:54.673Z",
-    "modified_on": "2020-11-02T17:02:54.673Z",
+    "modified_on": "2020-11-05T15:55:49.316Z",
     "attributes": {},
     "notes": "",
-    "slug": "none",
-    "raw_data_file": null,
+    "slug": "mugjpeg",
+    "raw_data_file": 17,
     "experiment": null,
     "use_parser": "auto",
-    "parsed_metadata": {},
-    "parsed_data": {},
+    "parsed_metadata": {
+      "columns": {}
+    },
+    "parsed_data": [],
     "machine": null,
     "folder": null
   }
@@ -5879,6 +5881,28 @@
   }
 },
 {
+  "model": "battDB.experimentdatafile",
+  "pk": 18,
+  "fields": {
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-05T15:33:41.286Z",
+    "modified_on": "2020-11-05T15:55:18.537Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "c_over_20_run_25_c_ca1txt",
+    "raw_data_file": 22,
+    "experiment": null,
+    "use_parser": "none",
+    "parsed_metadata": {
+      "columns": {}
+    },
+    "parsed_data": [],
+    "machine": null,
+    "folder": null
+  }
+},
+{
   "model": "battDB.harvester",
   "pk": 1,
   "fields": {
@@ -6032,6 +6056,18 @@
     "modified_on": "2020-11-02T16:53:59.690Z",
     "file": "uploaded_files/sample_Maccor_2.xlsx",
     "hash": "7102ac2452d3e22d5cf7148784fccc38"
+  }
+},
+{
+  "model": "common.uploadedfile",
+  "pk": 22,
+  "fields": {
+    "status": 10,
+    "user_owner": 2,
+    "created_on": "2020-11-05T15:32:25.079Z",
+    "modified_on": "2020-11-05T15:32:25.079Z",
+    "file": "uploaded_files/C_over_20_run_25_C_CA1.txt",
+    "hash": "690ea0970ca93096f6a9399829aa631c"
   }
 },
 {
@@ -13183,6 +13219,84 @@
     "object_repr": "None",
     "action_flag": 2,
     "change_message": "[{\"changed\": {\"fields\": [\"User token\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 513,
+  "fields": {
+    "action_time": "2020-11-05T15:32:25.278Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "22",
+    "object_repr": "C_over_20_run_25_C_CA1.txt",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 514,
+  "fields": {
+    "action_time": "2020-11-05T15:33:41.299Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "18",
+    "object_repr": "C_over_20_run_25_C_CA1.txt",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 515,
+  "fields": {
+    "action_time": "2020-11-05T15:52:58.068Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "18",
+    "object_repr": "C_over_20_run_25_C_CA1.txt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Use parser\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 516,
+  "fields": {
+    "action_time": "2020-11-05T15:54:20.632Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "18",
+    "object_repr": "C_over_20_run_25_C_CA1.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 517,
+  "fields": {
+    "action_time": "2020-11-05T15:55:18.539Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "18",
+    "object_repr": "C_over_20_run_25_C_CA1.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 518,
+  "fields": {
+    "action_time": "2020-11-05T15:55:49.317Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "16",
+    "object_repr": "mug.jpeg",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Raw data file\"]}}]"
   }
 },
 {

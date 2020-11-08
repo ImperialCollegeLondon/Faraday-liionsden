@@ -120,9 +120,9 @@ class DataAdmin(BaseAdmin):
      This should be done with a JOIN instead.
     """
     inlines = [DeviceDataInline, DataRangeInline, ]
-    list_display = ['__str__', 'get_file_link', 'get_experiment_link', 'file_exists', 'is_parsed', 'use_parser', 'num_rows', 'num_cols'] + BaseAdmin.list_display_extra
+    list_display = ['__str__', 'size', 'get_file_link', 'get_experiment_link', 'file_exists', 'is_parsed', 'use_parser', 'num_rows', 'num_cols']
     list_filter = ['experiment'] + BaseAdmin.list_filter
-    readonly_fields = BaseAdmin.readonly_fields + ['is_parsed', 'get_experiment_link', 'file_hash', 'columns', 'num_rows']
+    readonly_fields = BaseAdmin.readonly_fields + ['is_parsed', 'get_experiment_link', 'file_hash', 'columns', 'num_ranges']
     # form=DataFileForm
 
 
