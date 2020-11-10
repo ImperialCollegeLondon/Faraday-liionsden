@@ -338,14 +338,25 @@ class DeviceConfigNode(models.Model):
 
 
 
-class DataParser(cm.HasName, cm.HasNotes):
+class Parser(cm.BaseModelMandatoryName):
     """
     Parsers for experimental device data. <BR>
     TODO: In future, these could be user-defined in Python code via this interface (with appropriate permissions) <BR>
      This would require all parsing to be done in a sandboxed environment on a separate server (which it should anyway)
     """
-    module = models.FileField(max_length=100, default="", blank=True,
-                              help_text="Python module to run this parser")
+    # module = models.FileField(max_length=100, default="", blank=True,
+    #                           help_text="Python module to run this parser")
+    FORMAT_CHOICES = [("none", "None"), ("auto", "Auto-detect"),
+                      ("csv", "Generic CSV/TSV"),
+                      ("biologic", "Biologic CSV/TSV/MPT"),
+                      ("maccor", "Maccor XLS/XLSX"),
+                      ("ivium", "Ivium TXT"),
+                      ("novonix", "Novonix TXT"),
+                      ]
+    file_format = models.CharField(max_length=20, default="auto",
+                                   choices=FORMAT_CHOICES,
+                                   help_text="File format override, or use 'auto' to attempt detection")
+    parameters = models.ManyToManyField(dfn.Parameter, through="SignalType")
 
 
 class FileFolder(cm.BaseModel, cm.HasMPTT):
@@ -362,8 +373,8 @@ class Equipment(cm.BaseModel):
     manufacturer = models.ForeignKey(cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True)
     serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
                                 "Batch number, optionally indicate serial number format")
-    dataParser = models.ForeignKey(DataParser, null=True, blank=True, on_delete=models.SET_NULL,
-                                   help_text="Default parser for this equipment's data")
+    default_parser = models.ForeignKey(Parser, null=True, blank=True, on_delete=models.SET_NULL,
+                                       help_text="Default parser for this equipment's data")
 
     class Meta:
         verbose_name_plural="Equipment"
@@ -424,16 +435,8 @@ class ExperimentDataFile(cm.BaseModelNoName):
 
     mappings = models.ManyToManyField(DeviceBatch, through='DataColumn', blank=True, related_name='data_files')
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
-    PARSER_CHOICES = [("none", "None"), ("auto", "Auto-detect"),
-                      ("csv", "Generic CSV/TSV"),
-                      ("biologic", "Biologic CSV/TSV/MPT"),
-                      ("maccor", "Maccor XLS/XLSX"),
-                      ("ivium", "Ivium TXT"),
-                      ("novonix", "Novonix TXT"),
-                      ]
-    use_parser = models.CharField(max_length=20, default="auto",
-                                  choices=PARSER_CHOICES,
-                                  help_text="Parser to use for this DataFile")
+    use_parser = models.ForeignKey(Parser, on_delete=models.SET_NULL, null=True)
+
     parsed_metadata = models.JSONField(editable=False, default=dict,
                                        help_text="metadata automatically extracted from the file")
     parsed_data = models.JSONField(editable=False, default=dict,
@@ -552,14 +555,19 @@ class Harvester(cm.BaseModel):
     """
     upload_to_folder = models.ForeignKey(FileFolder, on_delete=models.CASCADE, default=0)
     attach_to_experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
-    attach_to_equipment= models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True)
+    attach_to_equipment = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True)
     user_token = models.ForeignKey(Token, on_delete=models.CASCADE, default=0)
     file_types = models.CharField(max_length=20, default="*.csv",
                                   help_text="File type pattern to monitor")
-    parser = models.CharField(max_length=20, default="csv",
-                              choices=ExperimentDataFile.PARSER_CHOICES,
-                              help_text="Default parser to use")
+    # parser = models.CharField(max_length=20, default="csv",
+    #                           choices=Parser.FORMAT_CHOICES,
+    #                           help_text="Default parser to use")
 
+
+class SignalType(models.Model):
+    parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
+    col_name = models.CharField(max_length=50, default="")
+    parser = models.ForeignKey(Parser, on_delete=models.CASCADE)
 
 # from django.dispatch import Signal
 # from django.db.models import signals

@@ -39,10 +39,10 @@ def parse_data_file(instance, use_parser):
         instance.parsed_metadata['columns'] = columns
         instance.parsed_data = [None] * instance.metadata['num_rows']
         gen = parser.get_data_generator_for_columns(columns, 10)
-        print(gen)
-        for (idx, row) in enumerate(gen):
-            print(row)
-            instance.parsed_data[idx] = list(row.values())
+
+        # for (idx, row) in enumerate(gen):
+        #     print(row)
+        #     instance.parsed_data[idx] = list(row.values())
     except (pandas.errors.ParserError, ValueError) as e:
         print(e)
         raise ValidationError(message={'raw_data_file': "File parsing failed: " + str(e)})

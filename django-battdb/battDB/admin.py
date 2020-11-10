@@ -161,3 +161,12 @@ class FolderAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
     pass
 
 admin.site.register(FileFolder, FolderAdmin)
+
+
+class ParserSignalInline(common.admin.TabularInline):
+    model = SignalType
+
+class ParserAdmin(BaseAdmin):
+    inlines = (ParserSignalInline,)
+
+admin.site.register(Parser, ParserAdmin)

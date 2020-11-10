@@ -7,6 +7,7 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+from threading import Thread
 
 import time
 
@@ -24,8 +25,10 @@ class MainWidget(QWidget):
         self.uploadButton.clicked.connect(self.doUploadFile)
 
     def doUploadFile(self):
-        self.logWidget.appendMessage("Uploading file %s" % self.dirWidget.get_selected_file())
+        self.logMessage("Uploading file %s" % self.dirWidget.get_selected_file())
 
+    def logMessage(self, msg):
+        self.logWidget.appendMessage(msg)
 
 class LogWidget(QPlainTextEdit):
     def __init__(self, parent=None, file="harvester.log"):
@@ -62,7 +65,7 @@ class DirectoryWidget(QWidget):
         self.dirModel.setFilter(QDir.NoDotAndDotDot | QDir.AllDirs)
 
         self.fileModel = HarvesterFileModel()
-        self.fileModel.setFilter(QDir.NoDotAndDotDot |  QDir.Files)
+        self.fileModel.setFilter(QDir.NoDotAndDotDot | QDir.Files)
 
         self.treeview.setModel(self.dirModel)
         self.listview.setModel(self.fileModel)
@@ -91,8 +94,19 @@ class HarvesterFileModel(QFileSystemModel):
         return super().data(index, role)
 
 
+class MonitorThread(Thread):
+    def __init__(self, app:QWidget):
+        self.app = app
+        super().__init__()
+
+    def run(self):
+        time.sleep(1)
+        self.app.logMessage("moo")
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = MainWidget()
+    mon = MonitorThread(w)
+    mon.start()
     w.show()
     sys.exit(app.exec_())

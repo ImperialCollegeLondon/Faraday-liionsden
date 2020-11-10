@@ -17,3 +17,9 @@ class HarvesterAPITest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Account.objects.count(), 1)
         self.assertEqual(Account.objects.get().name, 'foo')
+
+
+def create_experiment(**kwargs) -> models.Experiment:
+    exp = models.Experiment.objects.create(**kwargs)
+    pass
+
