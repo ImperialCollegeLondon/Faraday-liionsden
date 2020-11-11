@@ -11,3 +11,15 @@ class DataFileSerializer(serializers.ModelSerializer):
         model = ExperimentDataFile
         exclude=[]
 
+
+class ExperimentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Experiment
+        exclude = []
+        #fields = ['name']
+
+
+class HarvesterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Harvester
+        exclude = []

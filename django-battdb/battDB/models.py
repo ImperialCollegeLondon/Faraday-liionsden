@@ -546,7 +546,7 @@ class DataRange(cm.HasAttributes, cm.HasName, cm.HasNotes, cm.HasCreatedModified
         verbose_name_plural = "Data Ranges"
 
 
-class Harvester(cm.BaseModel):
+class Harvester(cm.BaseModelMandatoryName):
     """
     "Harvester" clients are programs which run on a scientist's computer or cycler machine,
     and monitor a folder for new data files.<BR>
@@ -556,12 +556,14 @@ class Harvester(cm.BaseModel):
     upload_to_folder = models.ForeignKey(FileFolder, on_delete=models.CASCADE, default=0)
     attach_to_experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
     attach_to_equipment = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True)
-    user_token = models.ForeignKey(Token, on_delete=models.CASCADE, default=0)
     file_types = models.CharField(max_length=20, default="*.csv",
                                   help_text="File type pattern to monitor")
     # parser = models.CharField(max_length=20, default="csv",
     #                           choices=Parser.FORMAT_CHOICES,
     #                           help_text="Default parser to use")
+
+    class Meta:
+        unique_together = ['name', 'user_owner']
 
 
 class SignalType(models.Model):

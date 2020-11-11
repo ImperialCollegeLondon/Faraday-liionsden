@@ -139,9 +139,7 @@ class BaseModelMandatoryName(BaseModel):
     """
    Changed BaseModel.name to blank=False
    """
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._meta.get_field('name').blank = False
+    name = models.CharField(max_length=128, blank=False, default="", null=False)
     class Meta:
         abstract = True
 

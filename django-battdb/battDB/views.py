@@ -1,5 +1,3 @@
-exit
-
 from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import ListView, CreateView, UpdateView, DetailView
@@ -23,8 +21,9 @@ from rest_framework import status
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser
 from rest_framework import authentication, permissions
-from rest_framework.generics import CreateAPIView, GenericAPIView
+from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
 from common.models import UploadedFile
+import django_filters.rest_framework
 
 np.random.seed(9615)
 
@@ -271,3 +270,27 @@ class UploadFileView(GenericAPIView):
     def options(self, request, format=None):
         return Response(status=status.HTTP_200_OK)
 
+
+class ExperimentAPIView(APIView):
+    queryset = Experiment.objects.all()
+    serializer_class = ExperimentSerializer
+
+
+class ExperimentAPIListView(ListAPIView):
+    serializer_class = ExperimentSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    queryset = Experiment.objects.all()
+
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     return Experiment.objects.filter(user_owner=user)
+
+
+
+class HarvesterAPIView(ListAPIView):
+    serializer_class = HarvesterSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        slug = self.request.query_params.get('slug', None)
+        return Harvester.objects.get(slug=slug, user_owner=user)
