@@ -19,7 +19,18 @@ class ExperimentSerializer(serializers.ModelSerializer):
         #fields = ['name']
 
 
+class DataRangeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Experiment
+        exclude = []
+
+
 class HarvesterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Harvester
         exclude = []
+
+
+class GeneralSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = None

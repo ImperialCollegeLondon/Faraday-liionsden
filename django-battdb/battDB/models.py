@@ -5,6 +5,7 @@ from django.db.models import JSONField
 from django.contrib.postgres.fields import ArrayField
 from django.urls import reverse
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 
 import common.models as cm
 import dfndb.models as dfn
@@ -176,7 +177,12 @@ class DeviceConfig(cm.BaseModel):
     """
     A configuration of device templates to represent how devices are connected in a module, pack, or experimental set-up
     """
+    TYPE_CHOICES=(
+        ("module", "Module"),
+        ("expmt", "Experiment"),
+    )
     devices = models.ManyToManyField(DeviceSpecification, through='DeviceConfigNode')
+    config_type = models.CharField(max_length=10, default="module", choices=TYPE_CHOICES)
 
     class Meta:
         verbose_name_plural = "Device Configurations"
@@ -391,11 +397,13 @@ class Experiment(cm.BaseModel):
     # device = models.ForeignKey(DeviceSpecification, related_name='used_in', null=True, blank=True,
     #                            on_delete=models.SET_NULL,
     #                            limit_choices_to={'abstract': False, 'complete': True})
-    config = models.ForeignKey(DeviceConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='used_in')
+    config = models.ForeignKey(DeviceConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='used_in',
+                               limit_choices_to={'config_type': 'expmt'})
     protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
                                  limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL},
                                  help_text="Test protocol used in this experiment")
     data_files = models.ManyToManyField(cm.UploadedFile, through="ExperimentDataFile")
+    folder = models.ForeignKey(FileFolder, null=True, blank=True, on_delete=models.SET_NULL)
 
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
@@ -439,10 +447,9 @@ class ExperimentDataFile(cm.BaseModelNoName):
 
     parsed_metadata = models.JSONField(editable=False, default=dict,
                                        help_text="metadata automatically extracted from the file")
-    parsed_data = models.JSONField(editable=False, default=dict,
-                                   help_text="Data automatically extracted from the file")
+
     machine = models.ForeignKey(Equipment, null=True, blank=True, on_delete=models.SET_NULL)
-    folder = models.ForeignKey(FileFolder, null=True, blank=True, on_delete=models.SET_NULL)
+
 
     #import_columns = models.ManyToManyField(dfn.Parameter, blank=True)
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
@@ -471,7 +478,7 @@ class ExperimentDataFile(cm.BaseModelNoName):
         return len(self.columns())
 
     def is_parsed(self):
-        return len(self.parsed_data) > 0
+        return len(self.columns()) > 0
     is_parsed.boolean = True
 
     def file_exists(self):
@@ -500,11 +507,29 @@ class ExperimentDataFile(cm.BaseModelNoName):
 
 class DataColumn(models.Model):
     data = models.ForeignKey(ExperimentDataFile, on_delete=models.CASCADE)
-    parameter = models.ForeignKey(dfn.Parameter, null=True, on_delete=models.SET_NULL,
-                                  default=4)
-    column_name = models.CharField(max_length=20)
-    device = models.ForeignKey(DeviceBatch, on_delete=models.CASCADE)
+    column_name = models.CharField(max_length=40, default='Ns')
+    RESAMPLE_CHOICES = (
+        ('none', 'Do not resample'),
+        ('on_change', 'Sample on change'),
+        ('decimate', 'Take every Nth sample'),
+        ('average', 'Average every Nth sample'),
+        ('max',     'Maximum every Nth sample'),
+        ('min',     'Minimum every Nth sample'),
+    )
+    resample = models.CharField(max_length=10, choices=RESAMPLE_CHOICES, default="none", help_text=
+                                "Resampling option - TO BE IMPLEMENTED - currently has no effect")
+    resample_n = models.PositiveSmallIntegerField(default=1, validators=(MinValueValidator(1),), help_text=
+                                                  "Resampling divisor - TO BE IMPLEMENTED")
+
+    parameter = models.ForeignKey(dfn.Parameter, null=True, on_delete=models.SET_NULL, blank=True, help_text=
+                                  "Map this column to a parameter on a device")
+    # TODO: Maybe these should be a text field - or perhaps a foreignKey to a different Through table,
+    #  e.g. ExperimentDevice - the devices for an experiment should not be defined by this model!
+    device = models.ForeignKey(DeviceBatch, null=True, on_delete=models.SET_NULL, blank=True)
     batch_id = models.PositiveSmallIntegerField(default=0)
+
+    #def clean(self):
+    # TODO: Validate related
 
     def serialNo(self):
         return "bork"
@@ -513,9 +538,10 @@ class DataColumn(models.Model):
         return self.data.exeriment()
 
     class Meta:
-        unique_together = ['device', 'data', 'batch_id']
+        unique_together = [['device', 'data', 'batch_id'], ['column_name', 'data']]
         verbose_name = "Column Mapping"
         verbose_name_plural = "Data Column Mappings to Device Parameters"
+
 
 
 class DataRange(cm.HasAttributes, cm.HasName, cm.HasNotes, cm.HasCreatedModifiedDates):
@@ -530,11 +556,13 @@ class DataRange(cm.HasAttributes, cm.HasName, cm.HasNotes, cm.HasCreatedModified
     label = models.CharField(max_length=32, null=True)
     protocol_step = models.PositiveIntegerField()
     step_action = models.CharField(max_length=8,
-                                   choices=[('chg', 'Charging'), ('dchg', 'Discharging'), ('rest', 'Rest'),
-                                            (None, 'Undefined')], null=True)
+                                   choices=[('chg', 'Charging'), ('dchg', 'Discharging'),
+                                            ('cycle', 'Full cycle'), ('rest', 'Rest'),
+                                            ('all', 'Entire series'),
+                                            ('user', 'User defined')], default='all')
     # TODO: Possibly split these arrays into a new object
-    ts_headers = ArrayField(models.CharField(max_length=32, null=True), null=True, blank=True)
-    ts_data = ArrayField(ArrayField(models.FloatField(null=True), null=True), null=True, blank=True)
+    ts_headers = ArrayField(models.CharField(max_length=32), blank=True, null=True)
+    ts_data = ArrayField(ArrayField(models.FloatField()), blank=True, null=True)
 
     # TODO: These need a schema
     # events = JSONField(null=True, blank=True)

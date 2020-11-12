@@ -17,7 +17,7 @@ import pandas as pd
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser
 from rest_framework import authentication, permissions
@@ -271,12 +271,18 @@ class UploadFileView(GenericAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
+class OwnerFilteredListAPIView(ListAPIView):
+    def get_queryset(self):
+        user = self.request.user
+        slug = self.request.query_params.get('slug', None)
+        return Harvester.objects.get(slug=slug, user_owner=user)
+
 class ExperimentAPIView(APIView):
     queryset = Experiment.objects.all()
     serializer_class = ExperimentSerializer
 
 
-class ExperimentAPIListView(ListAPIView):
+class ExperimentAPIListView(OwnerFilteredListAPIView):
     serializer_class = ExperimentSerializer
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     queryset = Experiment.objects.all()
@@ -285,12 +291,20 @@ class ExperimentAPIListView(ListAPIView):
     #     user = self.request.user
     #     return Experiment.objects.filter(user_owner=user)
 
+class DataRangeAPIView(OwnerFilteredListAPIView):
+    serializer_class = DataRangeSerializer
+    queryset = DataRange.objects.all()
 
 
-class HarvesterAPIView(ListAPIView):
+class HarvesterAPIView(OwnerFilteredListAPIView):
     serializer_class = HarvesterSerializer
 
+
+class GeneralViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
-        user = self.request.user
-        slug = self.request.query_params.get('slug', None)
-        return Harvester.objects.get(slug=slug, user_owner=user)
+        model = self.kwargs.get('model')
+        return model.objects.filter(user_owner=self.request.user)
+
+    def get_serializer_class(self):
+        GeneralSerializer.Meta.model = self.kwargs.get('model')
+        return GeneralSerializer
