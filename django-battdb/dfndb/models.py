@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 import common.models as cm
-
+from django.db.models import Sum
 
 # Create your models here.
 
@@ -18,7 +18,8 @@ class Compound(models.Model):
     """
     name = models.CharField(max_length=100)  # "Lithium"
     formula = models.CharField(max_length=20)  # "Li"
-    mass = models.PositiveIntegerField(default=0, help_text="optional molar mass")
+    mass = models.FloatField(default=0, validators=[MinValueValidator(0, "Mass cannot be negative!")],
+                             help_text="optional molar mass")
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.formula)
@@ -50,6 +51,9 @@ class Material(cm.BaseModel):
                                            default=0,
                                            help_text="If this material is a polymer, enter degree of polymerization")
 
+  #  def total_parts(self):
+  #      return int(self.components.all().aggregate(Sum('amount'))['amount__sum'])
+
     def __str__(self):
         return self.name
 
@@ -58,9 +62,16 @@ class CompositionPart(models.Model):
     """
     Compound amounts for use in materials
     """
-    compound = models.ForeignKey(Compound, on_delete=models.CASCADE)
+    compound = models.ForeignKey(Compound, on_delete=models.CASCADE, related_name="components")
     material = models.ForeignKey(Material, on_delete=models.CASCADE)
     amount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(100)])
+
+    def get_percentage(self):
+        total = CompositionPart.objects.filter(material=self.material).aggregate(Sum('amount'))['amount__sum']
+        return float(self.amount or 0) * 100 / total
+
+    def percentage(self):
+        return "%3.03f%%" % self.get_percentage()
 
     def __str__(self):
         return "%s%d" % (self.compound.formula, self.amount)

@@ -258,10 +258,10 @@ ALTER TABLE public.authtoken_token OWNER TO towen;
 CREATE TABLE public."battDB_batchdevice" (
     id integer NOT NULL,
     attributes jsonb NOT NULL,
-    batch_index smallint NOT NULL,
-    "serialNo" character varying(60) NOT NULL,
     batch_id integer NOT NULL,
-    CONSTRAINT "battDB_batchdevice_batch_index_check" CHECK ((batch_index >= 0))
+    seq_num smallint NOT NULL,
+    notes text,
+    CONSTRAINT "battDB_batchdevice_seq_num_check" CHECK ((seq_num >= 0))
 );
 
 
@@ -296,13 +296,11 @@ ALTER SEQUENCE public."battDB_batchdevice_id_seq" OWNED BY public."battDB_batchd
 CREATE TABLE public."battDB_datacolumn" (
     id integer NOT NULL,
     column_name character varying(40) NOT NULL,
-    batch_id smallint NOT NULL,
-    data_id integer NOT NULL,
-    device_id integer,
-    parameter_id integer,
     resample character varying(10) NOT NULL,
     resample_n smallint NOT NULL,
-    CONSTRAINT "battDB_datacolumn_batch_id_check" CHECK ((batch_id >= 0)),
+    data_file_id integer NOT NULL,
+    device_id integer,
+    parameter_id integer,
     CONSTRAINT "battDB_datacolumn_resample_n_check" CHECK ((resample_n >= 0))
 );
 
@@ -748,6 +746,45 @@ ALTER SEQUENCE public."battDB_experimentdatafile_id_seq" OWNED BY public."battDB
 
 
 --
+-- Name: battDB_experimentdevice; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public."battDB_experimentdevice" (
+    id integer NOT NULL,
+    batch_seq smallint NOT NULL,
+    device_pos character varying(20) NOT NULL,
+    data_file_id integer,
+    "deviceBatch_id" integer NOT NULL,
+    experiment_id integer NOT NULL,
+    CONSTRAINT "battDB_experimentdevice_batch_seq_1abc1dc2_check" CHECK ((batch_seq >= 0))
+);
+
+
+ALTER TABLE public."battDB_experimentdevice" OWNER TO towen;
+
+--
+-- Name: battDB_experimentdevice_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public."battDB_experimentdevice_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."battDB_experimentdevice_id_seq" OWNER TO towen;
+
+--
+-- Name: battDB_experimentdevice_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public."battDB_experimentdevice_id_seq" OWNED BY public."battDB_experimentdevice".id;
+
+
+--
 -- Name: battDB_filefolder; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -1160,8 +1197,7 @@ CREATE TABLE public.dfndb_compound (
     id integer NOT NULL,
     formula character varying(20) NOT NULL,
     name character varying(100) NOT NULL,
-    mass integer NOT NULL,
-    CONSTRAINT dfndb_compound_mass_check CHECK ((mass >= 0))
+    mass double precision NOT NULL
 );
 
 
@@ -1690,6 +1726,13 @@ ALTER TABLE ONLY public."battDB_experimentdatafile" ALTER COLUMN id SET DEFAULT 
 
 
 --
+-- Name: battDB_experimentdevice id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experimentdevice" ALTER COLUMN id SET DEFAULT nextval('public."battDB_experimentdevice_id_seq"'::regclass);
+
+
+--
 -- Name: battDB_filefolder id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
@@ -2083,6 +2126,10 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 266	Can change file folder	67	change_filefolder
 267	Can delete file folder	67	delete_filefolder
 268	Can view file folder	67	view_filefolder
+281	Can add experiment device	71	add_experimentdevice
+282	Can change experiment device	71	change_experimentdevice
+283	Can delete experiment device	71	delete_experimentdevice
+284	Can view experiment device	71	view_experimentdevice
 \.
 
 
@@ -2178,7 +2225,12 @@ c2fdceacffa198fd09d3f5baa7821b14f0ce0f22	2020-11-04 12:41:17.743212+00	8
 -- Data for Name: battDB_batchdevice; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_batchdevice" (id, attributes, batch_index, "serialNo", batch_id) FROM stdin;
+COPY public."battDB_batchdevice" (id, attributes, batch_id, seq_num, notes) FROM stdin;
+2	{}	32	1	\N
+3	{}	32	2	\N
+5	{}	32	4	
+6	{"state_of_health": "100%"}	32	5	foo
+4	{"state_of_health": "100%"}	32	3	.
 \.
 
 
@@ -2186,7 +2238,7 @@ COPY public."battDB_batchdevice" (id, attributes, batch_index, "serialNo", batch
 -- Data for Name: battDB_datacolumn; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_datacolumn" (id, column_name, batch_id, data_id, device_id, parameter_id, resample, resample_n) FROM stdin;
+COPY public."battDB_datacolumn" (id, column_name, resample, resample_n, data_file_id, device_id, parameter_id) FROM stdin;
 \.
 
 
@@ -2203,7 +2255,7 @@ COPY public."battDB_datarange" (id, name, created_on, modified_on, attributes, n
 --
 
 COPY public."battDB_devicebatch" (id, status, created_on, modified_on, attributes, notes, slug, "serialNo", batch_size, manufactured_on, lft, rght, tree_id, level, manufacturer_id, parent_id, specification_id, user_owner_id, manufacturing_protocol_id) FROM stdin;
-32	10	2020-11-01 17:41:49.156174+00	2020-11-01 17:41:49.156188+00	{}		imperial-college-my-nmc622-cell-1-off-2020-11-01		1	2020-11-01	1	2	1	0	1	\N	7	1	\N
+32	10	2020-11-01 17:41:49.156174+00	2020-11-12 16:50:19.715247+00	{}		imperial-college-my-nmc622-cell-5-off-2020-11-01	B%d	5	2020-11-01	1	2	1	0	1	\N	7	1	\N
 \.
 
 
@@ -2239,6 +2291,7 @@ COPY public."battDB_deviceparameter" (id, name, value, material_id, parameter_id
 1	Pack capacity	\N	\N	3	4	f
 2	Module capacity	\N	\N	3	5	f
 3	Cell Capacity	\N	\N	3	6	f
+4	Electrode Thickness	1	1	2	21	f
 \.
 
 
@@ -2264,6 +2317,7 @@ COPY public."battDB_devicespecification" (id, name, status, created_on, modified
 18	Connector	10	2020-11-02 12:52:59.707199+00	2020-11-02 13:01:53.108119+00	{}		connector	t	f	24	25	1	1	\N	4	\N
 19	Cycler Machine	10	2020-11-04 12:38:04.208567+00	2020-11-04 12:38:04.208583+00	{}		cycler-machine	t	f	1	2	4	0	\N	\N	1
 20	Tom's GalvoTron 5000	10	2020-11-04 12:39:23.301061+00	2020-11-04 12:39:23.301079+00	{}		toms-galvotron-5000	f	t	1	2	5	0	19	\N	1
+21	Positive Electrode Material	10	2020-11-12 16:56:28.553483+00	2020-11-12 17:49:44.681637+00	{}		positive-electrode-material	f	f	1	2	6	0	13	\N	1
 \.
 
 
@@ -2281,10 +2335,10 @@ COPY public."battDB_equipment" (id, name, status, created_on, modified_on, attri
 --
 
 COPY public."battDB_experiment" (id, name, status, created_on, modified_on, attributes, notes, slug, date, protocol_id, user_owner_id, config_id, folder_id) FROM stdin;
-5	My experiment	10	2020-11-01 17:43:36.325635+00	2020-11-02 10:58:17.647726+00	{}		tom-my-experiment-2020-11-01	2020-11-01	4	1	\N	\N
 7	\N	10	2020-11-10 13:01:21.234456+00	2020-11-10 13:01:21.234488+00	{}	\N	none-none-2020-11-10-130121233994	2020-11-10	\N	\N	\N	\N
 8	fo	10	2020-11-10 13:02:30.124113+00	2020-11-10 13:02:30.124164+00	{}	\N	none-fo-2020-11-10-130230123371	2020-11-10	\N	\N	\N	\N
 6	\N	10	2020-11-10 12:56:33.537583+00	2020-11-11 19:35:54.923375+00	{}		tom-none-2020-11-10	2020-11-10	\N	1	\N	\N
+5	My experiment	10	2020-11-01 17:43:36.325635+00	2020-11-12 15:09:24.691614+00	{}		tom-my-experiment-2020-11-01	2020-11-01	4	1	\N	\N
 \.
 
 
@@ -2296,6 +2350,16 @@ COPY public."battDB_experimentdatafile" (id, status, created_on, modified_on, at
 16	10	2020-11-02 17:02:54.67311+00	2020-11-05 15:55:49.316338+00	{}		mugjpeg	17	\N	1	{"columns": {}}	\N	\N
 18	10	2020-11-05 15:33:41.286298+00	2020-11-10 14:35:34.397115+00	{}		c_over_20_run_25_c_ca1txt	22	\N	1	{"columns": {"x": {"has_data": true, "is_numeric": true}, "Ns": {"has_data": true, "is_numeric": true}, "P/W": {"has_data": true, "is_numeric": true}, "I/mA": {"has_data": true, "is_numeric": true}, "Rec#": {"has_data": true, "is_numeric": true}, "Time": {"has_data": true, "is_numeric": false}, "mode": {"has_data": true, "is_numeric": true}, "R/Ohm": {"has_data": true, "is_numeric": true}, "error": {"has_data": true, "is_numeric": true}, "ox/red": {"has_data": true, "is_numeric": true}, "Ecell/V": {"has_data": true, "is_numeric": true}, "I Range": {"has_data": true, "is_numeric": true}, "dq/mA_h": {"has_data": true, "is_numeric": true}, "control/V": {"has_data": true, "is_numeric": true}, "Energy/W_h": {"has_data": true, "is_numeric": true}, "Ns changes": {"has_data": true, "is_numeric": true}, "control/mA": {"has_data": true, "is_numeric": true}, "(Q-Qo)/mA_h": {"has_data": true, "is_numeric": true}, "counter inc": {"has_data": true, "is_numeric": true}, "Efficiency/%": {"has_data": true, "is_numeric": true}, "control/V/mA": {"has_data": true, "is_numeric": true}, "cycle number": {"has_data": true, "is_numeric": true}, "Capacity/mA_h": {"has_data": true, "is_numeric": true}, "Q charge/mA_h": {"has_data": true, "is_numeric": true}, "control changes": {"has_data": true, "is_numeric": true}, "Q discharge/mA_h": {"has_data": true, "is_numeric": true}, "Energy charge/W_h": {"has_data": true, "is_numeric": true}, "Energy discharge/W_h": {"has_data": true, "is_numeric": true}, "Capacitance charge/�F": {"has_data": true, "is_numeric": true}, "Capacitance discharge/�F": {"has_data": true, "is_numeric": true}}}	\N	\N
 17	10	2020-11-02 18:07:10.755531+00	2020-11-02 18:18:03.675805+00	{}		biologic_fulltxt	18	5	1	{"columns": {"x": {"has_data": true, "is_numeric": true}, "Ns": {"has_data": true, "is_numeric": true}, "P/W": {"has_data": true, "is_numeric": true}, "I/mA": {"has_data": true, "is_numeric": true}, "Rec#": {"has_data": true, "is_numeric": true}, "Time": {"has_data": true, "is_numeric": true}, "mode": {"has_data": true, "is_numeric": true}, "R/Ohm": {"has_data": true, "is_numeric": true}, "error": {"has_data": true, "is_numeric": true}, "ox/red": {"has_data": true, "is_numeric": true}, "Ecell/V": {"has_data": true, "is_numeric": true}, "I Range": {"has_data": true, "is_numeric": true}, "dq/mA_h": {"has_data": true, "is_numeric": true}, "control/V": {"has_data": true, "is_numeric": true}, "Energy/W_h": {"has_data": true, "is_numeric": true}, "Ns changes": {"has_data": true, "is_numeric": true}, "control/mA": {"has_data": true, "is_numeric": true}, "(Q-Qo)/mA_h": {"has_data": true, "is_numeric": true}, "counter inc": {"has_data": true, "is_numeric": true}, "Analog OUT/V": {"has_data": true, "is_numeric": true}, "Efficiency/%": {"has_data": true, "is_numeric": true}, "control/V/mA": {"has_data": true, "is_numeric": true}, "cycle number": {"has_data": true, "is_numeric": true}, "Analog IN 1/V": {"has_data": true, "is_numeric": true}, "Capacity/mA_h": {"has_data": true, "is_numeric": true}, "Q charge/mA_h": {"has_data": true, "is_numeric": true}, "control changes": {"has_data": true, "is_numeric": true}, "Q discharge/mA_h": {"has_data": true, "is_numeric": true}, "Energy charge/W_h": {"has_data": true, "is_numeric": true}, "Energy discharge/W_h": {"has_data": true, "is_numeric": true}, "Capacitance charge/�F": {"has_data": true, "is_numeric": true}, "Capacitance discharge/�F": {"has_data": true, "is_numeric": true}}}	\N	\N
+\.
+
+
+--
+-- Data for Name: battDB_experimentdevice; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public."battDB_experimentdevice" (id, batch_seq, device_pos, data_file_id, "deviceBatch_id", experiment_id) FROM stdin;
+1	0	cell_nn	17	32	5
+3	1	cell_nn1	17	32	5
 \.
 
 
@@ -2416,8 +2480,9 @@ COPY public.dfndb_compound (id, formula, name, mass) FROM stdin;
 1	Li	Lithium	0
 3	Mg	Manganese	0
 4	Co	Cobalt	0
-2	C	Carbon	0
 5	Ni	Nickel	0
+6	LiPF6	LiPF6	151.905
+2	C	Carbon	12.011
 \.
 
 
@@ -2447,8 +2512,8 @@ COPY public.dfndb_dataparameter (id, data_id, parameter_id, material_id, type, v
 
 COPY public.dfndb_material (id, polymer, user_owner_id, type, attributes, status, name, notes, modified_on, created_on, slug) FROM stdin;
 2	1	1	1	{}	10	Graphite		2020-10-16	2020-10-16 15:05:13.815326+01	bork
-1	0	1	1	{}	10	NMC622		2020-10-16	2020-10-16 12:16:10.333468+01	bork
 3	0	1	2	{}	10	Lithium Metal		2020-10-16	2020-10-16 15:06:34.982964+01	bork
+1	0	1	1	{}	10	NMC622		2020-11-12	2020-10-16 12:16:10.333468+01	nmc622
 \.
 
 
@@ -2476,6 +2541,7 @@ COPY public.dfndb_parameter (id, symbol, notes, unit_id, user_owner_id, attribut
 6	C		11	1	{}	10	Capacity	2020-10-30	2020-10-30 12:17:04.438278+00	capacity-c-mah
 7	I		5	1	{}	10	Pack Current	2020-10-30	2020-10-30 15:03:05.688117+00	pack-current-i-a
 8	x		12	1	{}	10	miscellaneous	2020-11-01	2020-11-01 17:31:08.087297+00	miscellaneous-x-arb
+9	T		7	1	{}	10	Thickness	2020-11-12	2020-11-12 16:57:06.835404+00	thickness-t-mm
 \.
 
 
@@ -2983,6 +3049,8 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 479	2020-11-02 12:54:35.47199+00	4	2s2p module	2	[{"added": {"name": "device config node", "object": "2s2p module/Terminal_DEVICE"}}, {"added": {"name": "device config node", "object": "2s2p module/Terminal_DEVICE"}}]	51	1
 480	2020-11-02 12:55:22.47645+00	4	2s2p module	2	[{"added": {"name": "device config node", "object": "2s2p module/Terminal_DEVICE"}}]	51	1
 481	2020-11-02 12:55:45.343907+00	4	2s2p module	2	[{"changed": {"name": "device config node", "object": "2s2p module/Terminal_MODULE", "fields": ["Device position id"]}}, {"changed": {"name": "device config node", "object": "2s2p module/Terminal_MODULE", "fields": ["Device position id"]}}, {"changed": {"name": "device config node", "object": "2s2p module/Terminal_MODULE", "fields": ["Device position id"]}}]	51	1
+547	2020-11-12 17:34:46.57093+00	1	NMC622	2	[{"added": {"name": "composition part", "object": "Li1"}}]	29	1
+548	2020-11-12 17:35:00.550959+00	1	NMC622	2	[{"deleted": {"name": "composition part", "object": "Li1"}}]	29	1
 482	2020-11-02 12:56:54.506224+00	4	2s2p module	2	[{"changed": {"name": "device config node", "object": "2s2p module/Terminal_+", "fields": ["Device position id", "Pos netname"]}}, {"changed": {"name": "device config node", "object": "2s2p module/Terminal_-", "fields": ["Device position id", "Pos netname", "Neg netname"]}}, {"changed": {"name": "device config node", "object": "2s2p module/Terminal_T", "fields": ["Device position id"]}}]	51	1
 483	2020-11-02 13:01:53.109177+00	18	Connector	2	[{"changed": {"fields": ["Abstract Specification"]}}]	61	1
 484	2020-11-02 14:40:08.581201+00	19	Ivium_Cell1.txt	1	[{"added": {}}]	63	1
@@ -3027,6 +3095,30 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 523	2020-11-11 19:15:53.428366+00	1	makron	2	[{"changed": {"fields": ["Name"]}}]	68	1
 524	2020-11-11 19:35:39.94558+00	2	foo	1	[{"added": {}}]	68	1
 525	2020-11-11 19:35:54.924754+00	6	tom None 2020-11-10	2	[{"changed": {"fields": ["User owner"]}}]	8	1
+526	2020-11-12 15:06:03.284494+00	5	tom My experiment 2020-11-01	2	[{"added": {"name": "experiment device", "object": "ExperimentDevice object (1)"}}]	8	1
+527	2020-11-12 15:06:46.251925+00	5	tom My experiment 2020-11-01	2	[{"added": {"name": "experiment device", "object": "ExperimentDevice object (2)"}}]	8	1
+528	2020-11-12 15:07:11.529124+00	5	tom My experiment 2020-11-01	2	[{"deleted": {"name": "experiment device", "object": "ExperimentDevice object (None)"}}]	8	1
+529	2020-11-12 15:09:24.693747+00	5	tom My experiment 2020-11-01	2	[{"added": {"name": "experiment device", "object": "ExperimentDevice object (3)"}}, {"changed": {"name": "experiment device", "object": "ExperimentDevice object (1)", "fields": ["Data file"]}}]	8	1
+530	2020-11-12 15:37:28.120471+00	32	Imperial College My NMC622 Cell (5 off) 2020-11-01	2	[{"changed": {"fields": ["Batch size"]}}]	38	1
+531	2020-11-12 15:37:40.994553+00	32	Imperial College My NMC622 Cell (5 off) 2020-11-01	2	[{"added": {"name": "batch device", "object": "BatchDevice object (4)"}}]	38	1
+532	2020-11-12 16:03:48.911082+00	32	Imperial College My NMC622 Cell (5 off) 2020-11-01	2	[{"deleted": {"name": "batch device", "object": "My NMC622 Cell/1"}}]	38	1
+533	2020-11-12 16:04:02.131959+00	32	Imperial College My NMC622 Cell (5 off) 2020-11-01	2	[{"added": {"name": "batch device", "object": "My NMC622 Cell/4"}}]	38	1
+534	2020-11-12 16:05:04.573034+00	32	Imperial College My NMC622 Cell (5 off) 2020-11-01	2	[{"added": {"name": "batch device", "object": "My NMC622 Cell/5"}}]	38	1
+535	2020-11-12 16:05:12.916932+00	32	Imperial College My NMC622 Cell (5 off) 2020-11-01	2	[{"added": {"name": "batch device", "object": "My NMC622 Cell/6"}}]	38	1
+536	2020-11-12 16:05:18.959289+00	32	Imperial College My NMC622 Cell (5 off) 2020-11-01	2	[{"deleted": {"name": "batch device", "object": "My NMC622 Cell/6"}}]	38	1
+537	2020-11-12 16:21:03.55175+00	32	Imperial College My NMC622 Cell (5 off) 2020-11-01	2	[{"changed": {"name": "batch device", "object": "My NMC622 Cell/5", "fields": ["Notes"]}}]	38	1
+538	2020-11-12 16:21:13.925727+00	32	Imperial College My NMC622 Cell (5 off) 2020-11-01	2	[]	38	1
+539	2020-11-12 16:21:27.20621+00	32	Imperial College My NMC622 Cell (5 off) 2020-11-01	2	[]	38	1
+540	2020-11-12 16:21:47.170005+00	32	Imperial College My NMC622 Cell (5 off) 2020-11-01	2	[]	38	1
+541	2020-11-12 16:22:02.860423+00	32	Imperial College My NMC622 Cell (5 off) 2020-11-01	2	[{"changed": {"name": "batch device", "object": "My NMC622 Cell/3", "fields": ["Notes"]}}]	38	1
+542	2020-11-12 16:50:19.716331+00	32	Imperial College My NMC622 Cell (5 off) 2020-11-01	2	[{"changed": {"fields": ["SerialNo"]}}]	38	1
+543	2020-11-12 16:56:28.557557+00	21	Positive Electrode Material	1	[{"added": {}}, {"added": {"name": "device parameter", "object": "Thickness: t / m"}}]	61	1
+544	2020-11-12 16:57:06.837317+00	9	Thickness: T / mm	1	[{"added": {}}]	32	1
+545	2020-11-12 17:11:09.378166+00	6	LiPF6 (LiPF6)	1	[{"added": {}}]	28	1
+546	2020-11-12 17:13:04.37283+00	2	Carbon (C)	2	[{"changed": {"fields": ["Mass"]}}]	28	1
+549	2020-11-12 17:49:16.767023+00	1	NMC622	2	[{"added": {"name": "composition part", "object": "C1"}}]	29	1
+550	2020-11-12 17:49:25.941192+00	1	NMC622	2	[{"deleted": {"name": "composition part", "object": "C1"}}]	29	1
+551	2020-11-12 17:49:44.683192+00	21	Positive Electrode Material	2	[]	61	1
 \.
 
 
@@ -3072,6 +3164,7 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 68	battDB	harvester
 69	battDB	parser
 70	battDB	signaltype
+71	battDB	experimentdevice
 \.
 
 
@@ -3368,6 +3461,19 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 290	battDB	0166_ExperimentFileFolder	2020-11-12 12:33:04.071707+00
 291	battDB	0167_DataRangeType	2020-11-12 12:44:45.913063+00
 292	battDB	0168_DataColumn	2020-11-12 13:46:52.671035+00
+294	battDB	0169_ExperimentDevice	2020-11-12 15:00:12.957083+00
+295	battDB	0170_delete_datacolumn	2020-11-12 15:03:27.325387+00
+296	battDB	0171_datacolumn	2020-11-12 15:03:53.462883+00
+297	battDB	0172_auto_20201112_1505	2020-11-12 15:05:41.331559+00
+298	battDB	0173_auto_20201112_1511	2020-11-12 15:11:26.092498+00
+299	battDB	0174_auto_20201112_1519	2020-11-12 15:30:19.806095+00
+300	battDB	0175_auto_20201112_1520	2020-11-12 15:30:19.84965+00
+301	battDB	0176_BatchDevice	2020-11-12 15:30:19.892175+00
+302	battDB	0177_batchdevice_notes	2020-11-12 15:39:21.690796+00
+303	battDB	0178_auto_20201112_1603	2020-11-12 16:03:26.194017+00
+304	battDB	0179_auto_20201112_1710	2020-11-12 17:10:57.734199+00
+305	dfndb	0038_auto_20201112_1710	2020-11-12 17:10:57.782375+00
+306	dfndb	0039_auto_20201112_1751	2020-11-12 17:51:16.652868+00
 \.
 
 
@@ -3410,7 +3516,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 169, true);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 280, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 284, true);
 
 
 --
@@ -3438,14 +3544,14 @@ SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 104, true);
 -- Name: battDB_batchdevice_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_batchdevice_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_batchdevice_id_seq"', 7, true);
 
 
 --
 -- Name: battDB_datacolumn_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_datacolumn_id_seq"', 1, true);
+SELECT pg_catalog.setval('public."battDB_datacolumn_id_seq"', 1, false);
 
 
 --
@@ -3480,14 +3586,14 @@ SELECT pg_catalog.setval('public."battDB_deviceconfignode_id_seq"', 16, true);
 -- Name: battDB_deviceparameter_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_deviceparameter_id_seq"', 3, true);
+SELECT pg_catalog.setval('public."battDB_deviceparameter_id_seq"', 4, true);
 
 
 --
 -- Name: battDB_devicespecification_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_devicespecification_id_seq"', 20, true);
+SELECT pg_catalog.setval('public."battDB_devicespecification_id_seq"', 21, true);
 
 
 --
@@ -3509,6 +3615,13 @@ SELECT pg_catalog.setval('public."battDB_experiment_id_seq"', 8, true);
 --
 
 SELECT pg_catalog.setval('public."battDB_experimentdatafile_id_seq"', 18, true);
+
+
+--
+-- Name: battDB_experimentdevice_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public."battDB_experimentdevice_id_seq"', 3, true);
 
 
 --
@@ -3571,14 +3684,14 @@ SELECT pg_catalog.setval('public.common_uploadedfile_id_seq', 22, true);
 -- Name: dfndb_compositionpart_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_compositionpart_id_seq', 5, true);
+SELECT pg_catalog.setval('public.dfndb_compositionpart_id_seq', 7, true);
 
 
 --
 -- Name: dfndb_compound_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_compound_id_seq', 5, true);
+SELECT pg_catalog.setval('public.dfndb_compound_id_seq', 6, true);
 
 
 --
@@ -3613,7 +3726,7 @@ SELECT pg_catalog.setval('public.dfndb_method_id_seq', 4, true);
 -- Name: dfndb_parameter_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_parameter_id_seq', 8, true);
+SELECT pg_catalog.setval('public.dfndb_parameter_id_seq', 9, true);
 
 
 --
@@ -3627,21 +3740,21 @@ SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 12, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 525, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 551, true);
 
 
 --
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 70, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 71, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 292, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 306, true);
 
 
 --
@@ -3757,11 +3870,11 @@ ALTER TABLE ONLY public.authtoken_token
 
 
 --
--- Name: battDB_batchdevice battDB_batchdevice_batch_id_batch_index_c77a9437_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
+-- Name: battDB_batchdevice battDB_batchdevice_batch_id_seq_num_d6b32856_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_batchdevice"
-    ADD CONSTRAINT "battDB_batchdevice_batch_id_batch_index_c77a9437_uniq" UNIQUE (batch_id, batch_index);
+    ADD CONSTRAINT "battDB_batchdevice_batch_id_seq_num_d6b32856_uniq" UNIQUE (batch_id, seq_num);
 
 
 --
@@ -3773,19 +3886,19 @@ ALTER TABLE ONLY public."battDB_batchdevice"
 
 
 --
--- Name: battDB_datacolumn battDB_datacolumn_column_name_data_id_50bebb13_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
+-- Name: battDB_datacolumn battDB_datacolumn_column_name_data_file_id_8f143447_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_datacolumn"
-    ADD CONSTRAINT "battDB_datacolumn_column_name_data_id_50bebb13_uniq" UNIQUE (column_name, data_id);
+    ADD CONSTRAINT "battDB_datacolumn_column_name_data_file_id_8f143447_uniq" UNIQUE (column_name, data_file_id);
 
 
 --
--- Name: battDB_datacolumn battDB_datacolumn_device_id_data_id_batch_id_1c763fa3_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
+-- Name: battDB_datacolumn battDB_datacolumn_device_id_data_file_id_86f54ef0_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_datacolumn"
-    ADD CONSTRAINT "battDB_datacolumn_device_id_data_id_batch_id_1c763fa3_uniq" UNIQUE (device_id, data_id, batch_id);
+    ADD CONSTRAINT "battDB_datacolumn_device_id_data_file_id_86f54ef0_uniq" UNIQUE (device_id, data_file_id);
 
 
 --
@@ -3890,6 +4003,30 @@ ALTER TABLE ONLY public."battDB_experimentdatafile"
 
 ALTER TABLE ONLY public."battDB_experimentdatafile"
     ADD CONSTRAINT "battDB_experimentdatafile_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: battDB_experimentdevice battDB_experimentdevice_device_pos_data_file_id_419c3bbc_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experimentdevice"
+    ADD CONSTRAINT "battDB_experimentdevice_device_pos_data_file_id_419c3bbc_uniq" UNIQUE (device_pos, data_file_id);
+
+
+--
+-- Name: battDB_experimentdevice battDB_experimentdevice_experiment_id_device_id__2fcaf74c_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experimentdevice"
+    ADD CONSTRAINT "battDB_experimentdevice_experiment_id_device_id__2fcaf74c_uniq" UNIQUE (experiment_id, "deviceBatch_id", batch_seq, data_file_id);
+
+
+--
+-- Name: battDB_experimentdevice battDB_experimentdevice_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experimentdevice"
+    ADD CONSTRAINT "battDB_experimentdevice_pkey" PRIMARY KEY (id);
 
 
 --
@@ -4250,10 +4387,10 @@ CREATE INDEX "battDB_batchdevice_batch_id_8cefc0b1" ON public."battDB_batchdevic
 
 
 --
--- Name: battDB_datacolumn_data_id_1ba84ce8; Type: INDEX; Schema: public; Owner: towen
+-- Name: battDB_datacolumn_data_file_id_df73df9e; Type: INDEX; Schema: public; Owner: towen
 --
 
-CREATE INDEX "battDB_datacolumn_data_id_1ba84ce8" ON public."battDB_datacolumn" USING btree (data_id);
+CREATE INDEX "battDB_datacolumn_data_file_id_df73df9e" ON public."battDB_datacolumn" USING btree (data_file_id);
 
 
 --
@@ -4562,6 +4699,27 @@ CREATE INDEX "battDB_experimentdatafile_use_parser_id_fffb2715" ON public."battD
 --
 
 CREATE INDEX "battDB_experimentdatafile_user_owner_id_f8f951f2" ON public."battDB_experimentdatafile" USING btree (user_owner_id);
+
+
+--
+-- Name: battDB_experimentdevice_data_file_id_1a1175e3; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_experimentdevice_data_file_id_1a1175e3" ON public."battDB_experimentdevice" USING btree (data_file_id);
+
+
+--
+-- Name: battDB_experimentdevice_device_id_c2d32af9; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_experimentdevice_device_id_c2d32af9" ON public."battDB_experimentdevice" USING btree ("deviceBatch_id");
+
+
+--
+-- Name: battDB_experimentdevice_experiment_id_566fbea4; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_experimentdevice_experiment_id_566fbea4" ON public."battDB_experimentdevice" USING btree (experiment_id);
 
 
 --
@@ -5029,19 +5187,19 @@ ALTER TABLE ONLY public."battDB_batchdevice"
 
 
 --
--- Name: battDB_datacolumn battDB_datacolumn_data_id_1ba84ce8_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
+-- Name: battDB_datacolumn battDB_datacolumn_data_file_id_df73df9e_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_datacolumn"
-    ADD CONSTRAINT "battDB_datacolumn_data_id_1ba84ce8_fk_battDB_ex" FOREIGN KEY (data_id) REFERENCES public."battDB_experimentdatafile"(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT "battDB_datacolumn_data_file_id_df73df9e_fk_battDB_ex" FOREIGN KEY (data_file_id) REFERENCES public."battDB_experimentdatafile"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
--- Name: battDB_datacolumn battDB_datacolumn_device_id_bee39a70_fk_battDB_devicebatch_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+-- Name: battDB_datacolumn battDB_datacolumn_device_id_bee39a70_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_datacolumn"
-    ADD CONSTRAINT "battDB_datacolumn_device_id_bee39a70_fk_battDB_devicebatch_id" FOREIGN KEY (device_id) REFERENCES public."battDB_devicebatch"(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT "battDB_datacolumn_device_id_bee39a70_fk_battDB_ex" FOREIGN KEY (device_id) REFERENCES public."battDB_experimentdevice"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -5274,6 +5432,30 @@ ALTER TABLE ONLY public."battDB_experimentdatafile"
 
 ALTER TABLE ONLY public."battDB_experimentdatafile"
     ADD CONSTRAINT "battDB_experimentdat_user_owner_id_f8f951f2_fk_auth_user" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_experimentdevice battDB_experimentdev_data_file_id_1a1175e3_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experimentdevice"
+    ADD CONSTRAINT "battDB_experimentdev_data_file_id_1a1175e3_fk_battDB_ex" FOREIGN KEY (data_file_id) REFERENCES public."battDB_experimentdatafile"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_experimentdevice battDB_experimentdev_deviceBatch_id_eccc8b4a_fk_battDB_de; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experimentdevice"
+    ADD CONSTRAINT "battDB_experimentdev_deviceBatch_id_eccc8b4a_fk_battDB_de" FOREIGN KEY ("deviceBatch_id") REFERENCES public."battDB_devicebatch"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_experimentdevice battDB_experimentdev_experiment_id_566fbea4_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_experimentdevice"
+    ADD CONSTRAINT "battDB_experimentdev_experiment_id_566fbea4_fk_battDB_ex" FOREIGN KEY (experiment_id) REFERENCES public."battDB_experiment"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

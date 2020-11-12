@@ -34,9 +34,10 @@ admin.site.register(DeviceSpecification, DeviceSpecAdmin)
 
 class BatchDeviceInline(common.admin.TabularInline):
     model = BatchDevice
-    extra = 1
+    extra = 0
     verbose_name_plural = "Batch Members"
     verbose_name = "member"
+    readonly_fields = ['used_in', 'last_measured_SoH', 'attributes']
     exclude = ['attributes']
 
 class DeviceBatchInline(common.admin.TabularInline):
@@ -63,15 +64,15 @@ class ExperimentDataInline(common.admin.TabularInline):
     exclude = ['attributes', 'file_hash', 'user_owner']
 
 
-class ExperimentDevicesInline(common.admin.TabularInline):
-    model = DataColumn
+class ExperimentDeviceInline(common.admin.TabularInline):
+    model = ExperimentDevice
     extra = 1
-    # exclude = ['attributes', 'file_hash', 'user_owner']
+    readonly_fields = ["getSerialNo"]
+
 
 class ExperimentAdmin(common.admin.BaseAdmin):
 #    readonly_fields = BaseAdmin.readonly_fields + ['data_files']
-    exclude = ['data_files']
-    inlines = [ExperimentDataInline, ]
+    inlines = [ExperimentDeviceInline, ]
 #    form = ExperimentForm
 
 
@@ -107,8 +108,10 @@ admin.site.register([DeviceConfig,], DeviceConfigAdmin)
 
 class DeviceDataInline(common.admin.TabularInline):
     model = DataColumn
-    readonly_fields = ["serialNo"]
     extra = 0
+
+
+
 
 class DataRangeInline(common.admin.TabularInline):
     model = DataRange

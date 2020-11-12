@@ -8,7 +8,8 @@ from common.admin import BaseAdmin
 
 class MaterialCompositionInline(admin.TabularInline):
     model = CompositionPart
-    extra = 2
+    readonly_fields = ['percentage']
+    extra = 0
 
 
 class DataParameterInline(admin.TabularInline):

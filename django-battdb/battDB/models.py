@@ -126,7 +126,7 @@ class DeviceBatch(cm.BaseModelNoName, cm.HasMPTT):
                                       limit_choices_to={'abstract': False},
                                       help_text="Batch Specification")
     manufacturer = models.ForeignKey(cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True)
-    serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
+    serialNo = models.CharField(max_length=60, default="%d", blank=True, help_text=
                                 "Batch number, optionally indicate serial number format")
     batch_size = models.PositiveSmallIntegerField(default=1)
     manufacturing_protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
@@ -141,6 +141,9 @@ class DeviceBatch(cm.BaseModelNoName, cm.HasMPTT):
         verbose_name = "Device or Batch"
         verbose_name_plural = "Devices"
 
+    # FIXME: Cannot bulk_create with seq_num
+    # def clean(self):
+    #     BatchDevice.objects.bulk_create
 
     # class Meta:
     #     verbose_name_plural = "Device Tree"
@@ -164,13 +167,38 @@ class DeviceBatch(cm.BaseModelNoName, cm.HasMPTT):
 #         proxy = True
 
 
-class BatchDevice(cm.HasAttributes):
+class BatchDevice(cm.HasAttributes, cm.HasNotes):
     batch = models.ForeignKey(DeviceBatch, on_delete=models.CASCADE)
-    batch_index = models.PositiveSmallIntegerField(default=1)
-    serialNo = models.CharField(max_length=60, default="", blank=True, help_text=
-                                "Serial Number")
+    seq_num = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1), ], help_text=
+                                               "Sequence number within batch")
+
+    def get_used_in_exps(self):
+        return ExperimentDevice.objects.filter(deviceBatch=self.batch, batch_seq=self.seq_num)
+
+    def last_measured_SoH(self):
+        return self.attributes.get('state_of_health') or "Not tested"
+
+    def used_in(self):
+        return "%d Experiments" % self.get_used_in_exps().count()
+
+    def serial(self):
+        try:
+            return self.batch.serialNo % self.seq_num
+        except TypeError:
+            return self.batch.serialNo + "/" + str(self.seq_num)
+
     class Meta:
-        unique_together = ['batch', 'batch_index']
+        unique_together = ['batch', 'seq_num']
+
+    def clean(self):
+        if self.seq_num > self.batch.batch_size:
+            raise ValidationError("Batch sequence ID cannot exceed batch size!")
+        # TODO: Can compute device stats here
+        self.attributes['state_of_health'] = "100%"
+        #self.attributes['used_in_exps'] = self.get_used_in_exps()
+
+    def __str__(self):
+        return str(self.batch.specification) + "/" + self.serial()
 
 
 class DeviceConfig(cm.BaseModel):
@@ -441,7 +469,6 @@ class ExperimentDataFile(cm.BaseModelNoName):
     raw_data_file = models.ForeignKey(cm.UploadedFile, null=True, blank=False, on_delete=models.SET_NULL,
                                       related_name="used_by")
 
-    mappings = models.ManyToManyField(DeviceBatch, through='DataColumn', blank=True, related_name='data_files')
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
     use_parser = models.ForeignKey(Parser, on_delete=models.SET_NULL, null=True)
 
@@ -450,6 +477,7 @@ class ExperimentDataFile(cm.BaseModelNoName):
 
     machine = models.ForeignKey(Equipment, null=True, blank=True, on_delete=models.SET_NULL)
 
+    devices = models.ManyToManyField(DeviceBatch, through='ExperimentDevice', related_name="used_in")
 
     #import_columns = models.ManyToManyField(dfn.Parameter, blank=True)
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
@@ -505,8 +533,40 @@ class ExperimentDataFile(cm.BaseModelNoName):
         unique_together = ['raw_data_file', 'experiment']
 
 
+class ExperimentDevice(models.Model):
+    """
+    3-way join table, identifies devices in experiments, link devices to data files
+    """
+    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE)
+    # FIXME: DeviceBatch  / batch_id could be a foreignKey to DeviceBatch!
+    #  but maybe this way is actually better (avoids accidental data loss at the cost of potential inconsistency)
+    deviceBatch = models.ForeignKey(DeviceBatch, on_delete=models.CASCADE)
+    batch_seq = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1),], help_text=
+                                                 "sequence number of device within batch")
+    device_pos = models.CharField(max_length=20, default="cell_nn", help_text=
+                                  "Device Position ID in Experiment Config - e.g. Cell_A1 for the first cell of"
+                                  "a series-parallel pack")
+    data_file = models.ForeignKey(ExperimentDataFile, null=True, blank=True, on_delete=models.SET_NULL)
+
+    # TODO: implement id_to_serialno and serialno_to_id functions
+    def getSerialNo(self):
+        return "FIXME"
+
+    def clean(self):
+        if self.deviceBatch is not None and self.batch_seq > self.deviceBatch.batch_size:
+            raise ValidationError("Batch sequence ID cannot exceed batch size!")
+        elif self.deviceBatch is not None:
+            batchDev = BatchDevice.objects.get_or_create(batch=self.deviceBatch, seq_num=self.batch_seq)
+
+    class Meta:
+        unique_together = [['device_pos', 'data_file'],  # cannot have the same device position ID twice in a data file
+                           # cannot use the same device twice in a data file
+                           ['experiment', 'deviceBatch', 'batch_seq', 'data_file']]
+
+
+
 class DataColumn(models.Model):
-    data = models.ForeignKey(ExperimentDataFile, on_delete=models.CASCADE)
+    data_file = models.ForeignKey(ExperimentDataFile, on_delete=models.CASCADE)
     column_name = models.CharField(max_length=40, default='Ns')
     RESAMPLE_CHOICES = (
         ('none', 'Do not resample'),
@@ -523,25 +583,24 @@ class DataColumn(models.Model):
 
     parameter = models.ForeignKey(dfn.Parameter, null=True, on_delete=models.SET_NULL, blank=True, help_text=
                                   "Map this column to a parameter on a device")
-    # TODO: Maybe these should be a text field - or perhaps a foreignKey to a different Through table,
-    #  e.g. ExperimentDevice - the devices for an experiment should not be defined by this model!
-    device = models.ForeignKey(DeviceBatch, null=True, on_delete=models.SET_NULL, blank=True)
-    batch_id = models.PositiveSmallIntegerField(default=0)
+    device = models.ForeignKey(ExperimentDevice, null=True, blank=True, on_delete=models.SET_NULL, help_text=
+                               "Device id for parameter mapping")
 
-    #def clean(self):
-    # TODO: Validate related
-
-    def serialNo(self):
-        return "bork"
+    def clean(self):
+        if self.device is not None and self.device.experiment != self.data_file.experiment:
+            raise ValidationError("Cannot use device instance from a different experiment")
+        if self.device is None:
+            self.parameter = None
+        if self.resample == "none" or self.resample == "on_change":
+            self.resample_n = 1
 
     def experiment(self):
-        return self.data.exeriment()
+        return self.data_file.exeriment()
 
     class Meta:
-        unique_together = [['device', 'data', 'batch_id'], ['column_name', 'data']]
+        unique_together = [['device', 'data_file'], ['column_name', 'data_file']]
         verbose_name = "Column Mapping"
         verbose_name_plural = "Data Column Mappings to Device Parameters"
-
 
 
 class DataRange(cm.HasAttributes, cm.HasName, cm.HasNotes, cm.HasCreatedModifiedDates):

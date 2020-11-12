@@ -390,6 +390,28 @@
   }
 },
 {
+  "model": "battDB.devicespecification",
+  "pk": 21,
+  "fields": {
+    "name": "Positive Electrode Material",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-12T16:56:28.553Z",
+    "modified_on": "2020-11-12T17:49:44.681Z",
+    "attributes": {},
+    "notes": "",
+    "slug": "positive-electrode-material",
+    "parent": null,
+    "abstract": false,
+    "complete": false,
+    "device_type": 13,
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 6,
+    "level": 0
+  }
+},
+{
   "model": "battDB.deviceparameter",
   "pk": 1,
   "fields": {
@@ -426,27 +448,93 @@
   }
 },
 {
+  "model": "battDB.deviceparameter",
+  "pk": 4,
+  "fields": {
+    "name": "Electrode Thickness",
+    "spec": 21,
+    "parameter": 2,
+    "material": 1,
+    "value": 1,
+    "inherit_to_children": false
+  }
+},
+{
   "model": "battDB.devicebatch",
   "pk": 32,
   "fields": {
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-11-01T17:41:49.156Z",
-    "modified_on": "2020-11-01T17:41:49.156Z",
+    "modified_on": "2020-11-12T16:50:19.715Z",
     "attributes": {},
     "notes": "",
-    "slug": "imperial-college-my-nmc622-cell-1-off-2020-11-01",
+    "slug": "imperial-college-my-nmc622-cell-5-off-2020-11-01",
     "parent": null,
     "specification": 7,
     "manufacturer": 1,
-    "serialNo": "",
-    "batch_size": 1,
+    "serialNo": "B%d",
+    "batch_size": 5,
     "manufacturing_protocol": null,
     "manufactured_on": "2020-11-01",
     "lft": 1,
     "rght": 2,
     "tree_id": 1,
     "level": 0
+  }
+},
+{
+  "model": "battDB.batchdevice",
+  "pk": 2,
+  "fields": {
+    "attributes": {},
+    "notes": null,
+    "batch": 32,
+    "seq_num": 1
+  }
+},
+{
+  "model": "battDB.batchdevice",
+  "pk": 3,
+  "fields": {
+    "attributes": {},
+    "notes": null,
+    "batch": 32,
+    "seq_num": 2
+  }
+},
+{
+  "model": "battDB.batchdevice",
+  "pk": 4,
+  "fields": {
+    "attributes": {
+      "state_of_health": "100%"
+    },
+    "notes": ".",
+    "batch": 32,
+    "seq_num": 3
+  }
+},
+{
+  "model": "battDB.batchdevice",
+  "pk": 5,
+  "fields": {
+    "attributes": {},
+    "notes": "",
+    "batch": 32,
+    "seq_num": 4
+  }
+},
+{
+  "model": "battDB.batchdevice",
+  "pk": 6,
+  "fields": {
+    "attributes": {
+      "state_of_health": "100%"
+    },
+    "notes": "foo",
+    "batch": 32,
+    "seq_num": 5
   }
 },
 {
@@ -620,7 +708,7 @@
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-11-01T17:43:36.325Z",
-    "modified_on": "2020-11-02T10:58:17.647Z",
+    "modified_on": "2020-11-12T15:09:24.691Z",
     "attributes": {},
     "notes": "",
     "slug": "tom-my-experiment-2020-11-01",
@@ -995,6 +1083,28 @@
   }
 },
 {
+  "model": "battDB.experimentdevice",
+  "pk": 1,
+  "fields": {
+    "experiment": 5,
+    "deviceBatch": 32,
+    "batch_seq": 0,
+    "device_pos": "cell_nn",
+    "data_file": 17
+  }
+},
+{
+  "model": "battDB.experimentdevice",
+  "pk": 3,
+  "fields": {
+    "experiment": 5,
+    "deviceBatch": 32,
+    "batch_seq": 1,
+    "device_pos": "cell_nn1",
+    "data_file": 17
+  }
+},
+{
   "model": "battDB.harvester",
   "pk": 1,
   "fields": {
@@ -1184,7 +1294,7 @@
   "fields": {
     "name": "Lithium",
     "formula": "Li",
-    "mass": 0
+    "mass": 0.0
   }
 },
 {
@@ -1193,7 +1303,7 @@
   "fields": {
     "name": "Carbon",
     "formula": "C",
-    "mass": 0
+    "mass": 12.011
   }
 },
 {
@@ -1202,7 +1312,7 @@
   "fields": {
     "name": "Manganese",
     "formula": "Mg",
-    "mass": 0
+    "mass": 0.0
   }
 },
 {
@@ -1211,7 +1321,7 @@
   "fields": {
     "name": "Cobalt",
     "formula": "Co",
-    "mass": 0
+    "mass": 0.0
   }
 },
 {
@@ -1220,7 +1330,16 @@
   "fields": {
     "name": "Nickel",
     "formula": "Ni",
-    "mass": 0
+    "mass": 0.0
+  }
+},
+{
+  "model": "dfndb.compound",
+  "pk": 6,
+  "fields": {
+    "name": "LiPF6",
+    "formula": "LiPF6",
+    "mass": 151.905
   }
 },
 {
@@ -1231,10 +1350,10 @@
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-10-16T11:16:10.333Z",
-    "modified_on": "2020-10-16",
+    "modified_on": "2020-11-12",
     "attributes": {},
     "notes": "",
-    "slug": "bork",
+    "slug": "nmc622",
     "type": 1,
     "polymer": 0
   }
@@ -1636,6 +1755,22 @@
     "slug": "miscellaneous-x-arb",
     "symbol": "x",
     "unit": 12
+  }
+},
+{
+  "model": "dfndb.parameter",
+  "pk": 9,
+  "fields": {
+    "name": "Thickness",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-12T16:57:06.835Z",
+    "modified_on": "2020-11-12",
+    "attributes": {},
+    "notes": "",
+    "slug": "thickness-t-mm",
+    "symbol": "T",
+    "unit": 7
   }
 },
 {
@@ -8499,6 +8634,344 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 526,
+  "fields": {
+    "action_time": "2020-11-12T15:06:03.284Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "5",
+    "object_repr": "tom My experiment 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"experiment device\", \"object\": \"ExperimentDevice object (1)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 527,
+  "fields": {
+    "action_time": "2020-11-12T15:06:46.251Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "5",
+    "object_repr": "tom My experiment 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"experiment device\", \"object\": \"ExperimentDevice object (2)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 528,
+  "fields": {
+    "action_time": "2020-11-12T15:07:11.529Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "5",
+    "object_repr": "tom My experiment 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"deleted\": {\"name\": \"experiment device\", \"object\": \"ExperimentDevice object (None)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 529,
+  "fields": {
+    "action_time": "2020-11-12T15:09:24.693Z",
+    "user": 1,
+    "content_type": 8,
+    "object_id": "5",
+    "object_repr": "tom My experiment 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"experiment device\", \"object\": \"ExperimentDevice object (3)\"}}, {\"changed\": {\"name\": \"experiment device\", \"object\": \"ExperimentDevice object (1)\", \"fields\": [\"Data file\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 530,
+  "fields": {
+    "action_time": "2020-11-12T15:37:28.120Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (5 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Batch size\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 531,
+  "fields": {
+    "action_time": "2020-11-12T15:37:40.994Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (5 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"batch device\", \"object\": \"BatchDevice object (4)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 532,
+  "fields": {
+    "action_time": "2020-11-12T16:03:48.911Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (5 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"deleted\": {\"name\": \"batch device\", \"object\": \"My NMC622 Cell/1\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 533,
+  "fields": {
+    "action_time": "2020-11-12T16:04:02.131Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (5 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"batch device\", \"object\": \"My NMC622 Cell/4\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 534,
+  "fields": {
+    "action_time": "2020-11-12T16:05:04.573Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (5 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"batch device\", \"object\": \"My NMC622 Cell/5\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 535,
+  "fields": {
+    "action_time": "2020-11-12T16:05:12.916Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (5 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"batch device\", \"object\": \"My NMC622 Cell/6\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 536,
+  "fields": {
+    "action_time": "2020-11-12T16:05:18.959Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (5 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"deleted\": {\"name\": \"batch device\", \"object\": \"My NMC622 Cell/6\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 537,
+  "fields": {
+    "action_time": "2020-11-12T16:21:03.551Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (5 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"batch device\", \"object\": \"My NMC622 Cell/5\", \"fields\": [\"Notes\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 538,
+  "fields": {
+    "action_time": "2020-11-12T16:21:13.925Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (5 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 539,
+  "fields": {
+    "action_time": "2020-11-12T16:21:27.206Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (5 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 540,
+  "fields": {
+    "action_time": "2020-11-12T16:21:47.170Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (5 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 541,
+  "fields": {
+    "action_time": "2020-11-12T16:22:02.860Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (5 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"batch device\", \"object\": \"My NMC622 Cell/3\", \"fields\": [\"Notes\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 542,
+  "fields": {
+    "action_time": "2020-11-12T16:50:19.716Z",
+    "user": 1,
+    "content_type": 38,
+    "object_id": "32",
+    "object_repr": "Imperial College My NMC622 Cell (5 off) 2020-11-01",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"SerialNo\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 543,
+  "fields": {
+    "action_time": "2020-11-12T16:56:28.557Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "21",
+    "object_repr": "Positive Electrode Material",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"device parameter\", \"object\": \"Thickness: t / m\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 544,
+  "fields": {
+    "action_time": "2020-11-12T16:57:06.837Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "9",
+    "object_repr": "Thickness: T / mm",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 545,
+  "fields": {
+    "action_time": "2020-11-12T17:11:09.378Z",
+    "user": 1,
+    "content_type": 28,
+    "object_id": "6",
+    "object_repr": "LiPF6 (LiPF6)",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 546,
+  "fields": {
+    "action_time": "2020-11-12T17:13:04.372Z",
+    "user": 1,
+    "content_type": 28,
+    "object_id": "2",
+    "object_repr": "Carbon (C)",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Mass\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 547,
+  "fields": {
+    "action_time": "2020-11-12T17:34:46.570Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "1",
+    "object_repr": "NMC622",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"composition part\", \"object\": \"Li1\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 548,
+  "fields": {
+    "action_time": "2020-11-12T17:35:00.550Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "1",
+    "object_repr": "NMC622",
+    "action_flag": 2,
+    "change_message": "[{\"deleted\": {\"name\": \"composition part\", \"object\": \"Li1\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 549,
+  "fields": {
+    "action_time": "2020-11-12T17:49:16.767Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "1",
+    "object_repr": "NMC622",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"composition part\", \"object\": \"C1\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 550,
+  "fields": {
+    "action_time": "2020-11-12T17:49:25.941Z",
+    "user": 1,
+    "content_type": 29,
+    "object_id": "1",
+    "object_repr": "NMC622",
+    "action_flag": 2,
+    "change_message": "[{\"deleted\": {\"name\": \"composition part\", \"object\": \"C1\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 551,
+  "fields": {
+    "action_time": "2020-11-12T17:49:44.683Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "21",
+    "object_repr": "Positive Electrode Material",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 29,
   "fields": {
@@ -9831,6 +10304,42 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 281,
+  "fields": {
+    "name": "Can add experiment device",
+    "content_type": 71,
+    "codename": "add_experimentdevice"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 282,
+  "fields": {
+    "name": "Can change experiment device",
+    "content_type": 71,
+    "codename": "change_experimentdevice"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 283,
+  "fields": {
+    "name": "Can delete experiment device",
+    "content_type": 71,
+    "codename": "delete_experimentdevice"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 284,
+  "fields": {
+    "name": "Can view experiment device",
+    "content_type": 71,
+    "codename": "view_experimentdevice"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -10383,6 +10892,14 @@
   "fields": {
     "app_label": "battDB",
     "model": "signaltype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 71,
+  "fields": {
+    "app_label": "battDB",
+    "model": "experimentdevice"
   }
 },
 {
