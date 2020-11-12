@@ -177,6 +177,7 @@ class HasMPTT(MPTTModel):
                 else:
                     break
         meta.update(self.attributes)
+        return meta
 
 
 #TODO class HasHistory(models.Model):

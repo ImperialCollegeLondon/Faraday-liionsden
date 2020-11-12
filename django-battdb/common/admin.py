@@ -121,6 +121,7 @@ class CompositeBaseInLine(TabularInline):
 
 class HasMPTTAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
     inlines = [CompositeBaseInLine,]
+    readonly_fields = BaseAdmin.readonly_fields + ['metadata']
 
 
 class FileAdmin(ChangeformMixin, admin.ModelAdmin):

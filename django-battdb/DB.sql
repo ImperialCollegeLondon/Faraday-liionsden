@@ -400,6 +400,7 @@ CREATE TABLE public."battDB_devicebatch" (
     specification_id integer,
     user_owner_id integer,
     manufacturing_protocol_id integer,
+    inherit_metadata boolean NOT NULL,
     CONSTRAINT "battDB_devicebatch_batch_size_check" CHECK ((batch_size >= 0)),
     CONSTRAINT "battDB_devicebatch_level_check" CHECK ((level >= 0)),
     CONSTRAINT "battDB_devicebatch_lft_check" CHECK ((lft >= 0)),
@@ -575,6 +576,7 @@ CREATE TABLE public."battDB_devicespecification" (
     device_type_id integer,
     parent_id integer,
     user_owner_id integer,
+    inherit_metadata boolean NOT NULL,
     CONSTRAINT "battDB_devicespecification_level_check" CHECK ((level >= 0)),
     CONSTRAINT "battDB_devicespecification_lft_check" CHECK ((lft >= 0)),
     CONSTRAINT "battDB_devicespecification_rght_check" CHECK ((rght >= 0)),
@@ -803,6 +805,7 @@ CREATE TABLE public."battDB_filefolder" (
     level integer NOT NULL,
     parent_id integer,
     user_owner_id integer,
+    inherit_metadata boolean NOT NULL,
     CONSTRAINT "battDB_filefolder_level_check" CHECK ((level >= 0)),
     CONSTRAINT "battDB_filefolder_lft_check" CHECK ((lft >= 0)),
     CONSTRAINT "battDB_filefolder_rght_check" CHECK ((rght >= 0)),
@@ -2255,8 +2258,8 @@ COPY public."battDB_datarange" (id, name, created_on, modified_on, attributes, n
 -- Data for Name: battDB_devicebatch; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_devicebatch" (id, status, created_on, modified_on, attributes, notes, slug, "serialNo", batch_size, manufactured_on, lft, rght, tree_id, level, manufacturer_id, parent_id, specification_id, user_owner_id, manufacturing_protocol_id) FROM stdin;
-32	10	2020-11-01 17:41:49.156174+00	2020-11-12 16:50:19.715247+00	{}		imperial-college-my-nmc622-cell-5-off-2020-11-01	B%d	5	2020-11-01	1	2	1	0	1	\N	7	1	\N
+COPY public."battDB_devicebatch" (id, status, created_on, modified_on, attributes, notes, slug, "serialNo", batch_size, manufactured_on, lft, rght, tree_id, level, manufacturer_id, parent_id, specification_id, user_owner_id, manufacturing_protocol_id, inherit_metadata) FROM stdin;
+32	10	2020-11-01 17:41:49.156174+00	2020-11-12 16:50:19.715247+00	{}		imperial-college-my-nmc622-cell-5-off-2020-11-01	B%d	5	2020-11-01	1	2	1	0	1	\N	7	1	\N	t
 \.
 
 
@@ -2300,24 +2303,24 @@ COPY public."battDB_deviceparameter" (id, name, value, material_id, parameter_id
 -- Data for Name: battDB_devicespecification; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_devicespecification" (id, name, status, created_on, modified_on, attributes, notes, slug, abstract, complete, lft, rght, tree_id, level, device_type_id, parent_id, user_owner_id) FROM stdin;
-9	Positive Electrode	10	2020-11-02 12:16:18.676514+00	2020-11-02 12:18:39.030117+00	{}		positive-electrode	t	f	4	7	1	3	\N	6	\N
-10	Negative Electrode	10	2020-11-02 12:16:18.677955+00	2020-11-02 12:19:21.467412+00	{}		negative-electrode	t	f	8	11	1	3	\N	6	\N
-14	Neg. E'trode Material	10	2020-11-02 12:19:21.469428+00	2020-11-02 12:19:21.469438+00	{}		neg-etrode-material	t	f	9	10	1	4	\N	10	\N
-13	Pos. E'trode Material	10	2020-11-02 12:18:39.032358+00	2020-11-02 12:19:46.361764+00	{}		pos-etrode-material	t	f	5	6	1	4	\N	9	\N
-12	Electrolyte	10	2020-11-02 12:16:18.680618+00	2020-11-02 12:16:18.680627+00	{}		electrolyte	t	f	16	17	1	3	\N	6	\N
-11	Separator	10	2020-11-02 12:16:18.679339+00	2020-11-02 12:20:17.379271+00	{}		separator	t	f	12	15	1	3	\N	6	\N
-15	Separator Material	10	2020-11-02 12:20:17.381227+00	2020-11-02 12:20:17.381239+00	{}		separator-material	t	f	13	14	1	4	\N	11	\N
-16	Cell Casing	10	2020-11-02 12:20:56.097147+00	2020-11-02 12:20:56.097157+00	{}		cell-casing	t	f	18	19	1	3	\N	6	\N
-6	Cell	10	2020-11-01 17:27:16.425737+00	2020-11-02 12:42:33.456044+00	{}		cell	t	t	3	20	1	2	\N	5	1
-5	Module	10	2020-11-01 17:25:16.061485+00	2020-11-02 12:52:36.098468+00	{}		module	t	t	2	23	1	1	\N	4	\N
-17	Terminal	10	2020-11-02 12:52:36.100321+00	2020-11-02 12:52:36.100332+00	{}		terminal	t	f	21	22	1	2	\N	5	\N
-4	Pack	10	2020-11-01 17:25:16.059603+00	2020-11-02 12:52:59.705284+00	{}		pack	t	t	1	26	1	0	\N	\N	1
-18	Connector	10	2020-11-02 12:52:59.707199+00	2020-11-02 13:01:53.108119+00	{}		connector	t	f	24	25	1	1	\N	4	\N
-19	Cycler Machine	10	2020-11-04 12:38:04.208567+00	2020-11-04 12:38:04.208583+00	{}		cycler-machine	t	f	1	2	4	0	\N	\N	1
-8	My NMC622 Module	10	2020-11-01 17:45:04.963155+00	2020-11-01 17:45:33.655848+00	{}		my-nmc622-module	f	t	1	8	3	0	5	\N	1
-21	Positive Electrode Material	10	2020-11-12 16:56:28.553483+00	2020-11-12 18:01:07.031781+00	{}		positive-electrode-material	f	f	5	6	3	2	13	7	1
-7	My NMC622 Cell	10	2020-11-01 17:36:29.295484+00	2020-11-12 18:01:12.853761+00	{}		my-nmc622-cell	f	t	4	7	3	1	6	8	1
+COPY public."battDB_devicespecification" (id, name, status, created_on, modified_on, attributes, notes, slug, abstract, complete, lft, rght, tree_id, level, device_type_id, parent_id, user_owner_id, inherit_metadata) FROM stdin;
+5	Module	10	2020-11-01 17:25:16.061485+00	2020-11-12 21:11:42.41943+00	{"test": "foo"}		module	t	t	2	23	1	1	\N	4	\N	t
+9	Positive Electrode	10	2020-11-02 12:16:18.676514+00	2020-11-02 12:18:39.030117+00	{}		positive-electrode	t	f	4	7	1	3	\N	6	\N	t
+10	Negative Electrode	10	2020-11-02 12:16:18.677955+00	2020-11-02 12:19:21.467412+00	{}		negative-electrode	t	f	8	11	1	3	\N	6	\N	t
+14	Neg. E'trode Material	10	2020-11-02 12:19:21.469428+00	2020-11-02 12:19:21.469438+00	{}		neg-etrode-material	t	f	9	10	1	4	\N	10	\N	t
+13	Pos. E'trode Material	10	2020-11-02 12:18:39.032358+00	2020-11-02 12:19:46.361764+00	{}		pos-etrode-material	t	f	5	6	1	4	\N	9	\N	t
+12	Electrolyte	10	2020-11-02 12:16:18.680618+00	2020-11-02 12:16:18.680627+00	{}		electrolyte	t	f	16	17	1	3	\N	6	\N	t
+11	Separator	10	2020-11-02 12:16:18.679339+00	2020-11-02 12:20:17.379271+00	{}		separator	t	f	12	15	1	3	\N	6	\N	t
+15	Separator Material	10	2020-11-02 12:20:17.381227+00	2020-11-02 12:20:17.381239+00	{}		separator-material	t	f	13	14	1	4	\N	11	\N	t
+16	Cell Casing	10	2020-11-02 12:20:56.097147+00	2020-11-02 12:20:56.097157+00	{}		cell-casing	t	f	18	19	1	3	\N	6	\N	t
+6	Cell	10	2020-11-01 17:27:16.425737+00	2020-11-02 12:42:33.456044+00	{}		cell	t	t	3	20	1	2	\N	5	1	t
+17	Terminal	10	2020-11-02 12:52:36.100321+00	2020-11-02 12:52:36.100332+00	{}		terminal	t	f	21	22	1	2	\N	5	\N	t
+18	Connector	10	2020-11-02 12:52:59.707199+00	2020-11-02 13:01:53.108119+00	{}		connector	t	f	24	25	1	1	\N	4	\N	t
+19	Cycler Machine	10	2020-11-04 12:38:04.208567+00	2020-11-04 12:38:04.208583+00	{}		cycler-machine	t	f	1	2	4	0	\N	\N	1	t
+8	My NMC622 Module	10	2020-11-01 17:45:04.963155+00	2020-11-01 17:45:33.655848+00	{}		my-nmc622-module	f	t	1	8	3	0	5	\N	1	t
+21	Positive Electrode Material	10	2020-11-12 16:56:28.553483+00	2020-11-12 18:01:07.031781+00	{}		positive-electrode-material	f	f	5	6	3	2	13	7	1	t
+7	My NMC622 Cell	10	2020-11-01 17:36:29.295484+00	2020-11-12 18:01:12.853761+00	{}		my-nmc622-cell	f	t	4	7	3	1	6	8	1	t
+4	Pack	10	2020-11-01 17:25:16.059603+00	2020-11-12 21:10:51.073796+00	{"test": "moo"}		pack	t	t	1	26	1	0	\N	\N	1	t
 \.
 
 
@@ -2367,9 +2370,9 @@ COPY public."battDB_experimentdevice" (id, batch_seq, device_pos, data_file_id, 
 -- Data for Name: battDB_filefolder; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_filefolder" (id, name, status, created_on, modified_on, attributes, notes, slug, lft, rght, tree_id, level, parent_id, user_owner_id) FROM stdin;
-1	My Folder	10	2020-11-04 09:38:43.228605+00	2020-11-04 09:38:43.228628+00	{}		my-folder	1	4	1	0	\N	1
-2	Another Folder	10	2020-11-04 09:38:58.362381+00	2020-11-04 09:38:58.362395+00	{}		another-folder	2	3	1	1	1	1
+COPY public."battDB_filefolder" (id, name, status, created_on, modified_on, attributes, notes, slug, lft, rght, tree_id, level, parent_id, user_owner_id, inherit_metadata) FROM stdin;
+1	My Folder	10	2020-11-04 09:38:43.228605+00	2020-11-04 09:38:43.228628+00	{}		my-folder	1	4	1	0	\N	1	t
+2	Another Folder	10	2020-11-04 09:38:58.362381+00	2020-11-04 09:38:58.362395+00	{}		another-folder	2	3	1	1	1	1	t
 \.
 
 
@@ -3142,6 +3145,8 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 563	2020-11-12 19:56:45.386903+00	12	Sample nu,ber: x / x	1	[{"added": {}}]	32	1
 564	2020-11-12 19:56:56.625176+00	12	Sample number: x / x	2	[{"changed": {"fields": ["Name"]}}]	32	1
 565	2020-11-12 20:22:19.396428+00	1	Biologix Most Fields	2	[{"added": {"name": "signal type", "object": "SignalType object (4)"}}]	69	1
+566	2020-11-12 21:10:51.074785+00	4	Pack	2	[{"changed": {"fields": ["Attributes"]}}]	61	1
+567	2020-11-12 21:11:42.420412+00	5	Module	2	[{"changed": {"fields": ["Attributes"]}}]	61	1
 \.
 
 
@@ -3500,6 +3505,9 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 307	battDB	0180_remove_harvester_upload_to_folder	2020-11-12 17:57:57.033467+00
 308	battDB	0181_auto_20201112_1803	2020-11-12 18:03:08.450768+00
 309	battDB	0182_signaltype_order	2020-11-12 18:11:19.526627+00
+310	battDB	0183_auto_20201112_2034	2020-11-12 20:39:16.044952+00
+311	battDB	0184_devicespecification_inherit_metadata	2020-11-12 21:07:18.16946+00
+312	battDB	0185_auto_20201112_2108	2020-11-12 21:08:27.326171+00
 \.
 
 
@@ -3766,7 +3774,7 @@ SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 14, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 565, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 567, true);
 
 
 --
@@ -3780,7 +3788,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 71, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 309, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 312, true);
 
 
 --
