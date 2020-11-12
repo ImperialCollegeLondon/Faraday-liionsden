@@ -849,9 +849,8 @@ CREATE TABLE public."battDB_harvester" (
     notes text,
     slug character varying(500) NOT NULL,
     file_types character varying(20) NOT NULL,
-    attach_to_equipment_id integer,
+    equipment_type_id integer,
     attach_to_experiment_id integer,
-    upload_to_folder_id integer NOT NULL,
     user_owner_id integer,
     CONSTRAINT "battDB_harvester_status_check" CHECK ((status >= 0))
 );
@@ -954,7 +953,9 @@ CREATE TABLE public."battDB_signaltype" (
     id integer NOT NULL,
     col_name character varying(50) NOT NULL,
     parameter_id integer NOT NULL,
-    parser_id integer NOT NULL
+    parser_id integer NOT NULL,
+    "order" smallint NOT NULL,
+    CONSTRAINT "battDB_signaltype_order_check" CHECK (("order" >= 0))
 );
 
 
@@ -2309,15 +2310,14 @@ COPY public."battDB_devicespecification" (id, name, status, created_on, modified
 15	Separator Material	10	2020-11-02 12:20:17.381227+00	2020-11-02 12:20:17.381239+00	{}		separator-material	t	f	13	14	1	4	\N	11	\N
 16	Cell Casing	10	2020-11-02 12:20:56.097147+00	2020-11-02 12:20:56.097157+00	{}		cell-casing	t	f	18	19	1	3	\N	6	\N
 6	Cell	10	2020-11-01 17:27:16.425737+00	2020-11-02 12:42:33.456044+00	{}		cell	t	t	3	20	1	2	\N	5	1
-8	My NMC622 Module	10	2020-11-01 17:45:04.963155+00	2020-11-01 17:45:33.655848+00	{}		my-nmc622-module	f	t	1	4	3	0	5	\N	1
 5	Module	10	2020-11-01 17:25:16.061485+00	2020-11-02 12:52:36.098468+00	{}		module	t	t	2	23	1	1	\N	4	\N
 17	Terminal	10	2020-11-02 12:52:36.100321+00	2020-11-02 12:52:36.100332+00	{}		terminal	t	f	21	22	1	2	\N	5	\N
 4	Pack	10	2020-11-01 17:25:16.059603+00	2020-11-02 12:52:59.705284+00	{}		pack	t	t	1	26	1	0	\N	\N	1
-7	My NMC622 Cell	10	2020-11-01 17:36:29.295484+00	2020-11-01 17:46:29.432615+00	{}		my-nmc622-cell	f	t	1	2	2	0	6	\N	1
 18	Connector	10	2020-11-02 12:52:59.707199+00	2020-11-02 13:01:53.108119+00	{}		connector	t	f	24	25	1	1	\N	4	\N
 19	Cycler Machine	10	2020-11-04 12:38:04.208567+00	2020-11-04 12:38:04.208583+00	{}		cycler-machine	t	f	1	2	4	0	\N	\N	1
-20	Tom's GalvoTron 5000	10	2020-11-04 12:39:23.301061+00	2020-11-04 12:39:23.301079+00	{}		toms-galvotron-5000	f	t	1	2	5	0	19	\N	1
-21	Positive Electrode Material	10	2020-11-12 16:56:28.553483+00	2020-11-12 17:49:44.681637+00	{}		positive-electrode-material	f	f	1	2	6	0	13	\N	1
+8	My NMC622 Module	10	2020-11-01 17:45:04.963155+00	2020-11-01 17:45:33.655848+00	{}		my-nmc622-module	f	t	1	8	3	0	5	\N	1
+21	Positive Electrode Material	10	2020-11-12 16:56:28.553483+00	2020-11-12 18:01:07.031781+00	{}		positive-electrode-material	f	f	5	6	3	2	13	7	1
+7	My NMC622 Cell	10	2020-11-01 17:36:29.295484+00	2020-11-12 18:01:12.853761+00	{}		my-nmc622-cell	f	t	4	7	3	1	6	8	1
 \.
 
 
@@ -2326,7 +2326,7 @@ COPY public."battDB_devicespecification" (id, name, status, created_on, modified
 --
 
 COPY public."battDB_equipment" (id, name, status, created_on, modified_on, attributes, notes, slug, "serialNo", manufacturer_id, specification_id, user_owner_id, default_parser_id) FROM stdin;
-1	GalvoTron 5000	10	2020-11-04 12:39:37.006194+00	2020-11-04 12:39:37.006214+00	{}		galvotron-5000		1	20	1	\N
+1	GalvoTron 5000	10	2020-11-04 12:39:37.006194+00	2020-11-04 12:39:37.006214+00	{}		galvotron-5000		1	\N	1	\N
 \.
 
 
@@ -2377,9 +2377,9 @@ COPY public."battDB_filefolder" (id, name, status, created_on, modified_on, attr
 -- Data for Name: battDB_harvester; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_harvester" (id, name, status, created_on, modified_on, attributes, notes, slug, file_types, attach_to_equipment_id, attach_to_experiment_id, upload_to_folder_id, user_owner_id) FROM stdin;
-1	makron	10	2020-11-04 12:40:28.873201+00	2020-11-11 19:15:53.425912+00	{}		makron	*.csv	1	5	2	1
-2	foo	10	2020-11-11 19:35:39.944867+00	2020-11-11 19:35:39.944882+00	{}		foo	*.csv	\N	\N	1	1
+COPY public."battDB_harvester" (id, name, status, created_on, modified_on, attributes, notes, slug, file_types, equipment_type_id, attach_to_experiment_id, user_owner_id) FROM stdin;
+1	makron	10	2020-11-04 12:40:28.873201+00	2020-11-11 19:15:53.425912+00	{}		makron	*.csv	1	5	1
+2	foo	10	2020-11-11 19:35:39.944867+00	2020-11-11 19:35:39.944882+00	{}		foo	*.csv	\N	\N	1
 \.
 
 
@@ -2404,7 +2404,7 @@ COPY public."battDB_pack" (device_ptr_id) FROM stdin;
 --
 
 COPY public."battDB_parser" (id, name, notes, file_format, attributes, created_on, modified_on, slug, status, user_owner_id) FROM stdin;
-1	Biologix Most Fields		biologic	{}	2020-11-10 15:18:25.987275+00	2020-11-10 15:18:25.987296+00	biologix-most-fields	10	1
+1	Biologix Most Fields		biologic	{}	2020-11-10 15:18:25.987275+00	2020-11-12 20:22:19.394988+00	biologix-most-fields	10	1
 \.
 
 
@@ -2412,7 +2412,11 @@ COPY public."battDB_parser" (id, name, notes, file_format, attributes, created_o
 -- Data for Name: battDB_signaltype; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_signaltype" (id, col_name, parameter_id, parser_id) FROM stdin;
+COPY public."battDB_signaltype" (id, col_name, parameter_id, parser_id, "order") FROM stdin;
+2	I/mA	7	1	0
+1	Ecell/V	4	1	1
+3	control/V	10	1	2
+4	time/s	11	1	5
 \.
 
 
@@ -2455,7 +2459,7 @@ COPY public.common_uploadedfile (id, created_on, modified_on, file, hash, status
 19	2020-11-02 14:40:08.578715+00	2020-11-02 14:40:08.578729+00	uploaded_files/Ivium_Cell1.txt	b35947d7bc5b1f3533bd8b0504984a49	10	\N
 20	2020-11-02 16:31:11.964061+00	2020-11-02 16:31:11.964075+00	uploaded_files/sample_Maccor.xlsx	bc6f07013a09fed8658411f5c894ed40	10	1
 21	2020-11-02 16:53:59.690677+00	2020-11-02 16:53:59.690689+00	uploaded_files/sample_Maccor_2.xlsx	7102ac2452d3e22d5cf7148784fccc38	10	\N
-22	2020-11-05 15:32:25.079192+00	2020-11-05 15:32:25.079205+00	uploaded_files/C_over_20_run_25_C_CA1.txt	690ea0970ca93096f6a9399829aa631c	10	2
+22	2020-11-05 15:32:25.079192+00	2020-11-12 18:06:23.18682+00	uploaded_files/C_over_20_run_25_C_CA1.txt	690ea0970ca93096f6a9399829aa631c	10	2
 \.
 
 
@@ -2542,6 +2546,9 @@ COPY public.dfndb_parameter (id, symbol, notes, unit_id, user_owner_id, attribut
 7	I		5	1	{}	10	Pack Current	2020-10-30	2020-10-30 15:03:05.688117+00	pack-current-i-a
 8	x		12	1	{}	10	miscellaneous	2020-11-01	2020-11-01 17:31:08.087297+00	miscellaneous-x-arb
 9	T		7	1	{}	10	Thickness	2020-11-12	2020-11-12 16:57:06.835404+00	thickness-t-mm
+10	CV		1	1	{}	10	Control Voltage	2020-11-12	2020-11-12 18:08:04.598826+00	control-voltage-cv-v
+11	t		13	1	{}	10	Time	2020-11-12	2020-11-12 19:55:19.683333+00	time-t-s
+12	x		14	1	{}	10	Sample number	2020-11-12	2020-11-12 19:56:45.386025+00	sample-number-x-x
 \.
 
 
@@ -2561,6 +2568,8 @@ COPY public.dfndb_quantityunit (id, "quantityName", "quantitySymbol", "unitName"
 10	Distance	d	nanometres	nm	f	1e-09	6
 11	Capacity	C	milliAmp Hour	mAh	f	0.0002777777777777778	3
 12	Arbitrary	Arb	Arb	Arb	f	\N	\N
+13	Time	s	seconds	s	t	\N	\N
+14	int	.		x	f	\N	\N
 \.
 
 
@@ -3119,6 +3128,20 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 549	2020-11-12 17:49:16.767023+00	1	NMC622	2	[{"added": {"name": "composition part", "object": "C1"}}]	29	1
 550	2020-11-12 17:49:25.941192+00	1	NMC622	2	[{"deleted": {"name": "composition part", "object": "C1"}}]	29	1
 551	2020-11-12 17:49:44.683192+00	21	Positive Electrode Material	2	[]	61	1
+552	2020-11-12 18:01:07.037605+00	21	Positive Electrode Material	2	[{"changed": {"fields": ["parent", "lft", "rght", "tree_id", "level"]}}]	61	1
+553	2020-11-12 18:01:12.856726+00	7	My NMC622 Cell	2	[{"changed": {"fields": ["parent", "lft", "rght", "tree_id", "level"]}}]	61	1
+554	2020-11-12 18:02:22.079368+00	20	Tom's GalvoTron 5000	3		61	1
+555	2020-11-12 18:06:23.409574+00	22	C_over_20_run_25_C_CA1.txt	2	[{"changed": {"fields": ["File"]}}]	63	1
+556	2020-11-12 18:08:04.599891+00	10	Control Voltage: CV / V	1	[{"added": {}}]	32	1
+557	2020-11-12 18:11:41.068051+00	1	Biologix Most Fields	2	[{"added": {"name": "signal type", "object": "SignalType object (1)"}}, {"added": {"name": "signal type", "object": "SignalType object (2)"}}, {"added": {"name": "signal type", "object": "SignalType object (3)"}}]	69	1
+558	2020-11-12 18:12:50.949451+00	1	Biologix Most Fields	2	[{"changed": {"name": "signal type", "object": "SignalType object (1)", "fields": ["Order"]}}]	69	1
+559	2020-11-12 18:13:00.071757+00	1	Biologix Most Fields	2	[{"changed": {"name": "signal type", "object": "SignalType object (3)", "fields": ["Order"]}}]	69	1
+560	2020-11-12 19:55:14.890199+00	13	Time (s) / s	1	[{"added": {}}]	31	1
+561	2020-11-12 19:55:19.684234+00	11	Time: t / s	1	[{"added": {}}]	32	1
+562	2020-11-12 19:56:33.084759+00	14	int (.) / x	1	[{"added": {}}]	31	1
+563	2020-11-12 19:56:45.386903+00	12	Sample nu,ber: x / x	1	[{"added": {}}]	32	1
+564	2020-11-12 19:56:56.625176+00	12	Sample number: x / x	2	[{"changed": {"fields": ["Name"]}}]	32	1
+565	2020-11-12 20:22:19.396428+00	1	Biologix Most Fields	2	[{"added": {"name": "signal type", "object": "SignalType object (4)"}}]	69	1
 \.
 
 
@@ -3474,6 +3497,9 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 304	battDB	0179_auto_20201112_1710	2020-11-12 17:10:57.734199+00
 305	dfndb	0038_auto_20201112_1710	2020-11-12 17:10:57.782375+00
 306	dfndb	0039_auto_20201112_1751	2020-11-12 17:51:16.652868+00
+307	battDB	0180_remove_harvester_upload_to_folder	2020-11-12 17:57:57.033467+00
+308	battDB	0181_auto_20201112_1803	2020-11-12 18:03:08.450768+00
+309	battDB	0182_signaltype_order	2020-11-12 18:11:19.526627+00
 \.
 
 
@@ -3649,7 +3675,7 @@ SELECT pg_catalog.setval('public."battDB_parser_id_seq"', 1, true);
 -- Name: battDB_signaltype_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_signaltype_id_seq"', 1, false);
+SELECT pg_catalog.setval('public."battDB_signaltype_id_seq"', 4, true);
 
 
 --
@@ -3726,21 +3752,21 @@ SELECT pg_catalog.setval('public.dfndb_method_id_seq', 4, true);
 -- Name: dfndb_parameter_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_parameter_id_seq', 9, true);
+SELECT pg_catalog.setval('public.dfndb_parameter_id_seq', 12, true);
 
 
 --
 -- Name: dfndb_quantityunit_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 12, true);
+SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 14, true);
 
 
 --
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 551, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 565, true);
 
 
 --
@@ -3754,7 +3780,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 71, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 306, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 309, true);
 
 
 --
@@ -4761,7 +4787,7 @@ CREATE INDEX "battDB_filefolder_user_owner_id_a306e59e" ON public."battDB_filefo
 -- Name: battDB_harvester_attach_to_equipment_id_43c580f1; Type: INDEX; Schema: public; Owner: towen
 --
 
-CREATE INDEX "battDB_harvester_attach_to_equipment_id_43c580f1" ON public."battDB_harvester" USING btree (attach_to_equipment_id);
+CREATE INDEX "battDB_harvester_attach_to_equipment_id_43c580f1" ON public."battDB_harvester" USING btree (equipment_type_id);
 
 
 --
@@ -4783,13 +4809,6 @@ CREATE INDEX "battDB_harvester_slug_23fa0482" ON public."battDB_harvester" USING
 --
 
 CREATE INDEX "battDB_harvester_slug_23fa0482_like" ON public."battDB_harvester" USING btree (slug varchar_pattern_ops);
-
-
---
--- Name: battDB_harvester_upload_to_folder_id_75ff5a40; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_harvester_upload_to_folder_id_75ff5a40" ON public."battDB_harvester" USING btree (upload_to_folder_id);
 
 
 --
@@ -5475,14 +5494,6 @@ ALTER TABLE ONLY public."battDB_filefolder"
 
 
 --
--- Name: battDB_harvester battDB_harvester_attach_to_equipment__43c580f1_fk_battDB_eq; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_harvester"
-    ADD CONSTRAINT "battDB_harvester_attach_to_equipment__43c580f1_fk_battDB_eq" FOREIGN KEY (attach_to_equipment_id) REFERENCES public."battDB_equipment"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: battDB_harvester battDB_harvester_attach_to_experiment_785e6338_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -5491,11 +5502,11 @@ ALTER TABLE ONLY public."battDB_harvester"
 
 
 --
--- Name: battDB_harvester battDB_harvester_upload_to_folder_id_75ff5a40_fk_battDB_fi; Type: FK CONSTRAINT; Schema: public; Owner: towen
+-- Name: battDB_harvester battDB_harvester_equipment_type_id_04125ef9_fk_battDB_eq; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_harvester"
-    ADD CONSTRAINT "battDB_harvester_upload_to_folder_id_75ff5a40_fk_battDB_fi" FOREIGN KEY (upload_to_folder_id) REFERENCES public."battDB_filefolder"(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT "battDB_harvester_equipment_type_id_04125ef9_fk_battDB_eq" FOREIGN KEY (equipment_type_id) REFERENCES public."battDB_equipment"(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

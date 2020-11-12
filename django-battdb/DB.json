@@ -89,18 +89,18 @@
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-11-01T17:36:29.295Z",
-    "modified_on": "2020-11-01T17:46:29.432Z",
+    "modified_on": "2020-11-12T18:01:12.853Z",
     "attributes": {},
     "notes": "",
     "slug": "my-nmc622-cell",
-    "parent": null,
+    "parent": 8,
     "abstract": false,
     "complete": true,
     "device_type": 6,
-    "lft": 1,
-    "rght": 2,
-    "tree_id": 2,
-    "level": 0
+    "lft": 4,
+    "rght": 7,
+    "tree_id": 3,
+    "level": 1
   }
 },
 {
@@ -120,7 +120,7 @@
     "complete": true,
     "device_type": 5,
     "lft": 1,
-    "rght": 4,
+    "rght": 8,
     "tree_id": 3,
     "level": 0
   }
@@ -369,46 +369,24 @@
 },
 {
   "model": "battDB.devicespecification",
-  "pk": 20,
-  "fields": {
-    "name": "Tom's GalvoTron 5000",
-    "status": 10,
-    "user_owner": 1,
-    "created_on": "2020-11-04T12:39:23.301Z",
-    "modified_on": "2020-11-04T12:39:23.301Z",
-    "attributes": {},
-    "notes": "",
-    "slug": "toms-galvotron-5000",
-    "parent": null,
-    "abstract": false,
-    "complete": true,
-    "device_type": 19,
-    "lft": 1,
-    "rght": 2,
-    "tree_id": 5,
-    "level": 0
-  }
-},
-{
-  "model": "battDB.devicespecification",
   "pk": 21,
   "fields": {
     "name": "Positive Electrode Material",
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-11-12T16:56:28.553Z",
-    "modified_on": "2020-11-12T17:49:44.681Z",
+    "modified_on": "2020-11-12T18:01:07.031Z",
     "attributes": {},
     "notes": "",
     "slug": "positive-electrode-material",
-    "parent": null,
+    "parent": 7,
     "abstract": false,
     "complete": false,
     "device_type": 13,
-    "lft": 1,
-    "rght": 2,
-    "tree_id": 6,
-    "level": 0
+    "lft": 5,
+    "rght": 6,
+    "tree_id": 3,
+    "level": 2
   }
 },
 {
@@ -636,7 +614,7 @@
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-11-10T15:18:25.987Z",
-    "modified_on": "2020-11-10T15:18:25.987Z",
+    "modified_on": "2020-11-12T20:22:19.394Z",
     "attributes": {},
     "notes": "",
     "slug": "biologix-most-fields",
@@ -694,7 +672,7 @@
     "attributes": {},
     "notes": "",
     "slug": "galvotron-5000",
-    "specification": 20,
+    "specification": null,
     "manufacturer": 1,
     "serialNo": "",
     "default_parser": null
@@ -1116,9 +1094,8 @@
     "notes": "",
     "slug": "makron",
     "name": "makron",
-    "upload_to_folder": 2,
     "attach_to_experiment": 5,
-    "attach_to_equipment": 1,
+    "equipment_type": 1,
     "file_types": "*.csv"
   }
 },
@@ -1134,10 +1111,49 @@
     "notes": "",
     "slug": "foo",
     "name": "foo",
-    "upload_to_folder": 1,
     "attach_to_experiment": null,
-    "attach_to_equipment": null,
+    "equipment_type": null,
     "file_types": "*.csv"
+  }
+},
+{
+  "model": "battDB.signaltype",
+  "pk": 1,
+  "fields": {
+    "parameter": 4,
+    "col_name": "Ecell/V",
+    "order": 1,
+    "parser": 1
+  }
+},
+{
+  "model": "battDB.signaltype",
+  "pk": 2,
+  "fields": {
+    "parameter": 7,
+    "col_name": "I/mA",
+    "order": 0,
+    "parser": 1
+  }
+},
+{
+  "model": "battDB.signaltype",
+  "pk": 3,
+  "fields": {
+    "parameter": 10,
+    "col_name": "control/V",
+    "order": 2,
+    "parser": 1
+  }
+},
+{
+  "model": "battDB.signaltype",
+  "pk": 4,
+  "fields": {
+    "parameter": 11,
+    "col_name": "time/s",
+    "order": 5,
+    "parser": 1
   }
 },
 {
@@ -1283,7 +1299,7 @@
     "status": 10,
     "user_owner": 2,
     "created_on": "2020-11-05T15:32:25.079Z",
-    "modified_on": "2020-11-05T15:32:25.079Z",
+    "modified_on": "2020-11-12T18:06:23.186Z",
     "file": "uploaded_files/C_over_20_run_25_C_CA1.txt",
     "hash": "690ea0970ca93096f6a9399829aa631c"
   }
@@ -1643,6 +1659,32 @@
   }
 },
 {
+  "model": "dfndb.quantityunit",
+  "pk": 13,
+  "fields": {
+    "quantityName": "Time",
+    "quantitySymbol": "s",
+    "unitName": "seconds",
+    "unitSymbol": "s",
+    "is_SI_unit": true,
+    "related_unit": null,
+    "related_scale": null
+  }
+},
+{
+  "model": "dfndb.quantityunit",
+  "pk": 14,
+  "fields": {
+    "quantityName": "int",
+    "quantitySymbol": ".",
+    "unitName": "",
+    "unitSymbol": "x",
+    "is_SI_unit": false,
+    "related_unit": null,
+    "related_scale": null
+  }
+},
+{
   "model": "dfndb.parameter",
   "pk": 1,
   "fields": {
@@ -1771,6 +1813,54 @@
     "slug": "thickness-t-mm",
     "symbol": "T",
     "unit": 7
+  }
+},
+{
+  "model": "dfndb.parameter",
+  "pk": 10,
+  "fields": {
+    "name": "Control Voltage",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-12T18:08:04.598Z",
+    "modified_on": "2020-11-12",
+    "attributes": {},
+    "notes": "",
+    "slug": "control-voltage-cv-v",
+    "symbol": "CV",
+    "unit": 1
+  }
+},
+{
+  "model": "dfndb.parameter",
+  "pk": 11,
+  "fields": {
+    "name": "Time",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-12T19:55:19.683Z",
+    "modified_on": "2020-11-12",
+    "attributes": {},
+    "notes": "",
+    "slug": "time-t-s",
+    "symbol": "t",
+    "unit": 13
+  }
+},
+{
+  "model": "dfndb.parameter",
+  "pk": 12,
+  "fields": {
+    "name": "Sample number",
+    "status": 10,
+    "user_owner": 1,
+    "created_on": "2020-11-12T19:56:45.386Z",
+    "modified_on": "2020-11-12",
+    "attributes": {},
+    "notes": "",
+    "slug": "sample-number-x-x",
+    "symbol": "x",
+    "unit": 14
   }
 },
 {
@@ -8969,6 +9059,188 @@
     "object_repr": "Positive Electrode Material",
     "action_flag": 2,
     "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 552,
+  "fields": {
+    "action_time": "2020-11-12T18:01:07.037Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "21",
+    "object_repr": "Positive Electrode Material",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"parent\", \"lft\", \"rght\", \"tree_id\", \"level\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 553,
+  "fields": {
+    "action_time": "2020-11-12T18:01:12.856Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "7",
+    "object_repr": "My NMC622 Cell",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"parent\", \"lft\", \"rght\", \"tree_id\", \"level\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 554,
+  "fields": {
+    "action_time": "2020-11-12T18:02:22.079Z",
+    "user": 1,
+    "content_type": 61,
+    "object_id": "20",
+    "object_repr": "Tom's GalvoTron 5000",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 555,
+  "fields": {
+    "action_time": "2020-11-12T18:06:23.409Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "22",
+    "object_repr": "C_over_20_run_25_C_CA1.txt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"File\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 556,
+  "fields": {
+    "action_time": "2020-11-12T18:08:04.599Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "10",
+    "object_repr": "Control Voltage: CV / V",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 557,
+  "fields": {
+    "action_time": "2020-11-12T18:11:41.068Z",
+    "user": 1,
+    "content_type": 69,
+    "object_id": "1",
+    "object_repr": "Biologix Most Fields",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"signal type\", \"object\": \"SignalType object (1)\"}}, {\"added\": {\"name\": \"signal type\", \"object\": \"SignalType object (2)\"}}, {\"added\": {\"name\": \"signal type\", \"object\": \"SignalType object (3)\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 558,
+  "fields": {
+    "action_time": "2020-11-12T18:12:50.949Z",
+    "user": 1,
+    "content_type": 69,
+    "object_id": "1",
+    "object_repr": "Biologix Most Fields",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"signal type\", \"object\": \"SignalType object (1)\", \"fields\": [\"Order\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 559,
+  "fields": {
+    "action_time": "2020-11-12T18:13:00.071Z",
+    "user": 1,
+    "content_type": 69,
+    "object_id": "1",
+    "object_repr": "Biologix Most Fields",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"signal type\", \"object\": \"SignalType object (3)\", \"fields\": [\"Order\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 560,
+  "fields": {
+    "action_time": "2020-11-12T19:55:14.890Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "13",
+    "object_repr": "Time (s) / s",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 561,
+  "fields": {
+    "action_time": "2020-11-12T19:55:19.684Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "11",
+    "object_repr": "Time: t / s",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 562,
+  "fields": {
+    "action_time": "2020-11-12T19:56:33.084Z",
+    "user": 1,
+    "content_type": 31,
+    "object_id": "14",
+    "object_repr": "int (.) / x",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 563,
+  "fields": {
+    "action_time": "2020-11-12T19:56:45.386Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "12",
+    "object_repr": "Sample nu,ber: x / x",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 564,
+  "fields": {
+    "action_time": "2020-11-12T19:56:56.625Z",
+    "user": 1,
+    "content_type": 32,
+    "object_id": "12",
+    "object_repr": "Sample number: x / x",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Name\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 565,
+  "fields": {
+    "action_time": "2020-11-12T20:22:19.396Z",
+    "user": 1,
+    "content_type": 69,
+    "object_id": "1",
+    "object_repr": "Biologix Most Fields",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"signal type\", \"object\": \"SignalType object (4)\"}}]"
   }
 },
 {
