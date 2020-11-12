@@ -640,9 +640,9 @@ class Harvester(cm.BaseModelMandatoryName):
     Any new data files picked up are automatically uploaded to this system using a REST API. <BR>
     Each Harvester client needs its own username and authentication token to use the API
     """
-    upload_to_folder = models.ForeignKey(FileFolder, on_delete=models.CASCADE, default=0)
+  #  upload_to_folder = models.ForeignKey(FileFolder, on_delete=models.CASCADE, default=0)
     attach_to_experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
-    attach_to_equipment = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True)
+    equipment_type = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True)
     file_types = models.CharField(max_length=20, default="*.csv",
                                   help_text="File type pattern to monitor")
     # parser = models.CharField(max_length=20, default="csv",
@@ -656,6 +656,8 @@ class Harvester(cm.BaseModelMandatoryName):
 class SignalType(models.Model):
     parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
     col_name = models.CharField(max_length=50, default="")
+    order = models.PositiveSmallIntegerField(default=5,
+                                             help_text="override column ordering")
     parser = models.ForeignKey(Parser, on_delete=models.CASCADE)
 
 # from django.dispatch import Signal

@@ -313,6 +313,8 @@ class UploadedFile(HasCreatedModifiedDates, HasOwner, HasStatus):
     exists.boolean = True
 
     def size(self):
+        if not self.exists():
+            return "N/A"
         size_bytes = self.file.storage.size(self.file.name)
         if size_bytes < 1024:
             return "%dB" % size_bytes

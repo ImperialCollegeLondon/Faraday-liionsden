@@ -168,6 +168,8 @@ admin.site.register(FileFolder, FolderAdmin)
 
 class ParserSignalInline(common.admin.TabularInline):
     model = SignalType
+    extra = 1
+    ordering = ('order',)
 
 class ParserAdmin(BaseAdmin):
     inlines = (ParserSignalInline,)
