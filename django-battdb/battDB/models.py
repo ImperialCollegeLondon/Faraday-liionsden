@@ -490,7 +490,7 @@ class ExperimentDataFile(cm.BaseModelNoName):
         return 0
 
     def num_rows(self):
-        return len(self.parsed_data)
+        return self.attributes.get('num_rows') or "N/A"
 
     def columns(self):
         try:
@@ -520,7 +520,7 @@ class ExperimentDataFile(cm.BaseModelNoName):
 
     def clean(self):
         if(self.file_exists()):
-            parse_data_file(self, use_parser=self.use_parser)
+            parse_data_file(self, format=self.use_parser.file_format or 'none', columns=self.use_parser.foo)
         super().clean()
 
     def __str__(self):

@@ -19,7 +19,7 @@ import os
 from jsonschema import validate, exceptions as jsonschema_exceptions
 
 from django.core import exceptions
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 import inspect
 import json
 
@@ -158,8 +158,26 @@ class HasMPTT(MPTTModel):
     """
     parent = TreeForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL,
                             help_text="Parent node in object tree hierarchy")
+
+    inherit_metadata = models.BooleanField(default=True, verbose_name="Inherit metadata attributes from parent",
+                                           help_text="Set to True if this object does not describe a real life thing, "
+                                                     "but a specification, type or grouping. In this case, the "
+                                                     "metadata will be inherited.")
+
     class Meta:
-        abstract=True
+        abstract = True
+
+    def metadata(self):
+        meta = dict()
+        if self.inherit_metadata:
+            ancestors = self.get_ancestors(ascending=True, include_self=False)
+            for ancestor in ancestors:
+                if ancestor.inherit_metadata:
+                    meta.update(ancestor.attributes)
+                else:
+                    break
+        meta.update(self.attributes)
+
 
 #TODO class HasHistory(models.Model):
 # history = models.JSONField(...)
@@ -193,13 +211,8 @@ class Thing(BaseModel, HasMPTT):
     """
     A generic "thing"
     """
-    inherit_metadata = models.BooleanField(default=True, verbose_name="Inherit metadata from parent",
-                                           help_text="Set to True if this object does not describe a real life thing, "
-                                                     "but a specification, type or grouping. In this case, the "
-                                                     "metadata will be inherited.")
     class Meta:
         abstract = True
-
 
 
 # TODO: ModelForm Org.head = filter on Person WHERE Person.org = this
