@@ -3,11 +3,31 @@ battDB
 
 Changelog
 ---------
-* Ditched DJongo/Mongo - not fit for production IMHO
-* Created basic Django app to upload and view files ( #19)
+* 0.2
+  * DONE: 
+    * REST API File Upload
+    * DeviceConfig working properly
+    * Device specification tree structure (MPTT)
+      * Metadata inheritance down the tree
+    * experiment devices list
+    * column to parameter mapping
+  * TODO:
+    * Select columns to import
+    * Multiple parsers support WIP
+    * Full Harvester API & local client (ideally GUI) - PyQt WIP
+    * validate experiment devices against config
+    * API Test Cases WIP
+    * User Flows (wizard-like interface)
+    * Get data range storage working
+    * Get plotting working again
+    * REST API nested models, multiple objects per request
+    * Immutable History - HasImmutableHistory - ManyToMany: Common.HistoryLog (JSON)
+* 0.1
+  * Ditched DJongo/Mongo - not fit for production IMHO
+  * Created basic Django app to upload and view files ( #19)
     * Does not yet make use of Angular.js or any other frontend technology due to my lack of experience with such things. 'Djangular' helper module is no longer developed
-* Added support for "Data Ranges" to align with Luke's software
-* Started frontend development - added "django-plotly-dash' compoonent which promises to run Dash apps from within Django. This may allow re-use of some of the original Galvanalyser UI code.
+  * Added support for "Data Ranges" to align with Luke's software
+  * Started frontend development - added "django-plotly-dash' compoonent which promises to run Dash apps from within Django. This may allow re-use of some of the original Galvanalyser UI code.
 
 Thoughts
 --------
