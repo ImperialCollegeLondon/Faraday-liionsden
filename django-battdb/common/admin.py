@@ -40,8 +40,10 @@ class ChangeformMixin():
     formfield_overrides = {
         models.TextField: {'widget': django.forms.Textarea(
                            attrs={'rows': 3,
-                                  'cols': 40,
+                                  'cols': 20,
                                   'style': 'height: 3em;'})},
+        models.CharField: {'widget': django.forms.widgets.Input(
+            attrs={'cols': 20,})},
         models.JSONField: {'widget': django.forms.Textarea(
             attrs={'rows': 3,
                    'cols': 40,

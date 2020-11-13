@@ -23,6 +23,7 @@ class DeviceSpecInline(common.admin.CompositeBaseInLine):
 
 class DeviceSpecAdmin(common.admin.HasMPTTAdmin):
     model = DeviceSpecification
+    save_as = True
     list_display = common.admin.HasMPTTAdmin.list_display + ('device_type', 'abstract', 'complete')
     list_filter = (common.admin.HasMPTTAdmin.list_filter or []) + ['device_type', 'abstract', 'complete']
     #readonly_fields = (common.admin.HasMPTTAdmin.readonly_fields or []) + ['inherit_metadata']
@@ -52,6 +53,7 @@ class DeviceBatchInline(common.admin.TabularInline):
 class DeviceBatchAdmin(common.admin.BaseAdmin, mptt.admin.MPTTModelAdmin):
     list_display = ["__str__"] + ['manufacturer', 'serialNo', 'manufactured_on', 'batch_size'] + BaseAdmin.list_display_extra
     list_filter = BaseAdmin.list_filter + ['manufacturer', 'batch_size']
+    save_as = True
     inlines = [DeviceBatchInline, BatchDeviceInline,]
 
 
@@ -74,6 +76,7 @@ class ExperimentAdmin(common.admin.BaseAdmin):
     readonly_fields = ['data_files_list'] + BaseAdmin.readonly_fields
     list_display = ['__str__'] + ['devices_', 'files_', 'cycles_'] + BaseAdmin.list_display_extra
     inlines = [ExperimentDeviceInline, ]
+    save_as = True
 #    form = ExperimentForm
 
     def data_files_list(self, obj):
@@ -125,6 +128,27 @@ class DeviceDataInline(common.admin.TabularInline):
 class DataRangeInline(common.admin.TabularInline):
     model = DataRange
     extra = 0
+    exclude = ['attributes']
+    readonly_fields = ['size', 'columns', 'get_graph_link']
+
+    def size(self, obj):
+        if obj.ts_data is not None and obj.ts_data[0] is not None:
+            return "%dx%d" % (len(obj.ts_data), len(obj.ts_data[0]))
+        else:
+            return "N/A"
+    size.short_description = "Rows x Cols"
+
+    def get_graph_link(self, obj):
+        if obj.ts_data is not None:
+            return mark_safe(u'''
+            <button type="button"> <a href="%s">%s</a> </button>
+            ''' % ("/foo", "PLOT")) #% (reverse("battDB:datarange_plot", args=(obj.pk,)), "PLOT"))
+        else:
+            return "N/A"
+    get_graph_link.short_description = "Graph"
+
+    def columns(self, obj):
+        return str(obj.ts_headers)
 
 class DataAdmin(BaseAdmin):
     """
@@ -132,7 +156,7 @@ class DataAdmin(BaseAdmin):
      This should be done with a JOIN instead.
     """
     inlines = [DeviceDataInline, DataRangeInline, ]
-    list_display = ['__str__', 'user_owner', 'get_file_link', 'get_experiment_link', 'use_parser', 'file_data', 'parsed_data', 'created_on', 'status']
+    list_display = ['__str__', 'user_owner', 'get_file_link', 'get_experiment_link', 'show_parser', 'file_data', 'parsed_data', 'created_on', 'status']
     list_filter = ['experiment'] + BaseAdmin.list_filter
     readonly_fields = BaseAdmin.readonly_fields + ['is_parsed', 'get_experiment_link', 'file_hash',
                                                    'file_columns', 'num_ranges']
@@ -147,8 +171,21 @@ class DataAdmin(BaseAdmin):
     file_data.short_description = "File RxC"
 
     def parsed_data(self, obj):
-        return "%dx%d" % (obj.parsed_rows(), len(obj.parsed_columns()))
-    parsed_data.short_description="Parsed"
+        parsed = len(obj.parsed_columns())
+        missing = len(obj.missing_columns())
+        return "%d/%d: %s" % (parsed, parsed+missing, obj.parsed_columns())
+    parsed_data.short_description="Imported Cols"
+
+    def show_parser(self, obj):
+        if hasattr(obj,'use_parser') and obj.use_parser is not None:
+            return mark_safe('<a href="{}">{}</a>'.format(
+                reverse("admin:battDB_parser_change", args=(obj.use_parser.pk,)),
+                str(obj.use_parser)
+            ))
+        else:
+            return "N/A"
+
+    show_parser.short_description = "Parser Config"
 
     def get_experiment_link(self, obj):
         if hasattr(obj,'experiment') and obj.experiment is not None:
@@ -194,5 +231,6 @@ class ParserSignalInline(common.admin.TabularInline):
 
 class ParserAdmin(BaseAdmin):
     inlines = (ParserSignalInline,)
+    save_as = True
 
 admin.site.register(Parser, ParserAdmin)

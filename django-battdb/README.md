@@ -5,6 +5,8 @@ Changelog
 ---------
 * 0.2
   * DONE: 
+    * Select columns to import
+    * Get data range storage working
     * REST API File Upload
     * DeviceConfig working properly
     * Device specification tree structure (MPTT)
@@ -12,13 +14,11 @@ Changelog
     * experiment devices list
     * column to parameter mapping
   * TODO:
-    * Select columns to import
     * Multiple parsers support WIP
     * Full Harvester API & local client (ideally GUI) - PyQt WIP
     * validate experiment devices against config
     * API Test Cases WIP
     * User Flows (wizard-like interface)
-    * Get data range storage working
     * Get plotting working again
     * REST API nested models, multiple objects per request
     * Immutable History - HasImmutableHistory - ManyToMany: Common.HistoryLog (JSON)

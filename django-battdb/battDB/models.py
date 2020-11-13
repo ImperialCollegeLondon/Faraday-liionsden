@@ -13,9 +13,15 @@ import dfndb.models as dfn
 from .migration_dummy import *
 from datetime import datetime
 import django.core.exceptions
-from .utils import parse_data_file
 
 from rest_framework.authtoken.models import Token
+
+from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
+from galvanalyser.harvester.parsers.maccor_parser import MaccorXLSParser
+from galvanalyser.harvester.parsers.parser import Parser
+import pandas.errors
+from .utils import parse_data_file, get_parser
+import json
 
 import hashlib
 
@@ -502,14 +508,17 @@ class ExperimentDataFile(cm.BaseModelNoName):
     def num_ranges(self):
         return self.ranges.count()
 
-    def parsed_rows(self):
-        return self.attributes.get('num_rows') or 0
-
     def file_rows(self):
         return self.attributes.get('file_rows') or 0
 
+    def parsed_ranges(self):
+        return self.attributes.get('parsed_ranges') or []
+
     def parsed_columns(self):
         return self.attributes.get('parsed_columns') or []
+
+    def missing_columns(self):
+        return self.attributes.get('missing_columns') or []
 
     def file_columns(self):
         return self.attributes.get('file_columns') or []
@@ -527,10 +536,31 @@ class ExperimentDataFile(cm.BaseModelNoName):
     def file_hash(self):
         return self.raw_data_file.hash
 
+    def create_ranges(self):
+        ranges = self.attributes.get('range_config') or dict()
+        for name, config in ranges.items():
+            rng_q = DataRange.objects.get_or_create(dataFile=self, label=name)
+            rng = rng_q[0]
+            rng.file_offset_start = config.get('start') or 0
+            rng.file_offset_end = config.get('end') or 0
+            rng.protocol_step = config.get('step') or 0
+            rng.step_action = config.get('action') or 0
+            rng.ts_headers = self.parsed_columns()
+            parser = get_parser(self)
+            gen = parser.get_data_generator_for_columns(self.parsed_columns(), 10)
+            data = list(gen)
+#            for item in data:
+
+            rng.ts_data = data
+            rng.save()
+
     def clean(self):
-        if(self.file_exists()):
-            parse_data_file(self, file_format=self.use_parser.file_format or 'none', columns=
-            [p.name for p in self.use_parser.parameters.all()])
+        if self.file_exists():
+            cols = [c.col_name for c in self.use_parser.columns.all().order_by('order')]
+            parse_data_file(self, columns=cols)
+            if self.is_parsed():
+                self.create_ranges()
+
         super().clean()
 
     def __str__(self):
@@ -616,7 +646,7 @@ class DataColumn(models.Model):
         verbose_name_plural = "Data Column Mappings to Device Parameters"
 
 
-class DataRange(cm.HasAttributes, cm.HasName, cm.HasNotes, cm.HasCreatedModifiedDates):
+class DataRange(cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates):
     """
     DataRange - each data file contains numerous ranges e.g. charge & discharge cycles. Their data might overlap. <br>
     TODO: Write (or find) code to segment data into ranges. <br>
@@ -627,21 +657,21 @@ class DataRange(cm.HasAttributes, cm.HasName, cm.HasNotes, cm.HasCreatedModified
     file_offset_start = models.PositiveIntegerField(default=0)
     file_offset_end = models.PositiveIntegerField(default=0)
     label = models.CharField(max_length=32, default="all")
-    protocol_step = models.PositiveIntegerField()
+    protocol_step = models.PositiveSmallIntegerField(default=0)
     step_action = models.CharField(max_length=8,
                                    choices=[('chg', 'Charging'), ('dchg', 'Discharging'),
                                             ('cycle', 'Full cycle'), ('rest', 'Rest'),
                                             ('all', 'Entire series'),
                                             ('user', 'User defined')], default='all')
     # TODO: Possibly split these arrays into a new object
-    ts_headers = ArrayField(models.CharField(max_length=32), blank=True, null=True)
-    ts_data = ArrayField(ArrayField(models.FloatField()), blank=True, null=True)
+    ts_headers = ArrayField(models.CharField(max_length=32), blank=True, null=True, editable=False)
+    ts_data = ArrayField(ArrayField(models.FloatField()), blank=True, null=True, editable=False)
 
     # TODO: These need a schema
     # events = JSONField(null=True, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
     def __str__(self):
-        return "%s/%d: %s" % (self.dataFile, self.id, self.label)
+        return "%s/%d: %s" % (self.dataFile or "None", self.id or 0, self.label or "")
 
     class Meta:
         verbose_name_plural = "Data Ranges"
@@ -673,11 +703,16 @@ class SignalType(models.Model):
     col_name = models.CharField(max_length=50, default="")
     order = models.PositiveSmallIntegerField(default=5,
                                              help_text="override column ordering")
-    parser = models.ForeignKey(Parser, on_delete=models.CASCADE)
+    parser = models.ForeignKey(Parser, on_delete=models.CASCADE, related_name="columns")
+
+    def __str__(self):
+        return self.col_name
 
 # from django.dispatch import Signal
 # from django.db.models import signals
 #
 # signals.post_save.connect(data_pre_save, sender=ExperimentDataFile)
+
+
 
 

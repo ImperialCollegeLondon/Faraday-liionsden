@@ -120,16 +120,17 @@ class BiologicCSVnTSVParser(Parser, ABC):
 
         return metadata, column_info
 
-    def get_data_generator_for_columns(self, columns: Set, first_data_row: int,
-                                       col_mapping: Dict = {}) -> Generator[Dict, None, None]:
+    def get_data_generator_for_columns(self, columns: list, first_data_row: int,
+                                       col_mapping: Dict = {}) -> Generator[list, None, None]:
         """
         Creates a Generator for accessing all data in a biologic file row by row for the
         specified set of columns. Columns can be renamed if the mapping is passed
         """
-        wanted = self.data[list(columns)]  # Get the columns we want
-        renamed = wanted.rename(columns=col_mapping, inplace=False)  # Apply renaming
-        for row in renamed.to_dict(orient="row"):
-            yield row
+        wanted = self.data[columns]  # Get the columns we want
+        #renamed = wanted.rename(columns=col_mapping, inplace=False)  # Apply renaming
+        #for row in renamed.to_dict(orient="row"):
+        for row in wanted.values:
+            yield list(row)
 
     # The format of the BioLogix header is /almost/ parsable directly as YAML
     # We can hack in a few string replacements to make it valid
