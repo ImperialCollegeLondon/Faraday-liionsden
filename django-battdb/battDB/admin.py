@@ -50,7 +50,7 @@ class DeviceBatchInline(common.admin.TabularInline):
 
 #class ThingAdmin(mptt.admin.MPTTModelAdmin):
 class DeviceBatchAdmin(common.admin.BaseAdmin, mptt.admin.MPTTModelAdmin):
-    list_display = BaseAdmin.list_display + ['manufacturer', 'serialNo', 'manufactured_on', 'batch_size']
+    list_display = ["__str__"] + ['manufacturer', 'serialNo', 'manufactured_on', 'batch_size'] + BaseAdmin.list_display_extra
     list_filter = BaseAdmin.list_filter + ['manufacturer', 'batch_size']
     inlines = [DeviceBatchInline, BatchDeviceInline,]
 
@@ -71,9 +71,18 @@ class ExperimentDeviceInline(common.admin.TabularInline):
 
 
 class ExperimentAdmin(common.admin.BaseAdmin):
-#    readonly_fields = BaseAdmin.readonly_fields + ['data_files']
+    readonly_fields = ['data_files_list'] + BaseAdmin.readonly_fields
+    list_display = ['__str__'] + ['devices_', 'files_', 'cycles_'] + BaseAdmin.list_display_extra
     inlines = [ExperimentDeviceInline, ]
 #    form = ExperimentForm
+
+    def data_files_list(self, obj):
+        links_str = ""
+        for file in obj.data_files.all():
+            links_str = links_str + '<a href="{}">{}</a>, '.format(
+                reverse("admin:battDB_experimentdatafile_change", args=(file.pk,)),str(file))
+        return mark_safe(links_str)
+    data_files_list.short_description = "Data Files"
 
 
 admin.site.register(Experiment, ExperimentAdmin)
@@ -123,11 +132,23 @@ class DataAdmin(BaseAdmin):
      This should be done with a JOIN instead.
     """
     inlines = [DeviceDataInline, DataRangeInline, ]
-    list_display = ['__str__', 'size', 'get_file_link', 'get_experiment_link', 'file_exists', 'is_parsed', 'use_parser', 'num_rows', 'num_cols']
+    list_display = ['__str__', 'user_owner', 'get_file_link', 'get_experiment_link', 'use_parser', 'file_data', 'parsed_data', 'created_on', 'status']
     list_filter = ['experiment'] + BaseAdmin.list_filter
-    readonly_fields = BaseAdmin.readonly_fields + ['is_parsed', 'get_experiment_link', 'file_hash', 'columns', 'num_ranges']
+    readonly_fields = BaseAdmin.readonly_fields + ['is_parsed', 'get_experiment_link', 'file_hash',
+                                                   'file_columns', 'num_ranges']
     # form=DataFileForm
 
+    def size(self, obj):
+        return obj.raw_data_file.size()
+    size.short_description = "Raw Size"
+
+    def file_data(self, obj):
+        return "%dx%d" % (obj.file_rows(), len(obj.file_columns()))
+    file_data.short_description = "File RxC"
+
+    def parsed_data(self, obj):
+        return "%dx%d" % (obj.parsed_rows(), len(obj.parsed_columns()))
+    parsed_data.short_description="Parsed"
 
     def get_experiment_link(self, obj):
         if hasattr(obj,'experiment') and obj.experiment is not None:
@@ -142,11 +163,11 @@ class DataAdmin(BaseAdmin):
     def get_file_link(self, obj):
         if hasattr(obj, 'raw_data_file') and obj.raw_data_file is not None:
             return mark_safe(u'''
-            <button type="button"> <a href="%s">View</a> </button>
-            ''' % obj.raw_data_file.file.url)
+            <button type="button"> <a href="%s">\u2193%s</a> </button>
+            ''' % (obj.raw_data_file.file.url, obj.raw_data_file.size()))
         else:
             return "N/A"
-    get_file_link.short_description = "View Original File"
+    get_file_link.short_description = "View RAW"
 
 
 admin.site.register([ExperimentDataFile], DataAdmin)

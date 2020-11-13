@@ -13,7 +13,7 @@ import dfndb.models as dfn
 from .migration_dummy import *
 from datetime import datetime
 import django.core.exceptions
-from .utils import *
+from .utils import parse_data_file
 
 from rest_framework.authtoken.models import Token
 
@@ -436,6 +436,17 @@ class Experiment(cm.BaseModel):
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
 
+
+    def devices_(self):
+        return self.devices.count()
+
+    def files_(self):
+        return self.data_files.count()
+
+    def cycles_(self):
+        # TODO: Count total number of cycles
+        return "?"
+
     def __str__(self):
         return str(self.user_owner) + " " + str(self.name) + " " + str(self.date)
 
@@ -483,30 +494,28 @@ class ExperimentDataFile(cm.BaseModelNoName):
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
 
-    def size(self):
-        return self.raw_data_file.size()
 
     def num_cycles(self):
-        return 0
-
-    def num_rows(self):
-        return self.attributes.get('num_rows') or "N/A"
-
-    def columns(self):
-        try:
-            cols = self.parsed_metadata['columns']
-            return [k for k in cols.keys()]
-        except KeyError:
-            return []
+        return self.ranges.filter(step_action='cycle').count() + \
+               self.ranges.filter(step_action=['chg', 'dchg']).count()/2.0
 
     def num_ranges(self):
         return self.ranges.count()
 
-    def num_cols(self):
-        return len(self.columns())
+    def parsed_rows(self):
+        return self.attributes.get('num_rows') or 0
+
+    def file_rows(self):
+        return self.attributes.get('file_rows') or 0
+
+    def parsed_columns(self):
+        return self.attributes.get('parsed_columns') or []
+
+    def file_columns(self):
+        return self.attributes.get('file_columns') or []
 
     def is_parsed(self):
-        return len(self.columns()) > 0
+        return len(self.file_columns()) > 0
     is_parsed.boolean = True
 
     def file_exists(self):
@@ -520,7 +529,8 @@ class ExperimentDataFile(cm.BaseModelNoName):
 
     def clean(self):
         if(self.file_exists()):
-            parse_data_file(self, format=self.use_parser.file_format or 'none', columns=self.use_parser.foo)
+            parse_data_file(self, file_format=self.use_parser.file_format or 'none', columns=
+            [p.name for p in self.use_parser.parameters.all()])
         super().clean()
 
     def __str__(self):
@@ -537,13 +547,13 @@ class ExperimentDevice(models.Model):
     """
     3-way join table, identifies devices in experiments, link devices to data files
     """
-    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE)
+    experiment = models.ForeignKey(Experiment, on_delete=models.CASCADE, related_name="devices")
     # FIXME: DeviceBatch  / batch_id could be a foreignKey to DeviceBatch!
     #  but maybe this way is actually better (avoids accidental data loss at the cost of potential inconsistency)
     deviceBatch = models.ForeignKey(DeviceBatch, on_delete=models.CASCADE)
     batch_seq = models.PositiveSmallIntegerField(default=1, validators=[MinValueValidator(1),], help_text=
                                                  "sequence number of device within batch")
-    device_pos = models.CharField(max_length=20, default="cell_nn", help_text=
+    device_pos = models.CharField(max_length=20, default="cell_xx", help_text=
                                   "Device Position ID in Experiment Config - e.g. Cell_A1 for the first cell of"
                                   "a series-parallel pack")
     data_file = models.ForeignKey(ExperimentDataFile, null=True, blank=True, on_delete=models.SET_NULL)
@@ -557,6 +567,9 @@ class ExperimentDevice(models.Model):
             raise ValidationError("Batch sequence ID cannot exceed batch size!")
         elif self.deviceBatch is not None:
             batchDev = BatchDevice.objects.get_or_create(batch=self.deviceBatch, seq_num=self.batch_seq)
+
+    def __str__(self):
+        return self.device_pos
 
     class Meta:
         unique_together = [['device_pos', 'data_file'],  # cannot have the same device position ID twice in a data file
@@ -611,8 +624,9 @@ class DataRange(cm.HasAttributes, cm.HasName, cm.HasNotes, cm.HasCreatedModified
     """
     dataFile = models.ForeignKey(ExperimentDataFile, on_delete=models.SET_NULL, null=True, blank=True,
                                  related_name='ranges')
-    file_offset = models.PositiveIntegerField(default=0)
-    label = models.CharField(max_length=32, null=True)
+    file_offset_start = models.PositiveIntegerField(default=0)
+    file_offset_end = models.PositiveIntegerField(default=0)
+    label = models.CharField(max_length=32, default="all")
     protocol_step = models.PositiveIntegerField()
     step_action = models.CharField(max_length=8,
                                    choices=[('chg', 'Charging'), ('dchg', 'Discharging'),
@@ -631,6 +645,7 @@ class DataRange(cm.HasAttributes, cm.HasName, cm.HasNotes, cm.HasCreatedModified
 
     class Meta:
         verbose_name_plural = "Data Ranges"
+        unique_together = [['dataFile', 'label']]
 
 
 class Harvester(cm.BaseModelMandatoryName):

@@ -31,6 +31,9 @@ Changelog
 
 Thoughts
 --------
+* DataRange - plot X, Y, Y2
+* RANGES TO PLOT Overlay - field in Experiment 
+* FK relation from ExperimentDevice to BatchDevice using ON DELETE RESTRICT
 * Needs CSV file download of selected columns / data range
 * Needs to support data analysis
 * should support all features in Luke's galvanalyser
