@@ -38,6 +38,7 @@ INSTALLED_APPS = [
 #    'jsoneditor',
     'django_extensions',
     'mptt',
+    'debug_toolbar',
 #    'ipware',
 #    'djangular',
 #    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -159,3 +161,13 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 MEDIA_URL='/media/'
+
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    # ...
+]
+
+# DEBUG_TOOLBAR_PANELS = {
+#     'debug_toolbar.panels.profiling.ProfilingPanel',
+# }
