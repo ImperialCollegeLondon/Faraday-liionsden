@@ -59,10 +59,10 @@ def parse_data_file(instance, file_format="csv", columns=['time/s', 'Ecell/V', '
     # instance.parsed_data = [None] * instance.attributes['num_rows']
 
 
-
     # save again after setting metadata but don't get into a recursion loop!
     try:
         instance._dirty = True
         instance.save()
     finally:
         del instance._dirty
+        return parser

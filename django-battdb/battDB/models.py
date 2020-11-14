@@ -536,7 +536,7 @@ class ExperimentDataFile(cm.BaseModelNoName):
     def file_hash(self):
         return self.raw_data_file.hash
 
-    def create_ranges(self):
+    def create_ranges(self, parser):
         ranges = self.attributes.get('range_config') or dict()
         for name, config in ranges.items():
             rng_q = DataRange.objects.get_or_create(dataFile=self, label=name)
@@ -546,7 +546,8 @@ class ExperimentDataFile(cm.BaseModelNoName):
             rng.protocol_step = config.get('step') or 0
             rng.step_action = config.get('action') or 0
             rng.ts_headers = self.parsed_columns()
-            parser = get_parser(self)
+            # get_parser actually reads the whole file, so avoid calling it more than once!
+            # parser = get_parser(self)
             gen = parser.get_data_generator_for_columns(self.parsed_columns(), 10)
             data = list(gen)
 #            for item in data:
@@ -557,9 +558,10 @@ class ExperimentDataFile(cm.BaseModelNoName):
     def clean(self):
         if self.file_exists():
             cols = [c.col_name for c in self.use_parser.columns.all().order_by('order')]
-            parse_data_file(self, columns=cols)
+            parser = parse_data_file(self, columns=cols)
             if self.is_parsed():
-                self.create_ranges()
+                self.create_ranges(parser)
+            del parser
 
         super().clean()
 
