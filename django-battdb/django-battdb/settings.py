@@ -62,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_cprofile_middleware.middleware.ProfilerMiddleware",
 ]
 
 ROOT_URLCONF = 'django-battdb.urls'
@@ -171,3 +172,4 @@ INTERNAL_IPS = [
 # DEBUG_TOOLBAR_PANELS = {
 #     'debug_toolbar.panels.profiling.ProfilingPanel',
 # }
+

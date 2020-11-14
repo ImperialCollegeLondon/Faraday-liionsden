@@ -25,7 +25,6 @@ urlpatterns = [
     path('battDB/', include('battDB.urls')),
     path('dfndb/', include('dfndb.urls')),
     path('admin/', admin.site.urls),
-    path('debug/', debug_toolbar.panels.profiling.ProfilingPanel)
 ]
 
 if settings.DEBUG:

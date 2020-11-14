@@ -14,6 +14,9 @@ Changelog
     * experiment devices list
     * column to parameter mapping
   * TODO:
+    * Optimise queries:
+      * DataRange should store data in a non-admin class to avoid loading large files
+      * Parameters should be CharField only - not FK to dfndb
     * Multiple parsers support WIP
     * Full Harvester API & local client (ideally GUI) - PyQt WIP
     * validate experiment devices against config
