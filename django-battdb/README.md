@@ -18,6 +18,7 @@ Changelog
       * DataRange should store data in a non-admin class to avoid loading large files
       * Parameters should be CharField only - not FK to dfndb
     * Multiple parsers support WIP
+      * Re-implement all parsers - not that hard to do, and can use a much faster CSV parser instead of pandas, which takes about 30s/500MB
     * Full Harvester API & local client (ideally GUI) - PyQt WIP
     * validate experiment devices against config
     * API Test Cases WIP

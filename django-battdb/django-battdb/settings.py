@@ -38,7 +38,7 @@ INSTALLED_APPS = [
 #    'jsoneditor',
     'django_extensions',
     'mptt',
-    'debug_toolbar',
+#    'debug_toolbar',
 #    'ipware',
 #    'djangular',
 #    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
@@ -54,7 +54,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

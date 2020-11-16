@@ -822,7 +822,7 @@
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-11-02T18:07:10.755Z",
-    "modified_on": "2020-11-13T16:12:13.735Z",
+    "modified_on": "2020-11-14T14:55:24.655Z",
     "attributes": {
       "file_rows": 149,
       "file_columns": [
@@ -874,7 +874,6 @@
         }
       },
       "parsed_columns": [
-        "Time",
         "Ecell/V",
         "I/mA",
         "control/V"
@@ -885,7 +884,7 @@
     "slug": "biologic_fulltxt",
     "raw_data_file": 18,
     "experiment": 5,
-    "use_parser": 2,
+    "use_parser": 1,
     "parsed_metadata": {
       "num_rows": 149,
       "warnings": [],
@@ -1058,7 +1057,7 @@
     "status": 10,
     "user_owner": 1,
     "created_on": "2020-11-05T15:33:41.286Z",
-    "modified_on": "2020-11-13T16:36:40.906Z",
+    "modified_on": "2020-11-14T15:02:19.762Z",
     "attributes": {
       "file_rows": 1168866,
       "file_columns": [
@@ -10080,6 +10079,136 @@
   "pk": 613,
   "fields": {
     "action_time": "2020-11-13T16:36:40.910Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "18",
+    "object_repr": "C_over_20_run_25_C_CA1.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 614,
+  "fields": {
+    "action_time": "2020-11-13T16:49:04.570Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "18",
+    "object_repr": "C_over_20_run_25_C_CA1.txt",
+    "action_flag": 2,
+    "change_message": "[{\"deleted\": {\"name\": \"data range\", \"object\": \"C_over_20_run_25_C_CA1.txt/0: all\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 615,
+  "fields": {
+    "action_time": "2020-11-13T16:54:49.234Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "18",
+    "object_repr": "C_over_20_run_25_C_CA1.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 616,
+  "fields": {
+    "action_time": "2020-11-14T01:39:27.385Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "17",
+    "object_repr": "BioLogic_full.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 617,
+  "fields": {
+    "action_time": "2020-11-14T01:41:53.927Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "18",
+    "object_repr": "C_over_20_run_25_C_CA1.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 618,
+  "fields": {
+    "action_time": "2020-11-14T13:12:27.919Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "17",
+    "object_repr": "BioLogic_full.txt",
+    "action_flag": 2,
+    "change_message": "[{\"deleted\": {\"name\": \"data range\", \"object\": \"BioLogic_full.txt/0: all\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 619,
+  "fields": {
+    "action_time": "2020-11-14T13:21:16.016Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "18",
+    "object_repr": "C_over_20_run_25_C_CA1.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 620,
+  "fields": {
+    "action_time": "2020-11-14T13:25:00.484Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "17",
+    "object_repr": "BioLogic_full.txt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Use parser\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 621,
+  "fields": {
+    "action_time": "2020-11-14T13:33:59.761Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "18",
+    "object_repr": "C_over_20_run_25_C_CA1.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 622,
+  "fields": {
+    "action_time": "2020-11-14T14:55:24.656Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "17",
+    "object_repr": "BioLogic_full.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 623,
+  "fields": {
+    "action_time": "2020-11-14T14:56:26.782Z",
     "user": 1,
     "content_type": 23,
     "object_id": "18",
