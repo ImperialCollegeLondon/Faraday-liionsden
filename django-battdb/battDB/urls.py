@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/exp', ExperimentAPIListView.as_view()),
     path('api/data', GeneralViewSet.as_view(actions={'get': 'list'}), name='data_api'),
     path('api/harvester/<slug:slug>', HarvesterAPIView.as_view(), name='harvester_api'),
+    path('api/hash_list', AllFileHashesAPIView.as_view(), name='hashes_api'),
 ]

@@ -97,6 +97,7 @@ class DeviceConfigInline(common.admin.TabularInline):
 
 
 class DeviceConfigAdmin(BaseAdmin):
+    save_as = True
     inlines = (DeviceConfigInline,)
 
 
@@ -221,7 +222,7 @@ admin.site.register([Equipment, Harvester], BaseAdmin)
 class FolderAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
     pass
 
-admin.site.register(FileFolder, FolderAdmin)
+#admin.site.register(FileFolder, FolderAdmin)
 
 
 class ParserSignalInline(common.admin.TabularInline):

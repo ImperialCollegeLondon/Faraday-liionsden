@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from common.models import UploadedFile
 
 # class DataSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -29,6 +30,12 @@ class HarvesterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Harvester
         exclude = []
+
+
+class FileHashSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UploadedFile
+        fields = ['hash']
 
 
 class GeneralSerializer(serializers.ModelSerializer):

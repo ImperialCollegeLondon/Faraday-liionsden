@@ -271,18 +271,19 @@ class UploadFileView(GenericAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class OwnerFilteredListAPIView(ListAPIView):
-    def get_queryset(self):
-        user = self.request.user
-        slug = self.request.query_params.get('slug', None)
-        return Harvester.objects.get(slug=slug, user_owner=user)
+# class OwnerFilteredListAPIView(ListAPIView):
+#     model = Harvester
+#     def get_queryset(self):
+#         user = self.request.user
+#         slug = self.kwargs.get('slug', None)
+#         return model.objects.get(slug=slug, user_owner=user)
 
 class ExperimentAPIView(APIView):
     queryset = Experiment.objects.all()
     serializer_class = ExperimentSerializer
 
 
-class ExperimentAPIListView(OwnerFilteredListAPIView):
+class ExperimentAPIListView(ListAPIView):
     serializer_class = ExperimentSerializer
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     queryset = Experiment.objects.all()
@@ -291,13 +292,24 @@ class ExperimentAPIListView(OwnerFilteredListAPIView):
     #     user = self.request.user
     #     return Experiment.objects.filter(user_owner=user)
 
-class DataRangeAPIView(OwnerFilteredListAPIView):
+class DataRangeAPIView(ListAPIView):
     serializer_class = DataRangeSerializer
     queryset = DataRange.objects.all()
 
 
-class HarvesterAPIView(OwnerFilteredListAPIView):
+class AllFileHashesAPIView(ListAPIView):
+    "returns hashes and sizes of all files belonging to current user"
+    model = UploadedFile
+    serializer_class = FileHashSerializer
+    def get_queryset(self):
+        return UploadedFile.objects.all() # filter(user_owner=self.request.user)
+
+class HarvesterAPIView(ListAPIView):
     serializer_class = HarvesterSerializer
+    model = Harvester
+    def get_queryset(self):
+        return Harvester.objects.filter(user_owner=self.request.user, slug=self.kwargs.get('slug'))
+
 
 
 class GeneralViewSet(viewsets.ModelViewSet):

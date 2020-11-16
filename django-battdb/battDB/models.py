@@ -399,6 +399,7 @@ class Parser(cm.BaseModelMandatoryName):
     parameters = models.ManyToManyField(dfn.Parameter, through="SignalType")
 
 
+
 class FileFolder(cm.BaseModel, cm.HasMPTT):
     pass
 
@@ -496,6 +497,8 @@ class ExperimentDataFile(cm.BaseModelNoName):
 
     devices = models.ManyToManyField(DeviceBatch, through='ExperimentDevice', related_name="used_in")
 
+    parse = models.BooleanField(default=False, help_text="Set to True to import data on save")
+
     #import_columns = models.ManyToManyField(dfn.Parameter, blank=True)
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
@@ -524,7 +527,7 @@ class ExperimentDataFile(cm.BaseModelNoName):
         return self.attributes.get('file_columns') or []
 
     def is_parsed(self):
-        return len(self.file_columns()) > 0
+        return self.parse and len(self.file_columns()) > 0
     is_parsed.boolean = True
 
     def file_exists(self):
@@ -556,7 +559,7 @@ class ExperimentDataFile(cm.BaseModelNoName):
             rng.save()
 
     def clean(self):
-        if self.file_exists():
+        if self.parse and self.file_exists():
             cols = [c.col_name for c in self.use_parser.columns.all().order_by('order')]
             parser = parse_data_file(self, columns=cols)
             if self.is_parsed():
@@ -692,6 +695,8 @@ class Harvester(cm.BaseModelMandatoryName):
     equipment_type = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True)
     file_types = models.CharField(max_length=20, default="*.csv",
                                   help_text="File type pattern to monitor")
+    parser_config = models.ForeignKey(Parser, null=True, on_delete=models.SET_NULL)
+    local_folder = models.CharField(max_length=500, default=".")
     # parser = models.CharField(max_length=20, default="csv",
     #                           choices=Parser.FORMAT_CHOICES,
     #                           help_text="Default parser to use")
