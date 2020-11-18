@@ -60,6 +60,8 @@ class MyHandler(FileSystemEventHandler):
             fd = fp
             self.files_by_hash[file_hash] = fd
         else: # already existed - check state of existing entry
+            if(fd['state'] == 'ignored'):
+                return
             if fd['state'] == 'exists_remote':
                 print("Already in database: %s will be ignored" % filepath)
                 fd['state'] = 'ignored'
@@ -70,21 +72,20 @@ class MyHandler(FileSystemEventHandler):
                 return
             if fd['state'] == 'uploaded':
                 print("Already in database: %s will be ignored" % filepath)
+                fd['state'] = 'ignored'
+                return
 
         # now we have a file which we think is valid
 
         fd.update(fp)
         ## Process state machine
         print("consider_upload: fd=%s" % fd)
-        # if fd['state'] == 'new':
-        #
-        # else:
-        #     self.files_by_hash[file_hash] = fd
-        #     print("Uploading file %s" % filepath)
-        #     try:
-        #         self.API.upload_file(filepath)
-        #     finally:
-        #         fd['state'] = ''
+        self.files_by_hash[file_hash] = fd
+        print("Uploading file %s" % filepath)
+        try:
+            self.API.upload_file(filepath)
+        finally:
+            fd['state'] = 'uploaded'
 
     def check_db_files(self):
         for file in self.API.get_hashes():
