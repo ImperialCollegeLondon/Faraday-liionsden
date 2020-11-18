@@ -8,7 +8,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('authtoken', '0003_tokenproxy'),
+#        ('authtoken', '0003_tokenproxy'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('battDB', '0155_FileFolder'),
     ]

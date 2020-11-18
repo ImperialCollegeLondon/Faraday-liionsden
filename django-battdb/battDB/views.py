@@ -23,7 +23,7 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework import authentication, permissions
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
 from common.models import UploadedFile
-import django_filters.rest_framework
+#import django_filters.rest_framework
 
 np.random.seed(9615)
 
@@ -285,7 +285,7 @@ class ExperimentAPIView(APIView):
 
 class ExperimentAPIListView(ListAPIView):
     serializer_class = ExperimentSerializer
-    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    #filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     queryset = Experiment.objects.all()
 
     # def get_queryset(self):
