@@ -19,12 +19,13 @@ class MyHandler(FileSystemEventHandler):
         self.files_by_hash = dict()
         self.files_by_name = dict()
         self.scan_path = path
-        self.API = HarvesterAPI(site="http://127.0.0.1:8000", auth_token = "52f1021a6e32e4202acab1c5c19f0067cc1ce38a")
+        self.API = HarvesterAPI(site="http://ns3122207.ip-54-38-195.eu:10802", auth_token = "52f1021a6e32e4202acab1c5c19f0067cc1ce38a")
         self.check_db_files()
         self.check_local_files(state="exists_local")
 
     def found_new_file(self, filepath, state):
         fp = self.files_by_name.get(filepath)
+        print("New file: %s" % fp)
         if fp is None:  # create new entry in files dict
             fp = dict({'state': state, 'path': filepath, 'size': os.path.getsize(filepath)})
             self.files_by_name[filepath] = fp
@@ -52,9 +53,13 @@ class MyHandler(FileSystemEventHandler):
     # def consider_upload(self, filepath):
         fp = self.files_by_name.get(filepath) or dict()
         state = fp.get('state') or 'new'
+        if(state == 'ignored'):
+            return
+
         file_hash = hash_file(open(filepath, "rb"))
         fd = self.files_by_hash.get(file_hash)
-        print("Considering file: %s (%s) - %s" % (filepath, file_hash, state))
+        #print("Considering file: %s (%s) - %s" % (filepath, file_hash, state))
+        print("Considering file: %s " % fd)
 
         if fd is None: # create new entry in files dict
             fd = fp
@@ -77,7 +82,8 @@ class MyHandler(FileSystemEventHandler):
 
         # now we have a file which we think is valid
 
-        fd.update(fp)
+        fp.update(fd)
+#        fd.update(fp)
         ## Process state machine
         print("consider_upload: fd=%s" % fd)
         self.files_by_hash[file_hash] = fd
@@ -101,7 +107,7 @@ class MyHandler(FileSystemEventHandler):
         print("Local machine has %d files" % len(self.files_by_name))
 
     def check_waiting_files(self):
-        waiting_files = [f for f in self.files_by_name if f.get('state') == 'waiting']
+        waiting_files = [f for f in self.files_by_name.values() if f.get('state') == 'waiting']
         print("%d files waiting" % len(waiting_files))
         for f in waiting_files:
             self.found_new_file(f, 'checked')
@@ -146,7 +152,7 @@ class CheckTimer(Thread):
     def run(self):
         while(True):
             time.sleep(self.wait_time)
-            self.handler.check_local_files()
+            self.handler.check_waiting_files()
 
 
 if __name__ == "__main__":
