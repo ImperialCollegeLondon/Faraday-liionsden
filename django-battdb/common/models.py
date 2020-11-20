@@ -22,7 +22,8 @@ from django.core import exceptions
 from django.db.models import JSONField
 import inspect
 import json
-
+from django.db.models.signals import post_delete
+from .utils import file_cleanup
 
 class JSONSchemaField(JSONField):
     """
@@ -360,6 +361,7 @@ class UploadedFile(HasCreatedModifiedDates, HasOwner, HasStatus):
     hash = models.CharField(max_length=64, null=False, unique=True, editable=False,
                             help_text="SHA-1 Hash of uploaded file. You cannot upload the same file twice.")
 
+
     def clean(self):
         self.hash = hash_file(self.file)
         print(self.hash)
@@ -387,3 +389,7 @@ class UploadedFile(HasCreatedModifiedDates, HasOwner, HasStatus):
         else:
             return "%2.2fGB" % (self.size_bytes() / (1024.0**3))
 
+
+# FIXME: This doesn't seem to be working. Files remain on disk after UploadedFile object is deleted
+# Although we probably won't be deleting files anyway.
+post_delete.connect(file_cleanup, sender=UploadedFile, dispatch_uid="gallery.image.file_cleanup")

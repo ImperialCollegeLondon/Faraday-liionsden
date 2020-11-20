@@ -1,6 +1,8 @@
 import hashlib
 from functools import partial
-
+import os
+from django.core.files.storage import default_storage
+from django.db.models import FileField
 import psutil
 
 def has_handle(fpath):
@@ -21,3 +23,9 @@ def hash_file(file, block_size=65536):
         hasher.update(buf)
     return hasher.hexdigest()
 
+
+
+def file_cleanup(sender, **kwargs):
+    field = sender.file
+    if field and isinstance(field, FileField):
+        field.storage.delete(f.path)
