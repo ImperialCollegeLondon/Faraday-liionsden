@@ -20,8 +20,8 @@ urlpatterns = [
     url(r'^plotData/', plotData),
     path('upload/<str:filename>', UploadFileView.as_view(), name='upload_file'),
     path('api/exp/<int:pk>', ExperimentAPIView.as_view(), name='experiment_api'),
-    path('api/exp', ExperimentAPIListView.as_view()),
-    path('api/data', GeneralViewSet.as_view(actions={'get': 'list'}), name='data_api'),
+    path('api/exp', ExperimentAPIListView.as_view(), name='experiment_list_api'),
+    path('api/data', DataFileAPIView.as_view(), name='data_api'),
     path('api/harvester/<slug:slug>', HarvesterAPIView.as_view(), name='harvester_api'),
     path('api/hash_list', AllFileHashesAPIView.as_view(), name='hashes_api'),
 ]

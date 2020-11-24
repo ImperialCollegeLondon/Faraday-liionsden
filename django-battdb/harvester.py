@@ -8,9 +8,39 @@ import requests
 import json
 from common.utils import hash_file, has_handle
 from threading import Thread
+import platform
+import yaml
 
 MIN_FILE_SIZE = 1024  # do not import very small files - 1024 = 1kB
 MIN_FILE_AGE = 60     # do not import files modified very recently (<60s ago) - they are probably still in use
+DEFAULT_CONFIG = """
+database:    # Database connection config 
+    auth_token: 52f1021a6e32e4202acab1c5c19f0067cc1ce38a
+    user: tom
+    host: 127.0.0.1
+    port: 8000
+    machine_id: %s
+    
+experiments:   # Configure folders to monitor
+#  - 
+
+""" % platform.uname()[1] # set machine ID dynamically
+
+def load_config(config_file_path):
+    with open(config_file_path, "r") as config_file:
+        return yaml.safe_load(config_file)
+
+
+def write_config_template(config_template_path):
+    # template = {
+    #     "database_authtoken": "52f1021a6e32e4202acab1c5c19f0067cc1ce38a",
+    #     "database_host": "127.0.0.1",
+    #     "database_port": 8000,
+    #     "machine_id": platform.uname()[1],
+    #
+    # }
+    with open(config_template_path, "w") as config_file:
+        yaml.safe_dump(DEFAULT_CONFIG, config_file)
 
 
 class MyHandler(FileSystemEventHandler):
@@ -19,16 +49,18 @@ class MyHandler(FileSystemEventHandler):
         self.files_by_hash = dict()
         self.files_by_name = dict()
         self.scan_path = path
-        self.API = HarvesterAPI(site="http://ns3122207.ip-54-38-195.eu:10802", auth_token = "52f1021a6e32e4202acab1c5c19f0067cc1ce38a")
+        #self.API = HarvesterAPI(site="http://ns3122207.ip-54-38-195.eu:10802", auth_token = "52f1021a6e32e4202acab1c5c19f0067cc1ce38a")
+        self.API = HarvesterAPI(site="http://localhost:8000",
+                                auth_token="52f1021a6e32e4202acab1c5c19f0067cc1ce38a")
         self.check_db_files()
         self.check_local_files(state="exists_local")
 
     def found_new_file(self, filepath, state):
-        fp = self.files_by_name.get(filepath)
-        print("New file: %s" % fp)
+        fp = self.files_by_name.get(filepath) or None
         if fp is None:  # create new entry in files dict
             fp = dict({'state': state, 'path': filepath, 'size': os.path.getsize(filepath)})
             self.files_by_name[filepath] = fp
+            print("New file: %s" % fp)
         else: # we've already checked this file before
             if os.path.getsize(filepath) > fp['size']:
                 fp['state'] = 'growing'
@@ -47,6 +79,7 @@ class MyHandler(FileSystemEventHandler):
         file_age = time.time() - os.path.getmtime(filepath)
         if file_age < MIN_FILE_AGE:
             print("File [%s] was modified only %ds ago - waiting!" % (filepath, file_age))
+            fp['state'] = 'waiting'
             return
     #     self.consider_upload(filepath)
     #
@@ -110,7 +143,7 @@ class MyHandler(FileSystemEventHandler):
         waiting_files = [f for f in self.files_by_name.values() if f.get('state') == 'waiting']
         print("%d files waiting" % len(waiting_files))
         for f in waiting_files:
-            self.found_new_file(f, 'checked')
+            self.found_new_file(f['path'], 'checked')
 
     def on_modified(self, event: FileSystemEvent):
         if event.is_directory:
@@ -156,7 +189,7 @@ class CheckTimer(Thread):
 
 
 if __name__ == "__main__":
-    scan_path=sys.argv[1]
+    scan_path = str(sys.argv[1])
     event_handler = MyHandler(path=scan_path)
     observer = Observer()
     observer.schedule(event_handler, path=scan_path, recursive=True)

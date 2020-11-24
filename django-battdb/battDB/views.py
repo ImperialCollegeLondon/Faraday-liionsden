@@ -21,7 +21,7 @@ from rest_framework import status, viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser
 from rest_framework import authentication, permissions
-from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView, RetrieveAPIView
 from common.models import UploadedFile
 #import django_filters.rest_framework
 
@@ -262,10 +262,11 @@ class UploadFileView(GenericAPIView):
         obj.user_owner = request.user
         obj.clean()
         obj.save()
-        return Response(status=status.HTTP_201_CREATED)
+        response_data = FileHashSerializer(obj).data
+        return Response(response_data, status=status.HTTP_201_CREATED)
 
-    def get(self, request, format=None):
-        return Response(status=status.HTTP_200_OK)
+    # def get(self, request, format=None):
+    #     return Response(status=status.HTTP_200_OK)
 
     def options(self, request, format=None):
         return Response(status=status.HTTP_200_OK)
@@ -310,7 +311,10 @@ class HarvesterAPIView(ListAPIView):
     def get_queryset(self):
         return Harvester.objects.filter(user_owner=self.request.user, slug=self.kwargs.get('slug'))
 
-
+class DataFileAPIView(ListAPIView):
+    serializer_class = DataFileSerializer
+    def get_queryset(self):
+        return ExperimentDataFile.objects.filter(user_owner=self.request.user, experiment=self.request.GET.get('exp'))
 
 class GeneralViewSet(viewsets.ModelViewSet):
     def get_queryset(self):

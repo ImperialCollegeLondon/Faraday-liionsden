@@ -28,4 +28,4 @@ def hash_file(file, block_size=65536):
 def file_cleanup(sender, **kwargs):
     field = sender.file
     if field and isinstance(field, FileField):
-        field.storage.delete(f.path)
+        field.storage.delete()

@@ -31,11 +31,10 @@ class HarvesterSerializer(serializers.ModelSerializer):
         model = Harvester
         exclude = []
 
-
 class FileHashSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadedFile
-        fields = ['hash']
+        fields = ['id', 'hash']
 
 
 class GeneralSerializer(serializers.ModelSerializer):
