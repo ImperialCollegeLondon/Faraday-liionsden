@@ -1,0 +1,23 @@
+
+database:    # Database connection config 
+    auth_token: 52f1021a6e32e4202acab1c5c19f0067cc1ce38a
+    host: 127.0.0.1
+    port: 8000
+    
+local_machine:
+    machine_id: partridge
+    
+folders:   # Configure folders to monitor
+ - "/tmp/harvester-data":
+   recurse: True                                          # set to True to descend into sub-folders, False otherwise
+   auth_token: 52f1021a6e32e4202acab1c5c19f0067cc1ce38a   # use a different auth token to assign files to a different user. FIXME: this won't work, because the initial list of hashes are currently for one user only, not all users
+   experiment_id: 1                                       # experiment ID to set in the database. Use 'None' to assign later
+   file_extensions:
+     - ".csv"
+     - ".tsv"
+     - ".mpt"
+   parser: biologix
+   columns:
+     - "ECell/V": "Cell Voltage"
+     - "I/mA":    "Current"
+     
