@@ -8,14 +8,13 @@ import os
 import sys
 import requests
 import json
-from common.utils import hash_file, has_handle
 from threading import Thread
 import platform
 import yaml
 import logging
 from dataclasses import dataclass
-
 from harvester import CONFIG
+from harvester.utils import hash_file, has_handle
 
 # schema for info about files in local filesystem
 @dataclass
