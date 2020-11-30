@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import time
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler, FileSystemEvent, EVENT_TYPE_MODIFIED
+from watchdog.events import FileSystemEventHandler, FileSystemEvent, EVENT_TYPE_MODIFIED, EVENT_TYPE_CREATED, EVENT_TYPE_MOVED
 import os
 import sys
 import requests
@@ -11,183 +11,162 @@ from threading import Thread
 import platform
 import yaml
 import logging
+from dataclasses import dataclass
 
+from .harvester import CONFIG
 
+# schema for info about files in local filesystem
+@dataclass
+class FileObj:
+    hash: str = ""
+    path: str = ""
+    size: int = 0
+    ignored: bool = False
+    state: str = "default"
 
-harverster_config = dict()
-DEFAULT_CONFIG = """
-database:    # Database connection config 
-    auth_token: 52f1021a6e32e4202acab1c5c19f0067cc1ce38a
-    host: 127.0.0.1
-    port: 8000
-    
-harvester:
-    machine_id: "%s"      # uniquely identifies this harvester client - default is machine's hostname
-    min_file_size: 1024   # do not import very small files - 1024 = 1kB
-    min_file_age: 60      # do not import files modified very recently (<60s ago) - they are probably still in use
-    
-folders:   # Configure folders to monitor
- - "default": # default folder config
-    {
-       recurse: True,                                           # set to True to descend into sub-folders, False otherwise
-       auth_token: "52f1021a6e32e4202acab1c5c19f0067cc1ce38a",   # use a different auth token to assign files to a different user. FIXME: this won't work, because the initial list of hashes are currently for one user only, not all users
-       experiment_id: 1,                                        # experiment ID to set in the database. Use 'None' to assign later
-       file_extensions:                                        # list of file extensions to upload
-       [ ".csv", ".tsv", ".mpt" ], 
-       parser: "biologic",                                    # choices will be "biologic", "maccor", "ivium", "neware", etc. but currently only biologic is supported 
-       columns:                                               # Columns to extract from file:  Not yet implemented - select parser config via website
-       [
-         "ECell/V": "Cell Voltage",
-         "I/mA":    "Current"
-       ]
-    }
- - "/tmp/harvester-data": 
-    {
-       recurse: True,                                           # set to True to descend into sub-folders, False otherwise
-       auth_token: "52f1021a6e32e4202acab1c5c19f0067cc1ce38a",   # use a different auth token to assign files to a different user. FIXME: this won't work, because the initial list of hashes are currently for one user only, not all users
-       experiment_id: 1,                                        # experiment ID to set in the database. Use 'None' to assign later
-       file_extensions:                                        # list of file extensions to upload
-       [ ".csv", ".tsv", ".mpt" ], 
-       parser: "biologic",                                    # choices will be "biologic", "maccor", "ivium", "neware", etc. but currently only biologic is supported 
-       columns:                                               # Columns to extract from file:  Not yet implemented - select parser config via website
-       [
-         "ECell/V": "Cell Voltage",
-         "I/mA":    "Current"
-       ]
-    }
-     
-""" % platform.uname()[1] or "unknown" # set default machine_id to hostname
-
-
-
+    def check(self):
+        pass
 
 
 class FSMonitor(FileSystemEventHandler):
     def __init__(self, config):
         super().__init__()
+        self.harvester_config = config.get('harvester')
         self.logger = logging.getLogger(self.__class__.__name__)
-        self.files_by_hash = dict()
-        self.waiting_files = list()
+
         self.scan_path = config.get()
         #self.API = HarvesterAPI(site="http://ns3122207.ip-54-38-195.eu:10802", auth_token = "52f1021a6e32e4202acab1c5c19f0067cc1ce38a")
         self.API = HarvesterAPI(site="http://localhost:8000",
                                 auth_token="52f1021a6e32e4202acab1c5c19f0067cc1ce38a")
         self.check_db_files()
-        self.check_local_files(state="exists_local")
+        self.check_local_files(source="exists_local")
 
+    # load cached files list - TODO
+    # def load_files_list(self):
+    #     try:
+    #         with open(config_file_path, "r") as config_file:
+    #             logging.info("Reading config from %s" % config_file_path)
+    #             return yaml.safe_load(config_file)
+    #     except FileNotFoundError:
+    #         write_config_template(config_file_path)
+    #         return yaml.safe_load(DEFAULT_CONFIG)
 
-    def load_files_list(self):
+    def found_new_file(self, filepath, source="found"):
+        if os.path.splitext(filepath)[1].upper() not in [".CSV", ".TSV", ".MPT"]: # TODO: check config.file_patterns for this folder!
+            self.logger.debug("Wrong pattern: %s" % filepath)
+            return None
+        if filepath in self.local_files_by_path.keys():
+            self.logger.error("New path twice! %s" % filepath)
+            # raise ValueError("New path twice!")
+            # return None
+        fd = FileObj(state=source)
+        self.local_files_by_path[filepath] = fd
+        self.logger.debug("New file: %s" % filepath)
+        return fd
+
+    def process_file(self, fd):
+
+        if fd.ignored:
+            self.logger.debug("Ignored: %s", fd.path)
+            return fd
+
+        size = os.path.getsize(fd.path)
+
+        if size < self.harvester_config['min_file_size']:
+            fd.state = "too_small"
+            self.logger.debug("%s: Too small - skipping!" % fd.path)
+            return fd
+
+        if size > fd.size:
+            fd.size = size
+            fd.state = 'growing'
+            self.logger.info("Growing: %s", fd.path)
+            return fd
+
+        # check if file is open
+        if has_handle(fd.path):
+            fd.state = "has_handle"
+            self.logger.info("File [%s] is open in another process - skipping!" % fd.path)
+            return fd
+
+        # check minimum age
+        file_age = time.time() - os.path.getmtime(fd.path)
+        if file_age < self.harvester_config['min_file_age']:
+            self.logger.info("File [%s] was modified only %ds ago - waiting!" % (fd.path, file_age))
+            fd.state = 'waiting'
+            return fd
+
+        # compute hash
+        file_hash = hash_file(open(fd.path, "rb"))
+        self.logger.debug("Computed file hash for %s: %s" % (fd.path, fd.hash))
+        if not fd.hash:
+            fd.hash = file_hash
+        elif file_hash is not fd.hash:
+            self.logger.warning("File hash changed for %s" % fd.path)
+            fd.hash = file_hash
+        else:
+            self.logger.warning("Computed hash twice for %s" % fd.path)
+
+        # check if it exists in the list of hashes we got from the server
+        remote_file = self.remote_files_by_hash.get(fd.hash)
+        if remote_file is not None:
+            logging.warning("Already in database: " % fd.path)
+            fd.state = 'exists_remote'
+            fd.ignored = True
+            return fd
+
+        # Try to upload
+        self.logger.info("Uploading file %s" % fd.path)
         try:
-            with open(config_file_path, "r") as config_file:
-                logging.info("Reading config from %s" % config_file_path)
-                return yaml.safe_load(config_file)
-        except FileNotFoundError:
-            write_config_template(config_file_path)
-            return yaml.safe_load(DEFAULT_CONFIG)
-
-    def found_new_file(self, fd):
-        fp = self.files_by_name.get(filepath) or None
-        if fp is None:  # create new entry in files dict
-            fp = dict({'state': state, 'path': filepath, 'size': os.path.getsize(filepath)})
-            self.files_by_name[filepath] = fp
-            self.logger.info("New file: %s" % fp)
-        else: # we've already checked this file before
-            if os.path.getsize(filepath) > fp['size']:
-                fp['state'] = 'growing'
-
-        if(fp['state'] == 'ignored' or fp['state'] == 'growing' or fp['state'] == 'uploaded'):
-            return
-
-        if fp['size'] < MIN_FILE_SIZE:
-            #print("%s: Too small - skipping!" % filepath)
-            return
-
-        if has_handle(filepath):
-            self.logger.info("File [%s] is open in another process - skipping!" % filepath)
-            return
-
-        file_age = time.time() - os.path.getmtime(filepath)
-        if file_age < MIN_FILE_AGE:
-            self.logger.info("File [%s] was modified only %ds ago - waiting!" % (filepath, file_age))
-            fp['state'] = 'waiting'
-            return
-    #     self.consider_upload(filepath)
-    #
-    # def consider_upload(self, filepath):
-        fp = self.files_by_name.get(filepath) or dict()
-        state = fp.get('state') or 'new'
-        if(state == 'ignored'):
-            return
-
-        file_hash = hash_file(open(filepath, "rb"))
-        fd = self.files_by_hash.get(file_hash)
-        #print("Considering file: %s (%s) - %s" % (filepath, file_hash, state))
-        self.logger.info("Considering file: %s " % fd)
-
-        if fd is None: # create new entry in files dict
-            fd = fp
-            self.files_by_hash[file_hash] = fd
-        else: # already existed - check state of existing entry
-            if(fd['state'] == 'ignored'):
-                return
-            if fd['state'] == 'exists_remote':
-                logging.info("Already in database: %s will be ignored" % filepath)
-                fd['state'] = 'ignored'
-                return
-            if fd['state'] == 'exists_local':
-                logging.info("Local file system contains duplicates: %s will be ignored" % filepath)
-                fd['state'] = 'ignored'
-                return
-            if fd['state'] == 'uploaded':
-                logging.info("Already in database: %s will be ignored" % filepath)
-                fd['state'] = 'ignored'
-                return
-
-        # now we have a file which we think is valid
-
-        fp.update(fd)
-#        fd.update(fp)
-        ## Process state machine
-        self.logger.info("consider_upload: fd=%s" % fd)
-        self.files_by_hash[file_hash] = fd
-        self.logger.info("Uploading file %s" % filepath)
-        try:
-            self.API.upload_file(filepath)
+            self.API.upload_file(fd.path)
+        except requests.exceptions.RequestException:
+            fd.state = 'upload_failed'
+            return fd # try again
         finally:
-            fd['state'] = 'uploaded'
+            fd.state = 'uploaded'
+            fd.ignored = True
+            self.remote_files_by_hash[fd.hash] = fd
+            return fd
 
     def check_db_files(self):
         file = dict()
         try:
             for file in self.API.get_hashes():
                 h = file['hash']
-                self.files_by_hash[h] = dict({'state': 'exists_remote'})
-            self.logger.info("Database has %d files" % len(self.files_by_hash))
+                self.remote_files_by_hash[h] = FileObj(state="exists_remote", hash=h)
+            self.logger.info("Database has %d files" % len(self.remote_files_by_hash))
         except requests.exceptions.ConnectionError:
             self.logger.error("Cannot connect to database")
         except (KeyError, TypeError):
             self.logger.warning("Hashes not returned")
             self.logger.debug(file)
 
-
-    def check_local_files(self, state='new'):
+    def check_local_files(self, source="found_local"):
         for root, subFolders, files in os.walk(self.scan_path):
             for filename in files:
                 file_path = os.path.join(root, filename)
-                self.found_new_file(file_path)
-        self.logger.info("Local machine has %d files" % len(self.files_by_name))
+                self.found_new_file(file_path, source)
+        self.logger.info("Local machine has %d files" % len(self.local_files_by_path))
 
     def check_waiting_files(self):
-        self.logger.info("%d files waiting" % len(self.waiting_files))
-        for f in self.waiting_files:
-            self.recheck_file(f)
+        self.logger.info("%d files waiting" % len(self.local_files_by_path))
+        for fd in self.local_files_by_path:
+            self.process_file(fd)
 
     def on_modified(self, event: FileSystemEvent):
         if event.is_directory:
-            self.logger.info(f'new file: event type: {event.event_type}  path : {event.src_path}')
+            self.logger.debug(f'new file: event type: {event.event_type}  path : {event.src_path}')
+        elif event.event_type == EVENT_TYPE_CREATED:
+            self.logger.debug(f'new file : {event.src_path}')
+            self.found_new_file(event.src_path, 'event_new')
         elif event.event_type == EVENT_TYPE_MODIFIED:
-            self.logger.info(f'path : {event.src_path}')
-            self.found_new_file(event.src_path, 'new')
+            self.logger.debug(f'modified : {event.src_path}')
+            self.found_new_file(event.src_path, 'event_modified')
+        elif event.event_type == EVENT_TYPE_MOVED:
+            self.logger.debug(f'moved : {event.src_path}')
+            self.found_new_file(event.src_path, 'event_moved')
+        else:
+            self.logger.warning(f'Unknown FS Event : {event.event_type}, {event.src_path}')
 
 
 class HarvesterAPI:
@@ -231,29 +210,30 @@ class QueueManager(Thread):
 class HarvesterManager:
     def __init__(self, config_path: str):
         logging.info("======= Harvester utility started =========")
-        self.config = self.load_config(config_path)
-        logging.debug("Config Loaded: %s" % self.config)
-        self.config = self.load_config(config_path)
+        # self.config = self.load_config(config_path)
+        # logging.debug("Config Loaded: %s" % self.config)
+        # self.config = self.load_config(config_path)
         self.observers = dict()
-        self.observer = Observer()
+        observer = Observer()
         self.event_handler = FSMonitor(config=self.config)
+        self.remote_files_by_hash = dict()
+        self.local_files_by_path = dict()
+        self.waiting_files = list()
 
         # iterate through paths and attach observers
-        for line in paths:
+        for folder in CONFIG.folders:
             # convert line into string and strip newline character
-            targetPath = str(line).rstrip()
+            targetPath = str(folder.path).rstrip()
             # Schedules watching of a given path
-            observer.schedule(event_handler, targetPath)
+            observer.schedule(self.event_handler, targetPath)
             # Add observable to list of observers
-            observers.append(observer)
+            self.observers[targetPath] = observer
 
-    def start_monitor(self, path: str, config: dict):
-        pass
-
-    def start(self):
         # start observer
-        self.observer.start()
+        observer.start()
 
+    def wait(self):
+        logging.info("== Waiting for files ==")
         try:
             while True:
                 # poll every second
@@ -267,33 +247,35 @@ class HarvesterManager:
             # Wait until the thread terminates before exit
             o.join()
 
-    def load_config(self, config_file_path):
-        try:
-            with open(config_file_path, "r") as config_file:
-                logging.info("Reading config from %s" % config_file_path)
-                return yaml.safe_load(config_file)
-        except FileNotFoundError:
-            self.write_config_template(config_file_path)
-            return yaml.safe_load(DEFAULT_CONFIG)
-
-
-    def write_config_template(self, config_template_path):
-        # template = {
-        #     "database_authtoken": "52f1021a6e32e4202acab1c5c19f0067cc1ce38a",
-        #     "database_host": "127.0.0.1",
-        #     "database_port": 8000,
-        #     "machine_id": platform.uname()[1],
-        #
-        # }
-        logging.info("Writing default config to %s" % config_template_path)
-        with open(config_template_path, "w") as config_file:
-            config_file.write(DEFAULT_CONFIG)
+    # def load_config(self, config_file_path):
+    #     try:
+    #         with open(config_file_path, "r") as config_file:
+    #             logging.info("Reading config from %s" % config_file_path)
+    #             return yaml.safe_load(config_file)
+    #     except FileNotFoundError:
+    #         self.write_config_template(config_file_path)
+    #         return yaml.safe_load(DEFAULT_CONFIG)
+    #
+    #
+    # def write_config_template(self, config_template_path):
+    #     # template = {
+    #     #     "database_authtoken": "52f1021a6e32e4202acab1c5c19f0067cc1ce38a",
+    #     #     "database_host": "127.0.0.1",
+    #     #     "database_port": 8000,
+    #     #     "machine_id": platform.uname()[1],
+    #     #
+    #     # }
+    #     logging.info("Writing default config to %s" % config_template_path)
+    #     with open(config_template_path, "w") as config_file:
+    #         config_file.write(DEFAULT_CONFIG)
 
 if __name__ == "__main__":
     logging.basicConfig(filename='harvester.log', level=logging.DEBUG)
     logging.getLogger().addHandler(logging.StreamHandler())
-    HM = HarvesterManager(str(sys.argv[1]))
     logging.info("======= Harvester utility started =========")
+    HM = HarvesterManager(str(sys.argv[1]))
+
+
 
     observer.schedule(event_handler, path=scan_path, recursive=True)
     observer.start()
