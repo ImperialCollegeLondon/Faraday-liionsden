@@ -25,8 +25,14 @@ class FileObj:
     ignored: bool = False
     state: str = "default"
 
-    def check(self):
-        pass
+@dataclass
+class DatafileRecord:
+    upload_id: int
+    experiment_id: int
+    status: str = "Draft"
+    notes: str = "Uploaded by harvester API"
+    parser: str = "autodetect"
+    machine: str = CONFIG.machine_id
 
 
 class HarvesterAPI:
@@ -53,8 +59,12 @@ class HarvesterAPI:
         response = requests.put(url, data=open(pathname,'rb'), headers=headers)
         return json.loads(response.text)
 
-    def create_datafile_record(self, file_obj):
-        pass # TODO
+    #TODO
+    def create_datafile_record(self, edf_obj: DatafileRecord):
+        url = self.base_url + "/api/create_datafile"
+        self.logger.debug(f"Create EDF: {url}")
+        headers = {'Authorization': 'Token ' + self.token, "Content-Type": "application/octet-stream"}
+        response = requests.post(url, data=edf_obj, headers=headers)
 
 
 class HarvesterManager:

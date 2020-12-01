@@ -484,8 +484,7 @@ class ExperimentDataFile(cm.BaseModelNoName):
         # As yet unclear to me which is the best approach.
     """
 
-    raw_data_file = models.ForeignKey(cm.UploadedFile, null=True, blank=False, on_delete=models.SET_NULL,
-                                      related_name="used_by")
+    raw_data_file = models.OneToOneField(cm.UploadedFile, null=True, blank=False, on_delete=models.SET_NULL)
 
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
     use_parser = models.ForeignKey(Parser, on_delete=models.SET_NULL, null=True)

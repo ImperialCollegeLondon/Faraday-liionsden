@@ -1,6 +1,8 @@
 
 from .config import HarvesterConfig as hc
 
+
+# Minimal config - any of the values in HarvesterConfig can be overridden here
 CONFIG: hc = hc(
     database=hc.DBConfig(auth_token="52f1021a6e32e4202acab1c5c19f0067cc1ce38a"),
     folders=(

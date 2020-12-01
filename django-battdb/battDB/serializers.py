@@ -32,9 +32,11 @@ class HarvesterSerializer(serializers.ModelSerializer):
         exclude = []
 
 class FileHashSerializer(serializers.ModelSerializer):
+    #experimentdatafile = DataFileSerializer()
+    edf_id = serializers.IntegerField(source="experimentdatafile.id")
     class Meta:
         model = UploadedFile
-        fields = ['id', 'hash']
+        fields = ['id', 'hash', 'edf_id']
 
 
 class GeneralSerializer(serializers.ModelSerializer):

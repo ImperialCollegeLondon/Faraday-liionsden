@@ -8,7 +8,7 @@ import platform
 
 @dataclass
 class HarvesterConfig():
-    # DEFAULT CONFIGS
+    # THESE ARE JUST THE DEFAULT VALUES - see __init__.py for the actual config
 
     @dataclass
     class DBConfig:
