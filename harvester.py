@@ -61,8 +61,8 @@ class HarvesterAPI:
 
     #TODO
     def create_datafile_record(self, edf_obj: DatafileRecord):
-        url = self.base_url + "/api/create_datafile"
-        self.logger.debug(f"Create EDF: {url}")
+        url = self.base_url + "/api/dataCreate"
+        self.logger.debug(f"Create EDF: {url} : {edf_obj}")
         headers = {'Authorization': 'Token ' + self.token, "Content-Type": "application/octet-stream"}
         response = requests.post(url, data=edf_obj, headers=headers)
 
@@ -105,6 +105,7 @@ class HarvesterManager:
                 # poll every second
                 time.sleep(1)
                 self.check_waiting_files()
+                logging.debug("== Waiting for files ==")
         except KeyboardInterrupt:
             for o in self.observers:
                 o.unschedule_all()
@@ -140,33 +141,33 @@ class HarvesterManager:
 
         if fd.ignored:
             #self.logger.debug("Ignored: %s", fd.path)
-            return fd
+            return
 
         size = os.path.getsize(fd.path)
 
         if size < CONFIG.min_file_size:
             fd.state = "too_small"
             self.logger.debug("%s: Too small - skipping!" % fd.path)
-            return fd
+            return
 
         if size > fd.size:
             fd.size = size
             fd.state = 'growing'
             self.logger.info("Growing: %s", fd.path)
-            return fd
+            return
 
         # check if file is open
         if has_handle(fd.path):
             fd.state = "has_handle"
             self.logger.info(f"File [{fd.path}] is open in another process - skipping!")
-            return fd
+            return
 
         # check minimum age
         file_age = time.time() - os.path.getmtime(fd.path)
         if file_age < CONFIG.min_file_age:
             self.logger.info(f"File [{fd.path}] was modified only {file_age}s ago - waiting!")
             fd.state = 'waiting'
-            return fd
+            return
 
         # compute hash
         file_hash = hash_file(open(fd.path, "rb"))
@@ -183,9 +184,15 @@ class HarvesterManager:
         remote_file = self.remote_files_by_hash.get(fd.hash)
         if remote_file is not None:
             logging.warning(f"Already in database: {fd.path}")
+            #if remote_file.edf_id is None:
+            #    assign_to_experiment
             fd.state = 'exists_remote'
             fd.ignored = True
-            return fd
+            return
+
+    #     self.upload_file(fd)
+    #
+    # def upload_file(self, fd):
 
         # Try to upload
         self.logger.info(f"Uploading file: {fd.path}")
@@ -198,7 +205,7 @@ class HarvesterManager:
             fd.state = 'uploaded'
             fd.ignored = True
             self.remote_files_by_hash[fd.hash] = fd
-            return fd
+
 
     def check_db_files(self):
         file = dict()

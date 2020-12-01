@@ -311,10 +311,14 @@ class HarvesterAPIView(ListAPIView):
     def get_queryset(self):
         return Harvester.objects.filter(user_owner=self.request.user, slug=self.kwargs.get('slug'))
 
-class DataFileAPIView(ListAPIView):
+class DataFileListAPIView(ListAPIView):
     serializer_class = DataFileSerializer
     def get_queryset(self):
         return ExperimentDataFile.objects.filter(user_owner=self.request.user, experiment=self.request.GET.get('exp'))
+
+class DataFileCreateAPIView(CreateAPIView):
+    serializer_class = DataFileSerializer
+
 
 class GeneralViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
