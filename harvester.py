@@ -17,6 +17,7 @@ from harvester.utils import hash_file, has_handle
 @dataclass
 class FileObj:
     upload_id: int = None
+    edf_id: int = None
     fhash: str = ""
     path: str = ""
     size: int = 0
@@ -25,9 +26,8 @@ class FileObj:
 
 @dataclass
 class DatafileRecord:
-    upload_id: int
-    experiment_id: int = -1
-    edf_id: int = -1
+    raw_data_file: int
+    experiment: int = -1
     status: str = "draft"
     notes: str = "Uploaded by harvester API"
     parser: str = "autodetect"
@@ -185,12 +185,20 @@ class HarvesterManager:
         # check if it exists in the list of hashes we got from the server
         remote_file = self.remote_files_by_hash.get(fd.fhash)
         if remote_file is not None:
-            logging.warning(f"Already in database: {fd.path}")
-            #if remote_file.edf_id is None:
-            #    assign_to_experiment
             fd.state = 'exists_remote'
-            fd.ignored = True
-            return
+            fd.upload_id = remote_file.upload_id
+            fd.edf_id = remote_file.edf_id
+            if remote_file.edf_id is not None:
+                self.logger.warning(f"Already in database: {fd.path}")
+                #if remote_file.edf_id is None:
+                #    assign_to_experiment
+                fd.ignored = True
+                return
+            else: # exists but unassigned
+                self.logger.warning(f"File previously uploaded but not assigned to an experiment: {fd.path}")
+                self.create_edf(fd)
+                return
+
 
     #     self.upload_file(fd)
     #
@@ -213,7 +221,7 @@ class HarvesterManager:
 
     def create_edf(self, fd: FileObj):
         assert fd.upload_id is not None
-        edf = DatafileRecord(experiment_id=CONFIG.experiment_id, upload_id = fd.upload_id)
+        edf = DatafileRecord(experiment=CONFIG.experiment_id, raw_data_file=fd.upload_id, machine=CONFIG.machine_id)
         self.API.create_datafile_record(edf)
 
     def check_db_files(self):
@@ -221,7 +229,9 @@ class HarvesterManager:
         try:
             for file in self.API.get_hashes():
                 h = file['hash']
-                self.remote_files_by_hash[h] = FileObj(state="exists_remote", fhash=h)
+                i = file['id']
+                e = file['edf_id']
+                self.remote_files_by_hash[h] = FileObj(state="exists_remote", fhash=h, edf_id=e, upload_id=i)
             self.logger.info("Database has %d files" % len(self.remote_files_by_hash))
         except requests.exceptions.ConnectionError:
             self.logger.error("Cannot fetch hash list: Cannot connect to database")

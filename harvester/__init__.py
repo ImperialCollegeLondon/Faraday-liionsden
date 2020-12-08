@@ -10,5 +10,7 @@ CONFIG: hc = hc(
     folders=(
         hc.FolderConfig(path="/tmp/harvester-data", experiment_id=1, recursive=False),
         hc.MyBiologicFolderConfig(path="/tmp/harvester-data/biologic", experiment_id=2, file_patterns=(".txt")),
-    )
+    ),
+    experiment_id=8,
+    machine_id=1
 )

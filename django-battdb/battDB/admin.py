@@ -157,7 +157,7 @@ class DataAdmin(BaseAdmin):
      This should be done with a JOIN instead.
     """
     inlines = [DeviceDataInline, DataRangeInline, ]
-    list_display = ['__str__', 'user_owner', 'get_file_link', 'get_experiment_link', 'show_parser', 'file_data', 'parsed_data', 'created_on', 'status']
+    list_display = ['__str__', 'user_owner', 'get_file_link', 'get_experiment_link', 'file_data', 'parsed_data', 'created_on', 'status']
     list_filter = ['experiment'] + BaseAdmin.list_filter
     readonly_fields = BaseAdmin.readonly_fields + ['is_parsed', 'get_experiment_link', 'file_hash',
                                                    'file_columns', 'num_ranges']
@@ -177,6 +177,7 @@ class DataAdmin(BaseAdmin):
         return "%d/%d: %s" % (parsed, parsed+missing, obj.parsed_columns())
     parsed_data.short_description="Imported Cols"
 
+    #FIXME: This now breaks because parser is a string.
     def show_parser(self, obj):
         if hasattr(obj,'use_parser') and obj.use_parser is not None:
             return mark_safe('<a href="{}">{}</a>'.format(
