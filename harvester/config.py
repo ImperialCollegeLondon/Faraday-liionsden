@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from yamldataclassconfig.config import YamlDataClassConfig
 import platform
 
 # Config Schema & Defaults using shiny Python3.7 dataclasses

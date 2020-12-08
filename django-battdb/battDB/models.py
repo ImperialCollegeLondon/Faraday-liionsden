@@ -437,7 +437,6 @@ class Experiment(cm.BaseModel):
     protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
                                  limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL},
                                  help_text="Test protocol used in this experiment")
-    data_files = models.ManyToManyField(cm.UploadedFile, through="ExperimentDataFile")
     folder = models.ForeignKey(FileFolder, null=True, blank=True, on_delete=models.SET_NULL)
 
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
@@ -486,7 +485,8 @@ class ExperimentDataFile(cm.BaseModelNoName):
 
     raw_data_file = models.OneToOneField(cm.UploadedFile, null=True, blank=False, on_delete=models.SET_NULL)
 
-    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
+    experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL,
+                                   null=True, blank=True, related_name="data_files")
     use_parser = models.SlugField(max_length=20, default="autodetect")
 
     parsed_metadata = models.JSONField(editable=False, default=dict,
