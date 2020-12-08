@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import time
 
-from typing import Dict
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler, FileSystemEvent, EVENT_TYPE_MODIFIED, EVENT_TYPE_CREATED, EVENT_TYPE_MOVED
 import os
@@ -9,17 +8,16 @@ import sys
 import requests
 import json
 from threading import Thread
-import platform
-import yaml
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from harvester import CONFIG
 from harvester.utils import hash_file, has_handle
 
 # schema for info about files in local filesystem
 @dataclass
 class FileObj:
-    hash: str = ""
+    upload_id: int = None
+    fhash: str = ""
     path: str = ""
     size: int = 0
     ignored: bool = False
@@ -28,8 +26,9 @@ class FileObj:
 @dataclass
 class DatafileRecord:
     upload_id: int
-    experiment_id: int
-    status: str = "Draft"
+    experiment_id: int = -1
+    edf_id: int = -1
+    status: str = "draft"
     notes: str = "Uploaded by harvester API"
     parser: str = "autodetect"
     machine: str = CONFIG.machine_id
@@ -53,18 +52,21 @@ class HarvesterAPI:
     def upload_file(self, pathname):
         (dirname, filename) = os.path.split(pathname)
         url = self.base_url + "/battDB/upload/" + filename
-        self.logger.debug(f"Upload: {url}")
+
         headers = {'Authorization': 'Token ' + self.token, "Content-Type": "application/octet-stream"}
         # "Content-Disposition": "attachment; filename=foo"}
         response = requests.put(url, data=open(pathname,'rb'), headers=headers)
+        self.logger.debug(f"Upload: {url} : {response.text}")
         return json.loads(response.text)
 
     #TODO
     def create_datafile_record(self, edf_obj: DatafileRecord):
         url = self.base_url + "/api/dataCreate"
-        self.logger.debug(f"Create EDF: {url} : {edf_obj}")
-        headers = {'Authorization': 'Token ' + self.token, "Content-Type": "application/octet-stream"}
-        response = requests.post(url, data=edf_obj, headers=headers)
+        self.logger.debug(f"Create EDF: {url} : {asdict(edf_obj)}")
+        headers = {'Authorization': 'Token ' + self.token}
+        response = requests.post(url, data=asdict(edf_obj), headers=headers)
+        self.logger.debug(f"EDF: {response.text}")
+        return json.loads(response.text)
 
 
 class HarvesterManager:
@@ -139,7 +141,7 @@ class HarvesterManager:
 
     def process_file(self, fd):
 
-        if fd.ignored:
+        if fd.ignored or fd.upload_id is not None:
             #self.logger.debug("Ignored: %s", fd.path)
             return
 
@@ -171,17 +173,17 @@ class HarvesterManager:
 
         # compute hash
         file_hash = hash_file(open(fd.path, "rb"))
-        self.logger.debug(f"Computed file hash for {fd.path}: {fd.hash}")
-        if not fd.hash:
-            fd.hash = file_hash
-        elif file_hash is not fd.hash:
+        self.logger.debug(f"Computed file hash for {fd.path}: {fd.fhash}")
+        if not fd.fhash:
+            fd.fhash = file_hash
+        elif file_hash is not fd.fhash:
             self.logger.warning(f"File hash changed for {fd.path}")
-            fd.hash = file_hash
+            fd.fhash = file_hash
         else:
             self.logger.warning(f"Computed hash twice for {fd.path}")
 
         # check if it exists in the list of hashes we got from the server
-        remote_file = self.remote_files_by_hash.get(fd.hash)
+        remote_file = self.remote_files_by_hash.get(fd.fhash)
         if remote_file is not None:
             logging.warning(f"Already in database: {fd.path}")
             #if remote_file.edf_id is None:
@@ -197,22 +199,29 @@ class HarvesterManager:
         # Try to upload
         self.logger.info(f"Uploading file: {fd.path}")
         try:
-            self.API.upload_file(fd.path)
+            remote_file = self.API.upload_file(fd.path)
+            fd.upload_id = remote_file.get('id')
+            self.logger.info(f"Got upload id: {fd.upload_id}")
+            self.create_edf(fd)
         except requests.exceptions.RequestException:
             fd.state = 'upload_failed'
             return fd # try again
         finally:
             fd.state = 'uploaded'
             fd.ignored = True
-            self.remote_files_by_hash[fd.hash] = fd
+            self.remote_files_by_hash[fd.fhash] = fd
 
+    def create_edf(self, fd: FileObj):
+        assert fd.upload_id is not None
+        edf = DatafileRecord(experiment_id=CONFIG.experiment_id, upload_id = fd.upload_id)
+        self.API.create_datafile_record(edf)
 
     def check_db_files(self):
         file = dict()
         try:
             for file in self.API.get_hashes():
                 h = file['hash']
-                self.remote_files_by_hash[h] = FileObj(state="exists_remote", hash=h)
+                self.remote_files_by_hash[h] = FileObj(state="exists_remote", fhash=h)
             self.logger.info("Database has %d files" % len(self.remote_files_by_hash))
         except requests.exceptions.ConnectionError:
             self.logger.error("Cannot fetch hash list: Cannot connect to database")

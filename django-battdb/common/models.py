@@ -80,20 +80,15 @@ class HasStatus(models.Model):
     """
    Abstract base for any model having a common object status field
    """
-    OBJ_STATUS_DRAFT = 10  # viewable and editable only by owner
-    OBJ_STATUS_SUBMITTED = 20  # viewable by others, modifiable by owner
-    OBJ_STATUS_ACCEPTED = 30  # cannot be modified by owner, except to return status to draft
-    OBJ_STATUS_PUBLISHED = 40  # cannot be modified except by admin
-    OBJ_STATUS_DELETED = 50  # hidden to all except admin
 
     OBJ_STATUS = [
-        (OBJ_STATUS_DRAFT, 'Draft'),
-        (OBJ_STATUS_SUBMITTED, 'Submitted'),
-        (OBJ_STATUS_ACCEPTED, 'Accepted'),
-        (OBJ_STATUS_PUBLISHED, 'Published'),
-        (OBJ_STATUS_DELETED, 'Deleted'),
+        ("draft", 'Draft'), # viewable and editable only by owner
+        ("submitted", 'Submitted'), # viewable by others, modifiable by owner
+        ("accepted", 'Accepted'), # cannot be modified by owner, except to return status to draft
+        ("published", 'Published'), # cannot be modified except by admin
+        ("deleted", 'Deleted'),  # hidden to all except admin
     ]
-    status = models.PositiveSmallIntegerField(default=OBJ_STATUS_DRAFT, choices=OBJ_STATUS)
+    status = models.CharField(max_length=16, default="draft", choices=OBJ_STATUS)
 
     class Meta:
         abstract = True

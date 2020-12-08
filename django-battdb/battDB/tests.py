@@ -26,7 +26,7 @@ class HarvesterAPITest(APITestCase):
         #response = self.client.put(url, data=data, format='json')
         response = self.client.put(url, data=data, headers=headers, format="raw")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(models.ExperimentDataFile.objects.get().hash, '7776fadaf51c99476d1d7228ff790fcc')
+        self.assertEqual(models.ExperimentDataFile.objects.get().fhash, '7776fadaf51c99476d1d7228ff790fcc')
 
 
 def create_experiment(**kwargs) -> models.Experiment:

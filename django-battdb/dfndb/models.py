@@ -124,7 +124,7 @@ class Parameter(cm.BaseModel):
     Use the notes field to explain what this parameter is for. Use the JSON field to add machine-readable metadata.
     """
     symbol = models.CharField(max_length=40,  help_text="Parameter symbol. Will be decoded as LaTeX")
-    unit = models.ForeignKey(QuantityUnit, blank=True, null=True, on_delete=models.SET_NULL)
+    unit = models.ForeignKey(QuantityUnit, on_delete=models.RESTRICT)
 
     class Meta:
         unique_together = ('symbol', 'unit')

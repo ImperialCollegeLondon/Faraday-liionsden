@@ -317,7 +317,7 @@ class DataFileListAPIView(ListAPIView):
         return ExperimentDataFile.objects.filter(user_owner=self.request.user, experiment=self.request.GET.get('exp'))
 
 class DataFileCreateAPIView(CreateAPIView):
-    serializer_class = DataFileSerializer
+    serializer_class = NewDataFileSerializer
 
 
 class GeneralViewSet(viewsets.ModelViewSet):

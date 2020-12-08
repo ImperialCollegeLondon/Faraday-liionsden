@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-#from yamldataclassconfig.config import YamlDataClassConfig
+from yamldataclassconfig.config import YamlDataClassConfig
 import platform
 
 # Config Schema & Defaults using shiny Python3.7 dataclasses
@@ -37,6 +37,7 @@ class HarvesterConfig():
                           ("ECell/V",    "Voltage"),)
 
     database: DBConfig
+    experiment_id: int = -1                 # specify the ID of an experiment in the database
     machine_id: str = platform.uname()[1]
     file_patterns: tuple = (".csv", ".tsv", ".mpt", ".txt")  # specify file extensions (lower case)
     min_file_size: int = 1024                # ignore files smaller than this many Bytes
@@ -45,4 +46,7 @@ class HarvesterConfig():
         # FolderConfig(path="/tmp/harvester-data", experiment_id=1),  # specify actual config in __init__.py
         # MyBiologicFolderConfig(path="/tmp/harvester-data-bio2", experiment_id=2),
     )
+
+    def get_folder_config(self, path: str):
+        return
 

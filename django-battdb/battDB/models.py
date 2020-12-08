@@ -487,7 +487,7 @@ class ExperimentDataFile(cm.BaseModelNoName):
     raw_data_file = models.OneToOneField(cm.UploadedFile, null=True, blank=False, on_delete=models.SET_NULL)
 
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
-    use_parser = models.ForeignKey(Parser, on_delete=models.SET_NULL, null=True)
+    use_parser = models.SlugField(max_length=20, default="autodetect")
 
     parsed_metadata = models.JSONField(editable=False, default=dict,
                                        help_text="metadata automatically extracted from the file")
