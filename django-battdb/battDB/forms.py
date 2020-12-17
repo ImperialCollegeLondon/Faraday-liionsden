@@ -1,6 +1,5 @@
 from django import forms
 from .models import *
-from common.models import UploadedFile
 from django.contrib.admin.widgets import AdminDateWidget, FilteredSelectMultiple, AutocompleteSelectMultiple
 from django.forms import Textarea, TextInput
 

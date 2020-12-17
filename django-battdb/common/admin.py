@@ -126,9 +126,3 @@ class HasMPTTAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
     readonly_fields = BaseAdmin.readonly_fields + ['metadata']
 
 
-class FileAdmin(ChangeformMixin, admin.ModelAdmin):
-    readonly_fields = ['size', 'created_on', 'modified_on', 'exists', 'hash']
-    list_display = ["__str__", "user_owner", "status"] + readonly_fields
-
-
-admin.site.register(UploadedFile, FileAdmin)

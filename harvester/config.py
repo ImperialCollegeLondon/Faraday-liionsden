@@ -36,6 +36,7 @@ class HarvesterConfig():
                           ("ECell/V",    "Voltage"),)
 
     database: DBConfig
+    local_filelist_cache = "filelist_cache.yaml" # use a YAML file to cache local filenames so that we don't have to hash them all every time
     experiment_id: int = -1                 # specify the ID of an experiment in the database
     machine_id: str = platform.uname()[1]
     file_patterns: tuple = (".csv", ".tsv", ".mpt", ".txt")  # specify file extensions (lower case)

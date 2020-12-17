@@ -22,7 +22,6 @@ from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser
 from rest_framework import authentication, permissions
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView, RetrieveAPIView
-from common.models import UploadedFile
 #import django_filters.rest_framework
 
 np.random.seed(9615)

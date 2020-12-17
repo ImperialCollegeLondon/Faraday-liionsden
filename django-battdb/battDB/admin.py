@@ -123,8 +123,11 @@ class DeviceDataInline(common.admin.TabularInline):
     model = DataColumn
     extra = 0
 
-
-
+class DataFileInline(admin.StackedInline):
+    readonly_fields = ['size', 'local_date', 'exists', 'hash']
+    max_num = 1
+    model = UploadedFile
+    verbose_name_plural = "File Upload"
 
 class DataRangeInline(common.admin.TabularInline):
     model = DataRange
@@ -156,16 +159,12 @@ class DataAdmin(BaseAdmin):
     FIXME: This class exhibits an n+1 query antipattern. For each row returned, 2 additional queries are fired.
      This should be done with a JOIN instead.
     """
-    inlines = [DeviceDataInline, DataRangeInline, ]
+    inlines = [DataFileInline, DeviceDataInline, DataRangeInline, ]
     list_display = ['__str__', 'user_owner', 'get_file_link', 'get_experiment_link', 'file_data', 'parsed_data', 'created_on', 'status']
     list_filter = ['experiment'] + BaseAdmin.list_filter
     readonly_fields = BaseAdmin.readonly_fields + ['is_parsed', 'get_experiment_link', 'file_hash',
                                                    'file_columns', 'num_ranges']
     # form=DataFileForm
-
-    def size(self, obj):
-        return obj.raw_data_file.size()
-    size.short_description = "Raw Size"
 
     def file_data(self, obj):
         return "%dx%d" % (obj.file_rows(), len(obj.file_columns()))
@@ -236,3 +235,9 @@ class ParserAdmin(BaseAdmin):
     save_as = True
 
 admin.site.register(Parser, ParserAdmin)
+
+class FileAdmin(common.admin.ChangeformMixin, admin.ModelAdmin):
+    readonly_fields = ['size', 'local_date', 'exists', 'hash']
+
+
+admin.site.register(UploadedFile, FileAdmin)

@@ -23,6 +23,9 @@ import pandas.errors
 from .utils import parse_data_file, get_parser
 import json
 
+from django.db.models.signals import post_delete
+from common.utils import file_cleanup
+
 import hashlib
 
 # from jsonfield_schema import JSONSchema
@@ -400,10 +403,6 @@ class Parser(cm.BaseModelMandatoryName):
 
 
 
-class FileFolder(cm.BaseModel, cm.HasMPTT):
-    pass
-
-
 class Equipment(cm.BaseModel):
     """
     Definitions of equipment such as cycler machines
@@ -433,11 +432,13 @@ class Experiment(cm.BaseModel):
     #                            on_delete=models.SET_NULL,
     #                            limit_choices_to={'abstract': False, 'complete': True})
     config = models.ForeignKey(DeviceConfig, on_delete=models.SET_NULL, null=True, blank=True, related_name='used_in',
-                               limit_choices_to={'config_type': 'expmt'})
-    protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
-                                 limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL},
-                                 help_text="Test protocol used in this experiment")
-    folder = models.ForeignKey(FileFolder, null=True, blank=True, on_delete=models.SET_NULL)
+                               limit_choices_to={'config_type': 'expmt'},
+                               help_text="All devices in the same experiment must be of the same configuration, "
+                                         "i.e. an experiment must use all single cells, or all 2s2p modules, "
+                                         "not a mixture of both.")
+
+    protocol = models.TextField(null=True, blank=True,
+                                help_text="Test protocol used in this experiment")
 
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
@@ -474,34 +475,32 @@ class Experiment(cm.BaseModel):
     #     verbose_name = "dataset"
 
 
-class ExperimentDataFile(cm.BaseModelNoName):
+class ExperimentDataFile(cm.BaseModel):
     """
-        # FIXME: DataFile currently duplicates data. <br>
-        # It is stored for posterity in the format in which it was uploaded. <br>
-        # It is stored again as JSON within this class <br>
-        # Each defined "range" is pulled out and stored again as an ArrayField. <br>
-        # As yet unclear to me which is the best approach.
+        ExperimentDataFile (EDF) is the class tying data files, parsed data tables, and experiments together. <>BR>
+        It contains all of the time-series numerical data as a Postgres ArrayField(ArrayField(FloatField))) <br>
+        Text data should be added as Events.
+        Raw data files should be uploaded and referenced, where available.
     """
-
-    raw_data_file = models.OneToOneField(cm.UploadedFile, null=True, blank=False, on_delete=models.SET_NULL)
-
+    ts_headers = ArrayField(models.CharField(max_length=32), blank=True, null=True, editable=False,
+                            help_text="Parsed data column headers")
+    ts_data = ArrayField(ArrayField(models.FloatField()), blank=True, null=True, editable=False,
+                         help_text="Parsed time-series data columns (note: this is bulky data!)")
     experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL,
                                    null=True, blank=True, related_name="data_files")
-    use_parser = models.SlugField(max_length=20, default="autodetect")
 
-    parsed_metadata = models.JSONField(editable=False, default=dict,
-                                       help_text="metadata automatically extracted from the file")
-
-    machine = models.ForeignKey(Equipment, null=True, blank=True, on_delete=models.SET_NULL)
+    machine = models.ForeignKey(Equipment, null=True, blank=True, on_delete=models.SET_NULL,
+                                help_text="Equipment on which this data was recorded")
 
     devices = models.ManyToManyField(DeviceBatch, through='ExperimentDevice', related_name="used_in")
 
-    parse = models.BooleanField(default=False, help_text="Set to True to import data on save")
+    protocol = models.ForeignKey(dfn.Method, on_delete=models.SET_NULL, null=True, blank=True,
+                                 limit_choices_to={'type': dfn.Method.METHOD_TYPE_EXPERIMENTAL},
+                                 help_text="Test protocol used in this experiment")
 
     #import_columns = models.ManyToManyField(dfn.Parameter, blank=True)
     # parameters = JSONField(default=experimentParameters_schema, blank=True)
     # analysis = JSONField(default=experimentAnalysis_schema, blank=True)
-
 
     def num_cycles(self):
         return self.ranges.filter(step_action='cycle').count() + \
@@ -530,15 +529,18 @@ class ExperimentDataFile(cm.BaseModelNoName):
     is_parsed.boolean = True
 
     def file_exists(self):
-        if self.raw_data_file is not None:
+        if hasattr(self, 'raw_data_file'):
             return self.raw_data_file.exists()
         return False
     file_exists.boolean = True
 
     def file_hash(self):
-        return self.raw_data_file.hash
+        if self.raw_data_file is not None:
+            return self.raw_data_file.hash
+        # else
+        return "N/A"
 
-    def create_ranges(self, parser):
+    def create_ranges(self):
         ranges = self.attributes.get('range_config') or dict()
         for name, config in ranges.items():
             rng_q = DataRange.objects.get_or_create(dataFile=self, label=name)
@@ -547,35 +549,40 @@ class ExperimentDataFile(cm.BaseModelNoName):
             rng.file_offset_end = config.get('end') or 0
             rng.protocol_step = config.get('step') or 0
             rng.step_action = config.get('action') or 0
-            rng.ts_headers = self.parsed_columns()
-            # get_parser actually reads the whole file, so avoid calling it more than once!
-            # parser = get_parser(self)
-            gen = parser.get_data_generator_for_columns(self.parsed_columns(), 10)
-            data = list(gen)
-#            for item in data:
-
-            rng.ts_data = data
             rng.save()
 
     def clean(self):
-        if self.parse and self.file_exists():
+        if self.name is None or self.name == "":
+            try:
+                self.name = str(self.raw_data_file)
+            except UploadedFile.DoesNotExist:
+                self.name = "Unnamed data set"
+        if self.file_exists() and self.raw_data_file.parse:
             cols = [c.col_name for c in self.use_parser.columns.all().order_by('order')]
             parser = parse_data_file(self, columns=cols)
+            gen = parser.get_data_generator_for_columns(self.parsed_columns(), 10)
+            self.ts_headers = self.parsed_columns()
+            self.ts_data = list(gen)
             if self.is_parsed():
-                self.create_ranges(parser)
+                self.create_ranges()
             del parser
 
         super().clean()
-
-    def __str__(self):
-        return str(self.raw_data_file)
 
     class Meta:
         # verbose_name_plural = "4. Data Files"
         # verbose_name_plural = "Data Files"
         verbose_name = "Data File"
-        unique_together = ['raw_data_file', 'experiment']
+        #unique_together = ['raw_data_file', 'experiment']
 
+
+class UploadedFile(cm.HashedFile):
+    local_path = models.CharField(max_length=1024, default="", blank=True)
+    local_date = models.DateTimeField(default=datetime.now)
+    parse = models.BooleanField(default=False, help_text="Set to True to import data on save")
+    use_parser = models.ForeignKey(Parser, null=True, blank=True, on_delete=models.SET_NULL)
+    parsed_metadata = models.JSONField(editable=False, default=dict,
+                                       help_text="metadata automatically extracted from the file")
 
 class ExperimentDevice(models.Model):
     """
@@ -609,6 +616,7 @@ class ExperimentDevice(models.Model):
         unique_together = [['device_pos', 'data_file'],  # cannot have the same device position ID twice in a data file
                            # cannot use the same device twice in a data file
                            ['experiment', 'deviceBatch', 'batch_seq', 'data_file']]
+
 
 
 
@@ -667,9 +675,7 @@ class DataRange(cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates):
                                             ('cycle', 'Full cycle'), ('rest', 'Rest'),
                                             ('all', 'Entire series'),
                                             ('user', 'User defined')], default='all')
-    # TODO: Possibly split these arrays into a new object
-    ts_headers = ArrayField(models.CharField(max_length=32), blank=True, null=True, editable=False)
-    ts_data = ArrayField(ArrayField(models.FloatField()), blank=True, null=True, editable=False)
+
 
     # TODO: These need a schema
     # events = JSONField(null=True, blank=True)
@@ -720,5 +726,7 @@ class SignalType(models.Model):
 # signals.post_save.connect(data_pre_save, sender=ExperimentDataFile)
 
 
-
+# FIXME: This doesn't seem to be working. Files remain on disk after UploadedFile object is deleted
+# Although we probably won't be deleting files anyway.
+post_delete.connect(file_cleanup, sender=UploadedFile, dispatch_uid="gallery.image.file_cleanup")
 

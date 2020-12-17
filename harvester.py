@@ -7,11 +7,15 @@ import os
 import sys
 import requests
 import json
+import yaml
+from pprint import pprint
 from threading import Thread
 import logging
 from dataclasses import dataclass, asdict
 from harvester import CONFIG
 from harvester.utils import hash_file, has_handle
+import marshmallow
+from marshmallow_dataclass import class_schema
 
 # schema for info about files in local filesystem
 @dataclass
@@ -21,6 +25,7 @@ class FileObj:
     fhash: str = ""
     path: str = ""
     size: int = 0
+    last_modified: float = 0
     ignored: bool = False
     state: str = "default"
 
@@ -31,6 +36,7 @@ class DatafileRecord:
     status: str = "draft"
     notes: str = "Uploaded by harvester API"
     parser: str = "autodetect"
+    parse: bool = False
     machine: str = CONFIG.machine_id
 
 
@@ -85,6 +91,8 @@ class HarvesterManager:
         self.check_db_files()
         self.event_handler = FSMonitor(self)
 
+        self.load_filelist()
+
         # iterate through paths and attach observers
         for folder in CONFIG.folders:
             self.check_local_files(folder.path, recursive=folder.recursive)
@@ -92,6 +100,8 @@ class HarvesterManager:
             observer.schedule(self.event_handler, folder.path, recursive=folder.recursive)
             # Add observable to list of observers
             self.observers.append(observer)
+
+        self.logger.info(f"Local machine has {len(self.local_files_by_path)} files")
 
         # start observer
         try:
@@ -107,7 +117,6 @@ class HarvesterManager:
                 # poll every second
                 time.sleep(1)
                 self.check_waiting_files()
-                logging.debug("== Waiting for files ==")
         except KeyboardInterrupt:
             for o in self.observers:
                 o.unschedule_all()
@@ -116,6 +125,30 @@ class HarvesterManager:
         for o in self.observers:
             # Wait until the thread terminates before exit
             o.join()
+        self.save_filelist()
+
+    def load_filelist(self):
+        self.logger.info(f"Loading cached local files list from {CONFIG.local_filelist_cache}")
+        FObjSchema = class_schema(FileObj)
+
+        try:
+            with open(CONFIG.local_filelist_cache, "r") as cache_file:
+                cache_dict = yaml.safe_load(cache_file)
+                cache = FObjSchema(many=True).load(cache_dict)
+                for fd in cache:
+                    if os.path.exists(fd.path):
+                        self.local_files_by_path[fd.path] = fd
+                    else: self.logger.warning(f"Cached file no longer exists: {fd.path}")
+
+            cache_file.close()
+            self.logger.info(f"Local cache has {len(cache)} files")
+        except FileNotFoundError:
+            self.logger.warning("Filelist Cache not found - Will be created")
+
+    def save_filelist(self):
+        with open(CONFIG.local_filelist_cache, "w") as cache_file:
+            yaml.dump([asdict(f) for f in self.local_files_by_path.values()], stream=cache_file)
+        cache_file.close()
 
     # load cached files list - TODO
     # def load_files_list(self):
@@ -128,48 +161,56 @@ class HarvesterManager:
     #         return yaml.safe_load(DEFAULT_CONFIG)
 
     def found_new_file(self, filepath, source="found"):
+        assert(os.path.exists(filepath))
         if os.path.splitext(filepath)[1].lower() not in CONFIG.file_patterns: # TODO: file_patterns for each folder!
-            self.logger.debug("Wrong pattern: %s" % filepath)
+            self.logger.debug(f"Wrong pattern: {filepath}")
             return None
-        if filepath in self.local_files_by_path.keys():
-            self.logger.error("New path twice! %s" % filepath)
-            raise ValueError("New path twice!")
-        fd = FileObj(path=filepath, size=os.path.getsize(filepath), state=source)
-        self.local_files_by_path[filepath] = fd
-        self.logger.debug("New file: %s" % filepath)
-        return fd
+        fd = self.local_files_by_path.get(filepath) or None
+        if fd is not None:
+            if os.path.getmtime(filepath) != fd.last_modified:
+                if fd.upload_id is not None or fd.edf_id is not None:
+                    self.logger.warning(f"File has already been uploaded but has been modified locally! "
+                                        f"(uid={fd.upload_id}, edf={fd.edf_id}, path={fd.path})")
+                fd.ignored = False
+                fd.state = "modified_offline"
+            return self.local_files_by_path[filepath]
+        else:
+            fd = FileObj(path=filepath, size=os.path.getsize(filepath), state=source)
+            self.local_files_by_path[filepath] = fd
+            self.logger.debug(f"New file: {source} {filepath}")
+            return fd
 
     def process_file(self, fd):
 
         if fd.ignored or fd.upload_id is not None:
             #self.logger.debug("Ignored: %s", fd.path)
-            return
+            return None
 
         size = os.path.getsize(fd.path)
 
         if size < CONFIG.min_file_size:
             fd.state = "too_small"
-            self.logger.debug("%s: Too small - skipping!" % fd.path)
-            return
+            self.logger.debug(f"{fd.path}: Too small - skipping!")
+            return None
 
         if size > fd.size:
             fd.size = size
             fd.state = 'growing'
-            self.logger.info("Growing: %s", fd.path)
+            self.logger.info(f"Growing: {fd.path}")
             return
 
         # check if file is open
         if has_handle(fd.path):
             fd.state = "has_handle"
             self.logger.info(f"File [{fd.path}] is open in another process - skipping!")
-            return
+            return None
 
         # check minimum age
-        file_age = time.time() - os.path.getmtime(fd.path)
-        if file_age < CONFIG.min_file_age:
+        fd.last_modified = os.path.getmtime(fd.path)
+        if time.time() - fd.last_modified < CONFIG.min_file_age:
             self.logger.info(f"File [{fd.path}] was modified only {file_age}s ago - waiting!")
             fd.state = 'waiting'
-            return
+            return None
 
         # compute hash
         file_hash = hash_file(open(fd.path, "rb"))
@@ -193,12 +234,13 @@ class HarvesterManager:
                 #if remote_file.edf_id is None:
                 #    assign_to_experiment
                 fd.ignored = True
-                return
+                return None
             else: # exists but unassigned
                 self.logger.warning(f"File previously uploaded but not assigned to an experiment: {fd.path}")
                 self.create_edf(fd)
-                return
+                return fd
 
+    ### Else:
 
     #     self.upload_file(fd)
     #
@@ -232,21 +274,26 @@ class HarvesterManager:
                 i = file['id']
                 e = file['edf_id']
                 self.remote_files_by_hash[h] = FileObj(state="exists_remote", fhash=h, edf_id=e, upload_id=i)
-            self.logger.info("Database has %d files" % len(self.remote_files_by_hash))
+            self.logger.info(f"Database has {len(self.remote_files_by_hash)} files")
         except requests.exceptions.ConnectionError:
             self.logger.error("Cannot fetch hash list: Cannot connect to database")
         except (KeyError, TypeError):
             self.logger.warning("Hashes not returned")
             self.logger.debug(file)
 
-    def check_local_files(self, scan_path, recursive=False, source="found_local"):
+    def check_local_files(self, scan_path, recursive=False):
+        new=0
+        ignored=0
         for root, subFolders, files in os.walk(scan_path):
             for filename in files:
                 file_path = os.path.join(root, filename)
-                self.found_new_file(file_path, source)
+                if self.found_new_file(file_path, "found_local") is not None:
+                    new = new + 1
+                else: ignored = ignored + 1
             if not recursive:
                 break
-        self.logger.info("Local machine has %d files" % len(self.local_files_by_path))
+        self.logger.info(f"Found {new} valid files and {ignored} ignored under {scan_path} (Recursive={recursive})")
+        self.save_filelist()
 
     def check_waiting_files(self):
         #self.logger.debug("%d local files" % len(self.local_files_by_path))

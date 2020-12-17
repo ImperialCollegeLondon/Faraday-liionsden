@@ -22,8 +22,7 @@ from django.core import exceptions
 from django.db.models import JSONField
 import inspect
 import json
-from django.db.models.signals import post_delete
-from .utils import file_cleanup
+
 
 class JSONSchemaField(JSONField):
     """
@@ -259,7 +258,7 @@ class DOIField(models.URLField):
 
     def __init__(self, *args, **kwargs):
         kwargs['max_length'] = 128;
-        super(DOIField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def validate(self, value, obj):
         if not idutils.is_doi(value):
@@ -278,7 +277,7 @@ class DOIField(models.URLField):
 
 class YearField(models.IntegerField):
     def __init__(self, *args, **kwargs):
-        super(YearField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def validate(self, value, obj):
         super().validate(value, obj)
@@ -307,7 +306,7 @@ class ContentTypeRestrictedFileField(models.FileField):
         self.content_types = kwargs.pop("content_types")
         self.max_upload_size = kwargs.pop("max_upload_size")
 
-        super(ContentTypeRestrictedFileField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean(self, *args, **kwargs):
         data = super(ContentTypeRestrictedFileField, self).clean(*args, **kwargs)
@@ -346,7 +345,7 @@ class Paper(HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedMod
         return slugify(str(self.title) + "-" + str(self.year))
 
 
-class UploadedFile(HasCreatedModifiedDates, HasOwner, HasStatus):
+class HashedFile(models.Model):
     """
     A list of user-uploaded files. <BR>
     FIXME: This is pretty insecure - File format & size is not yet enforced, so any kind of file can be uploaded,
@@ -356,11 +355,14 @@ class UploadedFile(HasCreatedModifiedDates, HasOwner, HasStatus):
     hash = models.CharField(max_length=64, null=False, unique=True, editable=False,
                             help_text="SHA-1 Hash of uploaded file. You cannot upload the same file twice.")
 
+    class Meta:
+        abstract = True
+
 
     def clean(self):
         self.hash = hash_file(self.file)
         print(self.hash)
-        return super(UploadedFile, self).clean()
+        return super().clean()
 
     def __str__(self):
         return os.path.basename(self.file.name)
@@ -385,6 +387,4 @@ class UploadedFile(HasCreatedModifiedDates, HasOwner, HasStatus):
             return "%2.2fGB" % (self.size_bytes() / (1024.0**3))
 
 
-# FIXME: This doesn't seem to be working. Files remain on disk after UploadedFile object is deleted
-# Although we probably won't be deleting files anyway.
-post_delete.connect(file_cleanup, sender=UploadedFile, dispatch_uid="gallery.image.file_cleanup")
+
