@@ -20,7 +20,7 @@
   "pk": 4,
   "fields": {
     "name": "Pack",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-01T17:25:16.059Z",
     "modified_on": "2020-11-12T21:25:13.933Z",
@@ -43,7 +43,7 @@
   "pk": 5,
   "fields": {
     "name": "Module",
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-11-01T17:25:16.061Z",
     "modified_on": "2020-11-12T21:24:48.552Z",
@@ -66,7 +66,7 @@
   "pk": 6,
   "fields": {
     "name": "Cell",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-01T17:27:16.425Z",
     "modified_on": "2020-11-02T12:42:33.456Z",
@@ -89,7 +89,7 @@
   "pk": 7,
   "fields": {
     "name": "My NMC622 Cell",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-01T17:36:29.295Z",
     "modified_on": "2020-11-12T18:01:12.853Z",
@@ -112,7 +112,7 @@
   "pk": 8,
   "fields": {
     "name": "My NMC622 Module",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-01T17:45:04.963Z",
     "modified_on": "2020-11-01T17:45:33.655Z",
@@ -135,7 +135,7 @@
   "pk": 9,
   "fields": {
     "name": "Positive Electrode",
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-11-02T12:16:18.676Z",
     "modified_on": "2020-11-02T12:18:39.030Z",
@@ -158,7 +158,7 @@
   "pk": 10,
   "fields": {
     "name": "Negative Electrode",
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-11-02T12:16:18.677Z",
     "modified_on": "2020-11-02T12:19:21.467Z",
@@ -181,7 +181,7 @@
   "pk": 11,
   "fields": {
     "name": "Separator",
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-11-02T12:16:18.679Z",
     "modified_on": "2020-11-02T12:20:17.379Z",
@@ -204,7 +204,7 @@
   "pk": 12,
   "fields": {
     "name": "Electrolyte",
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-11-02T12:16:18.680Z",
     "modified_on": "2020-11-02T12:16:18.680Z",
@@ -227,7 +227,7 @@
   "pk": 13,
   "fields": {
     "name": "Pos. E'trode Material",
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-11-02T12:18:39.032Z",
     "modified_on": "2020-11-02T12:19:46.361Z",
@@ -250,7 +250,7 @@
   "pk": 14,
   "fields": {
     "name": "Neg. E'trode Material",
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-11-02T12:19:21.469Z",
     "modified_on": "2020-11-02T12:19:21.469Z",
@@ -273,7 +273,7 @@
   "pk": 15,
   "fields": {
     "name": "Separator Material",
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-11-02T12:20:17.381Z",
     "modified_on": "2020-11-02T12:20:17.381Z",
@@ -296,7 +296,7 @@
   "pk": 16,
   "fields": {
     "name": "Cell Casing",
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-11-02T12:20:56.097Z",
     "modified_on": "2020-11-02T12:20:56.097Z",
@@ -319,7 +319,7 @@
   "pk": 17,
   "fields": {
     "name": "Terminal",
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-11-02T12:52:36.100Z",
     "modified_on": "2020-11-02T12:52:36.100Z",
@@ -342,7 +342,7 @@
   "pk": 18,
   "fields": {
     "name": "Connector",
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-11-02T12:52:59.707Z",
     "modified_on": "2020-11-02T13:01:53.108Z",
@@ -365,7 +365,7 @@
   "pk": 19,
   "fields": {
     "name": "Cycler Machine",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-04T12:38:04.208Z",
     "modified_on": "2020-11-04T12:38:04.208Z",
@@ -388,7 +388,7 @@
   "pk": 21,
   "fields": {
     "name": "Positive Electrode Material",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-12T16:56:28.553Z",
     "modified_on": "2020-11-12T18:01:07.031Z",
@@ -458,7 +458,7 @@
   "model": "battDB.devicebatch",
   "pk": 32,
   "fields": {
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-01T17:41:49.156Z",
     "modified_on": "2020-11-12T16:50:19.715Z",
@@ -548,7 +548,7 @@
   "pk": 4,
   "fields": {
     "name": "2s2p module",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-02T12:35:00.339Z",
     "modified_on": "2020-11-02T12:56:54.504Z",
@@ -639,7 +639,7 @@
   "model": "battDB.parser",
   "pk": 1,
   "fields": {
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-10T15:18:25.987Z",
     "modified_on": "2020-11-13T16:11:03.188Z",
@@ -654,7 +654,7 @@
   "model": "battDB.parser",
   "pk": 2,
   "fields": {
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-13T16:10:41.670Z",
     "modified_on": "2020-11-13T16:10:41.670Z",
@@ -666,51 +666,11 @@
   }
 },
 {
-  "model": "battDB.filefolder",
-  "pk": 1,
-  "fields": {
-    "name": "My Folder",
-    "status": 10,
-    "user_owner": 1,
-    "created_on": "2020-11-04T09:38:43.228Z",
-    "modified_on": "2020-11-04T09:38:43.228Z",
-    "attributes": {},
-    "notes": "",
-    "slug": "my-folder",
-    "parent": null,
-    "inherit_metadata": true,
-    "lft": 1,
-    "rght": 4,
-    "tree_id": 1,
-    "level": 0
-  }
-},
-{
-  "model": "battDB.filefolder",
-  "pk": 2,
-  "fields": {
-    "name": "Another Folder",
-    "status": 10,
-    "user_owner": 1,
-    "created_on": "2020-11-04T09:38:58.362Z",
-    "modified_on": "2020-11-04T09:38:58.362Z",
-    "attributes": {},
-    "notes": "",
-    "slug": "another-folder",
-    "parent": 1,
-    "inherit_metadata": true,
-    "lft": 2,
-    "rght": 3,
-    "tree_id": 1,
-    "level": 1
-  }
-},
-{
   "model": "battDB.equipment",
   "pk": 1,
   "fields": {
     "name": "GalvoTron 5000",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-04T12:39:37.006Z",
     "modified_on": "2020-11-04T12:39:37.006Z",
@@ -728,7 +688,7 @@
   "pk": 5,
   "fields": {
     "name": "My experiment",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-01T17:43:36.325Z",
     "modified_on": "2020-11-12T15:09:24.691Z",
@@ -737,8 +697,7 @@
     "slug": "tom-my-experiment-2020-11-01",
     "date": "2020-11-01",
     "config": null,
-    "protocol": 4,
-    "folder": null
+    "protocol": "4"
   }
 },
 {
@@ -746,7 +705,7 @@
   "pk": 6,
   "fields": {
     "name": null,
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-10T12:56:33.537Z",
     "modified_on": "2020-11-11T19:35:54.923Z",
@@ -755,8 +714,7 @@
     "slug": "tom-none-2020-11-10",
     "date": "2020-11-10",
     "config": null,
-    "protocol": null,
-    "folder": null
+    "protocol": null
   }
 },
 {
@@ -764,7 +722,7 @@
   "pk": 7,
   "fields": {
     "name": null,
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-11-10T13:01:21.234Z",
     "modified_on": "2020-11-10T13:01:21.234Z",
@@ -773,8 +731,7 @@
     "slug": "none-none-2020-11-10-130121233994",
     "date": "2020-11-10",
     "config": null,
-    "protocol": null,
-    "folder": null
+    "protocol": null
   }
 },
 {
@@ -782,7 +739,7 @@
   "pk": 8,
   "fields": {
     "name": "fo",
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-11-10T13:02:30.124Z",
     "modified_on": "2020-11-10T13:02:30.124Z",
@@ -791,466 +748,40 @@
     "slug": "none-fo-2020-11-10-130230123371",
     "date": "2020-11-10",
     "config": null,
-    "protocol": null,
-    "folder": null
+    "protocol": null
   }
 },
 {
   "model": "battDB.experimentdatafile",
-  "pk": 16,
+  "pk": 22,
   "fields": {
-    "status": 10,
+    "name": "Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt",
+    "status": "draft",
     "user_owner": 1,
-    "created_on": "2020-11-02T17:02:54.673Z",
-    "modified_on": "2020-11-05T15:55:49.316Z",
+    "created_on": "2020-12-17T22:09:02.273Z",
+    "modified_on": "2020-12-17T22:09:08.590Z",
     "attributes": {},
     "notes": "",
-    "slug": "mugjpeg",
-    "raw_data_file": 17,
+    "slug": "group10-cell25_02_mb_c03mpt_cfuw1dktxt",
+    "ts_headers": null,
+    "ts_data": null,
     "experiment": null,
-    "use_parser": null,
-    "parsed_metadata": {
-      "columns": {}
-    },
     "machine": null,
-    "parse": false
+    "protocol": null
   }
 },
 {
-  "model": "battDB.experimentdatafile",
-  "pk": 17,
+  "model": "battDB.uploadedfile",
+  "pk": 3,
   "fields": {
-    "status": 10,
-    "user_owner": 1,
-    "created_on": "2020-11-02T18:07:10.755Z",
-    "modified_on": "2020-11-16T12:18:36.380Z",
-    "attributes": {
-      "file_rows": 149,
-      "file_columns": [
-        "mode",
-        "ox/red",
-        "error",
-        "control changes",
-        "Ns changes",
-        "counter inc",
-        "Ns",
-        "I Range",
-        "Time",
-        "control/V/mA",
-        "Ecell/V",
-        "I/mA",
-        "dq/mA_h",
-        "(Q-Qo)/mA_h",
-        "Energy/W_h",
-        "Analog IN 1/V",
-        "Analog OUT/V",
-        "Energy charge/W_h",
-        "Energy discharge/W_h",
-        "Capacitance charge/�F",
-        "Capacitance discharge/�F",
-        "x",
-        "Q discharge/mA_h",
-        "Q charge/mA_h",
-        "Capacity/mA_h",
-        "Efficiency/%",
-        "control/V",
-        "control/mA",
-        "cycle number",
-        "P/W",
-        "R/Ohm",
-        "Rec#"
-      ],
-      "range_config": {
-        "all": {
-          "end": 149,
-          "start": 1,
-          "action": "all"
-        }
-      },
-      "parsed_ranges": {
-        "all": {
-          "end": 149,
-          "start": 1,
-          "action": "all"
-        }
-      },
-      "parsed_columns": [
-        "Ecell/V",
-        "I/mA",
-        "control/V"
-      ],
-      "missing_columns": []
-    },
-    "notes": "",
-    "slug": "biologic_fulltxt",
-    "raw_data_file": 18,
-    "experiment": 5,
+    "file": "uploaded_files/Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt",
+    "hash": "bd87c16c57c61092dd4a8cabb89b0ea1",
+    "edf": 22,
+    "local_path": "",
+    "local_date": "2020-12-17T22:09:02.083Z",
+    "parse": false,
     "use_parser": 1,
-    "parsed_metadata": {
-      "num_rows": 149,
-      "warnings": [],
-      "data_start": 101,
-      "file_header": [
-        "BT-Lab ASCII FILE\n",
-        "Nb header lines : 102                         \n",
-        "\n",
-        "Modulo Bat\n",
-        "\n",
-        "Run on channel : E1 (SN 0355)\n",
-        "User : \n",
-        "Ecell ctrl range : min = 0.00 V, max = 9.00 V\n",
-        "Safety Limits :\n",
-        "\tEcell min = 2.50 V\n",
-        "\tEcell max = 4.35 V\n",
-        "\tfor t > 10 ms\n",
-        "Acquisition started on : 08/19/2019 16:31:18\n",
-        "Saved on :\n",
-        "\tFile : Cathode_CE1.mpr\n",
-        "\tDirectory : D:\\Data\\Ryan\\Entropy CoinCells 18Aug\\\n",
-        "\tHost : 192.109.209.129\n",
-        "Device : BCS-815 (SN 0455)\n",
-        "Address : 192.109.209.128\n",
-        "BT-Lab for windows v1.65 (software)\n",
-        "Internet server v1.65 (firmware)\n",
-        "Command interpretor v1.65 (firmware)\n",
-        "Electrode material : \n",
-        "Initial state : \n",
-        "Electrolyte : \n",
-        "Comments : \n",
-        "Mass of active material : 0.001 mg\n",
-        " at x = 0.000\n",
-        "Molecular weight of active material (at x = 0) : 0.001 g/mol\n",
-        "Atomic weight of intercalated ion : 0.001 g/mol\n",
-        "Acquisition started at : xo = 0.000\n",
-        "Number of e- transfered per intercalated ion : 1\n",
-        "for DX = 1, DQ = 26.802 mA.h\n",
-        "Battery capacity : 2.230 mA.h\n",
-        "Electrode surface area : 0.001 cm²\n",
-        "Characteristic mass : 0.001 g\n",
-        "Record Analogic IN 1\n",
-        "Cycle Definition : Charge/Discharge alternance\n",
-        "External device configuration :\n",
-        "   device type : Other\n",
-        "   device name : Other\n",
-        "   Analog OUT : \n",
-        "      mode : E/V\n",
-        "      unit : E/V\n",
-        "      max : 5.000 at 5.000 V\n",
-        "      min : 0.000 at 0.000 V\n",
-        "      current : 0.000\n",
-        "   Analog IN 1 : \n",
-        "      unit : E/V\n",
-        "      max : 5.000 at 5.000 V\n",
-        "      min : 0.000 at 0.000 V\n",
-        "Ns                  0                   1                   2                   3                   4                   5                   6                   7                   8                   9                   10                  11                  12                  13                  14                  15                  16                  17                  18                  19                  20                  21                  22                  23                  24                  25                  26                  27                  28                  29                  \n",
-        "ctrl_type           Rest                Rest                CC                  CV                  Rest                TO                  Rest                Rest                Rest                Rest                Rest                Rest                CC                  Rest                TO                  Rest                Rest                Rest                Rest                Rest                Rest                Loop                CV                  TO                  Rest                Rest                Rest                Rest                Rest                Rest                \n",
-        "Apply I/C           I                   I                   C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               \n",
-        "ctrl1_val                                                   0.000               4.300                                   2.700                                                                                                                                       100.000                                 100.000                                                                                                                                     100.000             2.700               4.300                                                                                                                                       \n",
-        "ctrl1_val_unit                                              mA                  V                                                                                                                                                                                   mA                                                                                                                                                                                                      V                                                                                                                                                               \n",
-        "ctrl1_val_vs                                                <None>              Ref                                                                                                                                                                                 <None>                                                                                                                                                                                                  Ref                                                                                                                                                             \n",
-        "ctrl2_val                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   \n",
-        "ctrl2_val_unit                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              \n",
-        "ctrl2_val_vs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \n",
-        "ctrl3_val                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   \n",
-        "ctrl3_val_unit                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              \n",
-        "ctrl3_val_vs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \n",
-        "N                   1.00                1.00                1.00                3.00                3.00                3.00                3.00                3.00                3.00                3.00                3.00                3.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                \n",
-        "charge/discharge    Charge              Charge              Charge              Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              \n",
-        "ctrl_seq            0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   12                  12                  12                  0                   0                   0                   0                   0                   0                   \n",
-        "ctrl_repeat         0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   60                  60                  60                  0                   0                   0                   0                   0                   0                   \n",
-        "ctrl_trigger        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Rising Edge         Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Rising Edge         Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Rising Edge         Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        \n",
-        "ctrl_TO_t           0.000               0.000               0.000               0.000               0.000               2.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               2.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               2.000               0.000               0.000               0.000               0.000               0.000               0.000               \n",
-        "ctrl_TO_t_unit      d                   d                   d                   d                   d                   s                   d                   d                   d                   d                   d                   d                   d                   d                   s                   d                   d                   d                   d                   d                   d                   d                   d                   s                   d                   d                   d                   d                   d                   d                   \n",
-        "ctrl_Nd             6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   \n",
-        "ctrl_Na             1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   \n",
-        "ctrl_corr           1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   \n",
-        "lim_nb              1                   1                   1                   1                   1                   0                   1                   1                   1                   1                   1                   1                   2                   1                   0                   1                   1                   1                   1                   1                   1                   0                   1                   0                   1                   1                   1                   1                   1                   1                   \n",
-        "lim1_type           Time                Time                Time                Ecell               |I|                 Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                |I|                 \n",
-        "lim1_comp           >                   >                   >                   <                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   <                   <                   >                   >                   >                   >                   >                   >                   \n",
-        "lim1_Q              Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             \n",
-        "lim1_value          3.000               3.000               4.300               23.000              90.000              90.000              3.000               3.000               3.000               3.000               3.000               10.000              6.000               90.000              90.000              3.000               3.000               3.000               3.000               3.000               10.000              10.000              23.000              23.000              3.000               3.000               3.000               3.000               3.000               10.000              \n",
-        "lim1_value_unit     d                   s                   s                   V                   mA                  mn                  d                   s                   d                   s                   d                   mn                  mn                  mn                  mn                  d                   s                   d                   s                   d                   mn                  mn                  s                   s                   d                   s                   d                   s                   d                   mA                  \n",
-        "lim1_action         Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       \n",
-        "lim1_seq            1                   2                   3                   4                   5                   6                   7                   8                   9                   10                  11                  12                  13                  14                  15                  16                  17                  18                  19                  20                  21                  22                  23                  24                  25                  26                  27                  28                  29                  30                  \n",
-        "lim2_type           Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Ecell               Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                \n",
-        "lim2_comp           <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   \n",
-        "lim2_Q              Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             \n",
-        "lim2_value          0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               2.700               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               \n",
-        "lim2_value_unit     s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   V                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   \n",
-        "lim2_action         Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Goto sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       \n",
-        "lim2_seq            1                   2                   3                   4                   5                   6                   7                   8                   9                   10                  11                  12                  22                  14                  15                  16                  17                  18                  19                  20                  21                  22                  23                  24                  25                  26                  27                  28                  29                  30                  \n",
-        "rec_nb              0                   0                   1                   1                   1                   0                   1                   1                   1                   1                   1                   1                   1                   1                   0                   1                   1                   1                   1                   1                   1                   0                   1                   0                   1                   1                   1                   1                   1                   1                   \n",
-        "rec1_type           Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                \n",
-        "rec1_value          1.000               1.000               1.000               1.000               10.000              10.000              1.000               1.000               1.000               1.000               1.000               1.000               1.000               10.000              10.000              1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               \n",
-        "rec1_value_unit     s                   s                   s                   mn                  s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   \n",
-        "E range min (V)     0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               \n",
-        "E range max (V)     9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               \n",
-        "I Range             10 mA               10 mA               1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                \n",
-        "I Range min         Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \n",
-        "I Range max         Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \n",
-        "I Range init        Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \n",
-        "auto rest           0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   \n",
-        "Bandwidth           4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   \n",
-        "\n"
-      ],
-      "Dataset_Name": "BioLogic_full",
-      "dataset_size": 101861,
-      "Device Metadata": {
-        "Mode": "Modulo Bat",
-        "User": null,
-        "DX/DQ": "for DX = 1, DQ = 26.802 mA.h",
-        "Device": "BCS-815 (SN 0455)",
-        "Record": "Analogic IN 1",
-        "Address": "192.109.209.128",
-        "Comments": null,
-        "FileType": "BT-Lab ASCII FILE",
-        "Saved on": {
-          "File": "Cathode_CE1.mpr",
-          "Host": "192.109.209.129",
-          "Directory": "D:\\Data\\Ryan\\Entropy CoinCells 18Aug\\"
-        },
-        "Electrolyte": null,
-        "Initial state": null,
-        "Safety Limits": "Ecell min = 2.50 V Ecell max = 4.35 V for t > 10 ms",
-        "Run on channel": "E1 (SN 0355)",
-        "Internet server": "v1.65 (firmware)",
-        "Nb header lines": 102,
-        "Battery capacity": "2.230 mA.h",
-        "Cycle Definition": "Charge/Discharge alternance",
-        "Ecell ctrl range": "min = 0.00 V, max = 9.00 V",
-        "BT-Lab for windows": "v1.65 (software)",
-        "Electrode material": null,
-        "Characteristic mass": "0.001 g",
-        "Command interpretor": "v1.65 (firmware)",
-        "Acquisition started at": "xo = 0.000",
-        "Acquisition started on": "08/19/2019 16:31:18",
-        "Electrode surface area": "0.001 cm²",
-        "Mass of active material": "0.001 mg at x = 0.000",
-        "External device configuration": {
-          "Analog OUT": {
-            "max": "5.000 at 5.000 V",
-            "min": "0.000 at 0.000 V",
-            "mode": "E/V",
-            "unit": "E/V",
-            "current": 0.0
-          },
-          "Analog IN 1": {
-            "max": "5.000 at 5.000 V",
-            "min": "0.000 at 0.000 V",
-            "unit": "E/V"
-          },
-          "device name": "Other",
-          "device type": "Other"
-        },
-        "Atomic weight of intercalated ion": "0.001 g/mol",
-        "Number of e- transfered per intercalated ion": 1,
-        "Molecular weight of active material (at x = 0)": "0.001 g/mol"
-      },
-      "first_sample_no": 102
-    },
-    "machine": null,
-    "parse": true
-  }
-},
-{
-  "model": "battDB.experimentdatafile",
-  "pk": 18,
-  "fields": {
-    "status": 10,
-    "user_owner": 1,
-    "created_on": "2020-11-05T15:33:41.286Z",
-    "modified_on": "2020-11-14T15:02:19.762Z",
-    "attributes": {
-      "file_rows": 1168866,
-      "file_columns": [
-        "mode",
-        "ox/red",
-        "error",
-        "control changes",
-        "Ns changes",
-        "counter inc",
-        "Ns",
-        "I Range",
-        "Time",
-        "control/V/mA",
-        "Ecell/V",
-        "I/mA",
-        "dq/mA_h",
-        "(Q-Qo)/mA_h",
-        "Energy/W_h",
-        "Energy charge/W_h",
-        "Energy discharge/W_h",
-        "Capacitance charge/�F",
-        "Capacitance discharge/�F",
-        "x",
-        "Q discharge/mA_h",
-        "Q charge/mA_h",
-        "Capacity/mA_h",
-        "Efficiency/%",
-        "control/V",
-        "control/mA",
-        "cycle number",
-        "P/W",
-        "R/Ohm",
-        "Rec#"
-      ],
-      "range_config": {
-        "all": {
-          "end": 1168866,
-          "start": 1,
-          "action": "all"
-        }
-      },
-      "parsed_ranges": {
-        "all": {
-          "end": 1168866,
-          "start": 1,
-          "action": "all"
-        }
-      },
-      "parsed_columns": [
-        "Ecell/V",
-        "I/mA",
-        "control/V"
-      ],
-      "missing_columns": []
-    },
-    "notes": "",
-    "slug": "c_over_20_run_25_c_ca1txt",
-    "raw_data_file": 22,
-    "experiment": null,
-    "use_parser": 1,
-    "parsed_metadata": {
-      "num_rows": 1168866,
-      "warnings": [],
-      "data_start": 84,
-      "file_header": [
-        "BT-Lab ASCII FILE\n",
-        "Nb header lines : 85                          \n",
-        "\n",
-        "Modulo Bat\n",
-        "\n",
-        "Run on channel : A1 (SN 0322)\n",
-        "Grouped channel(s) : A1, A2, A3, A4, A5\n",
-        "User : \n",
-        "Ecell ctrl range : min = 0.00 V, max = 9.00 V\n",
-        "Safety Limits :\n",
-        "\tEcell min = 2.45 V\n",
-        "\tEcell max = 4.25 V\n",
-        "\tfor t > 10 ms\n",
-        "Acquisition started on : 11/11/2019 12:25:53\n",
-        "Saved on :\n",
-        "\tFile : C over 20 run 25 °C_CA1.mpr\n",
-        "\tDirectory : D:\\Data\\Karthik\\MSM - AGM Single layer\\5 Cell Referenece tests\\Matrix  Tests\\25 ° Characterization\\C over 20\\\n",
-        "\tHost : 192.109.209.129\n",
-        "Device : BCS-815 (SN 0455)\n",
-        "Address : 192.109.209.128\n",
-        "BT-Lab for windows v1.65 (software)\n",
-        "Internet server v1.65 (firmware)\n",
-        "Command interpretor v1.65 (firmware)\n",
-        "Electrode material : \n",
-        "Initial state : \n",
-        "Electrolyte : \n",
-        "Comments : \n",
-        "Mass of active material : 0.001 mg\n",
-        " at x = 0.000\n",
-        "Molecular weight of active material (at x = 0) : 0.001 g/mol\n",
-        "Atomic weight of intercalated ion : 0.001 g/mol\n",
-        "Acquisition started at : xo = 0.000\n",
-        "Number of e- transfered per intercalated ion : 1\n",
-        "for DX = 1, DQ = 26.802 mA.h\n",
-        "Battery capacity : 1.000 A.h\n",
-        "Electrode surface area : 0.001 cm²\n",
-        "Characteristic mass : 0.001 g\n",
-        "Cycle Definition : Charge/Discharge alternance\n",
-        "Ns                  0                   1                   2                   3                   4                   5                   6                   7                   8                   \n",
-        "ctrl_type           Rest                CC                  CV                  Rest                CC                  CV                  Rest                Loop                Rest                \n",
-        "Apply I/C           I                   I                   I                   I                   I                   I                   I                   I                   I                   \n",
-        "ctrl1_val                               13.000              4.200                                   13.000              2.500                                   15.000                                  \n",
-        "ctrl1_val_unit                          mA                  V                                       mA                  V                                                                               \n",
-        "ctrl1_val_vs                            <None>              Ref                                     <None>              Ref                                                                             \n",
-        "ctrl2_val                                                                                                                                                                                               \n",
-        "ctrl2_val_unit                                                                                                                                                                                          \n",
-        "ctrl2_val_vs                                                                                                                                                                                            \n",
-        "ctrl3_val                                                                                                                                                                                               \n",
-        "ctrl3_val_unit                                                                                                                                                                                          \n",
-        "ctrl3_val_vs                                                                                                                                                                                            \n",
-        "N                   1.00                1.00                1.00                1.00                1.00                1.00                1.00                1.00                1.00                \n",
-        "charge/discharge    Charge              Charge              Charge              Charge              Discharge           Discharge           Discharge           Discharge           Discharge           \n",
-        "ctrl_seq            0                   0                   0                   0                   0                   0                   0                   1                   1                   \n",
-        "ctrl_repeat         0                   0                   0                   0                   0                   0                   0                   4                   4                   \n",
-        "ctrl_trigger        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        \n",
-        "ctrl_TO_t           0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               \n",
-        "ctrl_TO_t_unit      d                   d                   d                   d                   d                   d                   d                   d                   d                   \n",
-        "ctrl_Nd             6                   6                   6                   6                   6                   6                   6                   6                   6                   \n",
-        "ctrl_Na             1                   1                   1                   1                   1                   1                   1                   1                   1                   \n",
-        "ctrl_corr           1                   1                   1                   1                   1                   1                   1                   1                   1                   \n",
-        "lim_nb              1                   1                   1                   1                   1                   1                   1                   0                   1                   \n",
-        "lim1_type           Time                Ecell               |I|                 Time                Ecell               |I|                 Time                Ecell               Time                \n",
-        "lim1_comp           >                   >                   <                   >                   <                   <                   >                   <                   >                   \n",
-        "lim1_Q              Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             \n",
-        "lim1_value          5.000               4.200               5.000               2.000               2.500               5.000               2.000               2.500               2.000               \n",
-        "lim1_value_unit     s                   V                   mA                  h                   V                   mA                  h                   V                   h                   \n",
-        "lim1_action         Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       \n",
-        "lim1_seq            1                   2                   3                   4                   5                   6                   7                   8                   9                   \n",
-        "rec_nb              1                   2                   2                   1                   2                   2                   1                   0                   1                   \n",
-        "rec1_type           Time                Time                Time                Time                Time                Time                Time                Time                Time                \n",
-        "rec1_value          1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               \n",
-        "rec1_value_unit     mn                  s                   s                   s                   s                   s                   s                   s                   s                   \n",
-        "rec2_type           Time                Ecell               I                   Time                Ecell               I                   I                   Time                Time                \n",
-        "rec2_value          0.000               10.000              0.150               0.000               10.000              0.150               1.000               0.000               0.000               \n",
-        "rec2_value_unit     s                   mV                  mA                  s                   mV                  mA                  mA                  s                   s                   \n",
-        "E range min (V)     0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               \n",
-        "E range max (V)     9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               \n",
-        "I Range             10 mA               10 mA               Auto                1 A                 10 mA               Auto                100 mA              10 mA               1 A                 \n",
-        "I Range min         Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \n",
-        "I Range max         Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \n",
-        "I Range init        Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \n",
-        "auto rest           0                   0                   0                   0                   0                   0                   0                   0                   0                   \n",
-        "Bandwidth           4                   4                   4                   4                   4                   4                   4                   4                   4                   \n",
-        "\n"
-      ],
-      "Dataset_Name": "C_over_20_run_25_C_CA1",
-      "dataset_size": 517385203,
-      "Device Metadata": {
-        "Mode": "Modulo Bat",
-        "User": null,
-        "DX/DQ": "for DX = 1, DQ = 26.802 mA.h",
-        "Device": "BCS-815 (SN 0455)",
-        "Address": "192.109.209.128",
-        "Comments": null,
-        "FileType": "BT-Lab ASCII FILE",
-        "Saved on": {
-          "File": "C over 20 run 25 °C_CA1.mpr",
-          "Host": "192.109.209.129",
-          "Directory": "D:\\Data\\Karthik\\MSM - AGM Single layer\\5 Cell Referenece tests\\Matrix  Tests\\25 ° Characterization\\C over 20\\"
-        },
-        "Electrolyte": null,
-        "Initial state": null,
-        "Safety Limits": "Ecell min = 2.45 V Ecell max = 4.25 V for t > 10 ms",
-        "Run on channel": "A1 (SN 0322)",
-        "Internet server": "v1.65 (firmware)",
-        "Nb header lines": 85,
-        "Battery capacity": "1.000 A.h",
-        "Cycle Definition": "Charge/Discharge alternance",
-        "Ecell ctrl range": "min = 0.00 V, max = 9.00 V",
-        "BT-Lab for windows": "v1.65 (software)",
-        "Electrode material": null,
-        "Grouped channel(s)": "A1, A2, A3, A4, A5",
-        "Characteristic mass": "0.001 g",
-        "Command interpretor": "v1.65 (firmware)",
-        "Acquisition started at": "xo = 0.000",
-        "Acquisition started on": "11/11/2019 12:25:53",
-        "Electrode surface area": "0.001 cm²",
-        "Mass of active material": "0.001 mg at x = 0.000",
-        "Atomic weight of intercalated ion": "0.001 g/mol",
-        "Number of e- transfered per intercalated ion": 1,
-        "Molecular weight of active material (at x = 0)": "0.001 g/mol"
-      },
-      "first_sample_no": 85
-    },
-    "machine": null,
-    "parse": false
+    "parsed_metadata": {}
   }
 },
 {
@@ -1261,7 +792,7 @@
     "deviceBatch": 32,
     "batch_seq": 0,
     "device_pos": "cell_nn",
-    "data_file": 17
+    "data_file": null
   }
 },
 {
@@ -1272,14 +803,14 @@
     "deviceBatch": 32,
     "batch_seq": 1,
     "device_pos": "cell_nn1",
-    "data_file": 17
+    "data_file": null
   }
 },
 {
   "model": "battDB.harvester",
   "pk": 1,
   "fields": {
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-04T12:40:28.873Z",
     "modified_on": "2020-11-11T19:15:53.425Z",
@@ -1298,7 +829,7 @@
   "model": "battDB.harvester",
   "pk": 2,
   "fields": {
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-11T19:35:39.944Z",
     "modified_on": "2020-11-11T19:35:39.944Z",
@@ -1443,7 +974,7 @@
   "model": "common.paper",
   "pk": 1,
   "fields": {
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-10-15T17:18:05.103Z",
     "modified_on": "2020-10-19T15:59:28.034Z",
@@ -1457,126 +988,6 @@
     "publisher": null,
     "url": "https://ieeexplore.ieee.org/document/771073",
     "PDF": ""
-  }
-},
-{
-  "model": "common.uploadedfile",
-  "pk": 17,
-  "fields": {
-    "status": 10,
-    "user_owner": null,
-    "created_on": "2020-11-01T18:20:38.799Z",
-    "modified_on": "2020-11-01T18:20:38.806Z",
-    "file": "uploaded_files/mug.jpeg",
-    "hash": "f5009ba783fd94b0a410738e13dafa14"
-  }
-},
-{
-  "model": "common.uploadedfile",
-  "pk": 18,
-  "fields": {
-    "status": 10,
-    "user_owner": null,
-    "created_on": "2020-11-02T10:59:35.647Z",
-    "modified_on": "2020-11-02T10:59:35.647Z",
-    "file": "uploaded_files/BioLogic_full.txt",
-    "hash": "abf6e42283668f8ba9094a0f85411f64"
-  }
-},
-{
-  "model": "common.uploadedfile",
-  "pk": 19,
-  "fields": {
-    "status": 10,
-    "user_owner": null,
-    "created_on": "2020-11-02T14:40:08.578Z",
-    "modified_on": "2020-11-02T14:40:08.578Z",
-    "file": "uploaded_files/Ivium_Cell1.txt",
-    "hash": "b35947d7bc5b1f3533bd8b0504984a49"
-  }
-},
-{
-  "model": "common.uploadedfile",
-  "pk": 20,
-  "fields": {
-    "status": 10,
-    "user_owner": 1,
-    "created_on": "2020-11-02T16:31:11.964Z",
-    "modified_on": "2020-11-02T16:31:11.964Z",
-    "file": "uploaded_files/sample_Maccor.xlsx",
-    "hash": "bc6f07013a09fed8658411f5c894ed40"
-  }
-},
-{
-  "model": "common.uploadedfile",
-  "pk": 21,
-  "fields": {
-    "status": 10,
-    "user_owner": null,
-    "created_on": "2020-11-02T16:53:59.690Z",
-    "modified_on": "2020-11-02T16:53:59.690Z",
-    "file": "uploaded_files/sample_Maccor_2.xlsx",
-    "hash": "7102ac2452d3e22d5cf7148784fccc38"
-  }
-},
-{
-  "model": "common.uploadedfile",
-  "pk": 22,
-  "fields": {
-    "status": 10,
-    "user_owner": 2,
-    "created_on": "2020-11-05T15:32:25.079Z",
-    "modified_on": "2020-11-12T18:06:23.186Z",
-    "file": "uploaded_files/C_over_20_run_25_C_CA1.txt",
-    "hash": "690ea0970ca93096f6a9399829aa631c"
-  }
-},
-{
-  "model": "common.uploadedfile",
-  "pk": 23,
-  "fields": {
-    "status": 10,
-    "user_owner": 1,
-    "created_on": "2020-11-16T18:14:19.537Z",
-    "modified_on": "2020-11-16T18:14:19.549Z",
-    "file": "uploaded_files/motorLog.tsv",
-    "hash": "2d661d964b713301b5cc2fa8a011d01d"
-  }
-},
-{
-  "model": "common.uploadedfile",
-  "pk": 24,
-  "fields": {
-    "status": 10,
-    "user_owner": 1,
-    "created_on": "2020-11-17T19:32:45.312Z",
-    "modified_on": "2020-11-17T19:32:46.848Z",
-    "file": "uploaded_files/zork",
-    "hash": "872accfb08323cda2b12954ff3f35611"
-  }
-},
-{
-  "model": "common.uploadedfile",
-  "pk": 25,
-  "fields": {
-    "status": 10,
-    "user_owner": 1,
-    "created_on": "2020-11-17T19:32:47.871Z",
-    "modified_on": "2020-11-17T19:32:48.425Z",
-    "file": "uploaded_files/bork",
-    "hash": "30ef79fef19474f440ec375d8b3a8e5f"
-  }
-},
-{
-  "model": "common.uploadedfile",
-  "pk": 26,
-  "fields": {
-    "status": 10,
-    "user_owner": null,
-    "created_on": "2020-11-17T19:32:52.149Z",
-    "modified_on": "2020-11-17T19:32:52.149Z",
-    "file": "uploaded_files/zork_SQeiGbe",
-    "hash": ""
   }
 },
 {
@@ -1638,7 +1049,7 @@
   "pk": 1,
   "fields": {
     "name": "NMC622",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-10-16T11:16:10.333Z",
     "modified_on": "2020-11-12",
@@ -1654,7 +1065,7 @@
   "pk": 2,
   "fields": {
     "name": "Graphite",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-10-16T14:05:13.815Z",
     "modified_on": "2020-10-16",
@@ -1670,7 +1081,7 @@
   "pk": 3,
   "fields": {
     "name": "Lithium Metal",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-10-16T14:06:34.982Z",
     "modified_on": "2020-10-16",
@@ -1731,7 +1142,7 @@
   "pk": 1,
   "fields": {
     "name": "DFN",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-10-16T13:09:50.498Z",
     "modified_on": "2020-10-16",
@@ -1747,7 +1158,7 @@
   "pk": 2,
   "fields": {
     "name": "GITT",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-10-16T13:10:00.357Z",
     "modified_on": "2020-10-16",
@@ -1763,7 +1174,7 @@
   "pk": 3,
   "fields": {
     "name": "My DFN model",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-10-26T11:52:26.985Z",
     "modified_on": "2020-10-26",
@@ -1779,7 +1190,7 @@
   "pk": 4,
   "fields": {
     "name": "My experimental method",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-10-26T11:53:05.693Z",
     "modified_on": "2020-10-26",
@@ -1964,7 +1375,7 @@
   "pk": 1,
   "fields": {
     "name": "particle radius",
-    "status": 10,
+    "status": "draft",
     "user_owner": null,
     "created_on": "2020-10-16T12:02:34.855Z",
     "modified_on": "2020-10-16",
@@ -1983,7 +1394,7 @@
   "pk": 2,
   "fields": {
     "name": "Thickness",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-10-16T12:36:29.748Z",
     "modified_on": "2020-10-16",
@@ -1999,7 +1410,7 @@
   "pk": 3,
   "fields": {
     "name": "Capacity",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-10-16T12:51:37.090Z",
     "modified_on": "2020-10-16",
@@ -2015,7 +1426,7 @@
   "pk": 4,
   "fields": {
     "name": "Cell Voltage",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-10-28T14:42:37.150Z",
     "modified_on": "2020-10-28",
@@ -2031,7 +1442,7 @@
   "pk": 6,
   "fields": {
     "name": "Capacity",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-10-30T12:17:04.438Z",
     "modified_on": "2020-10-30",
@@ -2047,7 +1458,7 @@
   "pk": 7,
   "fields": {
     "name": "Pack Current",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-10-30T15:03:05.688Z",
     "modified_on": "2020-10-30",
@@ -2063,7 +1474,7 @@
   "pk": 8,
   "fields": {
     "name": "miscellaneous",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-01T17:31:08.087Z",
     "modified_on": "2020-11-01",
@@ -2079,7 +1490,7 @@
   "pk": 9,
   "fields": {
     "name": "Thickness",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-12T16:57:06.835Z",
     "modified_on": "2020-11-12",
@@ -2095,7 +1506,7 @@
   "pk": 10,
   "fields": {
     "name": "Control Voltage",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-12T18:08:04.598Z",
     "modified_on": "2020-11-12",
@@ -2111,7 +1522,7 @@
   "pk": 11,
   "fields": {
     "name": "Time",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-12T19:55:19.683Z",
     "modified_on": "2020-11-12",
@@ -2127,7 +1538,7 @@
   "pk": 12,
   "fields": {
     "name": "Sample number",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-11-12T19:56:45.386Z",
     "modified_on": "2020-11-12",
@@ -2143,7 +1554,7 @@
   "pk": 1,
   "fields": {
     "name": "test foo",
-    "status": 10,
+    "status": "draft",
     "user_owner": 1,
     "created_on": "2020-10-16T17:01:43.737Z",
     "modified_on": "2020-10-16",
@@ -10338,6 +9749,669 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 629,
+  "fields": {
+    "action_time": "2020-11-18T10:52:06.610Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "20",
+    "object_repr": "sample_Maccor.xlsx",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 630,
+  "fields": {
+    "action_time": "2020-11-18T10:53:04.015Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "21",
+    "object_repr": "sample_Maccor_2.xlsx",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 631,
+  "fields": {
+    "action_time": "2020-11-18T10:57:20.965Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "19",
+    "object_repr": "Ivium_Cell1.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 632,
+  "fields": {
+    "action_time": "2020-11-18T10:59:30.249Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "19",
+    "object_repr": "Ivium_Cell1.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 633,
+  "fields": {
+    "action_time": "2020-11-18T11:00:43.717Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "25",
+    "object_repr": "bork",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 634,
+  "fields": {
+    "action_time": "2020-11-18T11:01:28.097Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "26",
+    "object_repr": "zork_SQeiGbe",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 635,
+  "fields": {
+    "action_time": "2020-11-18T11:01:28.111Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "24",
+    "object_repr": "zork",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 636,
+  "fields": {
+    "action_time": "2020-11-18T11:01:35.370Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "23",
+    "object_repr": "motorLog.tsv",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 637,
+  "fields": {
+    "action_time": "2020-11-24T12:11:00.581Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "38",
+    "object_repr": "C_over_20_run_25_C_CA1_uc2jYdu.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 638,
+  "fields": {
+    "action_time": "2020-12-07T18:51:50.168Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "41",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 639,
+  "fields": {
+    "action_time": "2020-12-07T19:03:37.148Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "42",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_qRtdDkC.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 640,
+  "fields": {
+    "action_time": "2020-12-07T19:03:37.157Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "40",
+    "object_repr": "LFP_cell02_GEIS_CA2.mpt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 641,
+  "fields": {
+    "action_time": "2020-12-07T19:05:34.153Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "44",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_o27poLH.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 642,
+  "fields": {
+    "action_time": "2020-12-07T19:05:34.164Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "43",
+    "object_repr": "LFP_cell02_GEIS_CA2_DQpIWUA.mpt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 643,
+  "fields": {
+    "action_time": "2020-12-07T19:11:55.690Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "46",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_qTt2g5m.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 644,
+  "fields": {
+    "action_time": "2020-12-07T19:11:55.702Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "45",
+    "object_repr": "LFP_cell02_GEIS_CA2_Z9EAFUQ.mpt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 645,
+  "fields": {
+    "action_time": "2020-12-07T19:14:19.309Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "48",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_aJGb79u.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 646,
+  "fields": {
+    "action_time": "2020-12-07T19:14:19.320Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "47",
+    "object_repr": "LFP_cell02_GEIS_CA2_rbxcED3.mpt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 647,
+  "fields": {
+    "action_time": "2020-12-07T19:21:44.250Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "50",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_scK6O1A.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 648,
+  "fields": {
+    "action_time": "2020-12-07T19:21:44.262Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "49",
+    "object_repr": "LFP_cell02_GEIS_CA2_FG1JBFU.mpt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 649,
+  "fields": {
+    "action_time": "2020-12-07T19:23:53.378Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "51",
+    "object_repr": "LFP_cell02_GEIS_CA2_iJDy387.mpt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 650,
+  "fields": {
+    "action_time": "2020-12-07T22:47:20.960Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "53",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_KJCR6YL.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 651,
+  "fields": {
+    "action_time": "2020-12-07T22:47:20.973Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "52",
+    "object_repr": "LFP_cell02_GEIS_CA2_NE6IIlv.mpt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 652,
+  "fields": {
+    "action_time": "2020-12-07T23:48:15.053Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "55",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_GzyLaFt.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 653,
+  "fields": {
+    "action_time": "2020-12-07T23:48:15.067Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "54",
+    "object_repr": "LFP_cell02_GEIS_CA2_KCGFxsO.mpt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 654,
+  "fields": {
+    "action_time": "2020-12-07T23:49:35.205Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "57",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_gPH0EnV.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 655,
+  "fields": {
+    "action_time": "2020-12-07T23:49:35.217Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "56",
+    "object_repr": "LFP_cell02_GEIS_CA2_dyJjtpn.mpt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 656,
+  "fields": {
+    "action_time": "2020-12-07T23:56:22.772Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "59",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_OY6bSnm.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 657,
+  "fields": {
+    "action_time": "2020-12-07T23:56:22.778Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "58",
+    "object_repr": "LFP_cell02_GEIS_CA2_dAzAkA9.mpt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 658,
+  "fields": {
+    "action_time": "2020-12-08T00:01:28.973Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "61",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_geRlrL2.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 659,
+  "fields": {
+    "action_time": "2020-12-08T00:01:28.986Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "60",
+    "object_repr": "LFP_cell02_GEIS_CA2_mfEdKQS.mpt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 660,
+  "fields": {
+    "action_time": "2020-12-08T00:10:40.091Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "63",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_BxVuwjF.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 661,
+  "fields": {
+    "action_time": "2020-12-08T00:10:40.105Z",
+    "user": 1,
+    "content_type": 63,
+    "object_id": "62",
+    "object_repr": "LFP_cell02_GEIS_CA2_RoxSGWn.mpt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 662,
+  "fields": {
+    "action_time": "2020-12-17T14:22:42.841Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "20",
+    "object_repr": "None",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 663,
+  "fields": {
+    "action_time": "2020-12-17T14:35:45.572Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "18",
+    "object_repr": "Unnamed data set",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 664,
+  "fields": {
+    "action_time": "2020-12-17T15:35:10.300Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "19",
+    "object_repr": "Unnamed data set",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 665,
+  "fields": {
+    "action_time": "2020-12-17T16:37:40.613Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "18",
+    "object_repr": "Unnamed data set",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"uploaded file\", \"object\": \"Group10-Cell25_02_MB_C03.mpt_4gUntXe.txt\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 666,
+  "fields": {
+    "action_time": "2020-12-17T16:39:37.152Z",
+    "user": 1,
+    "content_type": 72,
+    "object_id": "1",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_4gUntXe.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 667,
+  "fields": {
+    "action_time": "2020-12-17T20:51:58.617Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "19",
+    "object_repr": "Unnamed data set",
+    "action_flag": 2,
+    "change_message": "[{\"added\": {\"name\": \"uploaded file\", \"object\": \"Group10-Cell25_02_MB_C03.mpt_0MI9Oc7.txt\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 668,
+  "fields": {
+    "action_time": "2020-12-17T20:52:07.675Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "19",
+    "object_repr": "Unnamed data set",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 669,
+  "fields": {
+    "action_time": "2020-12-17T20:52:17.709Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "19",
+    "object_repr": "Unnamed data set",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 670,
+  "fields": {
+    "action_time": "2020-12-17T20:54:13.853Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "19",
+    "object_repr": "Unnamed data set",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"uploaded file\", \"object\": \"Group10-Cell25_02_MB_C03.mpt.txt\", \"fields\": [\"File\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 671,
+  "fields": {
+    "action_time": "2020-12-17T20:54:31.274Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "19",
+    "object_repr": "Unnamed data set",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 672,
+  "fields": {
+    "action_time": "2020-12-17T20:57:10.629Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "18",
+    "object_repr": "Unnamed data set",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 673,
+  "fields": {
+    "action_time": "2020-12-17T20:58:49.757Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "17",
+    "object_repr": "None",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 674,
+  "fields": {
+    "action_time": "2020-12-17T20:58:49.764Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "16",
+    "object_repr": "None",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 675,
+  "fields": {
+    "action_time": "2020-12-17T21:04:14.897Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "21",
+    "object_repr": "Unnamed data set",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"uploaded file\", \"object\": \"Group10-Cell25_02_MB_C03.mpt_BJbDQGD.txt\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 676,
+  "fields": {
+    "action_time": "2020-12-17T21:05:09.121Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "21",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_BJbDQGD.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 692,
+  "fields": {
+    "action_time": "2020-12-17T22:07:42.642Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "21",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_BJbDQGD.txt",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 693,
+  "fields": {
+    "action_time": "2020-12-17T22:09:02.322Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "22",
+    "object_repr": "Unnamed data set",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}, {\"added\": {\"name\": \"uploaded file\", \"object\": \"Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt\"}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 694,
+  "fields": {
+    "action_time": "2020-12-17T22:09:08.591Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "22",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 29,
   "fields": {
@@ -11706,6 +11780,114 @@
   }
 },
 {
+  "model": "auth.permission",
+  "pk": 285,
+  "fields": {
+    "name": "Can add uploaded file",
+    "content_type": 72,
+    "codename": "add_uploadedfile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 286,
+  "fields": {
+    "name": "Can change uploaded file",
+    "content_type": 72,
+    "codename": "change_uploadedfile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 287,
+  "fields": {
+    "name": "Can delete uploaded file",
+    "content_type": 72,
+    "codename": "delete_uploadedfile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 288,
+  "fields": {
+    "name": "Can view uploaded file",
+    "content_type": 72,
+    "codename": "view_uploadedfile"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 289,
+  "fields": {
+    "name": "Can add data event",
+    "content_type": 73,
+    "codename": "add_dataevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 290,
+  "fields": {
+    "name": "Can change data event",
+    "content_type": 73,
+    "codename": "change_dataevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 291,
+  "fields": {
+    "name": "Can delete data event",
+    "content_type": 73,
+    "codename": "delete_dataevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 292,
+  "fields": {
+    "name": "Can view data event",
+    "content_type": 73,
+    "codename": "view_dataevent"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 293,
+  "fields": {
+    "name": "Can add data table",
+    "content_type": 74,
+    "codename": "add_datatable"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 294,
+  "fields": {
+    "name": "Can change data table",
+    "content_type": 74,
+    "codename": "change_datatable"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 295,
+  "fields": {
+    "name": "Can delete data table",
+    "content_type": 74,
+    "codename": "delete_datatable"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 296,
+  "fields": {
+    "name": "Can view data table",
+    "content_type": 74,
+    "codename": "view_datatable"
+  }
+},
+{
   "model": "auth.group",
   "pk": 1,
   "fields": {
@@ -11826,7 +12008,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$216000$OafoLVPyzITM$orFVUO5QzVoBneWLEpu4jxz+Ucrc+DqclzTFOsJcvH4=",
-    "last_login": "2020-11-16T18:14:56.362Z",
+    "last_login": "2020-12-29T18:07:01.958Z",
     "is_superuser": true,
     "username": "tom",
     "first_name": "Tom",
@@ -12269,6 +12451,30 @@
   }
 },
 {
+  "model": "contenttypes.contenttype",
+  "pk": 72,
+  "fields": {
+    "app_label": "battDB",
+    "model": "uploadedfile"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 73,
+  "fields": {
+    "app_label": "battDB",
+    "model": "dataevent"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 74,
+  "fields": {
+    "app_label": "battDB",
+    "model": "datatable"
+  }
+},
+{
   "model": "sessions.session",
   "pk": "9n5s8vuiaybs4f16zd2ihvnybnmmowy2",
   "fields": {
@@ -12378,6 +12584,30 @@
   "fields": {
     "session_data": ".eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kej1k:Cf0nR-PxemSaAVVjmjAfIWZ5JvWiINY9OmWKPBxxGBs",
     "expire_date": "2020-11-30T18:14:56.368Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "xmfurcackrl15onovppg0cv8qe51yy6s",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kmLbm:D1tL77UGwDZB5Vje23Ois4MrQbbK7YZN31zFfGoPV44",
+    "expire_date": "2020-12-21T18:51:38.507Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "zbiwzzffwqruymi23daayu13wkomo24m",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kjszE:3-JRXG4ckvbDTHln2-C4DOsOb6d7aaZy_REHukzTtqk",
+    "expire_date": "2020-12-14T23:53:40.160Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "zuk838rwug37i1u4j4fry21vxwaxrdv5",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kuJOf:J6-ok3LVIq7rmLTDOgGJa3bc1MyO3NHIkEYNQYTKLCs",
+    "expire_date": "2021-01-12T18:07:01.965Z"
   }
 }
 ]

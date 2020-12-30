@@ -5,8 +5,8 @@ mpld3
 django_jsoneditor
 matplotlib
 psutil
-numpy
-Django
+numpy >= 1.19
+Django >= 1.9
 djangorestframework
 preparenovonix
 PyYAML
@@ -16,3 +16,4 @@ django-ipware
 pydotplus
 coreapi-cli
 django-mptt
+idutils

@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.0 (Debian 13.0-2)
--- Dumped by pg_dump version 13.0 (Debian 13.0-2)
+-- Dumped from database version 13.1 (Debian 13.1-1+b1)
+-- Dumped by pg_dump version 13.1 (Debian 13.1-1+b1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -335,7 +335,6 @@ ALTER SEQUENCE public."battDB_datacolumn_id_seq" OWNED BY public."battDB_datacol
 
 CREATE TABLE public."battDB_devicebatch" (
     id integer NOT NULL,
-    status smallint NOT NULL,
     created_on timestamp with time zone NOT NULL,
     modified_on timestamp with time zone NOT NULL,
     attributes jsonb NOT NULL,
@@ -354,11 +353,11 @@ CREATE TABLE public."battDB_devicebatch" (
     user_owner_id integer,
     manufacturing_protocol_id integer,
     inherit_metadata boolean NOT NULL,
+    status character varying(16) NOT NULL,
     CONSTRAINT "battDB_devicebatch_batch_size_check" CHECK ((batch_size >= 0)),
     CONSTRAINT "battDB_devicebatch_level_check" CHECK ((level >= 0)),
     CONSTRAINT "battDB_devicebatch_lft_check" CHECK ((lft >= 0)),
     CONSTRAINT "battDB_devicebatch_rght_check" CHECK ((rght >= 0)),
-    CONSTRAINT "battDB_devicebatch_status_check" CHECK ((status >= 0)),
     CONSTRAINT "battDB_devicebatch_tree_id_check" CHECK ((tree_id >= 0))
 );
 
@@ -394,7 +393,6 @@ ALTER SEQUENCE public."battDB_devicebatch_id_seq" OWNED BY public."battDB_device
 CREATE TABLE public."battDB_deviceconfig" (
     id integer NOT NULL,
     name character varying(128),
-    status smallint NOT NULL,
     created_on timestamp with time zone NOT NULL,
     modified_on timestamp with time zone NOT NULL,
     attributes jsonb NOT NULL,
@@ -402,7 +400,7 @@ CREATE TABLE public."battDB_deviceconfig" (
     slug character varying(500) NOT NULL,
     user_owner_id integer,
     config_type character varying(10) NOT NULL,
-    CONSTRAINT "battDB_deviceconfig_status_check" CHECK ((status >= 0))
+    status character varying(16) NOT NULL
 );
 
 
@@ -514,7 +512,6 @@ ALTER SEQUENCE public."battDB_deviceparameter_id_seq" OWNED BY public."battDB_de
 CREATE TABLE public."battDB_devicespecification" (
     id integer NOT NULL,
     name character varying(128),
-    status smallint NOT NULL,
     created_on timestamp with time zone NOT NULL,
     modified_on timestamp with time zone NOT NULL,
     attributes jsonb NOT NULL,
@@ -530,10 +527,10 @@ CREATE TABLE public."battDB_devicespecification" (
     parent_id integer,
     user_owner_id integer,
     inherit_metadata boolean NOT NULL,
+    status character varying(16) NOT NULL,
     CONSTRAINT "battDB_devicespecification_level_check" CHECK ((level >= 0)),
     CONSTRAINT "battDB_devicespecification_lft_check" CHECK ((lft >= 0)),
     CONSTRAINT "battDB_devicespecification_rght_check" CHECK ((rght >= 0)),
-    CONSTRAINT "battDB_devicespecification_status_check" CHECK ((status >= 0)),
     CONSTRAINT "battDB_devicespecification_tree_id_check" CHECK ((tree_id >= 0))
 );
 
@@ -569,7 +566,6 @@ ALTER SEQUENCE public."battDB_devicespecification_id_seq" OWNED BY public."battD
 CREATE TABLE public."battDB_equipment" (
     id integer NOT NULL,
     name character varying(128),
-    status smallint NOT NULL,
     created_on timestamp with time zone NOT NULL,
     modified_on timestamp with time zone NOT NULL,
     attributes jsonb NOT NULL,
@@ -580,7 +576,7 @@ CREATE TABLE public."battDB_equipment" (
     specification_id integer,
     user_owner_id integer,
     default_parser_id integer,
-    CONSTRAINT "battDB_equipment_status_check" CHECK ((status >= 0))
+    status character varying(16) NOT NULL
 );
 
 
@@ -615,18 +611,16 @@ ALTER SEQUENCE public."battDB_equipment_id_seq" OWNED BY public."battDB_equipmen
 CREATE TABLE public."battDB_experiment" (
     id integer NOT NULL,
     name character varying(128),
-    status smallint NOT NULL,
     created_on timestamp with time zone NOT NULL,
     modified_on timestamp with time zone NOT NULL,
     attributes jsonb NOT NULL,
     notes text,
     slug character varying(500) NOT NULL,
     date date NOT NULL,
-    protocol_id integer,
+    protocol text,
     user_owner_id integer,
     config_id integer,
-    folder_id integer,
-    CONSTRAINT "battDB_experiment_status_check" CHECK ((status >= 0))
+    status character varying(16) NOT NULL
 );
 
 
@@ -660,20 +654,19 @@ ALTER SEQUENCE public."battDB_experiment_id_seq" OWNED BY public."battDB_experim
 
 CREATE TABLE public."battDB_experimentdatafile" (
     id integer NOT NULL,
-    status smallint NOT NULL,
     created_on timestamp with time zone NOT NULL,
     modified_on timestamp with time zone NOT NULL,
     attributes jsonb NOT NULL,
     notes text,
     slug character varying(500) NOT NULL,
-    raw_data_file_id integer,
     experiment_id integer,
     user_owner_id integer,
-    parsed_metadata jsonb NOT NULL,
     machine_id integer,
-    use_parser_id integer,
-    parse boolean NOT NULL,
-    CONSTRAINT "battDB_experimentdatafile_status_check" CHECK ((status >= 0))
+    status character varying(16) NOT NULL,
+    name character varying(128),
+    ts_data double precision[],
+    ts_headers character varying(32)[],
+    protocol_id integer
 );
 
 
@@ -741,65 +734,12 @@ ALTER SEQUENCE public."battDB_experimentdevice_id_seq" OWNED BY public."battDB_e
 
 
 --
--- Name: battDB_filefolder; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public."battDB_filefolder" (
-    id integer NOT NULL,
-    name character varying(128),
-    status smallint NOT NULL,
-    created_on timestamp with time zone NOT NULL,
-    modified_on timestamp with time zone NOT NULL,
-    attributes jsonb NOT NULL,
-    notes text,
-    slug character varying(500) NOT NULL,
-    lft integer NOT NULL,
-    rght integer NOT NULL,
-    tree_id integer NOT NULL,
-    level integer NOT NULL,
-    parent_id integer,
-    user_owner_id integer,
-    inherit_metadata boolean NOT NULL,
-    CONSTRAINT "battDB_filefolder_level_check" CHECK ((level >= 0)),
-    CONSTRAINT "battDB_filefolder_lft_check" CHECK ((lft >= 0)),
-    CONSTRAINT "battDB_filefolder_rght_check" CHECK ((rght >= 0)),
-    CONSTRAINT "battDB_filefolder_status_check" CHECK ((status >= 0)),
-    CONSTRAINT "battDB_filefolder_tree_id_check" CHECK ((tree_id >= 0))
-);
-
-
-ALTER TABLE public."battDB_filefolder" OWNER TO towen;
-
---
--- Name: battDB_filefolder_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
---
-
-CREATE SEQUENCE public."battDB_filefolder_id_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."battDB_filefolder_id_seq" OWNER TO towen;
-
---
--- Name: battDB_filefolder_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
---
-
-ALTER SEQUENCE public."battDB_filefolder_id_seq" OWNED BY public."battDB_filefolder".id;
-
-
---
 -- Name: battDB_harvester; Type: TABLE; Schema: public; Owner: towen
 --
 
 CREATE TABLE public."battDB_harvester" (
     id integer NOT NULL,
     name character varying(128) NOT NULL,
-    status smallint NOT NULL,
     created_on timestamp with time zone NOT NULL,
     modified_on timestamp with time zone NOT NULL,
     attributes jsonb NOT NULL,
@@ -811,7 +751,7 @@ CREATE TABLE public."battDB_harvester" (
     user_owner_id integer,
     parser_config_id integer,
     local_folder character varying(500) NOT NULL,
-    CONSTRAINT "battDB_harvester_status_check" CHECK ((status >= 0))
+    status character varying(16) NOT NULL
 );
 
 
@@ -840,28 +780,6 @@ ALTER SEQUENCE public."battDB_harvester_id_seq" OWNED BY public."battDB_harveste
 
 
 --
--- Name: battDB_module; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public."battDB_module" (
-    device_ptr_id integer NOT NULL
-);
-
-
-ALTER TABLE public."battDB_module" OWNER TO towen;
-
---
--- Name: battDB_pack; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public."battDB_pack" (
-    device_ptr_id integer NOT NULL
-);
-
-
-ALTER TABLE public."battDB_pack" OWNER TO towen;
-
---
 -- Name: battDB_parser; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -874,9 +792,8 @@ CREATE TABLE public."battDB_parser" (
     created_on timestamp with time zone NOT NULL,
     modified_on timestamp with time zone NOT NULL,
     slug character varying(500) NOT NULL,
-    status smallint NOT NULL,
     user_owner_id integer,
-    CONSTRAINT "battDB_parser_status_check" CHECK ((status >= 0))
+    status character varying(16) NOT NULL
 );
 
 
@@ -943,6 +860,47 @@ ALTER SEQUENCE public."battDB_signaltype_id_seq" OWNED BY public."battDB_signalt
 
 
 --
+-- Name: battDB_uploadedfile; Type: TABLE; Schema: public; Owner: towen
+--
+
+CREATE TABLE public."battDB_uploadedfile" (
+    id integer NOT NULL,
+    file character varying(100) NOT NULL,
+    hash character varying(64) NOT NULL,
+    local_date timestamp with time zone NOT NULL,
+    local_path character varying(1024) NOT NULL,
+    edf_id integer,
+    parse boolean NOT NULL,
+    parsed_metadata jsonb NOT NULL,
+    use_parser_id integer
+);
+
+
+ALTER TABLE public."battDB_uploadedfile" OWNER TO towen;
+
+--
+-- Name: battDB_uploadedfile_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
+--
+
+CREATE SEQUENCE public."battDB_uploadedfile_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public."battDB_uploadedfile_id_seq" OWNER TO towen;
+
+--
+-- Name: battDB_uploadedfile_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
+--
+
+ALTER SEQUENCE public."battDB_uploadedfile_id_seq" OWNED BY public."battDB_uploadedfile".id;
+
+
+--
 -- Name: common_org; Type: TABLE; Schema: public; Owner: towen
 --
 
@@ -999,7 +957,6 @@ CREATE TABLE public.common_paper (
     url character varying(200),
     publisher_id integer,
     attributes jsonb NOT NULL,
-    status smallint NOT NULL,
     user_owner_id integer,
     notes text,
     "PDF" character varying(100),
@@ -1007,7 +964,7 @@ CREATE TABLE public.common_paper (
     created_on timestamp with time zone NOT NULL,
     slug character varying(500) NOT NULL,
     authors character varying(300) NOT NULL,
-    CONSTRAINT common_paper_status_check CHECK ((status >= 0))
+    status character varying(16) NOT NULL
 );
 
 
@@ -1070,46 +1027,6 @@ ALTER TABLE public.common_person_id_seq OWNER TO towen;
 --
 
 ALTER SEQUENCE public.common_person_id_seq OWNED BY public.common_person.id;
-
-
---
--- Name: common_uploadedfile; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public.common_uploadedfile (
-    id integer NOT NULL,
-    created_on timestamp with time zone NOT NULL,
-    modified_on timestamp with time zone NOT NULL,
-    file character varying(100) NOT NULL,
-    hash character varying(64) NOT NULL,
-    status smallint NOT NULL,
-    user_owner_id integer,
-    CONSTRAINT common_uploadedfile_status_check CHECK ((status >= 0))
-);
-
-
-ALTER TABLE public.common_uploadedfile OWNER TO towen;
-
---
--- Name: common_uploadedfile_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
---
-
-CREATE SEQUENCE public.common_uploadedfile_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.common_uploadedfile_id_seq OWNER TO towen;
-
---
--- Name: common_uploadedfile_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
---
-
-ALTER SEQUENCE public.common_uploadedfile_id_seq OWNED BY public.common_uploadedfile.id;
 
 
 --
@@ -1194,13 +1111,12 @@ CREATE TABLE public.dfndb_data (
     paper_id integer,
     user_owner_id integer,
     attributes jsonb NOT NULL,
-    status smallint NOT NULL,
     name character varying(128),
     notes text,
     modified_on date NOT NULL,
     created_on timestamp with time zone NOT NULL,
     slug character varying(500) NOT NULL,
-    CONSTRAINT dfndb_data_status_check CHECK ((status >= 0))
+    status character varying(16) NOT NULL
 );
 
 
@@ -1277,14 +1193,13 @@ CREATE TABLE public.dfndb_material (
     user_owner_id integer,
     type smallint NOT NULL,
     attributes jsonb NOT NULL,
-    status smallint NOT NULL,
     name character varying(128),
     notes text,
     modified_on date NOT NULL,
     created_on timestamp with time zone NOT NULL,
     slug character varying(500) NOT NULL,
+    status character varying(16) NOT NULL,
     CONSTRAINT dfndb_material_polymer_cda0da24_check CHECK ((polymer >= 0)),
-    CONSTRAINT dfndb_material_status_check CHECK ((status >= 0)),
     CONSTRAINT dfndb_material_type_19d56e15_check CHECK ((type >= 0))
 );
 
@@ -1323,13 +1238,12 @@ CREATE TABLE public.dfndb_method (
     description text NOT NULL,
     user_owner_id integer,
     attributes jsonb NOT NULL,
-    status smallint NOT NULL,
     name character varying(128),
     notes text,
     modified_on date NOT NULL,
     created_on timestamp with time zone NOT NULL,
     slug character varying(500) NOT NULL,
-    CONSTRAINT dfndb_method_status_check CHECK ((status >= 0))
+    status character varying(16) NOT NULL
 );
 
 
@@ -1365,15 +1279,14 @@ CREATE TABLE public.dfndb_parameter (
     id integer NOT NULL,
     symbol character varying(40) NOT NULL,
     notes text,
-    unit_id integer,
+    unit_id integer NOT NULL,
     user_owner_id integer,
     attributes jsonb NOT NULL,
-    status smallint NOT NULL,
     name character varying(128),
     modified_on date NOT NULL,
     created_on timestamp with time zone NOT NULL,
     slug character varying(500) NOT NULL,
-    CONSTRAINT dfndb_parameter_status_check CHECK ((status >= 0))
+    status character varying(16) NOT NULL
 );
 
 
@@ -1686,13 +1599,6 @@ ALTER TABLE ONLY public."battDB_experimentdevice" ALTER COLUMN id SET DEFAULT ne
 
 
 --
--- Name: battDB_filefolder id; Type: DEFAULT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_filefolder" ALTER COLUMN id SET DEFAULT nextval('public."battDB_filefolder_id_seq"'::regclass);
-
-
---
 -- Name: battDB_harvester id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
@@ -1714,6 +1620,13 @@ ALTER TABLE ONLY public."battDB_signaltype" ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: battDB_uploadedfile id; Type: DEFAULT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_uploadedfile" ALTER COLUMN id SET DEFAULT nextval('public."battDB_uploadedfile_id_seq"'::regclass);
+
+
+--
 -- Name: common_org id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
@@ -1732,13 +1645,6 @@ ALTER TABLE ONLY public.common_paper ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.common_person ALTER COLUMN id SET DEFAULT nextval('public.common_person_id_seq'::regclass);
-
-
---
--- Name: common_uploadedfile id; Type: DEFAULT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.common_uploadedfile ALTER COLUMN id SET DEFAULT nextval('public.common_uploadedfile_id_seq'::regclass);
 
 
 --
@@ -1971,6 +1877,10 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 270	Can change harvester	68	change_harvester
 271	Can delete harvester	68	delete_harvester
 272	Can view harvester	68	view_harvester
+285	Can add uploaded file	72	add_uploadedfile
+286	Can change uploaded file	72	change_uploadedfile
+287	Can delete uploaded file	72	delete_uploadedfile
+288	Can view uploaded file	72	view_uploadedfile
 85	Can add data range	22	add_datarange
 86	Can change data range	22	change_datarange
 87	Can delete data range	22	delete_datarange
@@ -2035,6 +1945,14 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 278	Can change signal type	70	change_signaltype
 279	Can delete signal type	70	delete_signaltype
 280	Can view signal type	70	view_signaltype
+289	Can add data event	73	add_dataevent
+290	Can change data event	73	change_dataevent
+291	Can delete data event	73	delete_dataevent
+292	Can view data event	73	view_dataevent
+293	Can add data table	74	add_datatable
+294	Can change data table	74	change_datatable
+295	Can delete data table	74	delete_datatable
+296	Can view data table	74	view_datatable
 177	Can add Token	45	add_token
 178	Can change Token	45	change_token
 179	Can delete Token	45	delete_token
@@ -2095,7 +2013,7 @@ COPY public.auth_user (id, password, last_login, is_superuser, username, first_n
 3	pbkdf2_sha256$150000$EfLnuKoVFTo5$eI9zlUW09YuBiHiPdlpYqbf8cFyvRvTISVec8IqZaUw=	2020-08-13 10:56:28+01	t	binbin	Binbin	Chen		t	t	2020-08-13 09:53:36+01
 7	pbkdf2_sha256$216000$Vt9WFAxpjSyE$nW6zcHd0uYfDqElZJ+RkFpcN3t9RDAPKyWGARyQdUw4=	2020-10-08 13:36:25.920895+01	f	test	Test	User		t	t	2020-10-08 13:33:36+01
 8	pbkdf2_sha256$216000$rtzqcHSiEh62$Dzt8NBZjs+1qEmcZRFNHE3c1pMi7CAFMMRK04c52UWg=	\N	f	cycler-foobar5000				f	t	2020-11-04 11:59:55+00
-1	pbkdf2_sha256$216000$OafoLVPyzITM$orFVUO5QzVoBneWLEpu4jxz+Ucrc+DqclzTFOsJcvH4=	2020-11-16 18:14:56.362094+00	t	tom	Tom	Owen	tom.owen@zepler.net	t	t	2020-08-04 19:08:06+01
+1	pbkdf2_sha256$216000$OafoLVPyzITM$orFVUO5QzVoBneWLEpu4jxz+Ucrc+DqclzTFOsJcvH4=	2020-12-29 18:07:01.958477+00	t	tom	Tom	Owen	tom.owen@zepler.net	t	t	2020-08-04 19:08:06+01
 \.
 
 
@@ -2200,8 +2118,8 @@ COPY public."battDB_datacolumn" (id, column_name, resample, resample_n, data_fil
 -- Data for Name: battDB_devicebatch; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_devicebatch" (id, status, created_on, modified_on, attributes, notes, slug, "serialNo", batch_size, manufactured_on, lft, rght, tree_id, level, manufacturer_id, parent_id, specification_id, user_owner_id, manufacturing_protocol_id, inherit_metadata) FROM stdin;
-32	10	2020-11-01 17:41:49.156174+00	2020-11-12 16:50:19.715247+00	{}		imperial-college-my-nmc622-cell-5-off-2020-11-01	B%d	5	2020-11-01	1	2	1	0	1	\N	7	1	\N	t
+COPY public."battDB_devicebatch" (id, created_on, modified_on, attributes, notes, slug, "serialNo", batch_size, manufactured_on, lft, rght, tree_id, level, manufacturer_id, parent_id, specification_id, user_owner_id, manufacturing_protocol_id, inherit_metadata, status) FROM stdin;
+32	2020-11-01 17:41:49.156174+00	2020-11-12 16:50:19.715247+00	{}		imperial-college-my-nmc622-cell-5-off-2020-11-01	B%d	5	2020-11-01	1	2	1	0	1	\N	7	1	\N	t	draft
 \.
 
 
@@ -2209,8 +2127,8 @@ COPY public."battDB_devicebatch" (id, status, created_on, modified_on, attribute
 -- Data for Name: battDB_deviceconfig; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_deviceconfig" (id, name, status, created_on, modified_on, attributes, notes, slug, user_owner_id, config_type) FROM stdin;
-4	2s2p module	10	2020-11-02 12:35:00.339675+00	2020-11-02 12:56:54.504165+00	{}		2s2p-module	1	module
+COPY public."battDB_deviceconfig" (id, name, created_on, modified_on, attributes, notes, slug, user_owner_id, config_type, status) FROM stdin;
+4	2s2p module	2020-11-02 12:35:00.339675+00	2020-11-02 12:56:54.504165+00	{}		2s2p-module	1	module	draft
 \.
 
 
@@ -2245,24 +2163,24 @@ COPY public."battDB_deviceparameter" (id, name, value, material_id, parameter_id
 -- Data for Name: battDB_devicespecification; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_devicespecification" (id, name, status, created_on, modified_on, attributes, notes, slug, abstract, complete, lft, rght, tree_id, level, device_type_id, parent_id, user_owner_id, inherit_metadata) FROM stdin;
-9	Positive Electrode	10	2020-11-02 12:16:18.676514+00	2020-11-02 12:18:39.030117+00	{}		positive-electrode	t	f	4	7	1	3	\N	6	\N	t
-5	Module	10	2020-11-01 17:25:16.061485+00	2020-11-12 21:24:48.552232+00	{}		module	t	t	2	23	1	1	\N	4	\N	f
-4	Pack	10	2020-11-01 17:25:16.059603+00	2020-11-12 21:25:13.933661+00	{}		pack	t	t	1	26	1	0	\N	\N	1	t
-10	Negative Electrode	10	2020-11-02 12:16:18.677955+00	2020-11-02 12:19:21.467412+00	{}		negative-electrode	t	f	8	11	1	3	\N	6	\N	t
-14	Neg. E'trode Material	10	2020-11-02 12:19:21.469428+00	2020-11-02 12:19:21.469438+00	{}		neg-etrode-material	t	f	9	10	1	4	\N	10	\N	t
-13	Pos. E'trode Material	10	2020-11-02 12:18:39.032358+00	2020-11-02 12:19:46.361764+00	{}		pos-etrode-material	t	f	5	6	1	4	\N	9	\N	t
-12	Electrolyte	10	2020-11-02 12:16:18.680618+00	2020-11-02 12:16:18.680627+00	{}		electrolyte	t	f	16	17	1	3	\N	6	\N	t
-11	Separator	10	2020-11-02 12:16:18.679339+00	2020-11-02 12:20:17.379271+00	{}		separator	t	f	12	15	1	3	\N	6	\N	t
-15	Separator Material	10	2020-11-02 12:20:17.381227+00	2020-11-02 12:20:17.381239+00	{}		separator-material	t	f	13	14	1	4	\N	11	\N	t
-16	Cell Casing	10	2020-11-02 12:20:56.097147+00	2020-11-02 12:20:56.097157+00	{}		cell-casing	t	f	18	19	1	3	\N	6	\N	t
-6	Cell	10	2020-11-01 17:27:16.425737+00	2020-11-02 12:42:33.456044+00	{}		cell	t	t	3	20	1	2	\N	5	1	t
-17	Terminal	10	2020-11-02 12:52:36.100321+00	2020-11-02 12:52:36.100332+00	{}		terminal	t	f	21	22	1	2	\N	5	\N	t
-18	Connector	10	2020-11-02 12:52:59.707199+00	2020-11-02 13:01:53.108119+00	{}		connector	t	f	24	25	1	1	\N	4	\N	t
-19	Cycler Machine	10	2020-11-04 12:38:04.208567+00	2020-11-04 12:38:04.208583+00	{}		cycler-machine	t	f	1	2	4	0	\N	\N	1	t
-8	My NMC622 Module	10	2020-11-01 17:45:04.963155+00	2020-11-01 17:45:33.655848+00	{}		my-nmc622-module	f	t	1	8	3	0	5	\N	1	t
-21	Positive Electrode Material	10	2020-11-12 16:56:28.553483+00	2020-11-12 18:01:07.031781+00	{}		positive-electrode-material	f	f	5	6	3	2	13	7	1	t
-7	My NMC622 Cell	10	2020-11-01 17:36:29.295484+00	2020-11-12 18:01:12.853761+00	{}		my-nmc622-cell	f	t	4	7	3	1	6	8	1	t
+COPY public."battDB_devicespecification" (id, name, created_on, modified_on, attributes, notes, slug, abstract, complete, lft, rght, tree_id, level, device_type_id, parent_id, user_owner_id, inherit_metadata, status) FROM stdin;
+9	Positive Electrode	2020-11-02 12:16:18.676514+00	2020-11-02 12:18:39.030117+00	{}		positive-electrode	t	f	4	7	1	3	\N	6	\N	t	draft
+5	Module	2020-11-01 17:25:16.061485+00	2020-11-12 21:24:48.552232+00	{}		module	t	t	2	23	1	1	\N	4	\N	f	draft
+4	Pack	2020-11-01 17:25:16.059603+00	2020-11-12 21:25:13.933661+00	{}		pack	t	t	1	26	1	0	\N	\N	1	t	draft
+10	Negative Electrode	2020-11-02 12:16:18.677955+00	2020-11-02 12:19:21.467412+00	{}		negative-electrode	t	f	8	11	1	3	\N	6	\N	t	draft
+14	Neg. E'trode Material	2020-11-02 12:19:21.469428+00	2020-11-02 12:19:21.469438+00	{}		neg-etrode-material	t	f	9	10	1	4	\N	10	\N	t	draft
+13	Pos. E'trode Material	2020-11-02 12:18:39.032358+00	2020-11-02 12:19:46.361764+00	{}		pos-etrode-material	t	f	5	6	1	4	\N	9	\N	t	draft
+12	Electrolyte	2020-11-02 12:16:18.680618+00	2020-11-02 12:16:18.680627+00	{}		electrolyte	t	f	16	17	1	3	\N	6	\N	t	draft
+11	Separator	2020-11-02 12:16:18.679339+00	2020-11-02 12:20:17.379271+00	{}		separator	t	f	12	15	1	3	\N	6	\N	t	draft
+15	Separator Material	2020-11-02 12:20:17.381227+00	2020-11-02 12:20:17.381239+00	{}		separator-material	t	f	13	14	1	4	\N	11	\N	t	draft
+16	Cell Casing	2020-11-02 12:20:56.097147+00	2020-11-02 12:20:56.097157+00	{}		cell-casing	t	f	18	19	1	3	\N	6	\N	t	draft
+6	Cell	2020-11-01 17:27:16.425737+00	2020-11-02 12:42:33.456044+00	{}		cell	t	t	3	20	1	2	\N	5	1	t	draft
+17	Terminal	2020-11-02 12:52:36.100321+00	2020-11-02 12:52:36.100332+00	{}		terminal	t	f	21	22	1	2	\N	5	\N	t	draft
+18	Connector	2020-11-02 12:52:59.707199+00	2020-11-02 13:01:53.108119+00	{}		connector	t	f	24	25	1	1	\N	4	\N	t	draft
+19	Cycler Machine	2020-11-04 12:38:04.208567+00	2020-11-04 12:38:04.208583+00	{}		cycler-machine	t	f	1	2	4	0	\N	\N	1	t	draft
+8	My NMC622 Module	2020-11-01 17:45:04.963155+00	2020-11-01 17:45:33.655848+00	{}		my-nmc622-module	f	t	1	8	3	0	5	\N	1	t	draft
+21	Positive Electrode Material	2020-11-12 16:56:28.553483+00	2020-11-12 18:01:07.031781+00	{}		positive-electrode-material	f	f	5	6	3	2	13	7	1	t	draft
+7	My NMC622 Cell	2020-11-01 17:36:29.295484+00	2020-11-12 18:01:12.853761+00	{}		my-nmc622-cell	f	t	4	7	3	1	6	8	1	t	draft
 \.
 
 
@@ -2270,8 +2188,8 @@ COPY public."battDB_devicespecification" (id, name, status, created_on, modified
 -- Data for Name: battDB_equipment; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_equipment" (id, name, status, created_on, modified_on, attributes, notes, slug, "serialNo", manufacturer_id, specification_id, user_owner_id, default_parser_id) FROM stdin;
-1	GalvoTron 5000	10	2020-11-04 12:39:37.006194+00	2020-11-04 12:39:37.006214+00	{}		galvotron-5000		1	\N	1	\N
+COPY public."battDB_equipment" (id, name, created_on, modified_on, attributes, notes, slug, "serialNo", manufacturer_id, specification_id, user_owner_id, default_parser_id, status) FROM stdin;
+1	GalvoTron 5000	2020-11-04 12:39:37.006194+00	2020-11-04 12:39:37.006214+00	{}		galvotron-5000		1	\N	1	\N	draft
 \.
 
 
@@ -2279,11 +2197,11 @@ COPY public."battDB_equipment" (id, name, status, created_on, modified_on, attri
 -- Data for Name: battDB_experiment; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_experiment" (id, name, status, created_on, modified_on, attributes, notes, slug, date, protocol_id, user_owner_id, config_id, folder_id) FROM stdin;
-7	\N	10	2020-11-10 13:01:21.234456+00	2020-11-10 13:01:21.234488+00	{}	\N	none-none-2020-11-10-130121233994	2020-11-10	\N	\N	\N	\N
-8	fo	10	2020-11-10 13:02:30.124113+00	2020-11-10 13:02:30.124164+00	{}	\N	none-fo-2020-11-10-130230123371	2020-11-10	\N	\N	\N	\N
-6	\N	10	2020-11-10 12:56:33.537583+00	2020-11-11 19:35:54.923375+00	{}		tom-none-2020-11-10	2020-11-10	\N	1	\N	\N
-5	My experiment	10	2020-11-01 17:43:36.325635+00	2020-11-12 15:09:24.691614+00	{}		tom-my-experiment-2020-11-01	2020-11-01	4	1	\N	\N
+COPY public."battDB_experiment" (id, name, created_on, modified_on, attributes, notes, slug, date, protocol, user_owner_id, config_id, status) FROM stdin;
+7	\N	2020-11-10 13:01:21.234456+00	2020-11-10 13:01:21.234488+00	{}	\N	none-none-2020-11-10-130121233994	2020-11-10	\N	\N	\N	draft
+8	fo	2020-11-10 13:02:30.124113+00	2020-11-10 13:02:30.124164+00	{}	\N	none-fo-2020-11-10-130230123371	2020-11-10	\N	\N	\N	draft
+6	\N	2020-11-10 12:56:33.537583+00	2020-11-11 19:35:54.923375+00	{}		tom-none-2020-11-10	2020-11-10	\N	1	\N	draft
+5	My experiment	2020-11-01 17:43:36.325635+00	2020-11-12 15:09:24.691614+00	{}		tom-my-experiment-2020-11-01	2020-11-01	4	1	\N	draft
 \.
 
 
@@ -2291,10 +2209,8 @@ COPY public."battDB_experiment" (id, name, status, created_on, modified_on, attr
 -- Data for Name: battDB_experimentdatafile; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_experimentdatafile" (id, status, created_on, modified_on, attributes, notes, slug, raw_data_file_id, experiment_id, user_owner_id, parsed_metadata, machine_id, use_parser_id, parse) FROM stdin;
-16	10	2020-11-02 17:02:54.67311+00	2020-11-05 15:55:49.316338+00	{}		mugjpeg	17	\N	1	{"columns": {}}	\N	\N	f
-18	10	2020-11-05 15:33:41.286298+00	2020-11-14 15:02:19.76202+00	{"file_rows": 1168866, "file_columns": ["mode", "ox/red", "error", "control changes", "Ns changes", "counter inc", "Ns", "I Range", "Time", "control/V/mA", "Ecell/V", "I/mA", "dq/mA_h", "(Q-Qo)/mA_h", "Energy/W_h", "Energy charge/W_h", "Energy discharge/W_h", "Capacitance charge/�F", "Capacitance discharge/�F", "x", "Q discharge/mA_h", "Q charge/mA_h", "Capacity/mA_h", "Efficiency/%", "control/V", "control/mA", "cycle number", "P/W", "R/Ohm", "Rec#"], "range_config": {"all": {"end": 1168866, "start": 1, "action": "all"}}, "parsed_ranges": {"all": {"end": 1168866, "start": 1, "action": "all"}}, "parsed_columns": ["Ecell/V", "I/mA", "control/V"], "missing_columns": []}		c_over_20_run_25_c_ca1txt	22	\N	1	{"num_rows": 1168866, "warnings": [], "data_start": 84, "file_header": ["BT-Lab ASCII FILE\\n", "Nb header lines : 85                          \\n", "\\n", "Modulo Bat\\n", "\\n", "Run on channel : A1 (SN 0322)\\n", "Grouped channel(s) : A1, A2, A3, A4, A5\\n", "User : \\n", "Ecell ctrl range : min = 0.00 V, max = 9.00 V\\n", "Safety Limits :\\n", "\\tEcell min = 2.45 V\\n", "\\tEcell max = 4.25 V\\n", "\\tfor t > 10 ms\\n", "Acquisition started on : 11/11/2019 12:25:53\\n", "Saved on :\\n", "\\tFile : C over 20 run 25 °C_CA1.mpr\\n", "\\tDirectory : D:\\\\Data\\\\Karthik\\\\MSM - AGM Single layer\\\\5 Cell Referenece tests\\\\Matrix  Tests\\\\25 ° Characterization\\\\C over 20\\\\\\n", "\\tHost : 192.109.209.129\\n", "Device : BCS-815 (SN 0455)\\n", "Address : 192.109.209.128\\n", "BT-Lab for windows v1.65 (software)\\n", "Internet server v1.65 (firmware)\\n", "Command interpretor v1.65 (firmware)\\n", "Electrode material : \\n", "Initial state : \\n", "Electrolyte : \\n", "Comments : \\n", "Mass of active material : 0.001 mg\\n", " at x = 0.000\\n", "Molecular weight of active material (at x = 0) : 0.001 g/mol\\n", "Atomic weight of intercalated ion : 0.001 g/mol\\n", "Acquisition started at : xo = 0.000\\n", "Number of e- transfered per intercalated ion : 1\\n", "for DX = 1, DQ = 26.802 mA.h\\n", "Battery capacity : 1.000 A.h\\n", "Electrode surface area : 0.001 cm²\\n", "Characteristic mass : 0.001 g\\n", "Cycle Definition : Charge/Discharge alternance\\n", "Ns                  0                   1                   2                   3                   4                   5                   6                   7                   8                   \\n", "ctrl_type           Rest                CC                  CV                  Rest                CC                  CV                  Rest                Loop                Rest                \\n", "Apply I/C           I                   I                   I                   I                   I                   I                   I                   I                   I                   \\n", "ctrl1_val                               13.000              4.200                                   13.000              2.500                                   15.000                                  \\n", "ctrl1_val_unit                          mA                  V                                       mA                  V                                                                               \\n", "ctrl1_val_vs                            <None>              Ref                                     <None>              Ref                                                                             \\n", "ctrl2_val                                                                                                                                                                                               \\n", "ctrl2_val_unit                                                                                                                                                                                          \\n", "ctrl2_val_vs                                                                                                                                                                                            \\n", "ctrl3_val                                                                                                                                                                                               \\n", "ctrl3_val_unit                                                                                                                                                                                          \\n", "ctrl3_val_vs                                                                                                                                                                                            \\n", "N                   1.00                1.00                1.00                1.00                1.00                1.00                1.00                1.00                1.00                \\n", "charge/discharge    Charge              Charge              Charge              Charge              Discharge           Discharge           Discharge           Discharge           Discharge           \\n", "ctrl_seq            0                   0                   0                   0                   0                   0                   0                   1                   1                   \\n", "ctrl_repeat         0                   0                   0                   0                   0                   0                   0                   4                   4                   \\n", "ctrl_trigger        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        \\n", "ctrl_TO_t           0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               \\n", "ctrl_TO_t_unit      d                   d                   d                   d                   d                   d                   d                   d                   d                   \\n", "ctrl_Nd             6                   6                   6                   6                   6                   6                   6                   6                   6                   \\n", "ctrl_Na             1                   1                   1                   1                   1                   1                   1                   1                   1                   \\n", "ctrl_corr           1                   1                   1                   1                   1                   1                   1                   1                   1                   \\n", "lim_nb              1                   1                   1                   1                   1                   1                   1                   0                   1                   \\n", "lim1_type           Time                Ecell               |I|                 Time                Ecell               |I|                 Time                Ecell               Time                \\n", "lim1_comp           >                   >                   <                   >                   <                   <                   >                   <                   >                   \\n", "lim1_Q              Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             \\n", "lim1_value          5.000               4.200               5.000               2.000               2.500               5.000               2.000               2.500               2.000               \\n", "lim1_value_unit     s                   V                   mA                  h                   V                   mA                  h                   V                   h                   \\n", "lim1_action         Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       \\n", "lim1_seq            1                   2                   3                   4                   5                   6                   7                   8                   9                   \\n", "rec_nb              1                   2                   2                   1                   2                   2                   1                   0                   1                   \\n", "rec1_type           Time                Time                Time                Time                Time                Time                Time                Time                Time                \\n", "rec1_value          1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               \\n", "rec1_value_unit     mn                  s                   s                   s                   s                   s                   s                   s                   s                   \\n", "rec2_type           Time                Ecell               I                   Time                Ecell               I                   I                   Time                Time                \\n", "rec2_value          0.000               10.000              0.150               0.000               10.000              0.150               1.000               0.000               0.000               \\n", "rec2_value_unit     s                   mV                  mA                  s                   mV                  mA                  mA                  s                   s                   \\n", "E range min (V)     0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               \\n", "E range max (V)     9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               \\n", "I Range             10 mA               10 mA               Auto                1 A                 10 mA               Auto                100 mA              10 mA               1 A                 \\n", "I Range min         Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \\n", "I Range max         Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \\n", "I Range init        Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \\n", "auto rest           0                   0                   0                   0                   0                   0                   0                   0                   0                   \\n", "Bandwidth           4                   4                   4                   4                   4                   4                   4                   4                   4                   \\n", "\\n"], "Dataset_Name": "C_over_20_run_25_C_CA1", "dataset_size": 517385203, "Device Metadata": {"Mode": "Modulo Bat", "User": null, "DX/DQ": "for DX = 1, DQ = 26.802 mA.h", "Device": "BCS-815 (SN 0455)", "Address": "192.109.209.128", "Comments": null, "FileType": "BT-Lab ASCII FILE", "Saved on": {"File": "C over 20 run 25 °C_CA1.mpr", "Host": "192.109.209.129", "Directory": "D:\\\\Data\\\\Karthik\\\\MSM - AGM Single layer\\\\5 Cell Referenece tests\\\\Matrix  Tests\\\\25 ° Characterization\\\\C over 20\\\\"}, "Electrolyte": null, "Initial state": null, "Safety Limits": "Ecell min = 2.45 V Ecell max = 4.25 V for t > 10 ms", "Run on channel": "A1 (SN 0322)", "Internet server": "v1.65 (firmware)", "Nb header lines": 85, "Battery capacity": "1.000 A.h", "Cycle Definition": "Charge/Discharge alternance", "Ecell ctrl range": "min = 0.00 V, max = 9.00 V", "BT-Lab for windows": "v1.65 (software)", "Electrode material": null, "Grouped channel(s)": "A1, A2, A3, A4, A5", "Characteristic mass": "0.001 g", "Command interpretor": "v1.65 (firmware)", "Acquisition started at": "xo = 0.000", "Acquisition started on": "11/11/2019 12:25:53", "Electrode surface area": "0.001 cm²", "Mass of active material": "0.001 mg at x = 0.000", "Atomic weight of intercalated ion": "0.001 g/mol", "Number of e- transfered per intercalated ion": 1, "Molecular weight of active material (at x = 0)": "0.001 g/mol"}, "first_sample_no": 85}	\N	1	f
-17	10	2020-11-02 18:07:10.755531+00	2020-11-16 12:18:36.380009+00	{"file_rows": 149, "file_columns": ["mode", "ox/red", "error", "control changes", "Ns changes", "counter inc", "Ns", "I Range", "Time", "control/V/mA", "Ecell/V", "I/mA", "dq/mA_h", "(Q-Qo)/mA_h", "Energy/W_h", "Analog IN 1/V", "Analog OUT/V", "Energy charge/W_h", "Energy discharge/W_h", "Capacitance charge/�F", "Capacitance discharge/�F", "x", "Q discharge/mA_h", "Q charge/mA_h", "Capacity/mA_h", "Efficiency/%", "control/V", "control/mA", "cycle number", "P/W", "R/Ohm", "Rec#"], "range_config": {"all": {"end": 149, "start": 1, "action": "all"}}, "parsed_ranges": {"all": {"end": 149, "start": 1, "action": "all"}}, "parsed_columns": ["Ecell/V", "I/mA", "control/V"], "missing_columns": []}		biologic_fulltxt	18	5	1	{"num_rows": 149, "warnings": [], "data_start": 101, "file_header": ["BT-Lab ASCII FILE\\n", "Nb header lines : 102                         \\n", "\\n", "Modulo Bat\\n", "\\n", "Run on channel : E1 (SN 0355)\\n", "User : \\n", "Ecell ctrl range : min = 0.00 V, max = 9.00 V\\n", "Safety Limits :\\n", "\\tEcell min = 2.50 V\\n", "\\tEcell max = 4.35 V\\n", "\\tfor t > 10 ms\\n", "Acquisition started on : 08/19/2019 16:31:18\\n", "Saved on :\\n", "\\tFile : Cathode_CE1.mpr\\n", "\\tDirectory : D:\\\\Data\\\\Ryan\\\\Entropy CoinCells 18Aug\\\\\\n", "\\tHost : 192.109.209.129\\n", "Device : BCS-815 (SN 0455)\\n", "Address : 192.109.209.128\\n", "BT-Lab for windows v1.65 (software)\\n", "Internet server v1.65 (firmware)\\n", "Command interpretor v1.65 (firmware)\\n", "Electrode material : \\n", "Initial state : \\n", "Electrolyte : \\n", "Comments : \\n", "Mass of active material : 0.001 mg\\n", " at x = 0.000\\n", "Molecular weight of active material (at x = 0) : 0.001 g/mol\\n", "Atomic weight of intercalated ion : 0.001 g/mol\\n", "Acquisition started at : xo = 0.000\\n", "Number of e- transfered per intercalated ion : 1\\n", "for DX = 1, DQ = 26.802 mA.h\\n", "Battery capacity : 2.230 mA.h\\n", "Electrode surface area : 0.001 cm²\\n", "Characteristic mass : 0.001 g\\n", "Record Analogic IN 1\\n", "Cycle Definition : Charge/Discharge alternance\\n", "External device configuration :\\n", "   device type : Other\\n", "   device name : Other\\n", "   Analog OUT : \\n", "      mode : E/V\\n", "      unit : E/V\\n", "      max : 5.000 at 5.000 V\\n", "      min : 0.000 at 0.000 V\\n", "      current : 0.000\\n", "   Analog IN 1 : \\n", "      unit : E/V\\n", "      max : 5.000 at 5.000 V\\n", "      min : 0.000 at 0.000 V\\n", "Ns                  0                   1                   2                   3                   4                   5                   6                   7                   8                   9                   10                  11                  12                  13                  14                  15                  16                  17                  18                  19                  20                  21                  22                  23                  24                  25                  26                  27                  28                  29                  \\n", "ctrl_type           Rest                Rest                CC                  CV                  Rest                TO                  Rest                Rest                Rest                Rest                Rest                Rest                CC                  Rest                TO                  Rest                Rest                Rest                Rest                Rest                Rest                Loop                CV                  TO                  Rest                Rest                Rest                Rest                Rest                Rest                \\n", "Apply I/C           I                   I                   C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               C / N               \\n", "ctrl1_val                                                   0.000               4.300                                   2.700                                                                                                                                       100.000                                 100.000                                                                                                                                     100.000             2.700               4.300                                                                                                                                       \\n", "ctrl1_val_unit                                              mA                  V                                                                                                                                                                                   mA                                                                                                                                                                                                      V                                                                                                                                                               \\n", "ctrl1_val_vs                                                <None>              Ref                                                                                                                                                                                 <None>                                                                                                                                                                                                  Ref                                                                                                                                                             \\n", "ctrl2_val                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   \\n", "ctrl2_val_unit                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              \\n", "ctrl2_val_vs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \\n", "ctrl3_val                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   \\n", "ctrl3_val_unit                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              \\n", "ctrl3_val_vs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                \\n", "N                   1.00                1.00                1.00                3.00                3.00                3.00                3.00                3.00                3.00                3.00                3.00                3.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                5.00                \\n", "charge/discharge    Charge              Charge              Charge              Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Discharge           Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              Charge              \\n", "ctrl_seq            0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   12                  12                  12                  0                   0                   0                   0                   0                   0                   \\n", "ctrl_repeat         0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   60                  60                  60                  0                   0                   0                   0                   0                   0                   \\n", "ctrl_trigger        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Rising Edge         Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Rising Edge         Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Rising Edge         Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        Falling Edge        \\n", "ctrl_TO_t           0.000               0.000               0.000               0.000               0.000               2.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               2.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               2.000               0.000               0.000               0.000               0.000               0.000               0.000               \\n", "ctrl_TO_t_unit      d                   d                   d                   d                   d                   s                   d                   d                   d                   d                   d                   d                   d                   d                   s                   d                   d                   d                   d                   d                   d                   d                   d                   s                   d                   d                   d                   d                   d                   d                   \\n", "ctrl_Nd             6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   6                   \\n", "ctrl_Na             1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   \\n", "ctrl_corr           1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   1                   \\n", "lim_nb              1                   1                   1                   1                   1                   0                   1                   1                   1                   1                   1                   1                   2                   1                   0                   1                   1                   1                   1                   1                   1                   0                   1                   0                   1                   1                   1                   1                   1                   1                   \\n", "lim1_type           Time                Time                Time                Ecell               |I|                 Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                |I|                 \\n", "lim1_comp           >                   >                   >                   <                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   >                   <                   <                   >                   >                   >                   >                   >                   >                   \\n", "lim1_Q              Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             \\n", "lim1_value          3.000               3.000               4.300               23.000              90.000              90.000              3.000               3.000               3.000               3.000               3.000               10.000              6.000               90.000              90.000              3.000               3.000               3.000               3.000               3.000               10.000              10.000              23.000              23.000              3.000               3.000               3.000               3.000               3.000               10.000              \\n", "lim1_value_unit     d                   s                   s                   V                   mA                  mn                  d                   s                   d                   s                   d                   mn                  mn                  mn                  mn                  d                   s                   d                   s                   d                   mn                  mn                  s                   s                   d                   s                   d                   s                   d                   mA                  \\n", "lim1_action         Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       \\n", "lim1_seq            1                   2                   3                   4                   5                   6                   7                   8                   9                   10                  11                  12                  13                  14                  15                  16                  17                  18                  19                  20                  21                  22                  23                  24                  25                  26                  27                  28                  29                  30                  \\n", "lim2_type           Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Ecell               Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                \\n", "lim2_comp           <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   <                   \\n", "lim2_Q              Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             Q limit             \\n", "lim2_value          0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               2.700               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               \\n", "lim2_value_unit     s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   V                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   \\n", "lim2_action         Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Goto sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       Next sequence       \\n", "lim2_seq            1                   2                   3                   4                   5                   6                   7                   8                   9                   10                  11                  12                  22                  14                  15                  16                  17                  18                  19                  20                  21                  22                  23                  24                  25                  26                  27                  28                  29                  30                  \\n", "rec_nb              0                   0                   1                   1                   1                   0                   1                   1                   1                   1                   1                   1                   1                   1                   0                   1                   1                   1                   1                   1                   1                   0                   1                   0                   1                   1                   1                   1                   1                   1                   \\n", "rec1_type           Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                Time                \\n", "rec1_value          1.000               1.000               1.000               1.000               10.000              10.000              1.000               1.000               1.000               1.000               1.000               1.000               1.000               10.000              10.000              1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               1.000               \\n", "rec1_value_unit     s                   s                   s                   mn                  s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   s                   \\n", "E range min (V)     0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               0.000               \\n", "E range max (V)     9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               9.000               \\n", "I Range             10 mA               10 mA               1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                1 mA                \\n", "I Range min         Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \\n", "I Range max         Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \\n", "I Range init        Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               Unset               \\n", "auto rest           0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   0                   \\n", "Bandwidth           4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   4                   \\n", "\\n"], "Dataset_Name": "BioLogic_full", "dataset_size": 101861, "Device Metadata": {"Mode": "Modulo Bat", "User": null, "DX/DQ": "for DX = 1, DQ = 26.802 mA.h", "Device": "BCS-815 (SN 0455)", "Record": "Analogic IN 1", "Address": "192.109.209.128", "Comments": null, "FileType": "BT-Lab ASCII FILE", "Saved on": {"File": "Cathode_CE1.mpr", "Host": "192.109.209.129", "Directory": "D:\\\\Data\\\\Ryan\\\\Entropy CoinCells 18Aug\\\\"}, "Electrolyte": null, "Initial state": null, "Safety Limits": "Ecell min = 2.50 V Ecell max = 4.35 V for t > 10 ms", "Run on channel": "E1 (SN 0355)", "Internet server": "v1.65 (firmware)", "Nb header lines": 102, "Battery capacity": "2.230 mA.h", "Cycle Definition": "Charge/Discharge alternance", "Ecell ctrl range": "min = 0.00 V, max = 9.00 V", "BT-Lab for windows": "v1.65 (software)", "Electrode material": null, "Characteristic mass": "0.001 g", "Command interpretor": "v1.65 (firmware)", "Acquisition started at": "xo = 0.000", "Acquisition started on": "08/19/2019 16:31:18", "Electrode surface area": "0.001 cm²", "Mass of active material": "0.001 mg at x = 0.000", "External device configuration": {"Analog OUT": {"max": "5.000 at 5.000 V", "min": "0.000 at 0.000 V", "mode": "E/V", "unit": "E/V", "current": 0.0}, "Analog IN 1": {"max": "5.000 at 5.000 V", "min": "0.000 at 0.000 V", "unit": "E/V"}, "device name": "Other", "device type": "Other"}, "Atomic weight of intercalated ion": "0.001 g/mol", "Number of e- transfered per intercalated ion": 1, "Molecular weight of active material (at x = 0)": "0.001 g/mol"}, "first_sample_no": 102}	\N	1	t
+COPY public."battDB_experimentdatafile" (id, created_on, modified_on, attributes, notes, slug, experiment_id, user_owner_id, machine_id, status, name, ts_data, ts_headers, protocol_id) FROM stdin;
+22	2020-12-17 22:09:02.273842+00	2020-12-17 22:09:08.590241+00	{}		group10-cell25_02_mb_c03mpt_cfuw1dktxt	\N	1	\N	draft	Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt	\N	\N	\N
 \.
 
 
@@ -2303,18 +2219,8 @@ COPY public."battDB_experimentdatafile" (id, status, created_on, modified_on, at
 --
 
 COPY public."battDB_experimentdevice" (id, batch_seq, device_pos, data_file_id, "deviceBatch_id", experiment_id) FROM stdin;
-1	0	cell_nn	17	32	5
-3	1	cell_nn1	17	32	5
-\.
-
-
---
--- Data for Name: battDB_filefolder; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public."battDB_filefolder" (id, name, status, created_on, modified_on, attributes, notes, slug, lft, rght, tree_id, level, parent_id, user_owner_id, inherit_metadata) FROM stdin;
-1	My Folder	10	2020-11-04 09:38:43.228605+00	2020-11-04 09:38:43.228628+00	{}		my-folder	1	4	1	0	\N	1	t
-2	Another Folder	10	2020-11-04 09:38:58.362381+00	2020-11-04 09:38:58.362395+00	{}		another-folder	2	3	1	1	1	1	t
+1	0	cell_nn	\N	32	5
+3	1	cell_nn1	\N	32	5
 \.
 
 
@@ -2322,25 +2228,9 @@ COPY public."battDB_filefolder" (id, name, status, created_on, modified_on, attr
 -- Data for Name: battDB_harvester; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_harvester" (id, name, status, created_on, modified_on, attributes, notes, slug, file_types, equipment_type_id, attach_to_experiment_id, user_owner_id, parser_config_id, local_folder) FROM stdin;
-1	makron	10	2020-11-04 12:40:28.873201+00	2020-11-11 19:15:53.425912+00	{}		makron	*.csv	1	5	1	\N	.
-2	foo	10	2020-11-11 19:35:39.944867+00	2020-11-11 19:35:39.944882+00	{}		foo	*.csv	\N	\N	1	\N	.
-\.
-
-
---
--- Data for Name: battDB_module; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public."battDB_module" (device_ptr_id) FROM stdin;
-\.
-
-
---
--- Data for Name: battDB_pack; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public."battDB_pack" (device_ptr_id) FROM stdin;
+COPY public."battDB_harvester" (id, name, created_on, modified_on, attributes, notes, slug, file_types, equipment_type_id, attach_to_experiment_id, user_owner_id, parser_config_id, local_folder, status) FROM stdin;
+1	makron	2020-11-04 12:40:28.873201+00	2020-11-11 19:15:53.425912+00	{}		makron	*.csv	1	5	1	\N	.	draft
+2	foo	2020-11-11 19:35:39.944867+00	2020-11-11 19:35:39.944882+00	{}		foo	*.csv	\N	\N	1	\N	.	draft
 \.
 
 
@@ -2348,9 +2238,9 @@ COPY public."battDB_pack" (device_ptr_id) FROM stdin;
 -- Data for Name: battDB_parser; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_parser" (id, name, notes, file_format, attributes, created_on, modified_on, slug, status, user_owner_id) FROM stdin;
-2	Biologix Default		biologic	{}	2020-11-13 16:10:41.670367+00	2020-11-13 16:10:41.670384+00	biologix-default	10	1
-1	Biologix V,I,CV		biologic	{}	2020-11-10 15:18:25.987275+00	2020-11-13 16:11:03.188506+00	biologix-vicv	10	1
+COPY public."battDB_parser" (id, name, notes, file_format, attributes, created_on, modified_on, slug, user_owner_id, status) FROM stdin;
+2	Biologix Default		biologic	{}	2020-11-13 16:10:41.670367+00	2020-11-13 16:10:41.670384+00	biologix-default	1	draft
+1	Biologix V,I,CV		biologic	{}	2020-11-10 15:18:25.987275+00	2020-11-13 16:11:03.188506+00	biologix-vicv	1	draft
 \.
 
 
@@ -2370,6 +2260,15 @@ COPY public."battDB_signaltype" (id, col_name, parameter_id, parser_id, "order")
 
 
 --
+-- Data for Name: battDB_uploadedfile; Type: TABLE DATA; Schema: public; Owner: towen
+--
+
+COPY public."battDB_uploadedfile" (id, file, hash, local_date, local_path, edf_id, parse, parsed_metadata, use_parser_id) FROM stdin;
+3	uploaded_files/Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt	bd87c16c57c61092dd4a8cabb89b0ea1	2020-12-17 22:09:02.083916+00		22	f	{}	1
+\.
+
+
+--
 -- Data for Name: common_org; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
@@ -2383,8 +2282,8 @@ COPY public.common_org (id, website, is_mfg_cells, is_mfg_equip, is_publisher, i
 -- Data for Name: common_paper; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.common_paper (id, "DOI", year, title, url, publisher_id, attributes, status, user_owner_id, notes, "PDF", modified_on, created_on, slug, authors) FROM stdin;
-1	https://doi.org/10.1109/5.771073	2019	Toward unique identifiers	https://ieeexplore.ieee.org/document/771073	\N	{}	10	\N	.		2020-10-19 16:59:28.034498+01	2020-10-15 18:18:05.103148+01	toward-unique-identifiers-2019	
+COPY public.common_paper (id, "DOI", year, title, url, publisher_id, attributes, user_owner_id, notes, "PDF", modified_on, created_on, slug, authors, status) FROM stdin;
+1	https://doi.org/10.1109/5.771073	2019	Toward unique identifiers	https://ieeexplore.ieee.org/document/771073	\N	{}	\N	.		2020-10-19 16:59:28.034498+01	2020-10-15 18:18:05.103148+01	toward-unique-identifiers-2019		draft
 \.
 
 
@@ -2395,24 +2294,6 @@ COPY public.common_paper (id, "DOI", year, title, url, publisher_id, attributes,
 COPY public.common_person (id, org_id, user_id, "longName", "shortName") FROM stdin;
 1	1	1	Tom Owen	T.Owen
 2	\N	\N	nobby	n
-\.
-
-
---
--- Data for Name: common_uploadedfile; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public.common_uploadedfile (id, created_on, modified_on, file, hash, status, user_owner_id) FROM stdin;
-17	2020-11-01 18:20:38.799315+00	2020-11-01 18:20:38.806274+00	uploaded_files/mug.jpeg	f5009ba783fd94b0a410738e13dafa14	10	\N
-18	2020-11-02 10:59:35.647447+00	2020-11-02 10:59:35.647505+00	uploaded_files/BioLogic_full.txt	abf6e42283668f8ba9094a0f85411f64	10	\N
-19	2020-11-02 14:40:08.578715+00	2020-11-02 14:40:08.578729+00	uploaded_files/Ivium_Cell1.txt	b35947d7bc5b1f3533bd8b0504984a49	10	\N
-20	2020-11-02 16:31:11.964061+00	2020-11-02 16:31:11.964075+00	uploaded_files/sample_Maccor.xlsx	bc6f07013a09fed8658411f5c894ed40	10	1
-21	2020-11-02 16:53:59.690677+00	2020-11-02 16:53:59.690689+00	uploaded_files/sample_Maccor_2.xlsx	7102ac2452d3e22d5cf7148784fccc38	10	\N
-22	2020-11-05 15:32:25.079192+00	2020-11-12 18:06:23.18682+00	uploaded_files/C_over_20_run_25_C_CA1.txt	690ea0970ca93096f6a9399829aa631c	10	2
-23	2020-11-16 18:14:19.537559+00	2020-11-16 18:14:19.549812+00	uploaded_files/motorLog.tsv	2d661d964b713301b5cc2fa8a011d01d	10	1
-24	2020-11-17 19:32:45.312261+00	2020-11-17 19:32:46.848117+00	uploaded_files/zork	872accfb08323cda2b12954ff3f35611	10	1
-25	2020-11-17 19:32:47.871984+00	2020-11-17 19:32:48.425843+00	uploaded_files/bork	30ef79fef19474f440ec375d8b3a8e5f	10	1
-26	2020-11-17 19:32:52.149941+00	2020-11-17 19:32:52.149955+00	uploaded_files/zork_SQeiGbe		10	\N
 \.
 
 
@@ -2447,8 +2328,8 @@ COPY public.dfndb_compound (id, formula, name, mass) FROM stdin;
 -- Data for Name: dfndb_data; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_data (id, paper_id, user_owner_id, attributes, status, name, notes, modified_on, created_on, slug) FROM stdin;
-1	1	1	{}	10	test foo	moo	2020-10-16	2020-10-16 18:01:43.737067+01	bork
+COPY public.dfndb_data (id, paper_id, user_owner_id, attributes, name, notes, modified_on, created_on, slug, status) FROM stdin;
+1	1	1	{}	test foo	moo	2020-10-16	2020-10-16 18:01:43.737067+01	bork	draft
 \.
 
 
@@ -2467,10 +2348,10 @@ COPY public.dfndb_dataparameter (id, data_id, parameter_id, material_id, type, v
 -- Data for Name: dfndb_material; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_material (id, polymer, user_owner_id, type, attributes, status, name, notes, modified_on, created_on, slug) FROM stdin;
-2	1	1	1	{}	10	Graphite		2020-10-16	2020-10-16 15:05:13.815326+01	bork
-3	0	1	2	{}	10	Lithium Metal		2020-10-16	2020-10-16 15:06:34.982964+01	bork
-1	0	1	1	{}	10	NMC622		2020-11-12	2020-10-16 12:16:10.333468+01	nmc622
+COPY public.dfndb_material (id, polymer, user_owner_id, type, attributes, name, notes, modified_on, created_on, slug, status) FROM stdin;
+2	1	1	1	{}	Graphite		2020-10-16	2020-10-16 15:05:13.815326+01	bork	draft
+3	0	1	2	{}	Lithium Metal		2020-10-16	2020-10-16 15:06:34.982964+01	bork	draft
+1	0	1	1	{}	NMC622		2020-11-12	2020-10-16 12:16:10.333468+01	nmc622	draft
 \.
 
 
@@ -2478,11 +2359,11 @@ COPY public.dfndb_material (id, polymer, user_owner_id, type, attributes, status
 -- Data for Name: dfndb_method; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_method (id, type, description, user_owner_id, attributes, status, name, notes, modified_on, created_on, slug) FROM stdin;
-1	2		1	{}	10	DFN		2020-10-16	2020-10-16 14:09:50.498057+01	bork
-2	1		1	{}	10	GITT		2020-10-16	2020-10-16 14:10:00.357987+01	bork
-3	1000		1	{}	10	My DFN model		2020-10-26	2020-10-26 11:52:26.985926+00	my-dfn-model
-4	2000		1	{}	10	My experimental method		2020-10-26	2020-10-26 11:53:05.693795+00	my-experimental-method
+COPY public.dfndb_method (id, type, description, user_owner_id, attributes, name, notes, modified_on, created_on, slug, status) FROM stdin;
+1	2		1	{}	DFN		2020-10-16	2020-10-16 14:09:50.498057+01	bork	draft
+2	1		1	{}	GITT		2020-10-16	2020-10-16 14:10:00.357987+01	bork	draft
+3	1000		1	{}	My DFN model		2020-10-26	2020-10-26 11:52:26.985926+00	my-dfn-model	draft
+4	2000		1	{}	My experimental method		2020-10-26	2020-10-26 11:53:05.693795+00	my-experimental-method	draft
 \.
 
 
@@ -2490,18 +2371,18 @@ COPY public.dfndb_method (id, type, description, user_owner_id, attributes, stat
 -- Data for Name: dfndb_parameter; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public.dfndb_parameter (id, symbol, notes, unit_id, user_owner_id, attributes, status, name, modified_on, created_on, slug) FROM stdin;
-2	t		6	1	{}	10	Thickness	2020-10-16	2020-10-16 13:36:29.748252+01	bork
-3	C		9	1	{}	10	Capacity	2020-10-16	2020-10-16 13:51:37.090972+01	bork
-1	rP		10	\N	["boing", "boing"]	10	particle radius	2020-10-16	2020-10-16 13:02:34.855802+01	bork
-4	V		1	1	{}	10	Cell Voltage	2020-10-28	2020-10-28 14:42:37.150113+00	cell-voltage-v-v
-6	C		11	1	{}	10	Capacity	2020-10-30	2020-10-30 12:17:04.438278+00	capacity-c-mah
-7	I		5	1	{}	10	Pack Current	2020-10-30	2020-10-30 15:03:05.688117+00	pack-current-i-a
-8	x		12	1	{}	10	miscellaneous	2020-11-01	2020-11-01 17:31:08.087297+00	miscellaneous-x-arb
-9	T		7	1	{}	10	Thickness	2020-11-12	2020-11-12 16:57:06.835404+00	thickness-t-mm
-10	CV		1	1	{}	10	Control Voltage	2020-11-12	2020-11-12 18:08:04.598826+00	control-voltage-cv-v
-11	t		13	1	{}	10	Time	2020-11-12	2020-11-12 19:55:19.683333+00	time-t-s
-12	x		14	1	{}	10	Sample number	2020-11-12	2020-11-12 19:56:45.386025+00	sample-number-x-x
+COPY public.dfndb_parameter (id, symbol, notes, unit_id, user_owner_id, attributes, name, modified_on, created_on, slug, status) FROM stdin;
+2	t		6	1	{}	Thickness	2020-10-16	2020-10-16 13:36:29.748252+01	bork	draft
+3	C		9	1	{}	Capacity	2020-10-16	2020-10-16 13:51:37.090972+01	bork	draft
+1	rP		10	\N	["boing", "boing"]	particle radius	2020-10-16	2020-10-16 13:02:34.855802+01	bork	draft
+4	V		1	1	{}	Cell Voltage	2020-10-28	2020-10-28 14:42:37.150113+00	cell-voltage-v-v	draft
+6	C		11	1	{}	Capacity	2020-10-30	2020-10-30 12:17:04.438278+00	capacity-c-mah	draft
+7	I		5	1	{}	Pack Current	2020-10-30	2020-10-30 15:03:05.688117+00	pack-current-i-a	draft
+8	x		12	1	{}	miscellaneous	2020-11-01	2020-11-01 17:31:08.087297+00	miscellaneous-x-arb	draft
+9	T		7	1	{}	Thickness	2020-11-12	2020-11-12 16:57:06.835404+00	thickness-t-mm	draft
+10	CV		1	1	{}	Control Voltage	2020-11-12	2020-11-12 18:08:04.598826+00	control-voltage-cv-v	draft
+11	t		13	1	{}	Time	2020-11-12	2020-11-12 19:55:19.683333+00	time-t-s	draft
+12	x		14	1	{}	Sample number	2020-11-12	2020-11-12 19:56:45.386025+00	sample-number-x-x	draft
 \.
 
 
@@ -3158,6 +3039,57 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 626	2020-11-16 12:18:24.576394+00	17	BioLogic_full.txt	2	[{"changed": {"fields": ["Parse"]}}, {"deleted": {"name": "data range", "object": "BioLogic_full.txt/0: all"}}]	23	1
 627	2020-11-16 12:18:31.405366+00	17	BioLogic_full.txt	2	[]	23	1
 628	2020-11-16 12:18:36.382334+00	17	BioLogic_full.txt	2	[{"changed": {"fields": ["Parse"]}}]	23	1
+629	2020-11-18 10:52:06.610963+00	20	sample_Maccor.xlsx	3		63	1
+630	2020-11-18 10:53:04.015297+00	21	sample_Maccor_2.xlsx	3		63	1
+631	2020-11-18 10:57:20.96559+00	19	Ivium_Cell1.txt	3		63	1
+632	2020-11-18 10:59:30.24966+00	19	Ivium_Cell1.txt	3		63	1
+633	2020-11-18 11:00:43.717845+00	25	bork	3		63	1
+634	2020-11-18 11:01:28.097555+00	26	zork_SQeiGbe	3		63	1
+635	2020-11-18 11:01:28.11192+00	24	zork	3		63	1
+636	2020-11-18 11:01:35.370083+00	23	motorLog.tsv	3		63	1
+637	2020-11-24 12:11:00.581926+00	38	C_over_20_run_25_C_CA1_uc2jYdu.txt	3		63	1
+638	2020-12-07 18:51:50.168146+00	41	Group10-Cell25_02_MB_C03.mpt.txt	3		63	1
+639	2020-12-07 19:03:37.148209+00	42	Group10-Cell25_02_MB_C03.mpt_qRtdDkC.txt	3		63	1
+640	2020-12-07 19:03:37.157025+00	40	LFP_cell02_GEIS_CA2.mpt	3		63	1
+641	2020-12-07 19:05:34.153979+00	44	Group10-Cell25_02_MB_C03.mpt_o27poLH.txt	3		63	1
+642	2020-12-07 19:05:34.164986+00	43	LFP_cell02_GEIS_CA2_DQpIWUA.mpt	3		63	1
+643	2020-12-07 19:11:55.690848+00	46	Group10-Cell25_02_MB_C03.mpt_qTt2g5m.txt	3		63	1
+644	2020-12-07 19:11:55.702994+00	45	LFP_cell02_GEIS_CA2_Z9EAFUQ.mpt	3		63	1
+645	2020-12-07 19:14:19.309642+00	48	Group10-Cell25_02_MB_C03.mpt_aJGb79u.txt	3		63	1
+646	2020-12-07 19:14:19.320933+00	47	LFP_cell02_GEIS_CA2_rbxcED3.mpt	3		63	1
+647	2020-12-07 19:21:44.250969+00	50	Group10-Cell25_02_MB_C03.mpt_scK6O1A.txt	3		63	1
+648	2020-12-07 19:21:44.262875+00	49	LFP_cell02_GEIS_CA2_FG1JBFU.mpt	3		63	1
+649	2020-12-07 19:23:53.378683+00	51	LFP_cell02_GEIS_CA2_iJDy387.mpt	3		63	1
+650	2020-12-07 22:47:20.960848+00	53	Group10-Cell25_02_MB_C03.mpt_KJCR6YL.txt	3		63	1
+651	2020-12-07 22:47:20.973677+00	52	LFP_cell02_GEIS_CA2_NE6IIlv.mpt	3		63	1
+652	2020-12-07 23:48:15.053658+00	55	Group10-Cell25_02_MB_C03.mpt_GzyLaFt.txt	3		63	1
+653	2020-12-07 23:48:15.0679+00	54	LFP_cell02_GEIS_CA2_KCGFxsO.mpt	3		63	1
+654	2020-12-07 23:49:35.205528+00	57	Group10-Cell25_02_MB_C03.mpt_gPH0EnV.txt	3		63	1
+655	2020-12-07 23:49:35.217332+00	56	LFP_cell02_GEIS_CA2_dyJjtpn.mpt	3		63	1
+656	2020-12-07 23:56:22.772624+00	59	Group10-Cell25_02_MB_C03.mpt_OY6bSnm.txt	3		63	1
+657	2020-12-07 23:56:22.778758+00	58	LFP_cell02_GEIS_CA2_dAzAkA9.mpt	3		63	1
+658	2020-12-08 00:01:28.97348+00	61	Group10-Cell25_02_MB_C03.mpt_geRlrL2.txt	3		63	1
+659	2020-12-08 00:01:28.986479+00	60	LFP_cell02_GEIS_CA2_mfEdKQS.mpt	3		63	1
+660	2020-12-08 00:10:40.091597+00	63	Group10-Cell25_02_MB_C03.mpt_BxVuwjF.txt	3		63	1
+661	2020-12-08 00:10:40.105551+00	62	LFP_cell02_GEIS_CA2_RoxSGWn.mpt	3		63	1
+662	2020-12-17 14:22:42.841758+00	20	None	3		23	1
+663	2020-12-17 14:35:45.572152+00	18	Unnamed data set	2	[]	23	1
+664	2020-12-17 15:35:10.300007+00	19	Unnamed data set	2	[]	23	1
+665	2020-12-17 16:37:40.613066+00	18	Unnamed data set	2	[{"added": {"name": "uploaded file", "object": "Group10-Cell25_02_MB_C03.mpt_4gUntXe.txt"}}]	23	1
+666	2020-12-17 16:39:37.152024+00	1	Group10-Cell25_02_MB_C03.mpt_4gUntXe.txt	3		72	1
+667	2020-12-17 20:51:58.617069+00	19	Unnamed data set	2	[{"added": {"name": "uploaded file", "object": "Group10-Cell25_02_MB_C03.mpt_0MI9Oc7.txt"}}]	23	1
+668	2020-12-17 20:52:07.675531+00	19	Unnamed data set	2	[]	23	1
+669	2020-12-17 20:52:17.709791+00	19	Unnamed data set	2	[]	23	1
+670	2020-12-17 20:54:13.853703+00	19	Unnamed data set	2	[{"changed": {"name": "uploaded file", "object": "Group10-Cell25_02_MB_C03.mpt.txt", "fields": ["File"]}}]	23	1
+671	2020-12-17 20:54:31.274791+00	19	Unnamed data set	3		23	1
+672	2020-12-17 20:57:10.629005+00	18	Unnamed data set	3		23	1
+673	2020-12-17 20:58:49.757675+00	17	None	3		23	1
+674	2020-12-17 20:58:49.764847+00	16	None	3		23	1
+675	2020-12-17 21:04:14.897029+00	21	Unnamed data set	1	[{"added": {}}, {"added": {"name": "uploaded file", "object": "Group10-Cell25_02_MB_C03.mpt_BJbDQGD.txt"}}]	23	1
+676	2020-12-17 21:05:09.121446+00	21	Group10-Cell25_02_MB_C03.mpt_BJbDQGD.txt	2	[]	23	1
+692	2020-12-17 22:07:42.642074+00	21	Group10-Cell25_02_MB_C03.mpt_BJbDQGD.txt	3		23	1
+693	2020-12-17 22:09:02.322175+00	22	Unnamed data set	1	[{"added": {}}, {"added": {"name": "uploaded file", "object": "Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt"}}]	23	1
+694	2020-12-17 22:09:08.591309+00	22	Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt	2	[]	23	1
 \.
 
 
@@ -3204,6 +3136,9 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 69	battDB	parser
 70	battDB	signaltype
 71	battDB	experimentdevice
+72	battDB	uploadedfile
+73	battDB	dataevent
+74	battDB	datatable
 \.
 
 
@@ -3525,6 +3460,25 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 316	battDB	0189_harvester_parser_config	2020-11-16 12:10:10.399123+00
 317	battDB	0190_harvester_local_folder	2020-11-16 12:12:57.469884+00
 318	battDB	0191_experimentdatafile_parse	2020-11-16 12:15:35.111362+00
+319	battDB	0192_edf_1to1_uf	2020-11-30 23:56:47.81359+00
+320	battDB	0193_status_text	2020-12-07 23:55:33.41542+00
+321	common	0053_status_text	2020-12-07 23:55:33.487654+00
+322	dfndb	0040_status_text	2020-12-07 23:55:33.606697+00
+323	battDB	0194_status_text	2020-12-07 23:56:05.194809+00
+324	common	0054_status_text	2020-12-07 23:56:05.264169+00
+325	dfndb	0041_status_text	2020-12-07 23:56:05.343299+00
+326	battDB	0195_use_parser_text	2020-12-08 00:00:56.557991+00
+327	battDB	0196_use_parser_text	2020-12-08 00:00:56.585835+00
+328	battDB	0197_remove_experiment_data_files	2020-12-08 17:02:56.385812+00
+329	battDB	0198_auto_20201208_1703	2020-12-08 17:03:15.288418+00
+330	battDB	0199_FilesRefactor1	2020-12-17 13:27:17.151156+00
+331	common	0055_FilesRefactor1	2020-12-17 13:27:17.170372+00
+332	battDB	0200_FilesRefactor2	2020-12-17 14:04:37.55067+00
+333	battDB	0201_FilesRefactor3	2020-12-17 14:15:35.034673+00
+334	battDB	0202_FilesRefactor4	2020-12-17 14:22:31.26957+00
+336	battDB	0203_FilesRefactor5	2020-12-17 15:11:42.507484+00
+337	battDB	0204_FilesRefactor6	2020-12-17 15:51:26.980015+00
+338	battDB	0205_FilesRefactor7	2020-12-17 16:34:20.907032+00
 \.
 
 
@@ -3547,6 +3501,9 @@ i50nfgp0d9lr4o4xa9r7n38hn3b3flsf	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNut
 hbds84guogxhc8o1p9e0dbsn0479ehso	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kZamI:X67Jb2pGIuLroN5p8YY4sk19hN7DH5S-QP4Btp8tvsM	2020-11-16 14:25:46.306248+00
 pwreojo0dmcrbpv0ueeaxrlb0bn6j3r3	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kcSOs:pKtvvkl9Vor8Mf1D3jhgsWiaO_HP-rLt4xlg3Xf5BRk	2020-11-24 12:05:26.636338+00
 qzxcflgo428yd5139m5rrpju1vjaa5yp	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kej1k:Cf0nR-PxemSaAVVjmjAfIWZ5JvWiINY9OmWKPBxxGBs	2020-11-30 18:14:56.3688+00
+zbiwzzffwqruymi23daayu13wkomo24m	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kjszE:3-JRXG4ckvbDTHln2-C4DOsOb6d7aaZy_REHukzTtqk	2020-12-14 23:53:40.160017+00
+xmfurcackrl15onovppg0cv8qe51yy6s	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kmLbm:D1tL77UGwDZB5Vje23Ois4MrQbbK7YZN31zFfGoPV44	2020-12-21 18:51:38.507402+00
+zuk838rwug37i1u4j4fry21vxwaxrdv5	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kuJOf:J6-ok3LVIq7rmLTDOgGJa3bc1MyO3NHIkEYNQYTKLCs	2021-01-12 18:07:01.965942+00
 \.
 
 
@@ -3568,7 +3525,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 169, true);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 284, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 296, true);
 
 
 --
@@ -3659,7 +3616,7 @@ SELECT pg_catalog.setval('public."battDB_experiment_id_seq"', 8, true);
 -- Name: battDB_experimentdatafile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public."battDB_experimentdatafile_id_seq"', 18, true);
+SELECT pg_catalog.setval('public."battDB_experimentdatafile_id_seq"', 22, true);
 
 
 --
@@ -3667,13 +3624,6 @@ SELECT pg_catalog.setval('public."battDB_experimentdatafile_id_seq"', 18, true);
 --
 
 SELECT pg_catalog.setval('public."battDB_experimentdevice_id_seq"', 3, true);
-
-
---
--- Name: battDB_filefolder_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
---
-
-SELECT pg_catalog.setval('public."battDB_filefolder_id_seq"', 2, true);
 
 
 --
@@ -3698,6 +3648,13 @@ SELECT pg_catalog.setval('public."battDB_signaltype_id_seq"', 8, true);
 
 
 --
+-- Name: battDB_uploadedfile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
+--
+
+SELECT pg_catalog.setval('public."battDB_uploadedfile_id_seq"', 3, true);
+
+
+--
 -- Name: common_org_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
@@ -3716,13 +3673,6 @@ SELECT pg_catalog.setval('public.common_paper_id_seq', 2, true);
 --
 
 SELECT pg_catalog.setval('public.common_person_id_seq', 2, true);
-
-
---
--- Name: common_uploadedfile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
---
-
-SELECT pg_catalog.setval('public.common_uploadedfile_id_seq', 37, true);
 
 
 --
@@ -3785,21 +3735,21 @@ SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 14, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 628, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 694, true);
 
 
 --
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 71, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 74, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 318, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 340, true);
 
 
 --
@@ -4027,14 +3977,6 @@ ALTER TABLE ONLY public."battDB_experiment"
 
 
 --
--- Name: battDB_experimentdatafile battDB_experimentdatafil_raw_data_file_id_experim_241d6d9d_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experimentdatafile"
-    ADD CONSTRAINT "battDB_experimentdatafil_raw_data_file_id_experim_241d6d9d_uniq" UNIQUE (raw_data_file_id, experiment_id);
-
-
---
 -- Name: battDB_experimentdatafile battDB_experimentdatafile_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -4067,14 +4009,6 @@ ALTER TABLE ONLY public."battDB_experimentdevice"
 
 
 --
--- Name: battDB_filefolder battDB_filefolder_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_filefolder"
-    ADD CONSTRAINT "battDB_filefolder_pkey" PRIMARY KEY (id);
-
-
---
 -- Name: battDB_harvester battDB_harvester_name_user_owner_id_0b314229_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -4091,22 +4025,6 @@ ALTER TABLE ONLY public."battDB_harvester"
 
 
 --
--- Name: battDB_module battDB_module_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_module"
-    ADD CONSTRAINT "battDB_module_pkey" PRIMARY KEY (device_ptr_id);
-
-
---
--- Name: battDB_pack battDB_pack_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_pack"
-    ADD CONSTRAINT "battDB_pack_pkey" PRIMARY KEY (device_ptr_id);
-
-
---
 -- Name: battDB_parser battDB_parser_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -4120,6 +4038,30 @@ ALTER TABLE ONLY public."battDB_parser"
 
 ALTER TABLE ONLY public."battDB_signaltype"
     ADD CONSTRAINT "battDB_signaltype_pkey" PRIMARY KEY (id);
+
+
+--
+-- Name: battDB_uploadedfile battDB_uploadedfile_edf_id_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_uploadedfile"
+    ADD CONSTRAINT "battDB_uploadedfile_edf_id_key" UNIQUE (edf_id);
+
+
+--
+-- Name: battDB_uploadedfile battDB_uploadedfile_hash_key; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_uploadedfile"
+    ADD CONSTRAINT "battDB_uploadedfile_hash_key" UNIQUE (hash);
+
+
+--
+-- Name: battDB_uploadedfile battDB_uploadedfile_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_uploadedfile"
+    ADD CONSTRAINT "battDB_uploadedfile_pkey" PRIMARY KEY (id);
 
 
 --
@@ -4184,22 +4126,6 @@ ALTER TABLE ONLY public.common_person
 
 ALTER TABLE ONLY public.common_person
     ADD CONSTRAINT common_person_user_id_key UNIQUE (user_id);
-
-
---
--- Name: common_uploadedfile common_uploadedfile_hash_key; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.common_uploadedfile
-    ADD CONSTRAINT common_uploadedfile_hash_key UNIQUE (hash);
-
-
---
--- Name: common_uploadedfile common_uploadedfile_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.common_uploadedfile
-    ADD CONSTRAINT common_uploadedfile_pkey PRIMARY KEY (id);
 
 
 --
@@ -4648,20 +4574,6 @@ CREATE INDEX "battDB_experiment_config_id_308e8e11" ON public."battDB_experiment
 
 
 --
--- Name: battDB_experiment_folder_id_ffc45c6a; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_experiment_folder_id_ffc45c6a" ON public."battDB_experiment" USING btree (folder_id);
-
-
---
--- Name: battDB_experiment_protocol_id_ed0e9fcd; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_experiment_protocol_id_ed0e9fcd" ON public."battDB_experiment" USING btree (protocol_id);
-
-
---
 -- Name: battDB_experiment_slug_392e85c7; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -4697,10 +4609,10 @@ CREATE INDEX "battDB_experimentdatafile_machine_id_383367b5" ON public."battDB_e
 
 
 --
--- Name: battDB_experimentdatafile_raw_data_file_id_91752398; Type: INDEX; Schema: public; Owner: towen
+-- Name: battDB_experimentdatafile_protocol_id_b44400bf; Type: INDEX; Schema: public; Owner: towen
 --
 
-CREATE INDEX "battDB_experimentdatafile_raw_data_file_id_91752398" ON public."battDB_experimentdatafile" USING btree (raw_data_file_id);
+CREATE INDEX "battDB_experimentdatafile_protocol_id_b44400bf" ON public."battDB_experimentdatafile" USING btree (protocol_id);
 
 
 --
@@ -4715,13 +4627,6 @@ CREATE INDEX "battDB_experimentdatafile_slug_3950aa51" ON public."battDB_experim
 --
 
 CREATE INDEX "battDB_experimentdatafile_slug_3950aa51_like" ON public."battDB_experimentdatafile" USING btree (slug varchar_pattern_ops);
-
-
---
--- Name: battDB_experimentdatafile_use_parser_id_fffb2715; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_experimentdatafile_use_parser_id_fffb2715" ON public."battDB_experimentdatafile" USING btree (use_parser_id);
 
 
 --
@@ -4750,41 +4655,6 @@ CREATE INDEX "battDB_experimentdevice_device_id_c2d32af9" ON public."battDB_expe
 --
 
 CREATE INDEX "battDB_experimentdevice_experiment_id_566fbea4" ON public."battDB_experimentdevice" USING btree (experiment_id);
-
-
---
--- Name: battDB_filefolder_parent_id_62154397; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_filefolder_parent_id_62154397" ON public."battDB_filefolder" USING btree (parent_id);
-
-
---
--- Name: battDB_filefolder_slug_0c44081c; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_filefolder_slug_0c44081c" ON public."battDB_filefolder" USING btree (slug);
-
-
---
--- Name: battDB_filefolder_slug_0c44081c_like; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_filefolder_slug_0c44081c_like" ON public."battDB_filefolder" USING btree (slug varchar_pattern_ops);
-
-
---
--- Name: battDB_filefolder_tree_id_d1309d6d; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_filefolder_tree_id_d1309d6d" ON public."battDB_filefolder" USING btree (tree_id);
-
-
---
--- Name: battDB_filefolder_user_owner_id_a306e59e; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_filefolder_user_owner_id_a306e59e" ON public."battDB_filefolder" USING btree (user_owner_id);
 
 
 --
@@ -4862,6 +4732,20 @@ CREATE INDEX "battDB_signaltype_parameter_id_b769c552" ON public."battDB_signalt
 --
 
 CREATE INDEX "battDB_signaltype_parser_id_71e1d0a1" ON public."battDB_signaltype" USING btree (parser_id);
+
+
+--
+-- Name: battDB_uploadedfile_hash_6bab31a5_like; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_uploadedfile_hash_6bab31a5_like" ON public."battDB_uploadedfile" USING btree (hash varchar_pattern_ops);
+
+
+--
+-- Name: battDB_uploadedfile_use_parser_id_030169d5; Type: INDEX; Schema: public; Owner: towen
+--
+
+CREATE INDEX "battDB_uploadedfile_use_parser_id_030169d5" ON public."battDB_uploadedfile" USING btree (use_parser_id);
 
 
 --
@@ -4946,20 +4830,6 @@ CREATE INDEX common_person_org_id_fa830db5 ON public.common_person USING btree (
 --
 
 CREATE INDEX "common_person_shortName_7a8b3bab_like" ON public.common_person USING btree ("shortName" varchar_pattern_ops);
-
-
---
--- Name: common_uploadedfile_hash_724f1a2d_like; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX common_uploadedfile_hash_724f1a2d_like ON public.common_uploadedfile USING btree (hash varchar_pattern_ops);
-
-
---
--- Name: common_uploadedfile_user_owner_id_fb5e27a2; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX common_uploadedfile_user_owner_id_fb5e27a2 ON public.common_uploadedfile USING btree (user_owner_id);
 
 
 --
@@ -5393,22 +5263,6 @@ ALTER TABLE ONLY public."battDB_experiment"
 
 
 --
--- Name: battDB_experiment battDB_experiment_folder_id_ffc45c6a_fk_battDB_filefolder_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experiment"
-    ADD CONSTRAINT "battDB_experiment_folder_id_ffc45c6a_fk_battDB_filefolder_id" FOREIGN KEY (folder_id) REFERENCES public."battDB_filefolder"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_experiment battDB_experiment_protocol_id_ed0e9fcd_fk_dfndb_method_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experiment"
-    ADD CONSTRAINT "battDB_experiment_protocol_id_ed0e9fcd_fk_dfndb_method_id" FOREIGN KEY (protocol_id) REFERENCES public.dfndb_method(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
 -- Name: battDB_experiment battDB_experiment_user_owner_id_3a1061fa_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -5433,19 +5287,11 @@ ALTER TABLE ONLY public."battDB_experimentdatafile"
 
 
 --
--- Name: battDB_experimentdatafile battDB_experimentdat_raw_data_file_id_91752398_fk_common_up; Type: FK CONSTRAINT; Schema: public; Owner: towen
+-- Name: battDB_experimentdatafile battDB_experimentdat_protocol_id_b44400bf_fk_dfndb_met; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
 ALTER TABLE ONLY public."battDB_experimentdatafile"
-    ADD CONSTRAINT "battDB_experimentdat_raw_data_file_id_91752398_fk_common_up" FOREIGN KEY (raw_data_file_id) REFERENCES public.common_uploadedfile(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_experimentdatafile battDB_experimentdat_use_parser_id_fffb2715_fk_battDB_pa; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_experimentdatafile"
-    ADD CONSTRAINT "battDB_experimentdat_use_parser_id_fffb2715_fk_battDB_pa" FOREIGN KEY (use_parser_id) REFERENCES public."battDB_parser"(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT "battDB_experimentdat_protocol_id_b44400bf_fk_dfndb_met" FOREIGN KEY (protocol_id) REFERENCES public.dfndb_method(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -5478,22 +5324,6 @@ ALTER TABLE ONLY public."battDB_experimentdevice"
 
 ALTER TABLE ONLY public."battDB_experimentdevice"
     ADD CONSTRAINT "battDB_experimentdev_experiment_id_566fbea4_fk_battDB_ex" FOREIGN KEY (experiment_id) REFERENCES public."battDB_experiment"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_filefolder battDB_filefolder_parent_id_62154397_fk_battDB_filefolder_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_filefolder"
-    ADD CONSTRAINT "battDB_filefolder_parent_id_62154397_fk_battDB_filefolder_id" FOREIGN KEY (parent_id) REFERENCES public."battDB_filefolder"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_filefolder battDB_filefolder_user_owner_id_a306e59e_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_filefolder"
-    ADD CONSTRAINT "battDB_filefolder_user_owner_id_a306e59e_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
@@ -5553,6 +5383,22 @@ ALTER TABLE ONLY public."battDB_signaltype"
 
 
 --
+-- Name: battDB_uploadedfile battDB_uploadedfile_edf_id_fe03e908_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_uploadedfile"
+    ADD CONSTRAINT "battDB_uploadedfile_edf_id_fe03e908_fk_battDB_ex" FOREIGN KEY (edf_id) REFERENCES public."battDB_experimentdatafile"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: battDB_uploadedfile battDB_uploadedfile_use_parser_id_030169d5_fk_battDB_parser_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
+--
+
+ALTER TABLE ONLY public."battDB_uploadedfile"
+    ADD CONSTRAINT "battDB_uploadedfile_use_parser_id_030169d5_fk_battDB_parser_id" FOREIGN KEY (use_parser_id) REFERENCES public."battDB_parser"(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
 -- Name: common_org common_org_manager_id_753c3111_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
 --
 
@@ -5590,14 +5436,6 @@ ALTER TABLE ONLY public.common_person
 
 ALTER TABLE ONLY public.common_person
     ADD CONSTRAINT common_person_user_id_c5d7cec8_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: common_uploadedfile common_uploadedfile_user_owner_id_fb5e27a2_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public.common_uploadedfile
-    ADD CONSTRAINT common_uploadedfile_user_owner_id_fb5e27a2_fk_auth_user_id FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

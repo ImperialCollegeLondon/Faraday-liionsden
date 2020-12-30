@@ -552,7 +552,7 @@ class ExperimentDataFile(cm.BaseModel):
             rng.save()
 
     def clean(self):
-        if self.name is None or self.name == "":
+        if self.name is None or self.name == "" or self.name == "Unnamed data set":
             try:
                 self.name = str(self.raw_data_file)
             except UploadedFile.DoesNotExist:
@@ -577,6 +577,8 @@ class ExperimentDataFile(cm.BaseModel):
 
 
 class UploadedFile(cm.HashedFile):
+    edf = models.OneToOneField(ExperimentDataFile, on_delete=models.CASCADE, null=True, blank=True,
+                               related_name="raw_data_file")
     local_path = models.CharField(max_length=1024, default="", blank=True)
     local_date = models.DateTimeField(default=datetime.now)
     parse = models.BooleanField(default=False, help_text="Set to True to import data on save")
@@ -728,5 +730,5 @@ class SignalType(models.Model):
 
 # FIXME: This doesn't seem to be working. Files remain on disk after UploadedFile object is deleted
 # Although we probably won't be deleting files anyway.
-post_delete.connect(file_cleanup, sender=UploadedFile, dispatch_uid="gallery.image.file_cleanup")
+post_delete.connect(file_cleanup, sender=UploadedFile)
 

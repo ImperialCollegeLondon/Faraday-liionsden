@@ -10,6 +10,7 @@ def hash_file(file, block_size=65536):
 
 
 def file_cleanup(sender, **kwargs):
-    field = sender.file
-    if field and isinstance(field, FileField):
-        field.storage.delete()
+    return # ffs, why doesn't this work??
+    # field = sender.file.field
+    # #if field and isinstance(field, FileField):
+    # field.storage.delete(field.path)
