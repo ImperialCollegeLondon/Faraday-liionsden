@@ -304,11 +304,11 @@ class AllFileHashesAPIView(ListAPIView):
     def get_queryset(self):
         return UploadedFile.objects.all() # filter(user_owner=self.request.user)
 
-class HarvesterAPIView(ListAPIView):
-    serializer_class = HarvesterSerializer
-    model = Harvester
-    def get_queryset(self):
-        return Harvester.objects.filter(user_owner=self.request.user, slug=self.kwargs.get('slug'))
+# class HarvesterAPIView(ListAPIView):
+#     serializer_class = HarvesterSerializer
+#     model = Harvester
+#     def get_queryset(self):
+#         return Harvester.objects.filter(user_owner=self.request.user, slug=self.kwargs.get('slug'))
 
 class DataFileListAPIView(ListAPIView):
     serializer_class = DataFileSerializer

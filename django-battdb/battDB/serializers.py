@@ -43,10 +43,10 @@ class DataRangeSerializer(serializers.ModelSerializer):
         exclude = []
 
 
-class HarvesterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Harvester
-        exclude = []
+# class HarvesterSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Harvester
+#         exclude = []
 
 class FileHashSerializer(serializers.ModelSerializer):
     #experimentdatafile = DataFileSerializer()

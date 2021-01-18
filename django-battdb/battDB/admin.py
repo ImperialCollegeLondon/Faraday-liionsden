@@ -211,7 +211,7 @@ class DataAdmin(BaseAdmin):
 admin.site.register([ExperimentDataFile], DataAdmin)
 
 
-admin.site.register([Equipment, Harvester], BaseAdmin)
+admin.site.register([Equipment,], BaseAdmin)
 
 # class DataParserAdmin(admin.ModelAdmin):
 #     pass
@@ -236,8 +236,8 @@ class ParserAdmin(BaseAdmin):
 
 admin.site.register(Parser, ParserAdmin)
 
-class FileAdmin(common.admin.ChangeformMixin, admin.ModelAdmin):
-    readonly_fields = ['size', 'local_date', 'exists', 'hash']
-
-
-admin.site.register(UploadedFile, FileAdmin)
+# class FileAdmin(common.admin.ChangeformMixin, admin.ModelAdmin):
+#     readonly_fields = ['size', 'local_date', 'exists', 'hash']
+#
+#
+# admin.site.register(UploadedFile, FileAdmin)

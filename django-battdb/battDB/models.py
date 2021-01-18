@@ -625,6 +625,7 @@ class ExperimentDevice(models.Model):
 class DataColumn(models.Model):
     data_file = models.ForeignKey(ExperimentDataFile, on_delete=models.CASCADE)
     column_name = models.CharField(max_length=40, default='Ns')
+
     RESAMPLE_CHOICES = (
         ('none', 'Do not resample'),
         ('on_change', 'Sample on change'),
@@ -652,7 +653,7 @@ class DataColumn(models.Model):
             self.resample_n = 1
 
     def experiment(self):
-        return self.data_file.exeriment()
+        return self.data_file.experiment()
 
     class Meta:
         unique_together = [['device', 'data_file'], ['column_name', 'data_file']]
@@ -689,27 +690,27 @@ class DataRange(cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates):
         verbose_name_plural = "Data Ranges"
         unique_together = [['dataFile', 'label']]
 
-
-class Harvester(cm.BaseModelMandatoryName):
-    """
-    "Harvester" clients are programs which run on a scientist's computer or cycler machine,
-    and monitor a folder for new data files.<BR>
-    Any new data files picked up are automatically uploaded to this system using a REST API. <BR>
-    Each Harvester client needs its own username and authentication token to use the API
-    """
-  #  upload_to_folder = models.ForeignKey(FileFolder, on_delete=models.CASCADE, default=0)
-    attach_to_experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
-    equipment_type = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True)
-    file_types = models.CharField(max_length=20, default="*.csv",
-                                  help_text="File type pattern to monitor")
-    parser_config = models.ForeignKey(Parser, null=True, on_delete=models.SET_NULL)
-    local_folder = models.CharField(max_length=500, default=".")
-    # parser = models.CharField(max_length=20, default="csv",
-    #                           choices=Parser.FORMAT_CHOICES,
-    #                           help_text="Default parser to use")
-
-    class Meta:
-        unique_together = ['name', 'user_owner']
+#
+# class Harvester(cm.BaseModelMandatoryName):
+#     """
+#     "Harvester" clients are programs which run on a scientist's computer or cycler machine,
+#     and monitor a folder for new data files.<BR>
+#     Any new data files picked up are automatically uploaded to this system using a REST API. <BR>
+#     Each Harvester client needs its own username and authentication token to use the API
+#     """
+#   #  upload_to_folder = models.ForeignKey(FileFolder, on_delete=models.CASCADE, default=0)
+#     attach_to_experiment = models.ForeignKey(Experiment, on_delete=models.SET_NULL, null=True, blank=True)
+#     equipment_type = models.ForeignKey(Equipment, on_delete=models.SET_NULL, null=True, blank=True)
+#     file_types = models.CharField(max_length=20, default="*.csv",
+#                                   help_text="File type pattern to monitor")
+#     parser_config = models.ForeignKey(Parser, null=True, on_delete=models.SET_NULL)
+#     local_folder = models.CharField(max_length=500, default=".")
+#     # parser = models.CharField(max_length=20, default="csv",
+#     #                           choices=Parser.FORMAT_CHOICES,
+#     #                           help_text="Default parser to use")
+#
+#     class Meta:
+#         unique_together = ['name', 'user_owner']
 
 
 class SignalType(models.Model):
@@ -731,4 +732,3 @@ class SignalType(models.Model):
 # FIXME: This doesn't seem to be working. Files remain on disk after UploadedFile object is deleted
 # Although we probably won't be deleting files anyway.
 post_delete.connect(file_cleanup, sender=UploadedFile)
-
