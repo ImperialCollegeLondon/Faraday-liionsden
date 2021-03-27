@@ -298,9 +298,9 @@ CREATE TABLE public."battDB_datacolumn" (
     column_name character varying(40) NOT NULL,
     resample character varying(10) NOT NULL,
     resample_n smallint NOT NULL,
+    parameter_id integer,
     data_file_id integer NOT NULL,
     device_id integer,
-    parameter_id integer,
     CONSTRAINT "battDB_datacolumn_resample_n_check" CHECK ((resample_n >= 0))
 );
 
@@ -731,52 +731,6 @@ ALTER TABLE public."battDB_experimentdevice_id_seq" OWNER TO towen;
 --
 
 ALTER SEQUENCE public."battDB_experimentdevice_id_seq" OWNED BY public."battDB_experimentdevice".id;
-
-
---
--- Name: battDB_harvester; Type: TABLE; Schema: public; Owner: towen
---
-
-CREATE TABLE public."battDB_harvester" (
-    id integer NOT NULL,
-    name character varying(128) NOT NULL,
-    created_on timestamp with time zone NOT NULL,
-    modified_on timestamp with time zone NOT NULL,
-    attributes jsonb NOT NULL,
-    notes text,
-    slug character varying(500) NOT NULL,
-    file_types character varying(20) NOT NULL,
-    equipment_type_id integer,
-    attach_to_experiment_id integer,
-    user_owner_id integer,
-    parser_config_id integer,
-    local_folder character varying(500) NOT NULL,
-    status character varying(16) NOT NULL
-);
-
-
-ALTER TABLE public."battDB_harvester" OWNER TO towen;
-
---
--- Name: battDB_harvester_id_seq; Type: SEQUENCE; Schema: public; Owner: towen
---
-
-CREATE SEQUENCE public."battDB_harvester_id_seq"
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public."battDB_harvester_id_seq" OWNER TO towen;
-
---
--- Name: battDB_harvester_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: towen
---
-
-ALTER SEQUENCE public."battDB_harvester_id_seq" OWNED BY public."battDB_harvester".id;
 
 
 --
@@ -1599,13 +1553,6 @@ ALTER TABLE ONLY public."battDB_experimentdevice" ALTER COLUMN id SET DEFAULT ne
 
 
 --
--- Name: battDB_harvester id; Type: DEFAULT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_harvester" ALTER COLUMN id SET DEFAULT nextval('public."battDB_harvester_id_seq"'::regclass);
-
-
---
 -- Name: battDB_parser id; Type: DEFAULT; Schema: public; Owner: towen
 --
 
@@ -2013,7 +1960,7 @@ COPY public.auth_user (id, password, last_login, is_superuser, username, first_n
 3	pbkdf2_sha256$150000$EfLnuKoVFTo5$eI9zlUW09YuBiHiPdlpYqbf8cFyvRvTISVec8IqZaUw=	2020-08-13 10:56:28+01	t	binbin	Binbin	Chen		t	t	2020-08-13 09:53:36+01
 7	pbkdf2_sha256$216000$Vt9WFAxpjSyE$nW6zcHd0uYfDqElZJ+RkFpcN3t9RDAPKyWGARyQdUw4=	2020-10-08 13:36:25.920895+01	f	test	Test	User		t	t	2020-10-08 13:33:36+01
 8	pbkdf2_sha256$216000$rtzqcHSiEh62$Dzt8NBZjs+1qEmcZRFNHE3c1pMi7CAFMMRK04c52UWg=	\N	f	cycler-foobar5000				f	t	2020-11-04 11:59:55+00
-1	pbkdf2_sha256$216000$OafoLVPyzITM$orFVUO5QzVoBneWLEpu4jxz+Ucrc+DqclzTFOsJcvH4=	2020-12-29 18:07:01.958477+00	t	tom	Tom	Owen	tom.owen@zepler.net	t	t	2020-08-04 19:08:06+01
+1	pbkdf2_sha256$216000$OafoLVPyzITM$orFVUO5QzVoBneWLEpu4jxz+Ucrc+DqclzTFOsJcvH4=	2021-01-18 13:03:05.755939+00	t	tom	Tom	Owen	tom.owen@zepler.net	t	t	2020-08-04 19:08:06+01
 \.
 
 
@@ -2110,7 +2057,7 @@ COPY public."battDB_batchdevice" (id, attributes, batch_id, seq_num, notes) FROM
 -- Data for Name: battDB_datacolumn; Type: TABLE DATA; Schema: public; Owner: towen
 --
 
-COPY public."battDB_datacolumn" (id, column_name, resample, resample_n, data_file_id, device_id, parameter_id) FROM stdin;
+COPY public."battDB_datacolumn" (id, column_name, resample, resample_n, parameter_id, data_file_id, device_id) FROM stdin;
 \.
 
 
@@ -2210,7 +2157,7 @@ COPY public."battDB_experiment" (id, name, created_on, modified_on, attributes, 
 --
 
 COPY public."battDB_experimentdatafile" (id, created_on, modified_on, attributes, notes, slug, experiment_id, user_owner_id, machine_id, status, name, ts_data, ts_headers, protocol_id) FROM stdin;
-22	2020-12-17 22:09:02.273842+00	2020-12-17 22:09:08.590241+00	{}		group10-cell25_02_mb_c03mpt_cfuw1dktxt	\N	1	\N	draft	Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt	\N	\N	\N
+22	2020-12-17 22:09:02.273842+00	2021-01-18 13:03:31.552741+00	{}		group10-cell25_02_mb_c03mpt_cfuw1dktxt	\N	1	\N	draft	Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt	\N	\N	\N
 \.
 
 
@@ -2221,16 +2168,6 @@ COPY public."battDB_experimentdatafile" (id, created_on, modified_on, attributes
 COPY public."battDB_experimentdevice" (id, batch_seq, device_pos, data_file_id, "deviceBatch_id", experiment_id) FROM stdin;
 1	0	cell_nn	\N	32	5
 3	1	cell_nn1	\N	32	5
-\.
-
-
---
--- Data for Name: battDB_harvester; Type: TABLE DATA; Schema: public; Owner: towen
---
-
-COPY public."battDB_harvester" (id, name, created_on, modified_on, attributes, notes, slug, file_types, equipment_type_id, attach_to_experiment_id, user_owner_id, parser_config_id, local_folder, status) FROM stdin;
-1	makron	2020-11-04 12:40:28.873201+00	2020-11-11 19:15:53.425912+00	{}		makron	*.csv	1	5	1	\N	.	draft
-2	foo	2020-11-11 19:35:39.944867+00	2020-11-11 19:35:39.944882+00	{}		foo	*.csv	\N	\N	1	\N	.	draft
 \.
 
 
@@ -2264,7 +2201,7 @@ COPY public."battDB_signaltype" (id, col_name, parameter_id, parser_id, "order")
 --
 
 COPY public."battDB_uploadedfile" (id, file, hash, local_date, local_path, edf_id, parse, parsed_metadata, use_parser_id) FROM stdin;
-3	uploaded_files/Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt	bd87c16c57c61092dd4a8cabb89b0ea1	2020-12-17 22:09:02.083916+00		22	f	{}	1
+3	uploaded_files/Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt	bd87c16c57c61092dd4a8cabb89b0ea1	2020-12-17 22:09:02.083916+00		22	t	{}	1
 \.
 
 
@@ -3090,6 +3027,7 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 692	2020-12-17 22:07:42.642074+00	21	Group10-Cell25_02_MB_C03.mpt_BJbDQGD.txt	3		23	1
 693	2020-12-17 22:09:02.322175+00	22	Unnamed data set	1	[{"added": {}}, {"added": {"name": "uploaded file", "object": "Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt"}}]	23	1
 694	2020-12-17 22:09:08.591309+00	22	Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt	2	[]	23	1
+695	2021-01-18 13:03:31.554406+00	22	Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt	2	[{"changed": {"name": "uploaded file", "object": "Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt", "fields": ["Parse"]}}]	23	1
 \.
 
 
@@ -3479,6 +3417,10 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 336	battDB	0203_FilesRefactor5	2020-12-17 15:11:42.507484+00
 337	battDB	0204_FilesRefactor6	2020-12-17 15:51:26.980015+00
 338	battDB	0205_FilesRefactor7	2020-12-17 16:34:20.907032+00
+341	battDB	0206_auto_20201230_1742	2020-12-30 17:42:40.750261+00
+342	battDB	0207_auto_20210118_1302	2021-01-18 13:02:39.153213+00
+343	common	0056_auto_20210118_1302	2021-01-18 13:02:39.194461+00
+344	battDB	0208_auto_20210118_1637	2021-01-18 16:37:23.245606+00
 \.
 
 
@@ -3504,6 +3446,7 @@ qzxcflgo428yd5139m5rrpju1vjaa5yp	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNut
 zbiwzzffwqruymi23daayu13wkomo24m	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kjszE:3-JRXG4ckvbDTHln2-C4DOsOb6d7aaZy_REHukzTtqk	2020-12-14 23:53:40.160017+00
 xmfurcackrl15onovppg0cv8qe51yy6s	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kmLbm:D1tL77UGwDZB5Vje23Ois4MrQbbK7YZN31zFfGoPV44	2020-12-21 18:51:38.507402+00
 zuk838rwug37i1u4j4fry21vxwaxrdv5	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kuJOf:J6-ok3LVIq7rmLTDOgGJa3bc1MyO3NHIkEYNQYTKLCs	2021-01-12 18:07:01.965942+00
+vo0e2q0fc7wwtj5aybj3k3riw1u5y1q4	.eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1l1UBV:16RdUJ53BZBjXFVrpEaTWDkvKV_LSahJQB1VOUSvOZQ	2021-02-01 13:03:05.761529+00
 \.
 
 
@@ -3627,13 +3570,6 @@ SELECT pg_catalog.setval('public."battDB_experimentdevice_id_seq"', 3, true);
 
 
 --
--- Name: battDB_harvester_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
---
-
-SELECT pg_catalog.setval('public."battDB_harvester_id_seq"', 2, true);
-
-
---
 -- Name: battDB_parser_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
@@ -3735,7 +3671,7 @@ SELECT pg_catalog.setval('public.dfndb_quantityunit_id_seq', 14, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 694, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 695, true);
 
 
 --
@@ -3749,7 +3685,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 74, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: towen
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 340, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 344, true);
 
 
 --
@@ -4006,22 +3942,6 @@ ALTER TABLE ONLY public."battDB_experimentdevice"
 
 ALTER TABLE ONLY public."battDB_experimentdevice"
     ADD CONSTRAINT "battDB_experimentdevice_pkey" PRIMARY KEY (id);
-
-
---
--- Name: battDB_harvester battDB_harvester_name_user_owner_id_0b314229_uniq; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_harvester"
-    ADD CONSTRAINT "battDB_harvester_name_user_owner_id_0b314229_uniq" UNIQUE (name, user_owner_id);
-
-
---
--- Name: battDB_harvester battDB_harvester_pkey; Type: CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_harvester"
-    ADD CONSTRAINT "battDB_harvester_pkey" PRIMARY KEY (id);
 
 
 --
@@ -4658,48 +4578,6 @@ CREATE INDEX "battDB_experimentdevice_experiment_id_566fbea4" ON public."battDB_
 
 
 --
--- Name: battDB_harvester_attach_to_equipment_id_43c580f1; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_harvester_attach_to_equipment_id_43c580f1" ON public."battDB_harvester" USING btree (equipment_type_id);
-
-
---
--- Name: battDB_harvester_attach_to_experiment_id_785e6338; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_harvester_attach_to_experiment_id_785e6338" ON public."battDB_harvester" USING btree (attach_to_experiment_id);
-
-
---
--- Name: battDB_harvester_parser_config_id_de53cd9c; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_harvester_parser_config_id_de53cd9c" ON public."battDB_harvester" USING btree (parser_config_id);
-
-
---
--- Name: battDB_harvester_slug_23fa0482; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_harvester_slug_23fa0482" ON public."battDB_harvester" USING btree (slug);
-
-
---
--- Name: battDB_harvester_slug_23fa0482_like; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_harvester_slug_23fa0482_like" ON public."battDB_harvester" USING btree (slug varchar_pattern_ops);
-
-
---
--- Name: battDB_harvester_user_owner_id_1e9ff937; Type: INDEX; Schema: public; Owner: towen
---
-
-CREATE INDEX "battDB_harvester_user_owner_id_1e9ff937" ON public."battDB_harvester" USING btree (user_owner_id);
-
-
---
 -- Name: battDB_parser_slug_c95729d2; Type: INDEX; Schema: public; Owner: towen
 --
 
@@ -5324,38 +5202,6 @@ ALTER TABLE ONLY public."battDB_experimentdevice"
 
 ALTER TABLE ONLY public."battDB_experimentdevice"
     ADD CONSTRAINT "battDB_experimentdev_experiment_id_566fbea4_fk_battDB_ex" FOREIGN KEY (experiment_id) REFERENCES public."battDB_experiment"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_harvester battDB_harvester_attach_to_experiment_785e6338_fk_battDB_ex; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_harvester"
-    ADD CONSTRAINT "battDB_harvester_attach_to_experiment_785e6338_fk_battDB_ex" FOREIGN KEY (attach_to_experiment_id) REFERENCES public."battDB_experiment"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_harvester battDB_harvester_equipment_type_id_04125ef9_fk_battDB_eq; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_harvester"
-    ADD CONSTRAINT "battDB_harvester_equipment_type_id_04125ef9_fk_battDB_eq" FOREIGN KEY (equipment_type_id) REFERENCES public."battDB_equipment"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_harvester battDB_harvester_parser_config_id_de53cd9c_fk_battDB_parser_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_harvester"
-    ADD CONSTRAINT "battDB_harvester_parser_config_id_de53cd9c_fk_battDB_parser_id" FOREIGN KEY (parser_config_id) REFERENCES public."battDB_parser"(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: battDB_harvester battDB_harvester_user_owner_id_1e9ff937_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: towen
---
-
-ALTER TABLE ONLY public."battDB_harvester"
-    ADD CONSTRAINT "battDB_harvester_user_owner_id_1e9ff937_fk_auth_user_id" FOREIGN KEY (user_owner_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

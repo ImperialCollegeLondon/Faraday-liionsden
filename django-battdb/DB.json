@@ -759,7 +759,7 @@
     "status": "draft",
     "user_owner": 1,
     "created_on": "2020-12-17T22:09:02.273Z",
-    "modified_on": "2020-12-17T22:09:08.590Z",
+    "modified_on": "2021-01-18T13:03:31.552Z",
     "attributes": {},
     "notes": "",
     "slug": "group10-cell25_02_mb_c03mpt_cfuw1dktxt",
@@ -779,7 +779,7 @@
     "edf": 22,
     "local_path": "",
     "local_date": "2020-12-17T22:09:02.083Z",
-    "parse": false,
+    "parse": true,
     "use_parser": 1,
     "parsed_metadata": {}
   }
@@ -804,44 +804,6 @@
     "batch_seq": 1,
     "device_pos": "cell_nn1",
     "data_file": null
-  }
-},
-{
-  "model": "battDB.harvester",
-  "pk": 1,
-  "fields": {
-    "status": "draft",
-    "user_owner": 1,
-    "created_on": "2020-11-04T12:40:28.873Z",
-    "modified_on": "2020-11-11T19:15:53.425Z",
-    "attributes": {},
-    "notes": "",
-    "slug": "makron",
-    "name": "makron",
-    "attach_to_experiment": 5,
-    "equipment_type": 1,
-    "file_types": "*.csv",
-    "parser_config": null,
-    "local_folder": "."
-  }
-},
-{
-  "model": "battDB.harvester",
-  "pk": 2,
-  "fields": {
-    "status": "draft",
-    "user_owner": 1,
-    "created_on": "2020-11-11T19:35:39.944Z",
-    "modified_on": "2020-11-11T19:35:39.944Z",
-    "attributes": {},
-    "notes": "",
-    "slug": "foo",
-    "name": "foo",
-    "attach_to_experiment": null,
-    "equipment_type": null,
-    "file_types": "*.csv",
-    "parser_config": null,
-    "local_folder": "."
   }
 },
 {
@@ -10412,6 +10374,19 @@
   }
 },
 {
+  "model": "admin.logentry",
+  "pk": 695,
+  "fields": {
+    "action_time": "2021-01-18T13:03:31.554Z",
+    "user": 1,
+    "content_type": 23,
+    "object_id": "22",
+    "object_repr": "Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"name\": \"uploaded file\", \"object\": \"Group10-Cell25_02_MB_C03.mpt_CfuW1Dk.txt\", \"fields\": [\"Parse\"]}}]"
+  }
+},
+{
   "model": "auth.permission",
   "pk": 29,
   "fields": {
@@ -12008,7 +11983,7 @@
   "pk": 1,
   "fields": {
     "password": "pbkdf2_sha256$216000$OafoLVPyzITM$orFVUO5QzVoBneWLEpu4jxz+Ucrc+DqclzTFOsJcvH4=",
-    "last_login": "2020-12-29T18:07:01.958Z",
+    "last_login": "2021-01-18T13:03:05.755Z",
     "is_superuser": true,
     "username": "tom",
     "first_name": "Tom",
@@ -12584,6 +12559,14 @@
   "fields": {
     "session_data": ".eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1kej1k:Cf0nR-PxemSaAVVjmjAfIWZ5JvWiINY9OmWKPBxxGBs",
     "expire_date": "2020-11-30T18:14:56.368Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "vo0e2q0fc7wwtj5aybj3k3riw1u5y1q4",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQRe_C2hCo0AGX7j0DYZhBqgaS0q6Md7dNutDte-__twhxXUpYO89hInERWpx-Gcb05LoLesR6bzK1uswTyj2Rh-3y1ohf16P9Oyixl22dCX0yRiftFDuA0TEyD-MZVWZvrQPMoAZvDJDXeiOaHKgMLloEAvH5AuGMN2w:1l1UBV:16RdUJ53BZBjXFVrpEaTWDkvKV_LSahJQB1VOUSvOZQ",
+    "expire_date": "2021-02-01T13:03:05.761Z"
   }
 },
 {
