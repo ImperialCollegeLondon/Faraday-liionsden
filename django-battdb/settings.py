@@ -89,17 +89,28 @@ WSGI_APPLICATION = 'django-battdb.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    #'default': {
-    #    #'ENGINE': 'django.db.backends.sqlite3',
-    #    #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    #    'ENGINE' : 'djongo',
-    #    'NAME'   : 'django-battdbDB2'
-    #}
+# DATABASES = {
+#     #'default': {
+#     #    #'ENGINE': 'django.db.backends.sqlite3',
+#     #    #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     #    'ENGINE' : 'djongo',
+#     #    'NAME'   : 'django-battdbDB2'
+#     #}
+#
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'battdb',
+#     }
+# }
 
+DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'battdb',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
 
