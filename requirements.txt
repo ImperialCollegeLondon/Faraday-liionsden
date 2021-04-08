@@ -1,5 +1,5 @@
 pandas
-psycopg2
+psycopg2-binary
 maya
 mpld3
 django_jsoneditor
@@ -17,3 +17,4 @@ pydotplus
 coreapi-cli
 django-mptt
 idutils
+jsonschema
