@@ -18,3 +18,4 @@ coreapi-cli
 django-mptt
 idutils
 jsonschema
+wheel
