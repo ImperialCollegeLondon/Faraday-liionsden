@@ -1,5 +1,3 @@
-
-
 """
 Based on the test_resources/parser_data/BioLogic_full.txt file
 Maps all possible column namings to their standard names
@@ -26,7 +24,7 @@ COLUMN_NAME_MAPPING = {
     "Energy discharge/W_h": ["Energy discharge/W.h"],
     "Capacitance charge/�F": ["Capacitance charge/�F"],
     "Capacitance discharge/�F": ["Capacitance discharge/�F"],
-    "x": ["x"],                          # TODO: Is this right? What does it mean and can it change?
+    "x": ["x"],  # TODO: Is this right? What does it mean and can it change?
     "Q discharge/mA_h": ["Q discharge/mA.h"],
     "Q charge/mA_h": ["Q charge/mA.h"],
     "Capacity/mA_h": ["Capacity/mA.h"],
@@ -36,5 +34,5 @@ COLUMN_NAME_MAPPING = {
     "cycle number": ["cycle number"],
     "P/W": ["P/W"],
     "R/Ohm": ["R/Ohm"],
-    "Rec#": ["Rec#", "RecNo"]
+    "Rec#": ["Rec#", "RecNo"],
 }

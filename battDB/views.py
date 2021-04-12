@@ -4,7 +4,8 @@ from django.views.generic import ListView, CreateView, UpdateView, DetailView
 from django.views.generic.base import TemplateResponseMixin, ContextMixin, View
 from django.urls import reverse_lazy
 from .models import *
-#from .forms import ExperimentForm
+
+# from .forms import ExperimentForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import ProcessFormView
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
@@ -21,8 +22,14 @@ from rest_framework import status, viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.parsers import FileUploadParser
 from rest_framework import authentication, permissions
-from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView, RetrieveAPIView
-#import django_filters.rest_framework
+from rest_framework.generics import (
+    CreateAPIView,
+    GenericAPIView,
+    ListAPIView,
+    RetrieveAPIView,
+)
+
+# import django_filters.rest_framework
 
 np.random.seed(9615)
 
@@ -32,7 +39,7 @@ np.random.seed(9615)
 
 class ExperimentsView(ListView):
     model = Experiment
-    template_name = 'generic_list.html'
+    template_name = "generic_list.html"
 
 
 # class AllFilesView(ListView):
@@ -47,7 +54,7 @@ class ExperimentsView(ListView):
 
 class ExperimentView(DetailView):
     model = Experiment
-    template_name = 'experiment.html'
+    template_name = "experiment.html"
 
     # def get_object(self):  # simple unique ID e.g. /exp/94
     # if('pk' in self.kwargs):
@@ -192,7 +199,7 @@ class TemplateView(TemplateResponseMixin, ContextMixin, View):
 
 
 def index(request):
-    return redirect('/exps')
+    return redirect("/exps")
     # return HttpResponse("<h1>Hello, world.</h1>")
 
 
@@ -208,36 +215,44 @@ def index(request):
 #        serializer = DataSerializer(data, many=True)
 #    return JsonResponse(serializer.data, safe=False)
 
+
 def plotData(request):
     # generate df
     N = 100
-    df = pd.DataFrame((.1 * (np.random.random((N, 5)) - .5)).cumsum(0),
-                      columns=['a', 'b', 'c', 'd', 'e'], )
+    df = pd.DataFrame(
+        (0.1 * (np.random.random((N, 5)) - 0.5)).cumsum(0),
+        columns=["a", "b", "c", "d", "e"],
+    )
 
     # plot line + confidence interval
     fig, ax = plt.subplots()
     ax.grid(True, alpha=0.3)
 
     for key, val in df.iteritems():
-        l, = ax.plot(val.index, val.values, label=key)
-        ax.fill_between(val.index,
-                        val.values * .5, val.values * 1.5,
-                        color=l.get_color(), alpha=.4)
+        (l,) = ax.plot(val.index, val.values, label=key)
+        ax.fill_between(
+            val.index,
+            val.values * 0.5,
+            val.values * 1.5,
+            color=l.get_color(),
+            alpha=0.4,
+        )
 
     # define interactive legend
 
     handles, labels = ax.get_legend_handles_labels()  # return lines and labels
-    interactive_legend = mpld3.plugins.InteractiveLegendPlugin(zip(handles,
-                                                                   ax.collections),
-                                                               labels,
-                                                               alpha_unsel=0.5,
-                                                               alpha_over=1.5,
-                                                               start_visible=True)
+    interactive_legend = mpld3.plugins.InteractiveLegendPlugin(
+        zip(handles, ax.collections),
+        labels,
+        alpha_unsel=0.5,
+        alpha_over=1.5,
+        start_visible=True,
+    )
     mpld3.plugins.connect(fig, interactive_legend)
 
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
-    ax.set_title('Interactive legend', size=20)
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    ax.set_title("Interactive legend", size=20)
     # fig,ax=plt.subplots(figsize=(16,9))
     # plt.plot([1,2,3,4]*4096)
     g = mpld3.fig_to_html(fig, template_type="simple")
@@ -247,15 +262,15 @@ def plotData(request):
 class UploadFileView(GenericAPIView):
     queryset = UploadedFile.objects.all()
     parser_classes = (FileUploadParser,)
-    #serializer_class = DataFileSerializer
+    # serializer_class = DataFileSerializer
     # authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAdminUser]
 
     def put(self, request, filename, format=None):
-        if 'file' not in request.data:
+        if "file" not in request.data:
             raise ParseError("Empty content")
 
-        f = request.data['file']
+        f = request.data["file"]
         obj = UploadedFile()
         obj.file.save(filename, f, save=True)
         obj.user_owner = request.user
@@ -278,6 +293,7 @@ class UploadFileView(GenericAPIView):
 #         slug = self.kwargs.get('slug', None)
 #         return model.objects.get(slug=slug, user_owner=user)
 
+
 class ExperimentAPIView(APIView):
     queryset = Experiment.objects.all()
     serializer_class = ExperimentSerializer
@@ -285,12 +301,13 @@ class ExperimentAPIView(APIView):
 
 class ExperimentAPIListView(ListAPIView):
     serializer_class = ExperimentSerializer
-    #filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    # filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     queryset = Experiment.objects.all()
 
     # def get_queryset(self):
     #     user = self.request.user
     #     return Experiment.objects.filter(user_owner=user)
+
 
 class DataRangeAPIView(ListAPIView):
     serializer_class = DataRangeSerializer
@@ -301,8 +318,10 @@ class AllFileHashesAPIView(ListAPIView):
     "returns hashes and sizes of all files belonging to current user"
     model = UploadedFile
     serializer_class = FileHashSerializer
+
     def get_queryset(self):
-        return UploadedFile.objects.all() # filter(user_owner=self.request.user)
+        return UploadedFile.objects.all()  # filter(user_owner=self.request.user)
+
 
 # class HarvesterAPIView(ListAPIView):
 #     serializer_class = HarvesterSerializer
@@ -310,10 +329,15 @@ class AllFileHashesAPIView(ListAPIView):
 #     def get_queryset(self):
 #         return Harvester.objects.filter(user_owner=self.request.user, slug=self.kwargs.get('slug'))
 
+
 class DataFileListAPIView(ListAPIView):
     serializer_class = DataFileSerializer
+
     def get_queryset(self):
-        return ExperimentDataFile.objects.filter(user_owner=self.request.user, experiment=self.request.GET.get('exp'))
+        return ExperimentDataFile.objects.filter(
+            user_owner=self.request.user, experiment=self.request.GET.get("exp")
+        )
+
 
 class DataFileCreateAPIView(CreateAPIView):
     serializer_class = NewDataFileSerializer
@@ -321,9 +345,9 @@ class DataFileCreateAPIView(CreateAPIView):
 
 class GeneralViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
-        model = self.kwargs.get('model')
+        model = self.kwargs.get("model")
         return model.objects.filter(user_owner=self.request.user)
 
     def get_serializer_class(self):
-        GeneralSerializer.Meta.model = self.kwargs.get('model')
+        GeneralSerializer.Meta.model = self.kwargs.get("model")
         return GeneralSerializer

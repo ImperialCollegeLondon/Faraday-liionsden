@@ -17,16 +17,20 @@ from galvanalyser.harvester.parsers.parser_util.biologic import COLUMN_NAME_MAPP
 
 class BiologicCSVnTSVParser(Parser, ABC):
     """
-        Parser for the csv and tsv output of the BioLogic cycler
+    Parser for the csv and tsv output of the BioLogic cycler
     """
 
-    MANDATORY_COLUMNS = {'Time', 'Rec#', 'Ns'}
+    MANDATORY_COLUMNS = {"Time", "Rec#", "Ns"}
 
     def __init__(self, file_path: str) -> None:
         """ Initialise the parser and load the data into the Pandas dataframe """
         super().__init__(file_path)
-        self.encoding = "iso-8859-1"  # Assumed to be this, but we may need to do something about it
-        self.skip_rows = BiologicCSVnTSVParser._get_header_size(file_path, self.encoding)
+        self.encoding = (
+            "iso-8859-1"  # Assumed to be this, but we may need to do something about it
+        )
+        self.skip_rows = BiologicCSVnTSVParser._get_header_size(
+            file_path, self.encoding
+        )
         self._load_data(file_path)
         # Some preprocessing that could be done straight away
         self._drop_unnamed_columns()
@@ -38,11 +42,15 @@ class BiologicCSVnTSVParser(Parser, ABC):
         Loads the data as a Pandas data frame
         Can work with files that have a header or do not have one
         """
-        self.data = pd.read_csv(file_path, ',', engine="python", skiprows=self.skip_rows)
+        self.data = pd.read_csv(
+            file_path, ",", engine="python", skiprows=self.skip_rows
+        )
         # If we only have one column, it is likely that data is in tsv
         if len(self.data.keys()) == 1:
             # Read the data as tsv
-            self.data = pd.read_csv(file_path, '\t', engine="python", skiprows=self.skip_rows)
+            self.data = pd.read_csv(
+                file_path, "\t", engine="python", skiprows=self.skip_rows
+            )
         if len(self.data.keys()) == 1:
             # If the data still has only one column, then this is an unsupported filetype
             raise UnsupportedFileTypeError()
@@ -50,9 +58,9 @@ class BiologicCSVnTSVParser(Parser, ABC):
     @staticmethod
     def _get_header_size(file_path: str, encoding: str) -> int:
         """
-            Reads the file and determines the size of the header
-            :return:
-                header size --> int
+        Reads the file and determines the size of the header
+        :return:
+            header size --> int
         """
         with open(file_path, encoding=encoding) as datafile:
             if next(datafile) == "BT-Lab ASCII FILE\n":
@@ -67,7 +75,7 @@ class BiologicCSVnTSVParser(Parser, ABC):
     def _drop_unnamed_columns(self) -> None:
         """Drops columns of the internal parser dataframe that have no name """
         for header in list(self.data):
-            if 'Unnam' in header:
+            if "Unnam" in header:
                 self.data.drop(header, axis=1, inplace=True)
 
     def _standardise_columns(self) -> None:
@@ -81,23 +89,23 @@ class BiologicCSVnTSVParser(Parser, ABC):
 
     def _get_column_info(self) -> Dict:
         """
-            Gathers the metadata for each column
-            :return:
-            column_name: {is_numeric: bool}
+        Gathers the metadata for each column
+        :return:
+        column_name: {is_numeric: bool}
         """
         col_metadata = {}
         for k in self.data.keys():
             col_metadata[k] = {
-                'is_numeric': is_numeric_dtype(self.data[k]),
-                'has_data': True
+                "is_numeric": is_numeric_dtype(self.data[k]),
+                "has_data": True,
             }
         return col_metadata
 
     def get_metadata(self) -> (Dict, Dict):
         """
-            :return:
-            Dict: Metadata for the dataset (produced by the cycler)
-            Dict: Column names, whether they have data and if the data is numeric
+        :return:
+        Dict: Metadata for the dataset (produced by the cycler)
+        Dict: Column names, whether they have data and if the data is numeric
         """
         metadata = {
             "Dataset_Name": os.path.splitext(os.path.basename(self.file_path))[0],
@@ -110,25 +118,30 @@ class BiologicCSVnTSVParser(Parser, ABC):
             # Additional metadata could be extracted from the header if needed
         }
         with open(self.file_path, encoding=self.encoding) as f:
-          metadata["file_header"] = [f.readline() for _ in range(0, self.skip_rows)]
-        metadata["Device Metadata"] = self.header_to_yaml("".join(metadata["file_header"]))
+            metadata["file_header"] = [f.readline() for _ in range(0, self.skip_rows)]
+        metadata["Device Metadata"] = self.header_to_yaml(
+            "".join(metadata["file_header"])
+        )
 
         column_info = self._get_column_info()
 
         if not self.MANDATORY_COLUMNS.issubset(self.data.keys()):
-            metadata["warnings"].append("Not all mandatory columns are present in the raw datafile")
+            metadata["warnings"].append(
+                "Not all mandatory columns are present in the raw datafile"
+            )
 
         return metadata, column_info
 
-    def get_data_generator_for_columns(self, columns: list, first_data_row: int,
-                                       col_mapping: Dict = {}) -> Generator[list, None, None]:
+    def get_data_generator_for_columns(
+        self, columns: list, first_data_row: int, col_mapping: Dict = {}
+    ) -> Generator[list, None, None]:
         """
         Creates a Generator for accessing all data in a biologic file row by row for the
         specified set of columns. Columns can be renamed if the mapping is passed
         """
         wanted = self.data[columns]  # Get the columns we want
-        #renamed = wanted.rename(columns=col_mapping, inplace=False)  # Apply renaming
-        #for row in renamed.to_dict(orient="row"):
+        # renamed = wanted.rename(columns=col_mapping, inplace=False)  # Apply renaming
+        # for row in renamed.to_dict(orient="row"):
         for row in wanted.values:
             yield list(row)
 
@@ -136,36 +149,40 @@ class BiologicCSVnTSVParser(Parser, ABC):
     # We can hack in a few string replacements to make it valid
 
     yaml_replacements = {
-       "\t": "    ",  # tabs form lists. in YAML, tab indents are not valid
-       # simple text lines with no colon are not valid - add a colon for some assumed meaning
-       "BT-Lab ASCII FILE" : "FileType : BT-Lab ASCII FILE",
-       "Modulo Bat" : "Mode: Modulo Bat",
-       "BT-Lab for windows" : "BT-Lab for windows : ",
-       "Internet server"  : "Internet server : ",
-       "Command interpretor" : "Command interpretor : ",
-       "for DX =" : "DX/DQ : for DX =",
-       "Record" : "Record : "
-       # lines ending in \ are not valid
-       #"(.+)\\$" : "\1$"
-    } 
+        "\t": "    ",  # tabs form lists. in YAML, tab indents are not valid
+        # simple text lines with no colon are not valid - add a colon for some assumed meaning
+        "BT-Lab ASCII FILE": "FileType : BT-Lab ASCII FILE",
+        "Modulo Bat": "Mode: Modulo Bat",
+        "BT-Lab for windows": "BT-Lab for windows : ",
+        "Internet server": "Internet server : ",
+        "Command interpretor": "Command interpretor : ",
+        "for DX =": "DX/DQ : for DX =",
+        "Record": "Record : "
+        # lines ending in \ are not valid
+        # "(.+)\\$" : "\1$"
+    }
 
     # https://stackoverflow.com/questions/15175142/how-can-i-do-multiple-substitutions-using-regex-in-python
     def header_to_yaml(self, header):
-        regex = re.compile("(%s)" % "|".join(map(re.escape, self.yaml_replacements.keys())))
-        rep_header =  regex.sub(lambda mo: self.yaml_replacements[mo.string[mo.start():mo.end()]], header)
+        regex = re.compile(
+            "(%s)" % "|".join(map(re.escape, self.yaml_replacements.keys()))
+        )
+        rep_header = regex.sub(
+            lambda mo: self.yaml_replacements[mo.string[mo.start() : mo.end()]], header
+        )
         # quote all values for safety:
-        #clean_header = re.sub(r'^([^:]+):\s*(.*)', r'\1:"\2"', rep_header, flags=re.MULTILINE)
-        #print(rep_header)
+        # clean_header = re.sub(r'^([^:]+):\s*(.*)', r'\1:"\2"', rep_header, flags=re.MULTILINE)
+        # print(rep_header)
         # Table containg per-column metadata is not parseable as YAML. Skip this for now - find line where it starts, and end there.
-        regex = re.compile('^Ns.+');
-        #last_parseable_line = [m.start() for m in regex.finditer(rep_header)]
+        regex = re.compile("^Ns.+")
+        # last_parseable_line = [m.start() for m in regex.finditer(rep_header)]
 
-        parseable_lines=[]
-        for num, line in enumerate(rep_header.split('\n'), 1):
-        #    print('%d\t"%s"' % (num,line))
+        parseable_lines = []
+        for num, line in enumerate(rep_header.split("\n"), 1):
+            #    print('%d\t"%s"' % (num,line))
             if regex.match(line) is not None:
-        #         print("Stop at line %d" % num)
-                 break
+                #         print("Stop at line %d" % num)
+                break
             parseable_lines.append(line)
 
         parseable_header = "\n".join(parseable_lines)

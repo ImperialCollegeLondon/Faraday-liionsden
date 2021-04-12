@@ -1,6 +1,10 @@
 from django import forms
 from .models import *
-from django.contrib.admin.widgets import AdminDateWidget, FilteredSelectMultiple, AutocompleteSelectMultiple
+from django.contrib.admin.widgets import (
+    AdminDateWidget,
+    FilteredSelectMultiple,
+    AutocompleteSelectMultiple,
+)
 from django.forms import Textarea, TextInput
 
 # from jsoneditor.forms import JSONEditor

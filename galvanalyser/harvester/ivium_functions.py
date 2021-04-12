@@ -22,9 +22,9 @@ import galvanalyser.harvester.battery_exceptions as battery_exceptions
 
 def get_ivium_column_to_standard_column_mapping():
     """
-        Return a dict with a key of the column name in the file that maps to 
-        the standard column name in the value. Only return values where a
-        mapping exists
+    Return a dict with a key of the column name in the file that maps to
+    the standard column name in the value. Only return values where a
+    mapping exists
     """
     print("get_ivium_column_to_standard_column_mapping")
     return {"amps": 3, "volts": 2, "test_time": 1}
@@ -40,14 +40,12 @@ def isfloat(value):
 
 def load_metadata_ivium_text(file_path):
     """
-        Load metadata in a ivium_text file"
+    Load metadata in a ivium_text file"
     """
     metadata = {}
     metadata["Machine Type"] = "Ivium"
     metadata["Dataset Name"] = os.path.splitext(os.path.basename(file_path))[0]
-    metadata["Date of Test"] = datetime.fromtimestamp(
-        os.path.getctime(file_path)
-    )
+    metadata["Date of Test"] = datetime.fromtimestamp(os.path.getctime(file_path))
     columns_with_data = {
         name: {"has_data": True, "is_numeric": True}
         for name in get_ivium_column_to_standard_column_mapping()
@@ -63,7 +61,7 @@ def load_metadata_ivium_text(file_path):
 
 def load_data_ivium_text(file_path, columns, column_renames=None):
     """
-        Load data in a ivium text file"
+    Load data in a ivium text file"
     """
 
     if column_renames is None:
@@ -80,20 +78,17 @@ def load_data_ivium_text(file_path, columns, column_renames=None):
         for line_idx, line in enumerate(f, 1):
             if len(line) != 39:
                 raise battery_exceptions.InvalidDataInFileError(
-                    (
-                        "Incorrect line length on line {} was {} expected {}"
-                    ).format(line_idx, len(line), 39)
+                    ("Incorrect line length on line {} was {} expected {}").format(
+                        line_idx, len(line), 39
+                    )
                 )
             row = [line[:12].strip(), line[13:25].strip(), line[26:].strip()]
             yield {
-                column_names[col_idx]: row[col_idx]
-                for col_idx in columns_of_interest
+                column_names[col_idx]: row[col_idx] for col_idx in columns_of_interest
             }
 
 
 def generate_ivium_data_labels(file_type, file_path, column_info):
-    columns = [
-        column for column, info in column_info.items() if info["has_data"]
-    ]
+    columns = [column for column, info in column_info.items() if info["has_data"]]
     for item in []:
         yield item

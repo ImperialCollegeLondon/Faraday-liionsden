@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-#from rest_framework.generics import CreateAPIView, GenericAPIView, ListCreateAPIView
+# from rest_framework.generics import CreateAPIView, GenericAPIView, ListCreateAPIView
 
 from django.urls import path
 from django.conf.urls import url
@@ -22,7 +22,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    #path('', views.index, name='index'),
-    path('data', views.DataListView.as_view(), name='data'),
-    path('parameters/', views.ParametersAPIView.as_view(), name='parameters'),
+    # path('', views.index, name='index'),
+    path("data", views.DataListView.as_view(), name="data"),
+    path("parameters/", views.ParametersAPIView.as_view(), name="parameters"),
 ]

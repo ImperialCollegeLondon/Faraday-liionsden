@@ -4,12 +4,13 @@ from django import template
 
 register = template.Library()
 
+
 @register.filter
 def get_fields(obj):
     out = []
     for field in obj._meta.fields:
-       if(field.is_relation):
-          out.append((field.name, (getattr(obj,field.name))))
-       else:
-          out.append((field.name, field.value_to_string(obj)))
+        if field.is_relation:
+            out.append((field.name, (getattr(obj, field.name))))
+        else:
+            out.append((field.name, field.value_to_string(obj)))
     return out

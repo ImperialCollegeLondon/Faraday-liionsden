@@ -19,17 +19,22 @@ class HarvesterAPITest(APITestCase):
         pathname = "media/biologic.csv"
         (dirname, filename) = os.path.split(pathname)
         url = "http://127.0.0.1:8000/battDB/upload/" + filename
-        data=open(pathname,'rb')
-        headers = {'Authorization': 'Token ' + token, "Content-Type": "application/octet-stream"}
-        #factory = APIRequestFactory()
-        #request = factory.put('/battDB/upload/%s' % filename, {'name': 'test dataset'}, format='json')
-        #response = self.client.put(url, data=data, format='json')
+        data = open(pathname, "rb")
+        headers = {
+            "Authorization": "Token " + token,
+            "Content-Type": "application/octet-stream",
+        }
+        # factory = APIRequestFactory()
+        # request = factory.put('/battDB/upload/%s' % filename, {'name': 'test dataset'}, format='json')
+        # response = self.client.put(url, data=data, format='json')
         response = self.client.put(url, data=data, headers=headers, format="raw")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(models.ExperimentDataFile.objects.get().fhash, '7776fadaf51c99476d1d7228ff790fcc')
+        self.assertEqual(
+            models.ExperimentDataFile.objects.get().fhash,
+            "7776fadaf51c99476d1d7228ff790fcc",
+        )
 
 
 def create_experiment(**kwargs) -> models.Experiment:
     exp = models.Experiment.objects.create(**kwargs)
     pass
-

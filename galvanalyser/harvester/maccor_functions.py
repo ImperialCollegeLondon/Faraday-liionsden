@@ -40,9 +40,9 @@ class LogFilter(object):
 
 def get_maccor_column_to_standard_column_mapping():
     """
-        Return a dict with a key of the column name in the file that maps to
-        the standard column name in the value. Only return values where a
-        mapping exists
+    Return a dict with a key of the column name in the file that maps to
+    the standard column name in the value. Only return values where a
+    mapping exists
     """
     print("get_maccor_column_to_standard_column_mapping")
     all_values = {
@@ -128,18 +128,14 @@ def is_maccor_text_file(file_path, delimiter):
             return False
         reader = csv.reader(f, delimiter=delimiter)
         headers = next(reader)
-        if (
-            "Amps" not in headers
-            or "Volts" not in headers
-            or "TestTime" not in headers
-        ):
+        if "Amps" not in headers or "Volts" not in headers or "TestTime" not in headers:
             return False
     return True
 
 
 def identify_columns_maccor_excel(wbook):
     """
-        Identifies columns in a maccor excel file"
+    Identifies columns in a maccor excel file"
     """
     sheet = wbook.sheet_by_index(0)
     column_has_data = [False for col in range(0, sheet.ncols)]
@@ -204,16 +200,16 @@ def identify_columns_maccor_excel(wbook):
 
 def handle_recno(row, correct_number_of_columns, recno_col, row_idx):
     """
-     This seems to realign the row to columns if the row was read incorrectly
-     The way it does it is by appending first two columns together. This is done for Rec# > 1,000,
-     as the reader seems to recognise it at CSV
+    This seems to realign the row to columns if the row was read incorrectly
+    The way it does it is by appending first two columns together. This is done for Rec# > 1,000,
+    as the reader seems to recognise it at CSV
     """
     if len(row) > correct_number_of_columns:
         if recno_col >= 0:
             row = (
                 row[0:recno_col]
                 + [(row[recno_col] + row[recno_col + 1]).replace(",", "")]
-                + row[recno_col + 2:]
+                + row[recno_col + 2 :]
             )
         else:
             raise battery_exceptions.InvalidDataInFileError(
@@ -229,7 +225,7 @@ def handle_recno(row, correct_number_of_columns, recno_col, row_idx):
 
 def identify_columns_maccor_text(reader):
     """
-        Identifies columns in a maccor csv or tsv file"
+    Identifies columns in a maccor csv or tsv file"
     """
     headers = [header for header in next(reader) if header != ""]
     correct_number_of_columns = len(headers)
@@ -240,11 +236,11 @@ def identify_columns_maccor_text(reader):
     column_has_data = [False for _ in headers]
     row_idx = 1
     first_data = next(reader)
-    first_data = handle_recno(
-        first_data, correct_number_of_columns, recno_col, row_idx
-    )
+    first_data = handle_recno(first_data, correct_number_of_columns, recno_col, row_idx)
     column_is_numeric = [isfloat(column) for column in first_data]
-    logging.info("After parsing the first row of data, these columns were found to be numberic:")
+    logging.info(
+        "After parsing the first row of data, these columns were found to be numberic:"
+    )
     print(column_is_numeric)
     numeric_columns = []
     for i in range(0, len(column_is_numeric)):
@@ -270,11 +266,7 @@ def identify_columns_maccor_text(reader):
                         col,
                         headers[col],
                         row[col],
-                        (
-                            (" as float: " + str(float(row[col])))
-                            if is_float
-                            else ""
-                        ),
+                        ((" as float: " + str(float(row[col]))) if is_float else ""),
                         row_idx,
                     )
                 )
@@ -301,21 +293,21 @@ def identify_columns_maccor_text(reader):
 
 def clean_key(key):
     """
-        Unescapes and removes trailing characters on strings
+    Unescapes and removes trailing characters on strings
     """
     return key.replace("''", "'").strip().rstrip(":")
 
 
 def clean_value(value):
     """
-        Trims values
+    Trims values
     """
     return value.replace("''", "'").strip().rstrip("\0").strip()
 
 
 def load_metadata_maccor_excel(file_path):
     """
-        Load metadata in a maccor excel file"
+    Load metadata in a maccor excel file"
     """
     import xlrd
 
@@ -355,9 +347,7 @@ def load_metadata_maccor_excel(file_path):
                 col = col + 1
             col = col + 1
         metadata["Dataset Name"] = os.path.basename(metadata["Filename"])
-        metadata["misc_file_data"] = {
-            "excel format metadata": (dict(metadata), None)
-        }
+        metadata["misc_file_data"] = {"excel format metadata": (dict(metadata), None)}
         metadata["Machine Type"] = "Maccor"
         column_info, total_rows, first_rec, last_rec = identify_columns_maccor_excel(
             wbook
@@ -371,9 +361,10 @@ def load_metadata_maccor_excel(file_path):
 
 def load_metadata_maccor_text(file_type, file_path):
     """
-        Load metadata in a maccor csv or tsv file"
+    Load metadata in a maccor csv or tsv file"
     """
     import maya
+
     metadata = {}
     with open(file_path, "r") as csvfile:
         reader = None
@@ -387,9 +378,7 @@ def load_metadata_maccor_text(file_type, file_path):
         second = next(reader)
         key = clean_key(second[0])
         metadata[key] = maya.parse(second[1]).datetime()
-        metadata["Dataset Name"] = os.path.splitext(
-            os.path.basename(file_path)
-        )[0]
+        metadata["Dataset Name"] = os.path.splitext(os.path.basename(file_path))[0]
         metadata["Machine Type"] = "Maccor"
         column_info, total_rows, first_rec, last_rec = identify_columns_maccor_text(
             reader
@@ -403,9 +392,10 @@ def load_metadata_maccor_text(file_type, file_path):
 
 def load_metadata_maccor_raw(file_path):
     """
-        Load metadata in a maccor raw file"
+    Load metadata in a maccor raw file"
     """
     import maya
+
     metadata = {}
     column_info = {}
     with open(file_path, "r") as csvfile:
@@ -414,17 +404,13 @@ def load_metadata_maccor_raw(file_path):
         metadata["Today's Date"] = maya.parse(
             first[0].split(" ")[2], year_first=False
         ).datetime()
-        metadata["Date of Test"] = maya.parse(
-            first[1], year_first=False
-        ).datetime()
+        metadata["Date of Test"] = maya.parse(first[1], year_first=False).datetime()
         metadata["Filename"] = first[3].split(" Procedure:")[0]
         metadata["Dataset Name"] = os.path.basename(metadata["Filename"])
         # Just shove everything in the misc_file_data for now rather than
         # trying to parse it
         metadata["File Header Parts"] = first
-        metadata["misc_file_data"] = {
-            "raw format metadata": (dict(metadata), None)
-        }
+        metadata["misc_file_data"] = {"raw format metadata": (dict(metadata), None)}
         # Identify columns, what happens with the aux fields?
         # This question can't be answered for a few months so just make this
         # parse what we have and leave handling anything different to some
@@ -443,13 +429,11 @@ def load_metadata_maccor_raw(file_path):
 
 def load_data_maccor_excel(file_path, columns, column_renames=None):
     """
-        Load metadata in a maccor excel file"
+    Load metadata in a maccor excel file"
     """
     import xlrd
 
-    with xlrd.open_workbook(
-        file_path, on_demand=True, logfile=LogFilter()
-    ) as wbook:
+    with xlrd.open_workbook(file_path, on_demand=True, logfile=LogFilter()) as wbook:
         sheet = wbook.sheet_by_index(0)
         columns_of_interest = []
         column_names = []
@@ -481,7 +465,7 @@ def load_data_maccor_excel(file_path, columns, column_renames=None):
 
 def load_data_maccor_text(file_type, file_path, columns, column_renames=None):
     """
-        Load data in a maccor csv or tsv file"
+    Load data in a maccor csv or tsv file"
     """
 
     if column_renames is None:
@@ -512,12 +496,9 @@ def load_data_maccor_text(file_type, file_path, columns, column_renames=None):
                 column_names[col_idx] = column_renames[column_name]
         # columns_data = [[] for i in columns_of_interest]
         for row_idx, row in enumerate(reader):
-            row = handle_recno(
-                row, correct_number_of_columns, recno_col, row_idx
-            )
+            row = handle_recno(row, correct_number_of_columns, recno_col, row_idx)
             yield {
-                column_names[col_idx]: row[col_idx]
-                for col_idx in columns_of_interest
+                column_names[col_idx]: row[col_idx] for col_idx in columns_of_interest
             }
 
 

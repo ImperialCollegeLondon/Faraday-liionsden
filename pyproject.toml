@@ -1,5 +1,5 @@
 [tool.black]
-exclude = 'venv/|battDB/migrations/|common/migrations/|dfndb/migrations/|other/'
+exclude = 'venv/|battDB/migrations/|common/migrations/|dfndb/migrations/|other/|data/'
 [tool.isort]
 line_length = 88
 multi_line_output = 3

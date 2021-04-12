@@ -7,6 +7,7 @@ Vector = List[Dict]
 
 class FileType(Enum):
     """Different file types"""
+
     MACCOR_CSV = 1
     MACCOR_TSV = 2
     MACCOR_XLS = 3
@@ -16,7 +17,6 @@ class FileType(Enum):
 
 
 class Parser(abc.ABC):
-
     @abc.abstractmethod
     def __init__(self, file_path: str) -> None:
         self.file_path = file_path
@@ -26,6 +26,7 @@ class Parser(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def get_data_generator_for_columns(self, columns: Set, first_data_row: int, col_mapping: Dict) \
-            -> Generator[Dict, None, None]:
+    def get_data_generator_for_columns(
+        self, columns: Set, first_data_row: int, col_mapping: Dict
+    ) -> Generator[Dict, None, None]:
         pass

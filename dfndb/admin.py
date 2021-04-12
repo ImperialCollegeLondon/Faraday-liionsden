@@ -8,7 +8,7 @@ from common.admin import BaseAdmin
 
 class MaterialCompositionInline(admin.TabularInline):
     model = CompositionPart
-    readonly_fields = ['percentage']
+    readonly_fields = ["percentage"]
     extra = 0
 
 
@@ -18,14 +18,14 @@ class DataParameterInline(admin.TabularInline):
 
 
 class MaterialAdmin(BaseAdmin):
-    list_display = BaseAdmin.list_display + ['type', 'polymer']
-    list_filter = BaseAdmin.list_filter + ['type']
+    list_display = BaseAdmin.list_display + ["type", "polymer"]
+    list_filter = BaseAdmin.list_filter + ["type"]
     inlines = (MaterialCompositionInline,)
 
 
 class MethodAdmin(BaseAdmin):
-    list_display = BaseAdmin.list_display + ['type']
-    list_filter = BaseAdmin.list_filter + ['type']
+    list_display = BaseAdmin.list_display + ["type"]
+    list_filter = BaseAdmin.list_filter + ["type"]
 
     def __init__(self, model, admin_site):
         # self.list_display.append('fork')
@@ -37,12 +37,12 @@ class DataAdmin(BaseAdmin):
 
 
 class UnitAdmin(admin.ModelAdmin):
-    list_display = ['__str__', 'quantityName', 'unitName', 'is_SI_unit']
-    list_filter = ['is_SI_unit']
+    list_display = ["__str__", "quantityName", "unitName", "is_SI_unit"]
+    list_filter = ["is_SI_unit"]
 
 
 class CompoundAdmin(admin.ModelAdmin):
-    list_display = ['__str__']
+    list_display = ["__str__"]
 
 
 admin.site.register(QuantityUnit, UnitAdmin)

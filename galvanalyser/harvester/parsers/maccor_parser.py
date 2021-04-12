@@ -14,8 +14,8 @@ from galvanalyser.harvester.parsers.parser import Parser
 
 class MaccorXLSParser(Parser, ABC):
     """
-        Parser for Maccor excel raw data
-        Based on maccor_functions by Luke Pitt
+    Parser for Maccor excel raw data
+    Based on maccor_functions by Luke Pitt
     """
 
     def __init__(self, file_path: str) -> None:
@@ -61,22 +61,25 @@ class MaccorXLSParser(Parser, ABC):
         except ValueError:
             pass
 
-        last_rec, total_rows = self._check_columns_for_data(column_has_data, headers,
-                                                            numeric_columns, header_row + 1)
+        last_rec, total_rows = self._check_columns_for_data(
+            column_has_data, headers, numeric_columns, header_row + 1
+        )
 
         return {
-                   "num_rows": total_rows,
-                   "first_sample_no": first_rec,
-                   "last_sample_no": last_rec,
-               }, {
-                   headers[i]: {
-                       "has_data": column_has_data[i],
-                       "is_numeric": column_is_numeric[i]
-                   }
-                   for i in range(len(headers))
-               }
+            "num_rows": total_rows,
+            "first_sample_no": first_rec,
+            "last_sample_no": last_rec,
+        }, {
+            headers[i]: {
+                "has_data": column_has_data[i],
+                "is_numeric": column_is_numeric[i],
+            }
+            for i in range(len(headers))
+        }
 
-    def _check_columns_for_data(self, column_has_data, headers, numeric_columns, data_start):
+    def _check_columns_for_data(
+        self, column_has_data, headers, numeric_columns, data_start
+    ):
         """ Scans the entire file for datapoints in each column """
         total_rows, last_rec = 0, 0
         for sheet_id in range(self.workbook.nsheets):
@@ -85,7 +88,9 @@ class MaccorXLSParser(Parser, ABC):
             total_rows += sheet.nrows - 2
             for col in numeric_columns[:]:
                 try:
-                    unique_vals = set([float(x) for x in sheet.col_values(col, data_start)])
+                    unique_vals = set(
+                        [float(x) for x in sheet.col_values(col, data_start)]
+                    )
                 except (ValueError, IndexError) as e:
                     unique_vals = set()
 
@@ -107,7 +112,7 @@ class MaccorXLSParser(Parser, ABC):
 
     @staticmethod
     def _is_metadata_row(row: Iterable) -> bool:
-        return not any(x in ['Rec#', 'Cyc#', 'Step'] for x in [y.value for y in row])
+        return not any(x in ["Rec#", "Cyc#", "Step"] for x in [y.value for y in row])
 
     def get_metadata(self) -> (Dict, Dict):
         sheet = self.workbook.sheet_by_index(0)
@@ -138,15 +143,18 @@ class MaccorXLSParser(Parser, ABC):
 
         return metadata, column_info
 
-    def get_data_generator_for_columns(self, columns: Set, first_data_row: int,
-                                       col_mapping: Dict = None) -> Generator[Dict, None, None]:
+    def get_data_generator_for_columns(
+        self, columns: Set, first_data_row: int, col_mapping: Dict = None
+    ) -> Generator[Dict, None, None]:
         """
         Creates a generator for accessing all data in a maccor file row by row for the desired
          columns. Can rename columns if a custom mapping is passed.
         """
         sheet = self.workbook.sheet_by_index(0)
         col_names = sheet.row_slice(first_data_row - 1)
-        columns_of_interest = [i for i in range(sheet.ncols) if col_names[i].value in columns]
+        columns_of_interest = [
+            i for i in range(sheet.ncols) if col_names[i].value in columns
+        ]
         if col_mapping is not None:
             col_names = [col_mapping[x] if x in col_mapping else x for x in col_names]
 
@@ -156,8 +164,11 @@ class MaccorXLSParser(Parser, ABC):
             for i in range(first_data_row, sheet.nrows):
                 row = sheet.row(i)
                 yield {
-                    col_names[col].value: (row[col].value if self.rec_col != col
-                                           else self._sanitise_rec_val(row[col].value))
+                    col_names[col].value: (
+                        row[col].value
+                        if self.rec_col != col
+                        else self._sanitise_rec_val(row[col].value)
+                    )
                     for col in columns_of_interest
                 }
             logging.info("Unloading sheet %d", sheet_id)
@@ -172,7 +183,6 @@ class MaccorXLSParser(Parser, ABC):
 
 
 class MaccorTSVParser(Parser, ABC):
-
     def __init__(self, file_path: str) -> None:
         super().__init__(file_path)
 
@@ -181,7 +191,6 @@ class MaccorTSVParser(Parser, ABC):
 
 
 class MaccorCSVParser(Parser, ABC):
-
     def __init__(self, file_path: str) -> None:
         super().__init__(file_path)
 
