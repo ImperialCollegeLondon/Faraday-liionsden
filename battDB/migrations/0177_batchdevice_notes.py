@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0176_BatchDevice'),
+        ("battDB", "0176_BatchDevice"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='batchdevice',
-            name='notes',
-            field=models.TextField(blank=True, help_text='Optional human-readable notes', null=True),
+            model_name="batchdevice",
+            name="notes",
+            field=models.TextField(
+                blank=True, help_text="Optional human-readable notes", null=True
+            ),
         ),
     ]

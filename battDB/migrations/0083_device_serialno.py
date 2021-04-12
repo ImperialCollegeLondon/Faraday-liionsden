@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0082_auto_20201021_1112'),
+        ("battDB", "0082_auto_20201021_1112"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='device',
-            name='serialNo',
-            field=models.CharField(blank=True, help_text='Serial Number - Not valid for device templates', max_length=60, null=True),
+            model_name="device",
+            name="serialNo",
+            field=models.CharField(
+                blank=True,
+                help_text="Serial Number - Not valid for device templates",
+                max_length=60,
+                null=True,
+            ),
         ),
     ]

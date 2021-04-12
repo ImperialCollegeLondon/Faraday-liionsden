@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0137_auto_20201101_1652'),
+        ("battDB", "0137_auto_20201101_1652"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='deviceparameter',
-            name='inherit_to_children',
+            model_name="deviceparameter",
+            name="inherit_to_children",
             field=models.BooleanField(default=False),
         ),
     ]

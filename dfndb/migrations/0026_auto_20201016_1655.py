@@ -6,23 +6,31 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dfndb', '0025_auto_20201016_1404'),
+        ("dfndb", "0025_auto_20201016_1404"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='method',
-            name='description',
-            field=models.TextField(blank=True, help_text='Method description in PyBaMM format'),
+            model_name="method",
+            name="description",
+            field=models.TextField(
+                blank=True, help_text="Method description in PyBaMM format"
+            ),
         ),
         migrations.AlterField(
-            model_name='parameter',
-            name='notes',
-            field=models.TextField(blank=True, help_text='Optional human-readable notes', null=True),
+            model_name="parameter",
+            name="notes",
+            field=models.TextField(
+                blank=True, help_text="Optional human-readable notes", null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='parameter',
-            name='symbol',
-            field=models.CharField(help_text='Parameter symbol. Will be decoded as LaTeX', max_length=40, unique=True),
+            model_name="parameter",
+            name="symbol",
+            field=models.CharField(
+                help_text="Parameter symbol. Will be decoded as LaTeX",
+                max_length=40,
+                unique=True,
+            ),
         ),
     ]

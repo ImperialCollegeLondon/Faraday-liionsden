@@ -6,24 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dfndb', '0010_auto_20201015_1713'),
+        ("dfndb", "0010_auto_20201015_1713"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='data',
-            name='created_on',
-        ),
-        migrations.RemoveField(
-            model_name='material',
-            name='created_on',
-        ),
-        migrations.RemoveField(
-            model_name='method',
-            name='created_on',
-        ),
-        migrations.RemoveField(
-            model_name='parameter',
-            name='created_on',
-        ),
+        migrations.RemoveField(model_name="data", name="created_on",),
+        migrations.RemoveField(model_name="material", name="created_on",),
+        migrations.RemoveField(model_name="method", name="created_on",),
+        migrations.RemoveField(model_name="parameter", name="created_on",),
     ]

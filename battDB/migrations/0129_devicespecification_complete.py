@@ -6,13 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0128_auto_20201030_1453'),
+        ("battDB", "0128_auto_20201030_1453"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='devicespecification',
-            name='complete',
-            field=models.BooleanField(default=False, help_text='This device is complete - it can be used ion experiments'),
+            model_name="devicespecification",
+            name="complete",
+            field=models.BooleanField(
+                default=False,
+                help_text="This device is complete - it can be used ion experiments",
+            ),
         ),
     ]

@@ -6,12 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0194_status_text'),
+        ("battDB", "0194_status_text"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='experimentdatafile',
-            name='use_parser',
-        ),
+        migrations.RemoveField(model_name="experimentdatafile", name="use_parser",),
     ]

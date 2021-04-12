@@ -6,12 +6,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0131_Bork'),
-        ('common', '0048_Docstrings'),
+        ("battDB", "0131_Bork"),
+        ("common", "0048_Docstrings"),
     ]
 
     operations = [
-        migrations.DeleteModel(
-            name='Thing',
-        ),
+        migrations.DeleteModel(name="Thing",),
     ]

@@ -1,32 +1,29 @@
+import hashlib
+import json
 import os
 import traceback
-from django.db import models
-from django.db.models import JSONField
+from datetime import datetime
+
+import django.core.exceptions
+import pandas.errors
 from django.contrib.postgres.fields import ArrayField
-from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
+from django.db import models
+from django.db.models import JSONField
+from django.db.models.signals import post_delete
+from django.urls import reverse
+from rest_framework.authtoken.models import Token
 
 import common.models as cm
 import dfndb.models as dfn
-
-from .migration_dummy import *
-from datetime import datetime
-import django.core.exceptions
-
-from rest_framework.authtoken.models import Token
-
+from common.utils import file_cleanup
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 from galvanalyser.harvester.parsers.maccor_parser import MaccorXLSParser
 from galvanalyser.harvester.parsers.parser import Parser
-import pandas.errors
-from .utils import parse_data_file, get_parser
-import json
 
-from django.db.models.signals import post_delete
-from common.utils import file_cleanup
-
-import hashlib
+from .migration_dummy import *
+from .utils import get_parser, parse_data_file
 
 # from jsonfield_schema import JSONSchema
 
@@ -213,9 +210,7 @@ class BatchDevice(cm.HasAttributes, cm.HasNotes):
     batch = models.ForeignKey(DeviceBatch, on_delete=models.CASCADE)
     seq_num = models.PositiveSmallIntegerField(
         default=1,
-        validators=[
-            MinValueValidator(1),
-        ],
+        validators=[MinValueValidator(1),],
         help_text="Sequence number within batch",
     )
 
@@ -738,9 +733,7 @@ class ExperimentDevice(models.Model):
     deviceBatch = models.ForeignKey(DeviceBatch, on_delete=models.CASCADE)
     batch_seq = models.PositiveSmallIntegerField(
         default=1,
-        validators=[
-            MinValueValidator(1),
-        ],
+        validators=[MinValueValidator(1),],
         help_text="sequence number of device within batch",
     )
     device_pos = models.CharField(

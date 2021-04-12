@@ -6,12 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0140_remove_devicebatch_name'),
+        ("battDB", "0140_remove_devicebatch_name"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='experiment',
-            name='device',
-        ),
+        migrations.RemoveField(model_name="experiment", name="device",),
     ]

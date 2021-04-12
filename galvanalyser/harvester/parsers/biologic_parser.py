@@ -1,13 +1,11 @@
+import itertools
 import os
 import re
-import yaml
-import itertools
+from abc import ABC
+from typing import Dict, Generator, Set
 
 import pandas as pd
-
-from abc import ABC
-from typing import Set, Dict, Generator
-
+import yaml
 from pandas.core.dtypes.common import is_numeric_dtype
 
 from galvanalyser.harvester.battery_exceptions import UnsupportedFileTypeError

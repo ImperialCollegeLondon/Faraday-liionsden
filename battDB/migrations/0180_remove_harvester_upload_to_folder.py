@@ -6,12 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0179_auto_20201112_1710'),
+        ("battDB", "0179_auto_20201112_1710"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='harvester',
-            name='upload_to_folder',
-        ),
+        migrations.RemoveField(model_name="harvester", name="upload_to_folder",),
     ]

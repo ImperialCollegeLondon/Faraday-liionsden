@@ -1,21 +1,28 @@
 #!/usr/bin/env python3
-import time
-
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler, FileSystemEvent, EVENT_TYPE_MODIFIED, EVENT_TYPE_CREATED, EVENT_TYPE_MOVED
+import json
+import logging
 import os
 import sys
-import requests
-import json
-import yaml
+import time
+from dataclasses import asdict, dataclass
 from pprint import pprint
 from threading import Thread
-import logging
-from dataclasses import dataclass, asdict
-from harvester import CONFIG
-from harvester.utils import hash_file, has_handle
+
 import marshmallow
+import requests
+import yaml
+from harvester import CONFIG
+from harvester.utils import has_handle, hash_file
 from marshmallow_dataclass import class_schema
+from watchdog.events import (
+    EVENT_TYPE_CREATED,
+    EVENT_TYPE_MODIFIED,
+    EVENT_TYPE_MOVED,
+    FileSystemEvent,
+    FileSystemEventHandler,
+)
+from watchdog.observers import Observer
+
 
 # schema for info about files in local filesystem
 @dataclass
@@ -29,6 +36,7 @@ class FileObj:
     ignored: bool = False
     state: str = "default"
 
+
 @dataclass
 class DatafileRecord:
     raw_data_file: int
@@ -41,7 +49,6 @@ class DatafileRecord:
 
 
 class HarvesterAPI:
-
     def __init__(self, site, auth_token):
         self.token = auth_token
         self.base_url = site
@@ -50,7 +57,7 @@ class HarvesterAPI:
     def get_hashes(self):
         url = self.base_url + "/api/hash_list"
         self.logger.debug(f"Get hashes: {url}")
-        headers = {'Authorization': 'Token ' + self.token, "Content-Type": "text/JSON"}
+        headers = {"Authorization": "Token " + self.token, "Content-Type": "text/JSON"}
         response = requests.get(url, headers=headers)
         # return python dict
         return json.loads(response.text)
@@ -59,17 +66,20 @@ class HarvesterAPI:
         (dirname, filename) = os.path.split(pathname)
         url = self.base_url + "/battDB/upload/" + filename
 
-        headers = {'Authorization': 'Token ' + self.token, "Content-Type": "application/octet-stream"}
+        headers = {
+            "Authorization": "Token " + self.token,
+            "Content-Type": "application/octet-stream",
+        }
         # "Content-Disposition": "attachment; filename=foo"}
-        response = requests.put(url, data=open(pathname,'rb'), headers=headers)
+        response = requests.put(url, data=open(pathname, "rb"), headers=headers)
         self.logger.debug(f"Upload: {url} : {response.text}")
         return json.loads(response.text)
 
-    #TODO
+    # TODO
     def create_datafile_record(self, edf_obj: DatafileRecord):
         url = self.base_url + "/api/dataCreate"
         self.logger.debug(f"Create EDF: {url} : {asdict(edf_obj)}")
-        headers = {'Authorization': 'Token ' + self.token}
+        headers = {"Authorization": "Token " + self.token}
         response = requests.post(url, data=asdict(edf_obj), headers=headers)
         self.logger.debug(f"EDF: {response.text}")
         return json.loads(response.text)
@@ -82,8 +92,10 @@ class HarvesterManager:
         # self.config = self.load_config(config_path)
         # logging.debug("Config Loaded: %s" % self.config)
         # self.config = self.load_config(config_path)
-        self.API = HarvesterAPI(site=f"http://{CONFIG.database.host}:{CONFIG.database.port}",
-                                auth_token=CONFIG.database.auth_token)
+        self.API = HarvesterAPI(
+            site=f"http://{CONFIG.database.host}:{CONFIG.database.port}",
+            auth_token=CONFIG.database.auth_token,
+        )
         self.observers = list()
         observer = Observer()
         self.remote_files_by_hash = dict()
@@ -97,7 +109,9 @@ class HarvesterManager:
         for folder in CONFIG.folders:
             self.check_local_files(folder.path, recursive=folder.recursive)
             # Schedules watching of a given path
-            observer.schedule(self.event_handler, folder.path, recursive=folder.recursive)
+            observer.schedule(
+                self.event_handler, folder.path, recursive=folder.recursive
+            )
             # Add observable to list of observers
             self.observers.append(observer)
 
@@ -108,7 +122,7 @@ class HarvesterManager:
             observer.start()
         except FileNotFoundError as e:
             self.logger.error(f"Cannot start FS monitor: {e}")
-            raise e # BUG: watchdog module does not include the filename when it raises FileNotFoundError
+            raise e  # BUG: watchdog module does not include the filename when it raises FileNotFoundError
 
     def wait(self):
         logging.info("== Waiting for files ==")
@@ -128,7 +142,9 @@ class HarvesterManager:
         self.save_filelist()
 
     def load_filelist(self):
-        self.logger.info(f"Loading cached local files list from {CONFIG.local_filelist_cache}")
+        self.logger.info(
+            f"Loading cached local files list from {CONFIG.local_filelist_cache}"
+        )
         FObjSchema = class_schema(FileObj)
 
         try:
@@ -138,7 +154,8 @@ class HarvesterManager:
                 for fd in cache:
                     if os.path.exists(fd.path):
                         self.local_files_by_path[fd.path] = fd
-                    else: self.logger.warning(f"Cached file no longer exists: {fd.path}")
+                    else:
+                        self.logger.warning(f"Cached file no longer exists: {fd.path}")
 
             cache_file.close()
             self.logger.info(f"Local cache has {len(cache)} files")
@@ -147,7 +164,10 @@ class HarvesterManager:
 
     def save_filelist(self):
         with open(CONFIG.local_filelist_cache, "w") as cache_file:
-            yaml.dump([asdict(f) for f in self.local_files_by_path.values()], stream=cache_file)
+            yaml.dump(
+                [asdict(f) for f in self.local_files_by_path.values()],
+                stream=cache_file,
+            )
         cache_file.close()
 
     # load cached files list - TODO
@@ -161,16 +181,20 @@ class HarvesterManager:
     #         return yaml.safe_load(DEFAULT_CONFIG)
 
     def found_new_file(self, filepath, source="found"):
-        assert(os.path.exists(filepath))
-        if os.path.splitext(filepath)[1].lower() not in CONFIG.file_patterns: # TODO: file_patterns for each folder!
+        assert os.path.exists(filepath)
+        if (
+            os.path.splitext(filepath)[1].lower() not in CONFIG.file_patterns
+        ):  # TODO: file_patterns for each folder!
             self.logger.debug(f"Wrong pattern: {filepath}")
             return None
         fd = self.local_files_by_path.get(filepath) or None
         if fd is not None:
             if os.path.getmtime(filepath) != fd.last_modified:
                 if fd.upload_id is not None or fd.edf_id is not None:
-                    self.logger.warning(f"File has already been uploaded but has been modified locally! "
-                                        f"(uid={fd.upload_id}, edf={fd.edf_id}, path={fd.path})")
+                    self.logger.warning(
+                        f"File has already been uploaded but has been modified locally! "
+                        f"(uid={fd.upload_id}, edf={fd.edf_id}, path={fd.path})"
+                    )
                 fd.ignored = False
                 fd.state = "modified_offline"
             return self.local_files_by_path[filepath]
@@ -183,7 +207,7 @@ class HarvesterManager:
     def process_file(self, fd):
 
         if fd.ignored or fd.upload_id is not None:
-            #self.logger.debug("Ignored: %s", fd.path)
+            # self.logger.debug("Ignored: %s", fd.path)
             return None
 
         size = os.path.getsize(fd.path)
@@ -195,7 +219,7 @@ class HarvesterManager:
 
         if size > fd.size:
             fd.size = size
-            fd.state = 'growing'
+            fd.state = "growing"
             self.logger.info(f"Growing: {fd.path}")
             return
 
@@ -208,8 +232,10 @@ class HarvesterManager:
         # check minimum age
         fd.last_modified = os.path.getmtime(fd.path)
         if time.time() - fd.last_modified < CONFIG.min_file_age:
-            self.logger.info(f"File [{fd.path}] was modified only {file_age}s ago - waiting!")
-            fd.state = 'waiting'
+            self.logger.info(
+                f"File [{fd.path}] was modified only {file_age}s ago - waiting!"
+            )
+            fd.state = "waiting"
             return None
 
         # compute hash
@@ -226,54 +252,62 @@ class HarvesterManager:
         # check if it exists in the list of hashes we got from the server
         remote_file = self.remote_files_by_hash.get(fd.fhash)
         if remote_file is not None:
-            fd.state = 'exists_remote'
+            fd.state = "exists_remote"
             fd.upload_id = remote_file.upload_id
             fd.edf_id = remote_file.edf_id
             if remote_file.edf_id is not None:
                 self.logger.warning(f"Already in database: {fd.path}")
-                #if remote_file.edf_id is None:
+                # if remote_file.edf_id is None:
                 #    assign_to_experiment
                 fd.ignored = True
                 return None
-            else: # exists but unassigned
-                self.logger.warning(f"File previously uploaded but not assigned to an experiment: {fd.path}")
+            else:  # exists but unassigned
+                self.logger.warning(
+                    f"File previously uploaded but not assigned to an experiment: {fd.path}"
+                )
                 self.create_edf(fd)
                 return fd
 
-    ### Else:
+        ### Else:
 
-    #     self.upload_file(fd)
-    #
-    # def upload_file(self, fd):
+        #     self.upload_file(fd)
+        #
+        # def upload_file(self, fd):
 
         # Try to upload
         self.logger.info(f"Uploading file: {fd.path}")
         try:
             remote_file = self.API.upload_file(fd.path)
-            fd.upload_id = remote_file.get('id')
+            fd.upload_id = remote_file.get("id")
             self.logger.info(f"Got upload id: {fd.upload_id}")
             self.create_edf(fd)
         except requests.exceptions.RequestException:
-            fd.state = 'upload_failed'
-            return fd # try again
+            fd.state = "upload_failed"
+            return fd  # try again
         finally:
-            fd.state = 'uploaded'
+            fd.state = "uploaded"
             fd.ignored = True
             self.remote_files_by_hash[fd.fhash] = fd
 
     def create_edf(self, fd: FileObj):
         assert fd.upload_id is not None
-        edf = DatafileRecord(experiment=CONFIG.experiment_id, raw_data_file=fd.upload_id, machine=CONFIG.machine_id)
+        edf = DatafileRecord(
+            experiment=CONFIG.experiment_id,
+            raw_data_file=fd.upload_id,
+            machine=CONFIG.machine_id,
+        )
         self.API.create_datafile_record(edf)
 
     def check_db_files(self):
         file = dict()
         try:
             for file in self.API.get_hashes():
-                h = file['hash']
-                i = file['id']
-                e = file['edf_id']
-                self.remote_files_by_hash[h] = FileObj(state="exists_remote", fhash=h, edf_id=e, upload_id=i)
+                h = file["hash"]
+                i = file["id"]
+                e = file["edf_id"]
+                self.remote_files_by_hash[h] = FileObj(
+                    state="exists_remote", fhash=h, edf_id=e, upload_id=i
+                )
             self.logger.info(f"Database has {len(self.remote_files_by_hash)} files")
         except requests.exceptions.ConnectionError:
             self.logger.error("Cannot fetch hash list: Cannot connect to database")
@@ -282,21 +316,24 @@ class HarvesterManager:
             self.logger.debug(file)
 
     def check_local_files(self, scan_path, recursive=False):
-        new=0
-        ignored=0
+        new = 0
+        ignored = 0
         for root, subFolders, files in os.walk(scan_path):
             for filename in files:
                 file_path = os.path.join(root, filename)
                 if self.found_new_file(file_path, "found_local") is not None:
                     new = new + 1
-                else: ignored = ignored + 1
+                else:
+                    ignored = ignored + 1
             if not recursive:
                 break
-        self.logger.info(f"Found {new} valid files and {ignored} ignored under {scan_path} (Recursive={recursive})")
+        self.logger.info(
+            f"Found {new} valid files and {ignored} ignored under {scan_path} (Recursive={recursive})"
+        )
         self.save_filelist()
 
     def check_waiting_files(self):
-        #self.logger.debug("%d local files" % len(self.local_files_by_path))
+        # self.logger.debug("%d local files" % len(self.local_files_by_path))
         for fd in self.local_files_by_path.values():
             self.process_file(fd)
 
@@ -323,7 +360,6 @@ class HarvesterManager:
     #         config_file.write(DEFAULT_CONFIG)
 
 
-
 class FSMonitor(FileSystemEventHandler):
     def __init__(self, manager):
         super().__init__()
@@ -332,21 +368,26 @@ class FSMonitor(FileSystemEventHandler):
 
     def on_modified(self, event: FileSystemEvent):
         if event.is_directory:
-            self.logger.debug(f'new file: event type: {event.event_type}  path : {event.src_path}')
+            self.logger.debug(
+                f"new file: event type: {event.event_type}  path : {event.src_path}"
+            )
         elif event.event_type == EVENT_TYPE_CREATED:
-            self.logger.debug(f'new file : {event.src_path}')
-            self.manager.found_new_file(event.src_path, 'event_new')
+            self.logger.debug(f"new file : {event.src_path}")
+            self.manager.found_new_file(event.src_path, "event_new")
         elif event.event_type == EVENT_TYPE_MODIFIED:
-            self.logger.debug(f'modified : {event.src_path}')
-            self.manager.found_new_file(event.src_path, 'event_modified')
+            self.logger.debug(f"modified : {event.src_path}")
+            self.manager.found_new_file(event.src_path, "event_modified")
         elif event.event_type == EVENT_TYPE_MOVED:
-            self.logger.debug(f'moved : {event.src_path}')
-            self.manager.found_new_file(event.src_path, 'event_moved')
+            self.logger.debug(f"moved : {event.src_path}")
+            self.manager.found_new_file(event.src_path, "event_moved")
         else:
-            self.logger.warning(f'Unknown FS Event : {event.event_type}, {event.src_path}')
+            self.logger.warning(
+                f"Unknown FS Event : {event.event_type}, {event.src_path}"
+            )
+
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='harvester.log', level=logging.DEBUG)
+    logging.basicConfig(filename="harvester.log", level=logging.DEBUG)
     logging.getLogger().addHandler(logging.StreamHandler())
     HM = HarvesterManager()
     HM.wait()

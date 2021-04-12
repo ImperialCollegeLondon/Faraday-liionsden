@@ -1,15 +1,13 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-
-from django.views.generic import (
-    ListView,
-    DetailView,
-    CreateView,
-    UpdateView,
-    DeleteView,
-)
 from django.urls import reverse_lazy
-
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListCreateAPIView
 
 from .models import *

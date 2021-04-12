@@ -1,14 +1,15 @@
-from django.contrib import admin
-from common.admin import BaseAdmin
-from django.utils.safestring import mark_safe
-import common
-from django.forms import Textarea
 import mptt
+from django.contrib import admin
+from django.forms import Textarea
+from django.utils.safestring import mark_safe
+
+import common
+from common.admin import BaseAdmin
+
 from .forms import *
+from .models import *
 
 # Register your models here.
-
-from .models import *
 
 
 class DeviceParameterInline(common.admin.TabularInline):
@@ -128,10 +129,7 @@ class DeviceConfigAdmin(BaseAdmin):
 
 
 admin.site.register(
-    [
-        DeviceConfig,
-    ],
-    DeviceConfigAdmin,
+    [DeviceConfig,], DeviceConfigAdmin,
 )
 
 # class ModuleDeviceInline(admin.TabularInline):
@@ -284,10 +282,7 @@ admin.site.register([ExperimentDataFile], DataAdmin)
 
 
 admin.site.register(
-    [
-        Equipment,
-    ],
-    BaseAdmin,
+    [Equipment,], BaseAdmin,
 )
 
 # class DataParserAdmin(admin.ModelAdmin):

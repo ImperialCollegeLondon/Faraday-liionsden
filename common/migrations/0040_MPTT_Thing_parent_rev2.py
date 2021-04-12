@@ -6,13 +6,11 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0039_MPTT_Thing_parent_revert'),
+        ("common", "0039_MPTT_Thing_parent_revert"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='thing',
-            old_name='parent',
-            new_name='parent_assembly',
+            model_name="thing", old_name="parent", new_name="parent_assembly",
         ),
     ]

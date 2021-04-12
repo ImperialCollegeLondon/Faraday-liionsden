@@ -6,28 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dfndb', '0033_auto_20201021_1112'),
+        ("dfndb", "0033_auto_20201021_1112"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='data',
-            name='name',
+            model_name="data",
+            name="name",
             field=models.CharField(blank=True, max_length=128, null=True),
         ),
         migrations.AlterField(
-            model_name='material',
-            name='name',
+            model_name="material",
+            name="name",
             field=models.CharField(blank=True, max_length=128, null=True),
         ),
         migrations.AlterField(
-            model_name='method',
-            name='name',
+            model_name="method",
+            name="name",
             field=models.CharField(blank=True, max_length=128, null=True),
         ),
         migrations.AlterField(
-            model_name='parameter',
-            name='name',
+            model_name="parameter",
+            name="name",
             field=models.CharField(blank=True, max_length=128, null=True),
         ),
     ]

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0028_remove_paper_slug'),
+        ("common", "0028_remove_paper_slug"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='paper',
-            name='slug',
-            field=models.SlugField(default='bork', editable=False),
+            model_name="paper",
+            name="slug",
+            field=models.SlugField(default="bork", editable=False),
         ),
     ]

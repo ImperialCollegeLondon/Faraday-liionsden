@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0160_remove_harvester_user_token'),
+        ("battDB", "0160_remove_harvester_user_token"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='harvester',
-            name='name',
-            field=models.CharField(default='', max_length=128),
+            model_name="harvester",
+            name="name",
+            field=models.CharField(default="", max_length=128),
         ),
         migrations.AlterField(
-            model_name='parser',
-            name='name',
-            field=models.CharField(default='', max_length=128),
+            model_name="parser",
+            name="name",
+            field=models.CharField(default="", max_length=128),
         ),
     ]

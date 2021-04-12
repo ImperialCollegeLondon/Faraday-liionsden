@@ -6,17 +6,18 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0174_auto_20201112_1519'),
+        ("battDB", "0174_auto_20201112_1519"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='experimentdevice',
-            old_name='batch_id',
-            new_name='batch_seq',
+            model_name="experimentdevice", old_name="batch_id", new_name="batch_seq",
         ),
         migrations.AlterUniqueTogether(
-            name='experimentdevice',
-            unique_together={('experiment', 'deviceBatch', 'batch_seq', 'data_file'), ('device_pos', 'data_file')},
+            name="experimentdevice",
+            unique_together={
+                ("experiment", "deviceBatch", "batch_seq", "data_file"),
+                ("device_pos", "data_file"),
+            },
         ),
     ]

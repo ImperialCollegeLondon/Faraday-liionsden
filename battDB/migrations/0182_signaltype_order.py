@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0181_auto_20201112_1803'),
+        ("battDB", "0181_auto_20201112_1803"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='signaltype',
-            name='order',
+            model_name="signaltype",
+            name="order",
             field=models.PositiveSmallIntegerField(default=0),
         ),
     ]

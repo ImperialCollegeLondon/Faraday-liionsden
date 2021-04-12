@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0034_experimentdatafile_machine'),
+        ("battDB", "0034_experimentdatafile_machine"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='datarange',
-            name='file_offset',
+            model_name="datarange",
+            name="file_offset",
             field=models.PositiveIntegerField(default=0),
         ),
     ]

@@ -1,8 +1,9 @@
 import os
-import pandas as pd
+
 import numpy as np
-import preparenovonix.novonix_prep as prep
+import pandas as pd
 import preparenovonix.novonix_io as nio
+import preparenovonix.novonix_prep as prep
 
 df_cols = [
     "Time (s)",

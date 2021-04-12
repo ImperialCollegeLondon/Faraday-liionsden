@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0182_signaltype_order'),
+        ("battDB", "0182_signaltype_order"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='signaltype',
-            name='order',
-            field=models.PositiveSmallIntegerField(default=5, help_text='override column ordering'),
+            model_name="signaltype",
+            name="order",
+            field=models.PositiveSmallIntegerField(
+                default=5, help_text="override column ordering"
+            ),
         ),
     ]

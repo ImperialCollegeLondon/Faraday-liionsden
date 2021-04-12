@@ -7,13 +7,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dfndb', '0037_ManufacturingProtocol'),
+        ("dfndb", "0037_ManufacturingProtocol"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='compound',
-            name='mass',
-            field=models.FloatField(default=0, help_text='optional molar mass', validators=[django.core.validators.MinValueValidator(0, 'Mass cannot be negative!')]),
+            model_name="compound",
+            name="mass",
+            field=models.FloatField(
+                default=0,
+                help_text="optional molar mass",
+                validators=[
+                    django.core.validators.MinValueValidator(
+                        0, "Mass cannot be negative!"
+                    )
+                ],
+            ),
         ),
     ]

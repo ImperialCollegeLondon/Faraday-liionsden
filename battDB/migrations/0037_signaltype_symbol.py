@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0036_auto_20200903_1753'),
+        ("battDB", "0036_auto_20200903_1753"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='signaltype',
-            name='symbol',
-            field=models.CharField(default='X', max_length=8),
+            model_name="signaltype",
+            name="symbol",
+            field=models.CharField(default="X", max_length=8),
             preserve_default=False,
         ),
     ]

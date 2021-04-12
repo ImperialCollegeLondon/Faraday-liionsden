@@ -6,16 +6,36 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0025_remove_experimentdata_data'),
+        ("battDB", "0025_remove_experimentdata_data"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='EC_Cycle',
+            name="EC_Cycle",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cycle_num', models.PositiveIntegerField()),
-                ('cycle_action', models.CharField(choices=[('chg', 'Charging'), ('dchg', 'Discharging'), ('rest', 'Rest'), (None, 'Undefined')], max_length=8, null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("cycle_num", models.PositiveIntegerField()),
+                (
+                    "cycle_action",
+                    models.CharField(
+                        choices=[
+                            ("chg", "Charging"),
+                            ("dchg", "Discharging"),
+                            ("rest", "Rest"),
+                            (None, "Undefined"),
+                        ],
+                        max_length=8,
+                        null=True,
+                    ),
+                ),
             ],
         ),
     ]

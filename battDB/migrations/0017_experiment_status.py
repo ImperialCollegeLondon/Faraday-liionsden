@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0016_auto_20200812_1605'),
+        ("battDB", "0016_auto_20200812_1605"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='experiment',
-            name='status',
-            field=models.CharField(choices=[('edit', 'Edit'), ('published', 'Published')], default='edit', max_length=16),
+            model_name="experiment",
+            name="status",
+            field=models.CharField(
+                choices=[("edit", "Edit"), ("published", "Published")],
+                default="edit",
+                max_length=16,
+            ),
         ),
     ]

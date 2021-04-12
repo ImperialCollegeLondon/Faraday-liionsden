@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dfndb', '0031_auto_20201019_1515'),
+        ("dfndb", "0031_auto_20201019_1515"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='method',
-            name='type',
-            field=models.IntegerField(choices=[(2000, 'Experimental'), (1000, 'Modelling'), (3000, 'Both')]),
+            model_name="method",
+            name="type",
+            field=models.IntegerField(
+                choices=[(2000, "Experimental"), (1000, "Modelling"), (3000, "Both")]
+            ),
         ),
     ]

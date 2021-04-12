@@ -6,15 +6,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dfndb', '0015_auto_20201016_1116'),
+        ("dfndb", "0015_auto_20201016_1116"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='material',
-            name='composition',
-        ),
-        migrations.DeleteModel(
-            name='CompositionPart',
-        ),
+        migrations.RemoveField(model_name="material", name="composition",),
+        migrations.DeleteModel(name="CompositionPart",),
     ]

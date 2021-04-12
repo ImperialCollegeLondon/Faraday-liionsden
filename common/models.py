@@ -1,27 +1,27 @@
+import datetime
+import inspect
+import json
+import os
+
+import idutils  # for DOI validation: https://idutils.readthedocs.io/en/latest/
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
+from django.core import exceptions
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import JSONField
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractUser
-from django.utils.text import slugify
 from django.forms import forms
 from django.template.defaultfilters import filesizeformat
-from django.utils.translation import ugettext_lazy as _
-import idutils  # for DOI validation: https://idutils.readthedocs.io/en/latest/
-import datetime
 from django.utils import timezone
+from django.utils.text import slugify
+from django.utils.translation import ugettext_lazy as _
+from jsonschema import exceptions as jsonschema_exceptions
+from jsonschema import validate
 from mptt.models import MPTTModel, TreeForeignKey
+
 from .utils import hash_file
-import os
 
 # TODOnt: Add localised strings (l10n) using django_gettext for all string literals in this file
-
-from jsonschema import validate, exceptions as jsonschema_exceptions
-
-from django.core import exceptions
-from django.db.models import JSONField
-import inspect
-import json
 
 
 class JSONSchemaField(JSONField):
@@ -326,8 +326,7 @@ class DOIField(models.URLField):
     def validate(self, value, obj):
         if not idutils.is_doi(value):
             raise ValidationError(
-                _("%(value)s is not a valid DOI"),
-                params={"value": value},
+                _("%(value)s is not a valid DOI"), params={"value": value},
             )
         return super().validate(value, obj)
 
@@ -433,10 +432,7 @@ class HashedFile(models.Model):
      including Python scripts, very large binary files, etc.
     """
 
-    file = models.FileField(
-        upload_to="uploaded_files",
-        null=False,
-    )
+    file = models.FileField(upload_to="uploaded_files", null=False,)
     hash = models.CharField(
         max_length=64,
         null=False,

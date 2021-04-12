@@ -6,32 +6,32 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0120_DeviceConfig'),
+        ("battDB", "0120_DeviceConfig"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='deviceconfig',
-            options={'verbose_name_plural': 'Device Configurations'},
+            name="deviceconfig",
+            options={"verbose_name_plural": "Device Configurations"},
         ),
         migrations.AlterField(
-            model_name='datarange',
-            name='name',
+            model_name="datarange",
+            name="name",
             field=models.CharField(blank=True, max_length=128, null=True),
         ),
         migrations.AlterField(
-            model_name='deviceconfig',
-            name='name',
+            model_name="deviceconfig",
+            name="name",
             field=models.CharField(blank=True, max_length=128, null=True),
         ),
         migrations.AlterField(
-            model_name='experiment',
-            name='name',
+            model_name="experiment",
+            name="name",
             field=models.CharField(blank=True, max_length=128, null=True),
         ),
         migrations.AlterField(
-            model_name='experimentdatafile',
-            name='name',
+            model_name="experimentdatafile",
+            name="name",
             field=models.CharField(blank=True, max_length=128, null=True),
         ),
     ]

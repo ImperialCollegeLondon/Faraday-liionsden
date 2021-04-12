@@ -16,8 +16,8 @@ Including another URLconf
 
 # from rest_framework.generics import CreateAPIView, GenericAPIView, ListCreateAPIView
 
-from django.urls import path
 from django.conf.urls import url
+from django.urls import path
 
 from . import views
 

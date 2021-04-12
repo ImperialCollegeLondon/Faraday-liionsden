@@ -6,28 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dfndb', '0030_auto_20201018_2254'),
+        ("dfndb", "0030_auto_20201018_2254"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='data',
-            name='slug',
-            field=models.SlugField(default='bork', editable=False),
+            model_name="data",
+            name="slug",
+            field=models.SlugField(default="bork", editable=False),
         ),
         migrations.AddField(
-            model_name='material',
-            name='slug',
-            field=models.SlugField(default='bork', editable=False),
+            model_name="material",
+            name="slug",
+            field=models.SlugField(default="bork", editable=False),
         ),
         migrations.AddField(
-            model_name='method',
-            name='slug',
-            field=models.SlugField(default='bork', editable=False),
+            model_name="method",
+            name="slug",
+            field=models.SlugField(default="bork", editable=False),
         ),
         migrations.AddField(
-            model_name='parameter',
-            name='slug',
-            field=models.SlugField(default='bork', editable=False),
+            model_name="parameter",
+            name="slug",
+            field=models.SlugField(default="bork", editable=False),
         ),
     ]

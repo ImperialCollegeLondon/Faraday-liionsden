@@ -6,18 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0131_Bork'),
-        ('common', '0049_Bork'),
+        ("battDB", "0131_Bork"),
+        ("common", "0049_Bork"),
     ]
 
     operations = [
-        migrations.DeleteModel(
-            name='DeviceSpecification',
-        ),
-        migrations.DeleteModel(
-            name='Experiment',
-        ),
-        migrations.DeleteModel(
-            name='ExperimentDataFile',
-        ),
+        migrations.DeleteModel(name="DeviceSpecification",),
+        migrations.DeleteModel(name="Experiment",),
+        migrations.DeleteModel(name="ExperimentDataFile",),
     ]

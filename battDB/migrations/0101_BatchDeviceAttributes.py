@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0100_BatchDevice'),
+        ("battDB", "0100_BatchDevice"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='batchdevice',
-            name='attributes',
-            field=models.JSONField(blank=True, default=dict, help_text='Optional machine-readable JSON metadata'),
+            model_name="batchdevice",
+            name="attributes",
+            field=models.JSONField(
+                blank=True,
+                default=dict,
+                help_text="Optional machine-readable JSON metadata",
+            ),
         ),
     ]

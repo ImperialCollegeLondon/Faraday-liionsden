@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0150_dataparser_notes'),
+        ("battDB", "0150_dataparser_notes"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='dataparser',
-            name='module',
-            field=models.FileField(blank=True, default='', help_text='Python module to run this parser', upload_to=''),
+            model_name="dataparser",
+            name="module",
+            field=models.FileField(
+                blank=True,
+                default="",
+                help_text="Python module to run this parser",
+                upload_to="",
+            ),
         ),
     ]

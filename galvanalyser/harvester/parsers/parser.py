@@ -1,6 +1,6 @@
 import abc
 from enum import Enum
-from typing import List, Dict, Generator, Set
+from typing import Dict, Generator, List, Set
 
 Vector = List[Dict]
 

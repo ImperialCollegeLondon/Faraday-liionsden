@@ -6,28 +6,52 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dfndb', '0006_auto_20201012_1623'),
+        ("dfndb", "0006_auto_20201012_1623"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='data',
-            name='name',
-            field=models.CharField(blank=True, help_text='Unique name for this object', max_length=128, null=True, unique=True),
+            model_name="data",
+            name="name",
+            field=models.CharField(
+                blank=True,
+                help_text="Unique name for this object",
+                max_length=128,
+                null=True,
+                unique=True,
+            ),
         ),
         migrations.AddField(
-            model_name='material',
-            name='name',
-            field=models.CharField(blank=True, help_text='Unique name for this object', max_length=128, null=True, unique=True),
+            model_name="material",
+            name="name",
+            field=models.CharField(
+                blank=True,
+                help_text="Unique name for this object",
+                max_length=128,
+                null=True,
+                unique=True,
+            ),
         ),
         migrations.AddField(
-            model_name='method',
-            name='name',
-            field=models.CharField(blank=True, help_text='Unique name for this object', max_length=128, null=True, unique=True),
+            model_name="method",
+            name="name",
+            field=models.CharField(
+                blank=True,
+                help_text="Unique name for this object",
+                max_length=128,
+                null=True,
+                unique=True,
+            ),
         ),
         migrations.AddField(
-            model_name='parameter',
-            name='name',
-            field=models.CharField(blank=True, help_text='Unique name for this object', max_length=128, null=True, unique=True),
+            model_name="parameter",
+            name="name",
+            field=models.CharField(
+                blank=True,
+                help_text="Unique name for this object",
+                max_length=128,
+                null=True,
+                unique=True,
+            ),
         ),
     ]

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0189_harvester_parser_config'),
+        ("battDB", "0189_harvester_parser_config"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='harvester',
-            name='local_folder',
-            field=models.CharField(default='.', max_length=500),
+            model_name="harvester",
+            name="local_folder",
+            field=models.CharField(default=".", max_length=500),
         ),
     ]

@@ -8,12 +8,11 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('battDB', '0161_BaseModelMandatoryName'),
+        ("battDB", "0161_BaseModelMandatoryName"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='harvester',
-            unique_together={('name', 'user_owner')},
+            name="harvester", unique_together={("name", "user_owner")},
         ),
     ]

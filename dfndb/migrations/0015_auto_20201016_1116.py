@@ -6,13 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dfndb', '0014_auto_20201016_1109'),
+        ("dfndb", "0014_auto_20201016_1109"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='material',
-            name='composition',
-            field=models.ManyToManyField(help_text='e.g. NMC 622 would have 3 CompositionParts, Ni 6, Manganese 2, Cobalt 2', to='dfndb.CompositionPart'),
+            model_name="material",
+            name="composition",
+            field=models.ManyToManyField(
+                help_text="e.g. NMC 622 would have 3 CompositionParts, Ni 6, Manganese 2, Cobalt 2",
+                to="dfndb.CompositionPart",
+            ),
         ),
     ]

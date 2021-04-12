@@ -6,24 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0017_auto_20201015_1713'),
+        ("common", "0017_auto_20201015_1713"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='batch',
-            name='created_on',
-        ),
-        migrations.RemoveField(
-            model_name='device',
-            name='created_on',
-        ),
-        migrations.RemoveField(
-            model_name='devicetype',
-            name='created_on',
-        ),
-        migrations.RemoveField(
-            model_name='paper',
-            name='created_on',
-        ),
+        migrations.RemoveField(model_name="batch", name="created_on",),
+        migrations.RemoveField(model_name="device", name="created_on",),
+        migrations.RemoveField(model_name="devicetype", name="created_on",),
+        migrations.RemoveField(model_name="paper", name="created_on",),
     ]

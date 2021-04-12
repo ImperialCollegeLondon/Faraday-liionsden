@@ -1,9 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from common.admin import BaseAdmin
 
 from .models import *
-from common.admin import BaseAdmin
+
+# Register your models here.
 
 
 class MaterialCompositionInline(admin.TabularInline):

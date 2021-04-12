@@ -6,12 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0053_auto_20201013_2250'),
+        ("battDB", "0053_auto_20201013_2250"),
     ]
 
     operations = [
-        migrations.RemoveConstraint(
-            model_name='experiment',
-            name='unique_slugname',
-        ),
+        migrations.RemoveConstraint(model_name="experiment", name="unique_slugname",),
     ]

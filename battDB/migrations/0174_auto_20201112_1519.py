@@ -7,13 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0173_auto_20201112_1511'),
+        ("battDB", "0173_auto_20201112_1511"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='experimentdevice',
-            name='batch_id',
-            field=models.PositiveSmallIntegerField(default=1, help_text='sequence number of device within batch', validators=[django.core.validators.MinValueValidator(1)]),
+            model_name="experimentdevice",
+            name="batch_id",
+            field=models.PositiveSmallIntegerField(
+                default=1,
+                help_text="sequence number of device within batch",
+                validators=[django.core.validators.MinValueValidator(1)],
+            ),
         ),
     ]

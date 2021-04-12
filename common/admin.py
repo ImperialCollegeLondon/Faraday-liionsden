@@ -1,13 +1,13 @@
+import django.forms
+import mptt
 from django.contrib import admin
+from django.contrib.auth.models import ContentType, Permission
 from django.contrib.postgres.fields import JSONField
+
+from .models import *
 
 # from jsoneditor.forms import JSONEditor
 
-from .models import *
-import mptt
-import django.forms
-
-from django.contrib.auth.models import Permission, ContentType
 
 # class PermissionsAdmin(admin.ModelAdmin):
 #     list_filter = ['content_type']
@@ -47,13 +47,7 @@ class ChangeformMixin:
                 attrs={"rows": 3, "cols": 20, "style": "height: 3em;"}
             )
         },
-        models.CharField: {
-            "widget": django.forms.widgets.Input(
-                attrs={
-                    "cols": 20,
-                }
-            )
-        },
+        models.CharField: {"widget": django.forms.widgets.Input(attrs={"cols": 20,})},
         models.JSONField: {
             "widget": django.forms.Textarea(
                 attrs={"rows": 3, "cols": 40, "style": "height: 3em;"}
@@ -97,10 +91,7 @@ class OrgAdmin(admin.ModelAdmin):
 
 
 admin.site.register(
-    [
-        Org,
-    ],
-    OrgAdmin,
+    [Org,], OrgAdmin,
 )
 
 
@@ -110,10 +101,7 @@ class PaperAdmin(BaseAdmin):
 
 
 admin.site.register(
-    [
-        Paper,
-    ],
-    PaperAdmin,
+    [Paper,], PaperAdmin,
 )
 
 
@@ -124,10 +112,7 @@ class PersonAdmin(admin.ModelAdmin):
 
 
 admin.site.register(
-    [
-        Person,
-    ],
-    PersonAdmin,
+    [Person,], PersonAdmin,
 )
 
 

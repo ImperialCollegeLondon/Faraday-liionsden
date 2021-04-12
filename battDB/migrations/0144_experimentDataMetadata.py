@@ -6,18 +6,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0143_dataparser_module'),
+        ("battDB", "0143_dataparser_module"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='experimentdatafile',
-            name='parsed_metadata',
-            field=models.JSONField(default=dict, editable=False, help_text='metadata automatically extracted from the file'),
+            model_name="experimentdatafile",
+            name="parsed_metadata",
+            field=models.JSONField(
+                default=dict,
+                editable=False,
+                help_text="metadata automatically extracted from the file",
+            ),
         ),
         migrations.AlterField(
-            model_name='experimentdatafile',
-            name='parsed_data',
-            field=models.JSONField(default=dict, editable=False, help_text='Data automatically extracted from the file'),
+            model_name="experimentdatafile",
+            name="parsed_data",
+            field=models.JSONField(
+                default=dict,
+                editable=False,
+                help_text="Data automatically extracted from the file",
+            ),
         ),
     ]

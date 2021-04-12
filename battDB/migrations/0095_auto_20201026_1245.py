@@ -6,13 +6,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0094_auto_20201026_1208'),
+        ("battDB", "0094_auto_20201026_1208"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='device',
-            name='devType',
-            field=models.PositiveSmallIntegerField(choices=[(0, 'None'), (20, 'Cell'), (30, 'Module'), (40, 'Pack'), (1, 'Cycler'), (10, 'Sensor')], default=0),
+            model_name="device",
+            name="devType",
+            field=models.PositiveSmallIntegerField(
+                choices=[
+                    (0, "None"),
+                    (20, "Cell"),
+                    (30, "Module"),
+                    (40, "Pack"),
+                    (1, "Cycler"),
+                    (10, "Sensor"),
+                ],
+                default=0,
+            ),
         ),
     ]

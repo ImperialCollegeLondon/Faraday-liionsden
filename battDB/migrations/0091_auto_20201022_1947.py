@@ -6,13 +6,11 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0090_auto_20201022_1946'),
+        ("battDB", "0090_auto_20201022_1946"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='device',
-            old_name='parent',
-            new_name='parent_specification',
+            model_name="device", old_name="parent", new_name="parent_specification",
         ),
     ]

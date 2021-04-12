@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0032_auto_20201026_1245'),
+        ("common", "0032_auto_20201026_1245"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='paper',
-            name='authors',
-            field=models.CharField(default='', max_length=300),
+            model_name="paper",
+            name="authors",
+            field=models.CharField(default="", max_length=300),
         ),
         migrations.AlterField(
-            model_name='paper',
-            name='title',
-            field=models.CharField(default='', max_length=300),
+            model_name="paper",
+            name="title",
+            field=models.CharField(default="", max_length=300),
         ),
     ]

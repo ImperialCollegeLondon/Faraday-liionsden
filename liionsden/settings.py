@@ -110,18 +110,10 @@ if os.environ.get("GITHUB_WORKFLOW"):
 
 validation = "django.contrib.auth.password_validation"
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": f"{validation}.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": f"{validation}.MinimumLengthValidator",
-    },
-    {
-        "NAME": f"{validation}.CommonPasswordValidator",
-    },
-    {
-        "NAME": f"{validation}.NumericPasswordValidator",
-    },
+    {"NAME": f"{validation}.UserAttributeSimilarityValidator",},
+    {"NAME": f"{validation}.MinimumLengthValidator",},
+    {"NAME": f"{validation}.CommonPasswordValidator",},
+    {"NAME": f"{validation}.NumericPasswordValidator",},
 ]
 
 

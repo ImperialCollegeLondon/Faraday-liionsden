@@ -1,9 +1,11 @@
+import os
+
 from django.test import TestCase
-from . import models
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase, APIRequestFactory
-import os
+from rest_framework.test import APIRequestFactory, APITestCase
+
+from . import models
 
 # Create your tests here.
 

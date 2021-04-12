@@ -6,12 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0072_auto_20201018_2215'),
+        ("battDB", "0072_auto_20201018_2215"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='deviceconfignode',
-            name='type',
-        ),
+        migrations.RemoveField(model_name="deviceconfignode", name="type",),
     ]

@@ -6,12 +6,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0199_FilesRefactor1'),
-        ('common', '0054_status_text'),
+        ("battDB", "0199_FilesRefactor1"),
+        ("common", "0054_status_text"),
     ]
 
     operations = [
-        migrations.DeleteModel(
-            name='UploadedFile',
-        ),
+        migrations.DeleteModel(name="UploadedFile",),
     ]

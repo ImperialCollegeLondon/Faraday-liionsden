@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0055_auto_20201015_1051'),
+        ("battDB", "0055_auto_20201015_1051"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='rawdatafile',
-            name='file_hash',
-            field=models.CharField(default='bork', max_length=64),
+            model_name="rawdatafile",
+            name="file_hash",
+            field=models.CharField(default="bork", max_length=64),
             preserve_default=False,
         ),
     ]

@@ -6,12 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0159_ParserBaseModel'),
+        ("battDB", "0159_ParserBaseModel"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='harvester',
-            name='user_token',
-        ),
+        migrations.RemoveField(model_name="harvester", name="user_token",),
     ]

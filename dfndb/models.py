@@ -1,9 +1,10 @@
-from django.db import models
 from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
-import common.models as cm
+from django.db import models
 from django.db.models import Sum
+from django.utils.translation import gettext_lazy as _
+
+import common.models as cm
 
 # Create your models here.
 

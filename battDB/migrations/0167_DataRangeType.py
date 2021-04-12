@@ -6,17 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0166_ExperimentFileFolder'),
+        ("battDB", "0166_ExperimentFileFolder"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='experimentdatafile',
-            name='parsed_data',
-        ),
+        migrations.RemoveField(model_name="experimentdatafile", name="parsed_data",),
         migrations.AlterField(
-            model_name='datarange',
-            name='step_action',
-            field=models.CharField(choices=[('chg', 'Charging'), ('dchg', 'Discharging'), ('cycle', 'Full cycle'), ('rest', 'Rest'), ('all', 'Entire series'), ('user', 'User defined')], default='all', max_length=8),
+            model_name="datarange",
+            name="step_action",
+            field=models.CharField(
+                choices=[
+                    ("chg", "Charging"),
+                    ("dchg", "Discharging"),
+                    ("cycle", "Full cycle"),
+                    ("rest", "Rest"),
+                    ("all", "Entire series"),
+                    ("user", "User defined"),
+                ],
+                default="all",
+                max_length=8,
+            ),
         ),
     ]

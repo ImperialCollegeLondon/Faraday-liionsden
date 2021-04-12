@@ -6,137 +6,42 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0130_auto_20201030_1457'),
+        ("battDB", "0130_auto_20201030_1457"),
     ]
 
     operations = [
-        migrations.AlterUniqueTogether(
-            name='datacolumn',
-            unique_together=None,
-        ),
-        migrations.RemoveField(
-            model_name='datacolumn',
-            name='data',
-        ),
-        migrations.RemoveField(
-            model_name='datacolumn',
-            name='device',
-        ),
-        migrations.RemoveField(
-            model_name='datacolumn',
-            name='parameter',
-        ),
-        migrations.RemoveField(
-            model_name='datarange',
-            name='dataFile',
-        ),
-        migrations.RemoveField(
-            model_name='datarange',
-            name='user_owner',
-        ),
-        migrations.RemoveField(
-            model_name='devicebatch',
-            name='manufacturer',
-        ),
-        migrations.RemoveField(
-            model_name='devicebatch',
-            name='specification',
-        ),
-        migrations.RemoveField(
-            model_name='devicebatch',
-            name='thing_ptr',
-        ),
-        migrations.RemoveField(
-            model_name='deviceconfig',
-            name='devices',
-        ),
-        migrations.RemoveField(
-            model_name='deviceconfig',
-            name='user_owner',
-        ),
-        migrations.RemoveField(
-            model_name='deviceconfignode',
-            name='config',
-        ),
-        migrations.RemoveField(
-            model_name='deviceconfignode',
-            name='device',
-        ),
-        migrations.RemoveField(
-            model_name='deviceconfignode',
-            name='next',
-        ),
-        migrations.AlterUniqueTogether(
-            name='deviceparameter',
-            unique_together=None,
-        ),
-        migrations.RemoveField(
-            model_name='deviceparameter',
-            name='material',
-        ),
-        migrations.RemoveField(
-            model_name='deviceparameter',
-            name='parameter',
-        ),
-        migrations.RemoveField(
-            model_name='deviceparameter',
-            name='spec',
-        ),
-        migrations.RemoveField(
-            model_name='devicespecification',
-            name='device_type',
-        ),
-        migrations.RemoveField(
-            model_name='devicespecification',
-            name='parameters',
-        ),
-        migrations.RemoveField(
-            model_name='devicespecification',
-            name='thing_ptr',
-        ),
-        migrations.RemoveField(
-            model_name='experiment',
-            name='device',
-        ),
-        migrations.RemoveField(
-            model_name='experiment',
-            name='protocol',
-        ),
-        migrations.RemoveField(
-            model_name='experiment',
-            name='user_owner',
-        ),
-        migrations.RemoveField(
-            model_name='experimentdatafile',
-            name='experiment',
-        ),
-        migrations.RemoveField(
-            model_name='experimentdatafile',
-            name='mappings',
-        ),
-        migrations.RemoveField(
-            model_name='experimentdatafile',
-            name='user_owner',
-        ),
-        migrations.DeleteModel(
-            name='BatchDevice',
-        ),
-        migrations.DeleteModel(
-            name='DataColumn',
-        ),
-        migrations.DeleteModel(
-            name='DataRange',
-        ),
-        migrations.DeleteModel(
-            name='DeviceBatch',
-        ),
-        migrations.DeleteModel(
-            name='DeviceConfig',
-        ),
-        migrations.DeleteModel(
-            name='DeviceConfigNode',
-        ),
-        migrations.DeleteModel(
-            name='DeviceParameter',
-        ),
+        migrations.AlterUniqueTogether(name="datacolumn", unique_together=None,),
+        migrations.RemoveField(model_name="datacolumn", name="data",),
+        migrations.RemoveField(model_name="datacolumn", name="device",),
+        migrations.RemoveField(model_name="datacolumn", name="parameter",),
+        migrations.RemoveField(model_name="datarange", name="dataFile",),
+        migrations.RemoveField(model_name="datarange", name="user_owner",),
+        migrations.RemoveField(model_name="devicebatch", name="manufacturer",),
+        migrations.RemoveField(model_name="devicebatch", name="specification",),
+        migrations.RemoveField(model_name="devicebatch", name="thing_ptr",),
+        migrations.RemoveField(model_name="deviceconfig", name="devices",),
+        migrations.RemoveField(model_name="deviceconfig", name="user_owner",),
+        migrations.RemoveField(model_name="deviceconfignode", name="config",),
+        migrations.RemoveField(model_name="deviceconfignode", name="device",),
+        migrations.RemoveField(model_name="deviceconfignode", name="next",),
+        migrations.AlterUniqueTogether(name="deviceparameter", unique_together=None,),
+        migrations.RemoveField(model_name="deviceparameter", name="material",),
+        migrations.RemoveField(model_name="deviceparameter", name="parameter",),
+        migrations.RemoveField(model_name="deviceparameter", name="spec",),
+        migrations.RemoveField(model_name="devicespecification", name="device_type",),
+        migrations.RemoveField(model_name="devicespecification", name="parameters",),
+        migrations.RemoveField(model_name="devicespecification", name="thing_ptr",),
+        migrations.RemoveField(model_name="experiment", name="device",),
+        migrations.RemoveField(model_name="experiment", name="protocol",),
+        migrations.RemoveField(model_name="experiment", name="user_owner",),
+        migrations.RemoveField(model_name="experimentdatafile", name="experiment",),
+        migrations.RemoveField(model_name="experimentdatafile", name="mappings",),
+        migrations.RemoveField(model_name="experimentdatafile", name="user_owner",),
+        migrations.DeleteModel(name="BatchDevice",),
+        migrations.DeleteModel(name="DataColumn",),
+        migrations.DeleteModel(name="DataRange",),
+        migrations.DeleteModel(name="DeviceBatch",),
+        migrations.DeleteModel(name="DeviceConfig",),
+        migrations.DeleteModel(name="DeviceConfigNode",),
+        migrations.DeleteModel(name="DeviceParameter",),
     ]

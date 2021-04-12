@@ -6,40 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0015_auto_20201015_1710'),
+        ("common", "0015_auto_20201015_1710"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='batch',
-            name='created_on',
-        ),
-        migrations.RemoveField(
-            model_name='batch',
-            name='modified_on',
-        ),
-        migrations.RemoveField(
-            model_name='device',
-            name='created_on',
-        ),
-        migrations.RemoveField(
-            model_name='device',
-            name='modified_on',
-        ),
-        migrations.RemoveField(
-            model_name='devicetype',
-            name='created_on',
-        ),
-        migrations.RemoveField(
-            model_name='devicetype',
-            name='modified_on',
-        ),
-        migrations.RemoveField(
-            model_name='paper',
-            name='created_on',
-        ),
-        migrations.RemoveField(
-            model_name='paper',
-            name='modified_on',
-        ),
+        migrations.RemoveField(model_name="batch", name="created_on",),
+        migrations.RemoveField(model_name="batch", name="modified_on",),
+        migrations.RemoveField(model_name="device", name="created_on",),
+        migrations.RemoveField(model_name="device", name="modified_on",),
+        migrations.RemoveField(model_name="devicetype", name="created_on",),
+        migrations.RemoveField(model_name="devicetype", name="modified_on",),
+        migrations.RemoveField(model_name="paper", name="created_on",),
+        migrations.RemoveField(model_name="paper", name="modified_on",),
     ]

@@ -6,11 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0073_remove_deviceconfignode_type'),
+        ("battDB", "0073_remove_deviceconfignode_type"),
     ]
 
     operations = [
-        migrations.DeleteModel(
-            name='DeviceConfigNode',
-        ),
+        migrations.DeleteModel(name="DeviceConfigNode",),
     ]

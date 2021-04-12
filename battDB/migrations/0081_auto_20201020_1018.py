@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0080_auto_20201020_1000'),
+        ("battDB", "0080_auto_20201020_1000"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='deviceconfig',
-            name='devices',
-            field=models.ManyToManyField(through='battDB.DeviceConfigNode', to='battDB.Device'),
+            model_name="deviceconfig",
+            name="devices",
+            field=models.ManyToManyField(
+                through="battDB.DeviceConfigNode", to="battDB.Device"
+            ),
         ),
     ]

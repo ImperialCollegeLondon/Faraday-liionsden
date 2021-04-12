@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0195_use_parser_text'),
+        ("battDB", "0195_use_parser_text"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='experimentdatafile',
-            name='use_parser',
-            field=models.SlugField(default='autodetect', max_length=20),
+            model_name="experimentdatafile",
+            name="use_parser",
+            field=models.SlugField(default="autodetect", max_length=20),
         ),
     ]

@@ -6,28 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0013_auto_20201015_1636'),
+        ("common", "0013_auto_20201015_1636"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='batch',
-            name='modified_on',
+            model_name="batch",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='device',
-            name='modified_on',
+            model_name="device",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='devicetype',
-            name='modified_on',
+            model_name="devicetype",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='paper',
-            name='modified_on',
+            model_name="paper",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
     ]

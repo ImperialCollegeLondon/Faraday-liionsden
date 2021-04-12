@@ -6,18 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dfndb', '0034_Docstrings'),
-        ('battDB', '0125_DeviceParamName'),
+        ("dfndb", "0034_Docstrings"),
+        ("battDB", "0125_DeviceParamName"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='deviceparameter',
-            old_name='data',
-            new_name='spec',
+            model_name="deviceparameter", old_name="data", new_name="spec",
         ),
         migrations.AlterUniqueTogether(
-            name='deviceparameter',
-            unique_together={('spec', 'parameter', 'material'), ('spec', 'name')},
+            name="deviceparameter",
+            unique_together={("spec", "parameter", "material"), ("spec", "name")},
         ),
     ]

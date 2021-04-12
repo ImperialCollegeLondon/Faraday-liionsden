@@ -15,10 +15,11 @@
 #
 # @author Luke Pitt.
 #
-import os
 import csv
-import re
 import logging
+import os
+import re
+
 import galvanalyser.harvester.battery_exceptions as battery_exceptions
 
 

@@ -6,23 +6,41 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0009_auto_20201012_1623'),
+        ("common", "0009_auto_20201012_1623"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='org',
-            name='name',
-            field=models.CharField(blank=True, help_text='Unique name for this object', max_length=128, null=True, unique=True),
+            model_name="org",
+            name="name",
+            field=models.CharField(
+                blank=True,
+                help_text="Unique name for this object",
+                max_length=128,
+                null=True,
+                unique=True,
+            ),
         ),
         migrations.AddField(
-            model_name='paper',
-            name='name',
-            field=models.CharField(blank=True, help_text='Unique name for this object', max_length=128, null=True, unique=True),
+            model_name="paper",
+            name="name",
+            field=models.CharField(
+                blank=True,
+                help_text="Unique name for this object",
+                max_length=128,
+                null=True,
+                unique=True,
+            ),
         ),
         migrations.AddField(
-            model_name='person',
-            name='name',
-            field=models.CharField(blank=True, help_text='Unique name for this object', max_length=128, null=True, unique=True),
+            model_name="person",
+            name="name",
+            field=models.CharField(
+                blank=True,
+                help_text="Unique name for this object",
+                max_length=128,
+                null=True,
+                unique=True,
+            ),
         ),
     ]

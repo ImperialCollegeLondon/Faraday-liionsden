@@ -1,11 +1,9 @@
 import logging
 import os
-from typing import Dict, Generator, Set, Iterable
+from abc import ABC
+from typing import Dict, Generator, Iterable, Set
 
 import xlrd
-
-from abc import ABC
-
 from xlrd.sheet import Cell
 
 from galvanalyser.harvester import battery_exceptions
@@ -65,17 +63,20 @@ class MaccorXLSParser(Parser, ABC):
             column_has_data, headers, numeric_columns, header_row + 1
         )
 
-        return {
-            "num_rows": total_rows,
-            "first_sample_no": first_rec,
-            "last_sample_no": last_rec,
-        }, {
-            headers[i]: {
-                "has_data": column_has_data[i],
-                "is_numeric": column_is_numeric[i],
-            }
-            for i in range(len(headers))
-        }
+        return (
+            {
+                "num_rows": total_rows,
+                "first_sample_no": first_rec,
+                "last_sample_no": last_rec,
+            },
+            {
+                headers[i]: {
+                    "has_data": column_has_data[i],
+                    "is_numeric": column_is_numeric[i],
+                }
+                for i in range(len(headers))
+            },
+        )
 
     def _check_columns_for_data(
         self, column_has_data, headers, numeric_columns, data_start

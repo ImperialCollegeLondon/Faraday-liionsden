@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0010_experiment_processed_data_file'),
+        ("battDB", "0010_experiment_processed_data_file"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='experiment',
-            name='processed_data_file',
-            field=models.FileField(null=True, upload_to='processed_data_files'),
+            model_name="experiment",
+            name="processed_data_file",
+            field=models.FileField(null=True, upload_to="processed_data_files"),
         ),
         migrations.AlterField(
-            model_name='experiment',
-            name='raw_data_file',
-            field=models.FileField(null=True, upload_to='raw_data_files'),
+            model_name="experiment",
+            name="raw_data_file",
+            field=models.FileField(null=True, upload_to="raw_data_files"),
         ),
     ]

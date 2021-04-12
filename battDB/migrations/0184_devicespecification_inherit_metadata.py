@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0183_auto_20201112_2034'),
+        ("battDB", "0183_auto_20201112_2034"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='devicespecification',
-            name='inherit_metadata',
-            field=models.BooleanField(default=True, help_text='Set to True if this object does not describe a real life thing, but a specification, type or grouping. In this case, the metadata will be inherited.', verbose_name='Inherit metadata attributes from parent'),
+            model_name="devicespecification",
+            name="inherit_metadata",
+            field=models.BooleanField(
+                default=True,
+                help_text="Set to True if this object does not describe a real life thing, but a specification, type or grouping. In this case, the metadata will be inherited.",
+                verbose_name="Inherit metadata attributes from parent",
+            ),
         ),
     ]

@@ -6,21 +6,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0013_auto_20200805_1146'),
+        ("battDB", "0013_auto_20200805_1146"),
     ]
 
     operations = [
-        migrations.RemoveConstraint(
-            model_name='experiment',
-            name='unique_namestring',
-        ),
+        migrations.RemoveConstraint(model_name="experiment", name="unique_namestring",),
         migrations.AlterField(
-            model_name='experiment',
-            name='name',
-            field=models.SlugField(default='experiment'),
+            model_name="experiment",
+            name="name",
+            field=models.SlugField(default="experiment"),
         ),
         migrations.AddConstraint(
-            model_name='experiment',
-            constraint=models.UniqueConstraint(fields=('owner', 'name', 'date'), name='unique_namestring'),
+            model_name="experiment",
+            constraint=models.UniqueConstraint(
+                fields=("owner", "name", "date"), name="unique_namestring"
+            ),
         ),
     ]

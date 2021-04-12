@@ -7,18 +7,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0026_ec_cycle'),
+        ("battDB", "0026_ec_cycle"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='ec_cycle',
-            name='ts_data',
-            field=django.contrib.postgres.fields.ArrayField(base_field=django.contrib.postgres.fields.ArrayField(base_field=models.FloatField(null=True), null=True, size=None), blank=True, null=True, size=None),
+            model_name="ec_cycle",
+            name="ts_data",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=django.contrib.postgres.fields.ArrayField(
+                    base_field=models.FloatField(null=True), null=True, size=None
+                ),
+                blank=True,
+                null=True,
+                size=None,
+            ),
         ),
         migrations.AddField(
-            model_name='ec_cycle',
-            name='ts_headers',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=32, null=True), blank=True, null=True, size=None),
+            model_name="ec_cycle",
+            name="ts_headers",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.CharField(max_length=32, null=True),
+                blank=True,
+                null=True,
+                size=None,
+            ),
         ),
     ]

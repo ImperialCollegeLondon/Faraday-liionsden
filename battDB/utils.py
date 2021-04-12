@@ -1,15 +1,15 @@
+import pandas.errors
 from django.core.exceptions import ValidationError
+
+from galvanalyser.harvester import (
+    battery_exceptions,
+    biologic_functions,
+    ivium_functions,
+    maccor_functions,
+)
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 from galvanalyser.harvester.parsers.maccor_parser import MaccorXLSParser
 from galvanalyser.harvester.parsers.parser import Parser
-from galvanalyser.harvester import (
-    maccor_functions,
-    ivium_functions,
-    biologic_functions,
-    battery_exceptions,
-)
-
-import pandas.errors
 
 
 def identify_file(file_path):

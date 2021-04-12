@@ -6,26 +6,13 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0070_auto_20201015_2331'),
+        ("battDB", "0070_auto_20201015_2331"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='device',
-            name='batch',
-        ),
-        migrations.RemoveField(
-            model_name='device',
-            name='user_owner',
-        ),
-        migrations.RemoveField(
-            model_name='experiment',
-            name='cells',
-        ),
-        migrations.DeleteModel(
-            name='Cell',
-        ),
-        migrations.DeleteModel(
-            name='Device',
-        ),
+        migrations.RemoveField(model_name="device", name="batch",),
+        migrations.RemoveField(model_name="device", name="user_owner",),
+        migrations.RemoveField(model_name="experiment", name="cells",),
+        migrations.DeleteModel(name="Cell",),
+        migrations.DeleteModel(name="Device",),
     ]

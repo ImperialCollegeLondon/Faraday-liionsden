@@ -6,18 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0038_signaltype_unit'),
+        ("battDB", "0038_signaltype_unit"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='signaltype',
-            old_name='unit',
-            new_name='unit_name',
+            model_name="signaltype", old_name="unit", new_name="unit_name",
         ),
         migrations.AddField(
-            model_name='signaltype',
-            name='unit_symbol',
-            field=models.CharField(default='', max_length=8),
+            model_name="signaltype",
+            name="unit_symbol",
+            field=models.CharField(default="", max_length=8),
         ),
     ]

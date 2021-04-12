@@ -1,33 +1,30 @@
-from django.shortcuts import get_object_or_404, redirect
-from django.http import HttpResponse, JsonResponse
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
-from django.views.generic.base import TemplateResponseMixin, ContextMixin, View
-from django.urls import reverse_lazy
-from .models import *
-
-# from .forms import ExperimentForm
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import ProcessFormView
-from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
-from .serializers import *
 import matplotlib.pyplot as plt
 import mpld3
 import numpy as np
 import pandas as pd
-
-from django.http import Http404
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status, viewsets
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
+from django.views.generic.edit import ProcessFormView
+from rest_framework import authentication, permissions, status, viewsets
 from rest_framework.exceptions import ParseError
-from rest_framework.parsers import FileUploadParser
-from rest_framework import authentication, permissions
 from rest_framework.generics import (
     CreateAPIView,
     GenericAPIView,
     ListAPIView,
     RetrieveAPIView,
 )
+from rest_framework.parsers import FileUploadParser
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
+
+from .models import *
+from .serializers import *
 
 # import django_filters.rest_framework
 

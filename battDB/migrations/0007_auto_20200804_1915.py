@@ -7,32 +7,37 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0006_experimentalapparatus_photo'),
+        ("battDB", "0006_experimentalapparatus_photo"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CellConfig',
+            name="CellConfig",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=32, unique=True)),
-                ('attributes', django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=32, unique=True)),
+                (
+                    "attributes",
+                    django.contrib.postgres.fields.jsonb.JSONField(
+                        blank=True, default=dict
+                    ),
+                ),
             ],
-            options={
-                'abstract': False,
-            },
+            options={"abstract": False,},
         ),
-        migrations.RemoveField(
-            model_name='experimentalapparatus',
-            name='cellConfig',
-        ),
-        migrations.RemoveField(
-            model_name='experimentalapparatus',
-            name='cells',
-        ),
+        migrations.RemoveField(model_name="experimentalapparatus", name="cellConfig",),
+        migrations.RemoveField(model_name="experimentalapparatus", name="cells",),
         migrations.AddField(
-            model_name='experiment',
-            name='cells',
-            field=models.ManyToManyField(to='battDB.Cell'),
+            model_name="experiment",
+            name="cells",
+            field=models.ManyToManyField(to="battDB.Cell"),
         ),
     ]

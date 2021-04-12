@@ -6,17 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dfndb', '0027_remove_data_data'),
+        ("dfndb", "0027_remove_data_data"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='dataparameter',
-            name='value',
+            model_name="dataparameter",
+            name="value",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterUniqueTogether(
-            name='dataparameter',
-            unique_together={('data', 'parameter', 'material')},
+            name="dataparameter", unique_together={("data", "parameter", "material")},
         ),
     ]

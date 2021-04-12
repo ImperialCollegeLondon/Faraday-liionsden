@@ -6,35 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0104_auto_20201028_1225'),
+        ("battDB", "0104_auto_20201028_1225"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='deviceconfignode',
-            name='config',
-        ),
-        migrations.RemoveField(
-            model_name='deviceconfignode',
-            name='device',
-        ),
-        migrations.RemoveField(
-            model_name='deviceconfignode',
-            name='next',
-        ),
-        migrations.RemoveField(
-            model_name='experiment',
-            name='config',
-        ),
+        migrations.RemoveField(model_name="deviceconfignode", name="config",),
+        migrations.RemoveField(model_name="deviceconfignode", name="device",),
+        migrations.RemoveField(model_name="deviceconfignode", name="next",),
+        migrations.RemoveField(model_name="experiment", name="config",),
         migrations.AlterField(
-            model_name='device',
-            name='devType',
-            field=models.CharField(choices=[('component', 'Component part of a cell'), ('cell', 'Single cell'), ('module', 'Module containing cells'), ('battery', 'Battery pack containing modules'), ('sensor', 'Sensor attached to a device'), ('cycler', 'Cycler Machine')], default='cell', max_length=16),
+            model_name="device",
+            name="devType",
+            field=models.CharField(
+                choices=[
+                    ("component", "Component part of a cell"),
+                    ("cell", "Single cell"),
+                    ("module", "Module containing cells"),
+                    ("battery", "Battery pack containing modules"),
+                    ("sensor", "Sensor attached to a device"),
+                    ("cycler", "Cycler Machine"),
+                ],
+                default="cell",
+                max_length=16,
+            ),
         ),
-        migrations.DeleteModel(
-            name='DeviceConfig',
-        ),
-        migrations.DeleteModel(
-            name='DeviceConfigNode',
-        ),
+        migrations.DeleteModel(name="DeviceConfig",),
+        migrations.DeleteModel(name="DeviceConfigNode",),
     ]

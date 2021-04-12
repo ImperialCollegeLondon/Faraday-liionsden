@@ -6,16 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0026_auto_20201018_2306'),
+        ("common", "0026_auto_20201018_2306"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='paper',
-            name='slug',
-            field=models.SlugField(default='bork', editable=False),
+            model_name="paper",
+            name="slug",
+            field=models.SlugField(default="bork", editable=False),
         ),
-        migrations.DeleteModel(
-            name='BaseModelWithSlug',
-        ),
+        migrations.DeleteModel(name="BaseModelWithSlug",),
     ]

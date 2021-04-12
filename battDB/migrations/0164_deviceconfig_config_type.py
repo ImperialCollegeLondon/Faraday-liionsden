@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0163_ts_notnull'),
+        ("battDB", "0163_ts_notnull"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='deviceconfig',
-            name='config_type',
-            field=models.CharField(choices=[('module', 'Module'), ('expmt', 'Experiment')], default='module', max_length=10),
+            model_name="deviceconfig",
+            name="config_type",
+            field=models.CharField(
+                choices=[("module", "Module"), ("expmt", "Experiment")],
+                default="module",
+                max_length=10,
+            ),
         ),
     ]

@@ -6,33 +6,20 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0051_SlugFieldMaxLen500'),
-        ('battDB', '0136_SlugFieldMaxLen500'),
+        ("common", "0051_SlugFieldMaxLen500"),
+        ("battDB", "0136_SlugFieldMaxLen500"),
     ]
 
     operations = [
+        migrations.AlterModelOptions(name="experiment", options={},),
         migrations.AlterModelOptions(
-            name='experiment',
-            options={},
+            name="experimentdatafile", options={"verbose_name": "Data File"},
         ),
-        migrations.AlterModelOptions(
-            name='experimentdatafile',
-            options={'verbose_name': 'Data File'},
-        ),
-        migrations.RemoveField(
-            model_name='datarange',
-            name='slug',
-        ),
-        migrations.RemoveField(
-            model_name='datarange',
-            name='status',
-        ),
-        migrations.RemoveField(
-            model_name='datarange',
-            name='user_owner',
-        ),
+        migrations.RemoveField(model_name="datarange", name="slug",),
+        migrations.RemoveField(model_name="datarange", name="status",),
+        migrations.RemoveField(model_name="datarange", name="user_owner",),
         migrations.AlterUniqueTogether(
-            name='experimentdatafile',
-            unique_together={('raw_data_file', 'experiment')},
+            name="experimentdatafile",
+            unique_together={("raw_data_file", "experiment")},
         ),
     ]

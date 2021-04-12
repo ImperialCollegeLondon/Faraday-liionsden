@@ -6,63 +6,63 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0057_auto_20201015_1150'),
+        ("battDB", "0057_auto_20201015_1150"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cell',
-            name='modified_on',
+            model_name="cell",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='cellbatch',
-            name='modified_on',
+            model_name="cellbatch",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='cellconfig',
-            name='modified_on',
+            model_name="cellconfig",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='celltype',
-            name='modified_on',
+            model_name="celltype",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='datarange',
-            name='modified_on',
+            model_name="datarange",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='equipment',
-            name='modified_on',
+            model_name="equipment",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='equipmenttype',
-            name='modified_on',
+            model_name="equipmenttype",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='experiment',
-            name='modified_on',
+            model_name="experiment",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='experimentdatafile',
-            name='modified_on',
+            model_name="experimentdatafile",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='rawdatafile',
-            name='modified_on',
+            model_name="rawdatafile",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='testprotocol',
-            name='modified_on',
+            model_name="testprotocol",
+            name="modified_on",
             field=models.DateField(auto_now=True),
         ),
     ]

@@ -6,11 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0169_ExperimentDevice'),
+        ("battDB", "0169_ExperimentDevice"),
     ]
 
     operations = [
-        migrations.DeleteModel(
-            name='DataColumn',
-        ),
+        migrations.DeleteModel(name="DataColumn",),
     ]

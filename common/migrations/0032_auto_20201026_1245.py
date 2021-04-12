@@ -6,15 +6,10 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0031_auto_20201021_1138'),
+        ("common", "0031_auto_20201021_1138"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='paper',
-            name='authors',
-        ),
-        migrations.DeleteModel(
-            name='PaperAuthor',
-        ),
+        migrations.RemoveField(model_name="paper", name="authors",),
+        migrations.DeleteModel(name="PaperAuthor",),
     ]

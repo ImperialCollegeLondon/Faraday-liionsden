@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('battDB', '0149_DataParser_No_BaseModel'),
+        ("battDB", "0149_DataParser_No_BaseModel"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='dataparser',
-            name='notes',
-            field=models.TextField(blank=True, help_text='Optional human-readable notes', null=True),
+            model_name="dataparser",
+            name="notes",
+            field=models.TextField(
+                blank=True, help_text="Optional human-readable notes", null=True
+            ),
         ),
     ]

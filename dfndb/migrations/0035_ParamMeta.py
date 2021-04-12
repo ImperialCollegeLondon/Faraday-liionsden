@@ -6,17 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dfndb', '0034_Docstrings'),
+        ("dfndb", "0034_Docstrings"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='parameter',
-            name='symbol',
-            field=models.CharField(help_text='Parameter symbol. Will be decoded as LaTeX', max_length=40),
+            model_name="parameter",
+            name="symbol",
+            field=models.CharField(
+                help_text="Parameter symbol. Will be decoded as LaTeX", max_length=40
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='parameter',
-            unique_together={('symbol', 'unit')},
+            name="parameter", unique_together={("symbol", "unit")},
         ),
     ]

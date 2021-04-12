@@ -6,13 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0043_MPTT_Thing'),
+        ("common", "0043_MPTT_Thing"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='thing',
-            name='is_template',
-            field=models.BooleanField(default=False, help_text='Set to true if this object does not describe a real life object, but a specification, type or grouping of objects'),
+            model_name="thing",
+            name="is_template",
+            field=models.BooleanField(
+                default=False,
+                help_text="Set to true if this object does not describe a real life object, but a specification, type or grouping of objects",
+            ),
         ),
     ]
