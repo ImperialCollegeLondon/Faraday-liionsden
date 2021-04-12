@@ -1,38 +1,21 @@
 battDB
 ======
 
-Changelog
----------
-* 0.2
-  * DONE: 
-    * Select columns to import
-    * Get data range storage working
-    * REST API File Upload
-    * DeviceConfig working properly
-    * Device specification tree structure (MPTT)
-      * Metadata inheritance down the tree
-    * experiment devices list
-    * column to parameter mapping
-  * TODO:
-    * Optimise queries:
-      * DataRange should store data in a non-admin class to avoid loading large files
-      * Parameters should be CharField only - not FK to dfndb
-    * Multiple parsers support WIP
-      * Re-implement all parsers - not that hard to do, and can use a much faster CSV parser instead of pandas, which takes about 30s/500MB
-    * Full Harvester API & local client (ideally GUI) - PyQt WIP
-    * validate experiment devices against config
-    * API Test Cases WIP
-    * User Flows (wizard-like interface)
-    * Get plotting working again
-    * REST API nested models, multiple objects per request
-    * Immutable History - HasImmutableHistory - ManyToMany: Common.HistoryLog (JSON)
-* 0.1
-  * Ditched DJongo/Mongo - not fit for production IMHO
-  * Created basic Django app to upload and view files ( #19)
-    * Does not yet make use of Angular.js or any other frontend technology due to my lack of experience with such things. 'Djangular' helper module is no longer developed
-  * Added support for "Data Ranges" to align with Luke's software
-  * Started frontend development - added "django-plotly-dash' compoonent which promises to run Dash apps from within Django. This may allow re-use of some of the original Galvanalyser UI code.
-
+TODO
+----
+* Optimise queries:
+  * DataRange should store data in a non-admin class to avoid loading large files
+  * Parameters should be CharField only - not FK to dfndb
+* Multiple parsers support WIP
+  * Re-implement all parsers - not that hard to do, and can use a much faster CSV parser instead of pandas, which takes about 30s/500MB
+* Full Harvester API & local client (ideally GUI) - PyQt WIP
+* validate experiment devices against config
+* API Test Cases WIP
+* User Flows (wizard-like interface)
+* Get plotting working again
+* REST API nested models, multiple objects per request
+* Immutable History - HasImmutableHistory - ManyToMany: Common.HistoryLog (JSON)
+  
 Thoughts
 --------
 * DataRange - plot X, Y, Y2
