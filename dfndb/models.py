@@ -1,23 +1,12 @@
-from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Sum
-from django.utils.translation import gettext_lazy as _
 
 import common.models as cm
 
-# Create your models here.
-
-# I don't like Material having a column for each chemical compound - that seems nasty.
-# Instead I will use one of Django's special ManyToManyFields with a "Through" relationship.
-# This specifies the table a mapping table with an extra column for the composition number
-# actually, don't even need a "through" for this.
-
 
 class Compound(models.Model):
-    """
-    Chemical Compound or Element, e.g. Lithium, Graphite
-    """
+    """Chemical Compound or Element, e.g. Lithium, Graphite."""
 
     name = models.CharField(max_length=100)  # "Lithium"
     formula = models.CharField(max_length=20)  # "Li"
@@ -38,15 +27,15 @@ class Compound(models.Model):
 
 
 class Material(cm.BaseModel):
-    """
-    A material specification used as part of an electrochemical cell specification, e.g. NMC622. <br>
+    """A material used as part of an electrochemical cell specification, e.g. NMC622.
+
     Make use of the 'notes' field for additional explanation
     """
 
     composition = models.ManyToManyField(
         Compound,
         through="CompositionPart",
-        help_text="e.g. NMC 622 would have 3 Compounds, Nickel 6, Manganese 2, Cobalt 2",
+        help_text="eg. NMC 622 would have 3 Compounds: Nickel 6, Manganese 2, Cobalt 2",
     )
     MATERIAL_TYPE_CHOICES = [
         (1, "Anode"),
@@ -60,17 +49,12 @@ class Material(cm.BaseModel):
         help_text="If this material is a polymer, enter degree of polymerization",
     )
 
-    #  def total_parts(self):
-    #      return int(self.components.all().aggregate(Sum('amount'))['amount__sum'])
-
     def __str__(self):
         return self.name
 
 
 class CompositionPart(models.Model):
-    """
-    Compound amounts for use in materials
-    """
+    """Compound amounts for use in materials."""
 
     compound = models.ForeignKey(
         Compound, on_delete=models.CASCADE, related_name="components"
@@ -95,9 +79,7 @@ class CompositionPart(models.Model):
 
 
 class Method(cm.BaseModel):
-    """
-    Description of experimental / modelling method types
-    """
+    """Description of experimental / modelling method types."""
 
     METHOD_TYPE_MODELLING = 1000
     METHOD_TYPE_EXPERIMENTAL = 2000
@@ -110,15 +92,15 @@ class Method(cm.BaseModel):
     type = models.IntegerField(
         choices=METHOD_TYPE_CHOICES, default=METHOD_TYPE_MODELLING
     )
+
+    # Todo: What does this mean?
     description = models.TextField(
         blank=True, help_text="Method description in PyBaMM format"
     )
 
 
 class QuantityUnit(models.Model):
-    """
-    Quantity Units e.g. Volts, Amps, Watts
-    """
+    """Quantity Units e.g. Volts, Amps, Watts."""
 
     quantityName = models.CharField(
         max_length=100, help_text="Readable name e.g. 'Charge'"
@@ -153,9 +135,11 @@ class QuantityUnit(models.Model):
 
 
 class Parameter(cm.BaseModel):
-    """
-    Experiment or simulation parameters. E.g. electrode thickness, electrolyte concentration etc.<br>
-    Use the notes field to explain what this parameter is for. Use the JSON field to add machine-readable metadata.
+    """Experiment or simulation parameters.
+
+    E.g. electrode thickness, electrolyte concentration etc. Use the notes field to
+    explain what this parameter is for. Use the JSON field to add machine-readable
+    metadata.
     """
 
     symbol = models.CharField(
@@ -171,23 +155,21 @@ class Parameter(cm.BaseModel):
 
 
 class Data(cm.BaseModel):
-    """
-    Experiment or simulation data.
+    """Experiment or simulation data.
+
+    This model represents a source of data parameters, typically a paper. All
+    parameters described in data source are packed together here.
     """
 
     paper = models.ForeignKey(cm.Paper, on_delete=models.CASCADE, null=True, blank=True)
     parameter = models.ManyToManyField(Parameter, through="DataParameter")
-    # data = models.JSONField()
 
-    # other fields to be added... I'm not sure what the numrange fields are for?
     class Meta:
         verbose_name_plural = "Data"  # don't pluralise to "Datas"
 
 
 class DataParameter(models.Model):
-    """
-    Parameters on data
-    """
+    """Parameters on data."""
 
     PARAM_TYPE_NONE = 10
     PARAM_TYPE_INPUT = 20
