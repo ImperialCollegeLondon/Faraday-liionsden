@@ -1,12 +1,7 @@
 import pandas.errors
 from django.core.exceptions import ValidationError
 
-from galvanalyser.harvester import (
-    battery_exceptions,
-    biologic_functions,
-    ivium_functions,
-    maccor_functions,
-)
+from galvanalyser.harvester import battery_exceptions, maccor_functions
 from galvanalyser.harvester.parsers.biologic_parser import BiologicCSVnTSVParser
 from galvanalyser.harvester.parsers.maccor_parser import MaccorXLSParser
 from galvanalyser.harvester.parsers.parser import Parser
@@ -35,8 +30,6 @@ def identify_file(file_path):
                 pass
             elif maccor_functions.is_maccor_text_file(file_path, "\t"):
                 return {"TSV", "MACCOR"}
-            # elif ivium_functions.is_ivium_text_file(file_path):
-            #     return {"TXT", "IVIUM"}
         else:
             # No extension or unrecognised extension
             if maccor_functions.is_maccor_raw_file(file_path):
@@ -49,6 +42,7 @@ def identify_file(file_path):
 
 class DummyParser(Parser):
     def __init__(self, file_path: str) -> None:
+        super(DummyParser, self).__init__(file_path)
         self.file_path = file_path
 
     def get_metadata(self):
@@ -61,8 +55,6 @@ class DummyParser(Parser):
 
 
 def get_parser(instance):
-    # print("result_post_save: Sender: %s, Instance: %s, args: %s, kwargs: %s, base_loc: %s, Filename: %s" % (
-    #     sender, instance, args, kwargs, instance.raw_data_file.file.storage.base_location, instance.raw_data_file.file.name))
 
     filepath = "/".join(
         [
@@ -70,8 +62,6 @@ def get_parser(instance):
             instance.raw_data_file.file.name,
         ]
     )
-    # TODO: Work out which type of file it is and call the correct parser!
-    # parser = BiologicCSVnTSVParser(filepath)
 
     file_format = instance.use_parser.file_format
 
@@ -85,7 +75,7 @@ def get_parser(instance):
 
 
 # When saving a data file, call this to parse the data.
-def parse_data_file(instance, file_format="csv", columns=["time/s", "Ecell/V", "I/mA"]):
+def parse_data_file(instance, file_format="csv", columns=("time/s", "Ecell/V", "I/mA")):
     if not instance:
         return
     if hasattr(instance, "_dirty"):
@@ -111,7 +101,6 @@ def parse_data_file(instance, file_format="csv", columns=["time/s", "Ecell/V", "
     instance.attributes["range_config"] = {
         "all": {"start": 1, "end": total_rows, "action": "all"}
     }
-    # instance.parsed_data = [None] * instance.attributes['num_rows']
 
     # save again after setting metadata but don't get into a recursion loop!
     try:
