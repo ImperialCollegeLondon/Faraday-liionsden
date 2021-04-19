@@ -302,7 +302,8 @@ class DOIField(models.URLField):
     def validate(self, value, obj):
         if not idutils.is_doi(value):
             raise ValidationError(
-                _("%(value)s is not a valid DOI"), params={"value": value},
+                _("%(value)s is not a valid DOI"),
+                params={"value": value},
             )
         return super().validate(value, obj)
 
@@ -385,7 +386,12 @@ class Paper(
 ):
     """An academic paper."""
 
-    DOI = DOIField(unique=True, blank=True, null=True, help_text="DOI for the paper.",)
+    DOI = DOIField(
+        unique=True,
+        blank=True,
+        null=True,
+        help_text="DOI for the paper.",
+    )
     year = YearField(default=datetime.date.today().year)
     title = models.CharField(max_length=300, default="")
     authors = models.CharField(max_length=300, default="")
@@ -414,7 +420,10 @@ class HashedFile(models.Model):
      of file can be uploaded, including Python scripts, very large binary files, etc.
     """
 
-    file = models.FileField(upload_to="uploaded_files", null=False,)
+    file = models.FileField(
+        upload_to="uploaded_files",
+        null=False,
+    )
     hash = models.CharField(
         max_length=64,
         null=False,
