@@ -1,42 +1,17 @@
 import django.forms
 import mptt
 from django.contrib import admin
-from django.contrib.auth.models import ContentType, Permission
-from django.contrib.postgres.fields import JSONField
 
-from .models import *
-
-# from jsoneditor.forms import JSONEditor
-
-
-# class PermissionsAdmin(admin.ModelAdmin):
-#     list_filter = ['content_type']
-#
-# admin.site.register(Permission, PermissionsAdmin)
-# admin.site.register(ContentType)
+from . import models
 
 admin.site.site_header = "The Faraday Institution - Liionsden Electrochemistry Database"
 admin.site.site_title = "Liionsden Admin"
 admin.site.index_title = "Liionsden Admin"
 
-# admin.site.register([
-#    Paper,
-#    ], admin.ModelAdmin)
-
-
-class PersonAdmin(admin.ModelAdmin):
-    list_display = ["username", "first_name", "last_name", "email", "org"]
-    list_filter = ["org"]
-
-
-# admin.site.register([
-#  User,
-# ], PersonAdmin)
-
 
 class ChangeformMixin:
     def get_changeform_initial_data(self, request):
-        get_data = super().get_changeform_initial_data(request)
+        get_data = super(ChangeformMixin, self).get_changeform_initial_data(request)
         get_data["user_owner"] = request.user.pk
         return get_data
 
@@ -63,19 +38,6 @@ class BaseAdmin(ChangeformMixin, admin.ModelAdmin):
     readonly_fields = ["created_on", "modified_on", "slug"]
     generic_fields = {"name", "notes", "status", "user_owner", "attributes"}
 
-    # this works, but it messes up field ordering due to conversion to sets
-    # def get_fieldsets(self, request, obj=None):
-    #     fs = super(BaseAdmin, self).get_fieldsets(request, obj)
-    #     all_fields = set(fs[0][1]['fields'])
-    #     new_fields = all_fields - BaseAdmin.generic_fields
-    #     # reconstruct fieldsets
-    #     fs = (('Generic Base Fields', {
-    #         'fields': BaseAdmin.generic_fields
-    #     }), ('Model Fields', {
-    #         'fields': new_fields
-    #     }), )
-    #     return fs
-
 
 class OrgAdmin(admin.ModelAdmin):
     list_display = [
@@ -91,7 +53,7 @@ class OrgAdmin(admin.ModelAdmin):
 
 
 admin.site.register(
-    [Org,], OrgAdmin,
+    [models.Org,], OrgAdmin,
 )
 
 
@@ -101,7 +63,7 @@ class PaperAdmin(BaseAdmin):
 
 
 admin.site.register(
-    [Paper,], PaperAdmin,
+    [models.Paper,], PaperAdmin,
 )
 
 
@@ -112,7 +74,7 @@ class PersonAdmin(admin.ModelAdmin):
 
 
 admin.site.register(
-    [Person,], PersonAdmin,
+    [models.Person,], PersonAdmin,
 )
 
 
