@@ -1,8 +1,9 @@
 import django.forms
 import mptt
 from django.contrib import admin
+from django.db import models
 
-from . import models
+from . import models as cmodels
 
 admin.site.site_header = "The Faraday Institution - Liionsden Electrochemistry Database"
 admin.site.site_title = "Liionsden Admin"
@@ -22,7 +23,13 @@ class ChangeformMixin:
                 attrs={"rows": 3, "cols": 20, "style": "height: 3em;"}
             )
         },
-        models.CharField: {"widget": django.forms.widgets.Input(attrs={"cols": 20,})},
+        models.CharField: {
+            "widget": django.forms.widgets.Input(
+                attrs={
+                    "cols": 20,
+                }
+            )
+        },
         models.JSONField: {
             "widget": django.forms.Textarea(
                 attrs={"rows": 3, "cols": 40, "style": "height: 3em;"}
@@ -53,7 +60,10 @@ class OrgAdmin(admin.ModelAdmin):
 
 
 admin.site.register(
-    [models.Org,], OrgAdmin,
+    [
+        cmodels.Org,
+    ],
+    OrgAdmin,
 )
 
 
@@ -63,7 +73,10 @@ class PaperAdmin(BaseAdmin):
 
 
 admin.site.register(
-    [models.Paper,], PaperAdmin,
+    [
+        cmodels.Paper,
+    ],
+    PaperAdmin,
 )
 
 
@@ -74,7 +87,10 @@ class PersonAdmin(admin.ModelAdmin):
 
 
 admin.site.register(
-    [models.Person,], PersonAdmin,
+    [
+        cmodels.Person,
+    ],
+    PersonAdmin,
 )
 
 
@@ -84,7 +100,6 @@ class TabularInline(ChangeformMixin, admin.TabularInline):
 
 class CompositeBaseInLine(TabularInline):
     fk_name = "parent"
-    verbose_name_plural = "Composition"
     extra = 1
     verbose_name_plural = "Child Objects"
 
