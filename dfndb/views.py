@@ -1,35 +1,28 @@
-from django.http import HttpResponse
-from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    ListView,
-    UpdateView,
-)
-from rest_framework.generics import CreateAPIView, GenericAPIView, ListCreateAPIView
+from django.views.generic import ListView
+from rest_framework.generics import ListCreateAPIView
 
-from .models import *
-from .serializers import *
-
-# Create your views here.
+from .models import Data, Parameter
+from .serializers import ParameterSerializer
 
 
 class DataListView(ListView):
-    model = Data
-    # template_name = 'lazycrud/object_list.html'
+    """View of available data.
 
+    TODO: Not working, for now. Removed from urls.
+    """
+
+    model = Data
     page_title = "Data list"
-    # fields = '__all__'
     create_url = reverse_lazy("dfndb:cdata")
     create_label = "Create new Data"
 
 
-def index(request):
-    return HttpResponse("<h1>Hello, world.</h1>")
-
-
 class ParametersAPIView(ListCreateAPIView):
+    """API for getting and creating parameters.
+
+    TODO: Do we really want an API for this?
+    """
+
     queryset = Parameter.objects.all()
     serializer_class = ParameterSerializer
