@@ -5,21 +5,19 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
-from django.db.models.signals import post_delete
 from django.urls import reverse
 
 import common.models as cm
 import dfndb.models as dfn
-from common.utils import file_cleanup
 
 from .utils import parse_data_file
 
 
 class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
-    """
-    A device specification is a template for creating a devcice or batch of devices in
-    the system. Specifications are structured as a tree, so that each device can be
-    composed of sub- devices
+    """A template for creating a device or batch of devices in the system.
+
+    Specifications are structured as a tree, so that each device can be composed of sub-
+    devices
     """
 
     parameters = models.ManyToManyField(dfn.Parameter, through="DeviceParameter")
@@ -63,9 +61,7 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
 
 
 class DeviceParameter(cm.HasName):
-    """
-    Parameters on device
-    """
+    """Parameters on device."""
 
     spec = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE)
     parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
@@ -83,10 +79,8 @@ class DeviceParameter(cm.HasName):
 
 
 class DeviceBatch(cm.BaseModelNoName, cm.HasMPTT):
-    """
-    A device or batch of devices is a physical, tangible thing produced to a given
-    specification.
-    """
+    """A device or batch of devices is a physical, tangible thing produced to a given
+    specification."""
 
     specification = models.ForeignKey(
         DeviceSpecification,
@@ -133,7 +127,9 @@ class BatchDevice(cm.HasAttributes, cm.HasNotes):
     batch = models.ForeignKey(DeviceBatch, on_delete=models.CASCADE)
     seq_num = models.PositiveSmallIntegerField(
         default=1,
-        validators=[MinValueValidator(1),],
+        validators=[
+            MinValueValidator(1),
+        ],
         help_text="Sequence number within batch",
     )
 
@@ -169,10 +165,8 @@ class BatchDevice(cm.HasAttributes, cm.HasNotes):
 
 
 class DeviceConfig(cm.BaseModel):
-    """
-    A configuration of device templates to represent how devices are connected in a
-    module, pack, or experimental set-up
-    """
+    """A configuration of device templates to represent how devices are connected in a
+    module, pack, or experimental set-up."""
 
     TYPE_CHOICES = (
         ("module", "Module"),
@@ -241,8 +235,9 @@ class DeviceConfigNode(models.Model):
 
 
 class Parser(cm.BaseModelMandatoryName):
-    """
-    Parsers for experimental device data. <BR>
+    """Parsers for experimental device data.
+
+    <BR>
     TODO: In future, these could be user-defined in Python code via this interface
         (with appropriate permissions) <BR> This would require all parsing to be done
         in a sandboxed environment on a separate server (which it should anyway)
@@ -267,9 +262,7 @@ class Parser(cm.BaseModelMandatoryName):
 
 
 class Equipment(cm.BaseModel):
-    """
-    Definitions of equipment such as cycler machines
-    """
+    """Definitions of equipment such as cycler machines."""
 
     specification = models.ForeignKey(
         DeviceSpecification,
@@ -301,10 +294,10 @@ class Equipment(cm.BaseModel):
 
 
 class Experiment(cm.BaseModel):
-    """
-    Main "Experiment" aka DataSet class. <br>
-    Has many: data files (from cyclers) <br>
-    Has many: devices (actual physical objects e.g. cells) <br>
+    """Main "Experiment" aka DataSet class.
+
+    <br> Has many: data files (from cyclers) <br> Has many: devices (actual physical
+    objects e.g. cells) <br>
     """
 
     date = models.DateField(default=datetime.now)
@@ -343,13 +336,12 @@ class Experiment(cm.BaseModel):
 
 
 class ExperimentDataFile(cm.BaseModel):
-    """
-    ExperimentDataFile (EDF) is the class tying data files, parsed data tables, and
-    experiments together. <>BR>
-    It contains all of the time-series numerical data as a Postgres
-    ArrayField(ArrayField(FloatField))) <br>
-    Text data should be added as Events.
-    Raw data files should be uploaded and referenced, where available.
+    """ExperimentDataFile (EDF) is the class tying data files, parsed data tables, and
+    experiments together.
+
+    <>BR> It contains all of the time-series numerical data as a Postgres
+    ArrayField(ArrayField(FloatField))) <br> Text data should be added as Events. Raw
+    data files should be uploaded and referenced, where available.
     """
 
     ts_headers = ArrayField(
@@ -494,9 +486,8 @@ class UploadedFile(cm.HashedFile):
 
 
 class ExperimentDevice(models.Model):
-    """
-    3-way join table, identifies devices in experiments, link devices to data files
-    """
+    """3-way join table, identifies devices in experiments, link devices to data
+    files."""
 
     experiment = models.ForeignKey(
         Experiment, on_delete=models.CASCADE, related_name="devices"
@@ -507,7 +498,9 @@ class ExperimentDevice(models.Model):
     deviceBatch = models.ForeignKey(DeviceBatch, on_delete=models.CASCADE)
     batch_seq = models.PositiveSmallIntegerField(
         default=1,
-        validators=[MinValueValidator(1),],
+        validators=[
+            MinValueValidator(1),
+        ],
         help_text="sequence number of device within batch",
     )
     device_pos = models.CharField(
@@ -660,9 +653,3 @@ class SignalType(models.Model):
 
     def __str__(self):
         return self.col_name
-
-
-# FIXME: This doesn't seem to be working. Files remain on disk after UploadedFile
-#  object is deleted
-#  Although we probably won't be deleting files anyway.
-post_delete.connect(file_cleanup, sender=UploadedFile)
