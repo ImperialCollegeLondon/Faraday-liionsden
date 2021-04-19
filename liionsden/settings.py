@@ -148,3 +148,5 @@ INTERNAL_IPS = [
 # DEBUG_TOOLBAR_PANELS = {
 #     'debug_toolbar.panels.profiling.ProfilingPanel',
 # }
+
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
