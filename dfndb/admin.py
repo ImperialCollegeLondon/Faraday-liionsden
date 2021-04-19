@@ -2,19 +2,17 @@ from django.contrib import admin
 
 from common.admin import BaseAdmin
 
-from .models import *
-
-# Register your models here.
+from . import models as cmodels
 
 
 class MaterialCompositionInline(admin.TabularInline):
-    model = CompositionPart
+    model = cmodels.CompositionPart
     readonly_fields = ["percentage"]
     extra = 0
 
 
 class DataParameterInline(admin.TabularInline):
-    model = DataParameter
+    model = cmodels.DataParameter
     extra = 1
 
 
@@ -29,7 +27,6 @@ class MethodAdmin(BaseAdmin):
     list_filter = BaseAdmin.list_filter + ["type"]
 
     def __init__(self, model, admin_site):
-        # self.list_display.append('fork')
         super(MethodAdmin, self).__init__(model, admin_site)
 
 
@@ -46,9 +43,9 @@ class CompoundAdmin(admin.ModelAdmin):
     list_display = ["__str__"]
 
 
-admin.site.register(QuantityUnit, UnitAdmin)
-admin.site.register(Data, DataAdmin)
-admin.site.register(Material, MaterialAdmin)
-admin.site.register(Parameter, BaseAdmin)
-admin.site.register(Method, MethodAdmin)
-admin.site.register(Compound, CompoundAdmin)
+admin.site.register(cmodels.QuantityUnit, UnitAdmin)
+admin.site.register(cmodels.Data, DataAdmin)
+admin.site.register(cmodels.Material, MaterialAdmin)
+admin.site.register(cmodels.Parameter, BaseAdmin)
+admin.site.register(cmodels.Method, MethodAdmin)
+admin.site.register(cmodels.Compound, CompoundAdmin)
