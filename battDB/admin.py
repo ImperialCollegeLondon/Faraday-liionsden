@@ -1,15 +1,28 @@
 import mptt
 from django.contrib import admin
-from django.forms import Textarea
 from django.utils.safestring import mark_safe
 
 import common
 from common.admin import BaseAdmin
 
-from .forms import *
-from .models import *
-
-# Register your models here.
+from .models import (
+    BatchDevice,
+    DataColumn,
+    DataRange,
+    DeviceBatch,
+    DeviceConfig,
+    DeviceConfigNode,
+    DeviceParameter,
+    DeviceSpecification,
+    Equipment,
+    Experiment,
+    ExperimentDataFile,
+    ExperimentDevice,
+    Parser,
+    SignalType,
+    UploadedFile,
+    reverse,
+)
 
 
 class DeviceParameterInline(common.admin.TabularInline):
@@ -35,7 +48,6 @@ class DeviceSpecAdmin(common.admin.HasMPTTAdmin):
         "abstract",
         "complete",
     ]
-    # readonly_fields = (common.admin.HasMPTTAdmin.readonly_fields or []) + ['inherit_metadata']
     inlines = [
         DeviceSpecInline,
         DeviceParameterInline,
@@ -101,7 +113,6 @@ class ExperimentAdmin(common.admin.BaseAdmin):
         ExperimentDeviceInline,
     ]
     save_as = True
-    #    form = ExperimentForm
 
     def data_files_list(self, obj):
         links_str = ""
@@ -131,22 +142,6 @@ class DeviceConfigAdmin(BaseAdmin):
 admin.site.register(
     [DeviceConfig,], DeviceConfigAdmin,
 )
-
-# class ModuleDeviceInline(admin.TabularInline):
-#     model = ModuleDevice
-#     extra = 2
-# #    fk_name = "device"
-
-
-# class ModuleAdmin(BaseAdmin):
-# inlines = [ModuleDeviceInline,]
-
-# admin.site.register([CompositeDevice,], ModuleAdmin)
-
-# class DataFileAdmin(admin.TabularInline):
-#     model = common.models.UploadedFile
-#     readonly_fields = ["hash"]
-#     extra = 0
 
 
 class DeviceDataInline(common.admin.TabularInline):
@@ -182,7 +177,7 @@ class DataRangeInline(common.admin.TabularInline):
             <button type="button"> <a href="%s">%s</a> </button>
             """
                 % ("/foo", "PLOT")
-            )  #% (reverse("battDB:datarange_plot", args=(obj.pk,)), "PLOT"))
+            )
         else:
             return "N/A"
 
@@ -194,8 +189,9 @@ class DataRangeInline(common.admin.TabularInline):
 
 class DataAdmin(BaseAdmin):
     """
-    FIXME: This class exhibits an n+1 query antipattern. For each row returned, 2 additional queries are fired.
-     This should be done with a JOIN instead.
+    FIXME: This class exhibits an n+1 query antipattern. For each row returned,
+        2 additional queries are fired.
+        This should be done with a JOIN instead.
     """
 
     inlines = [
@@ -221,7 +217,6 @@ class DataAdmin(BaseAdmin):
         "file_columns",
         "num_ranges",
     ]
-    # form=DataFileForm
 
     def file_data(self, obj):
         return "%dx%d" % (obj.file_rows(), len(obj.file_columns()))
@@ -285,17 +280,9 @@ admin.site.register(
     [Equipment,], BaseAdmin,
 )
 
-# class DataParserAdmin(admin.ModelAdmin):
-#     pass
-#
-# admin.site.register([DataParser, ], DataParserAdmin)
-
 
 class FolderAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
     pass
-
-
-# admin.site.register(FileFolder, FolderAdmin)
 
 
 class ParserSignalInline(common.admin.TabularInline):
@@ -310,9 +297,3 @@ class ParserAdmin(BaseAdmin):
 
 
 admin.site.register(Parser, ParserAdmin)
-
-# class FileAdmin(common.admin.ChangeformMixin, admin.ModelAdmin):
-#     readonly_fields = ['size', 'local_date', 'exists', 'hash']
-#
-#
-# admin.site.register(UploadedFile, FileAdmin)

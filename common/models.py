@@ -1,18 +1,14 @@
 import datetime
-import inspect
-import json
 import os
 
 import idutils  # for DOI validation: https://idutils.readthedocs.io/en/latest/
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractUser
 from django.core import exceptions
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import JSONField
 from django.forms import forms
 from django.template.defaultfilters import filesizeformat
-from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 from jsonschema import exceptions as jsonschema_exceptions
@@ -21,29 +17,19 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 from .utils import hash_file
 
-# TODOnt: Add localised strings (l10n) using django_gettext for all string literals in this file
+# TODO: Add localised strings (l10n) using django_gettext for all string literals in
+#  this file
 
 
 class JSONSchemaField(JSONField):
-    """
-    From https://dev.to/saadullahaleem/adding-validation-support-for-json-in-django-models-5fbm
-    """
+    """From https://dev.to/saadullahaleem/adding-validation-support-for-json-in-django-
+    models-5fbm."""
 
     def __init__(self, *args, **kwargs):
         self.schema = kwargs.pop("schema", None)
         super().__init__(*args, **kwargs)
 
-    # @property
-    # def _schema_data(self):
-    #     model_file = inspect.getfile(self.model)
-    #     dirname = os.path.dirname(model_file)
-    #     # schema file related to model.py path
-    #     p = os.path.join(dirname, self.schema)
-    #     with open(p, 'r') as file:
-    #         return json.loads(file.read())
-
     def _validate_schema(self, value):
-
         # Disable validation when migrations are faked
         if self.model.__module__ == "__fake__":
             return True
@@ -65,23 +51,20 @@ class JSONSchemaField(JSONField):
 
 
 class HasName(models.Model):
-    """
-    Abstract base class for any model having a name
-    """
+    """Abstract base class for any model having a name."""
 
     name = models.CharField(max_length=128, blank=True, null=True)
 
     def __str__(self):
         return str(self.name)
 
+    # Tells Django not to create a table for this model: it's an abstract base class
     class Meta:
-        abstract = True  # this tells Django not to create a table for this model - it's an abstract base class
+        abstract = True
 
 
 class HasStatus(models.Model):
-    """
-    Abstract base for any model having a common object status field
-    """
+    """Abstract base for any model having a common object status field."""
 
     OBJ_STATUS = [
         ("draft", "Draft"),  # viewable and editable only by owner
@@ -100,20 +83,19 @@ class HasStatus(models.Model):
 
 
 class HasOwner(models.Model):
-    """
-    Abstract base for any model whose objects belong to user and group objects
-    """
+    """Abstract base for any model whose objects belong to user and group objects."""
 
     user_owner = models.ForeignKey(
         get_user_model(), on_delete=models.SET_NULL, null=True, blank=True
     )
 
-    # org_owner = models.ForeignKey('Org', on_delete=models.SET_NULL, null=True, blank=True)
     class Meta:
         abstract = True
 
 
 class HasCreatedModifiedDates(models.Model):
+    """Abstract base for any model with creation and modified dates."""
+
     created_on = models.DateTimeField(auto_now_add=True)
     modified_on = models.DateTimeField(auto_now=True)
 
@@ -122,8 +104,9 @@ class HasCreatedModifiedDates(models.Model):
 
 
 class HasAttributes(models.Model):
-    """
-    Abstract base having JSON attributes
+    """Abstract base having JSON attributes.
+
+    TODO: What is the use case for this field?
     """
 
     attributes = JSONField(
@@ -135,9 +118,7 @@ class HasAttributes(models.Model):
 
 
 class HasNotes(models.Model):
-    """
-    Abstract base having textual notes
-    """
+    """Abstract base having textual notes."""
 
     notes = models.TextField(
         null=True, blank=True, help_text="Optional human-readable notes"
@@ -148,8 +129,8 @@ class HasNotes(models.Model):
 
 
 class HasSlug(models.Model):
-    """
-    Adds a unique SlugField
+    """Adds a unique SlugField.
+
     FIXME: Make unique=True later
     """
 
@@ -163,16 +144,14 @@ class HasSlug(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self))
-        return super().save(*args, **kwargs)
+        return super(HasSlug, self).save(*args, **kwargs)
 
     class Meta:
         abstract = True
 
 
 class HasMPTT(MPTTModel):
-    """
-    Adds object hierarchical tree structure using django-MPTT library
-    """
+    """Adds object hierarchical tree structure using django-MPTT library."""
 
     parent = TreeForeignKey(
         "self",
@@ -185,37 +164,38 @@ class HasMPTT(MPTTModel):
     inherit_metadata = models.BooleanField(
         default=True,
         verbose_name="Inherit metadata attributes from parent",
-        help_text="Set to True if this object does not describe a real life thing, "
-        "but a specification, type or grouping. In this case, the "
-        "metadata will be inherited.",
+        help_text="Set to True if this object does not describe a real life thing, but "
+        "a specification, type or grouping. "
+        "In this case, the metadata will be inherited.",
     )
 
     class Meta:
         abstract = True
 
     def metadata(self):
+        """Provide the metadata for this object."""
         meta = dict()
         if self.inherit_metadata:
             ancestors = self.get_ancestors(ascending=True, include_self=False)
             for ancestor in ancestors:
-                if ancestor.inherit_metadata:
+                if ancestor.inherit_metadata and hasattr(self, "attributes"):
                     meta.update(ancestor.attributes)
                 else:
                     break
-        meta.update(self.attributes)
+
+        if hasattr(self, "attributes"):
+            meta.update(self.attributes)
+
         return meta
-
-
-# TODO class HasHistory(models.Model):
-# history = models.JSONField(...)
 
 
 class BaseModelNoName(
     HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
 ):
-    """
-    Abstract base Inheriting all the common bases as mixins:<br>
-    HasName, HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
+    """Abstract base for not named objects inheriting all the common bases as mixins.
+
+    The inherited bases are HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes,
+    HasCreatedModifiedDates.
     """
 
     class Meta:
@@ -223,9 +203,10 @@ class BaseModelNoName(
 
 
 class BaseModel(BaseModelNoName, HasName):
-    """
-    Abstract base Inheriting all the common bases as mixins:<br>
-    HasName, HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
+    """Abstract base for named objects inheriting all the common bases as mixins.
+
+    The inherited bases are HasName, HasSlug, HasStatus, HasOwner, HasAttributes,
+    HasNotes, HasCreatedModifiedDates.
     """
 
     class Meta:
@@ -233,9 +214,7 @@ class BaseModel(BaseModelNoName, HasName):
 
 
 class BaseModelMandatoryName(BaseModel):
-    """
-    Changed BaseModel.name to blank=False
-    """
+    """Changed BaseModel.name to blank=False."""
 
     name = models.CharField(max_length=128, blank=False, default="", null=False)
 
@@ -244,8 +223,9 @@ class BaseModelMandatoryName(BaseModel):
 
 
 class Thing(BaseModel, HasMPTT):
-    """
-    A generic "thing"
+    """A generic "thing".
+
+    Todo: This should be removed or give a more meaningful name.
     """
 
     class Meta:
@@ -254,8 +234,9 @@ class Thing(BaseModel, HasMPTT):
 
 # TODO: ModelForm Org.head = filter on Person WHERE Person.org = this
 class Org(HasNotes, HasSlug, HasAttributes, HasCreatedModifiedDates):
-    """
-    Organisation, e.g. publisher, manufacturer or institution
+    """Model for organizations.
+
+    Being these publisher, manufacturer or institution, for example.
     """
 
     name = models.CharField(max_length=128, unique=True, help_text="Organisation name")
@@ -273,9 +254,7 @@ class Org(HasNotes, HasSlug, HasAttributes, HasCreatedModifiedDates):
 
 
 class Person(models.Model):
-    """
-    describes a person who can be outside the system e.g. an author on a paper
-    """
+    """Describes a person who can be outside the system e.g. an author on a paper."""
 
     longName = models.CharField(
         max_length=128,
@@ -293,14 +272,14 @@ class Person(models.Model):
         null=True,
         blank=True,
         related_name="person",
-        help_text="User account in the system",
+        help_text="User account in the system, if any.",
     )
     org = models.ForeignKey(
         Org,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        help_text="Organisation that this person belongs to",
+        help_text="Organisation that this person belongs to, if any.",
     )
 
     def __str__(self):
@@ -313,15 +292,12 @@ class Person(models.Model):
         return self.user.last_name or "borked"
 
 
-# class UserRole
-
-
 class DOIField(models.URLField):
     description = "Digital Object Identifier (DOI)"
 
     def __init__(self, *args, **kwargs):
         kwargs["max_length"] = 128
-        super().__init__(*args, **kwargs)
+        super(DOIField, self).__init__(*args, **kwargs)
 
     def validate(self, value, obj):
         if not idutils.is_doi(value):
@@ -331,18 +307,27 @@ class DOIField(models.URLField):
         return super().validate(value, obj)
 
     def get_url(self):
-        pass  # TODO: implement a method to resolve the URL of a DOI
+        """Gets the URL of a DOI.
+
+        TODO: implement method
+        """
+        pass
 
     def get_name(self):
-        pass  # TODO: implement a method to fetch the document name
+        """Fetch the document name associated to the DOI.
+
+        TODO: implement method
+        """
+        pass
 
 
 class YearField(models.IntegerField):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(YearField, self).__init__(*args, **kwargs)
 
     def validate(self, value, obj):
-        super().validate(value, obj)
+        """Validates the value of the year."""
+        super(YearField, self).validate(value, obj)
         if value > datetime.date.today().year:
             raise ValidationError("Invalid year: Cannot be in the future")
         if value < 1791:
@@ -353,27 +338,31 @@ class YearField(models.IntegerField):
 
 # https://djangosnippets.org/snippets/2206/
 class ContentTypeRestrictedFileField(models.FileField):
-    """
-    Same as FileField, but you can specify:
-        * content_types - list containing allowed content_types. Example: ['application/pdf', 'image/jpeg']
-        * max_upload_size - a number indicating the maximum file size allowed for upload.
-            2.5MB - 2621440
-            5MB - 5242880
-            10MB - 10485760
-            20MB - 20971520
-            50MB - 5242880
-            100MB 104857600
-            250MB - 214958080
-            500MB - 429916160
+    """A FileField with some extra information.
+
+    The extra information than can be added is:
+        - content_types - list containing allowed content_types. Eg:
+            ['application/pdf', 'image/jpeg']
+        - max_upload_size - an integer number indicating the maximum file size allowed
+            in bytes. Eg.:
+                2.5MB - 2621440
+                5MB - 5242880
+                10MB - 10485760
+                20MB - 20971520
+                50MB - 5242880
+                100MB 104857600
+                250MB - 214958080
+                500MB - 429916160
     """
 
     def __init__(self, *args, **kwargs):
-        self.content_types = kwargs.pop("content_types")
-        self.max_upload_size = kwargs.pop("max_upload_size")
+        self.content_types = kwargs.pop("content_types", [])
+        self.max_upload_size = kwargs.pop("max_upload_size", 429916160)
 
-        super().__init__(*args, **kwargs)
+        super(ContentTypeRestrictedFileField, self).__init__(*args, **kwargs)
 
     def clean(self, *args, **kwargs):
+        """Validates the value and returns the data."""
         data = super(ContentTypeRestrictedFileField, self).clean(*args, **kwargs)
 
         file = data.file
@@ -394,16 +383,9 @@ class ContentTypeRestrictedFileField(models.FileField):
 class Paper(
     HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
 ):
-    """
-    An academic paper
-    """
+    """An academic paper."""
 
-    DOI = DOIField(
-        unique=True,
-        blank=True,
-        null=True,
-        help_text="Paper DOI. In future, this could populate the other fields automatically.",
-    )
+    DOI = DOIField(unique=True, blank=True, null=True, help_text="DOI for the paper.",)
     year = YearField(default=datetime.date.today().year)
     title = models.CharField(max_length=300, default="")
     authors = models.CharField(max_length=300, default="")
@@ -426,10 +408,10 @@ class Paper(
 
 
 class HashedFile(models.Model):
-    """
-    A list of user-uploaded files. <BR>
-    FIXME: This is pretty insecure - File format & size is not yet enforced, so any kind of file can be uploaded,
-     including Python scripts, very large binary files, etc.
+    """A list of user-uploaded files. <BR>
+
+    FIXME: This is pretty insecure - File format & size is not yet enforced, so any kind
+     of file can be uploaded, including Python scripts, very large binary files, etc.
     """
 
     file = models.FileField(upload_to="uploaded_files", null=False,)
@@ -447,7 +429,7 @@ class HashedFile(models.Model):
     def clean(self):
         self.hash = hash_file(self.file)
         print(self.hash)
-        return super().clean()
+        return super(HashedFile, self).clean()
 
     def __str__(self):
         return os.path.basename(self.file.name)
