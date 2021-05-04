@@ -196,7 +196,7 @@ class TemplateView(TemplateResponseMixin, ContextMixin, View):
 
 
 def index(request):
-    return redirect("/exps")
+    return redirect("/admin")
     # return HttpResponse("<h1>Hello, world.</h1>")
 
 

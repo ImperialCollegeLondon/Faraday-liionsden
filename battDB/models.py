@@ -16,8 +16,8 @@ from .utils import parse_data_file
 class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
     """A template for creating a device or batch of devices in the system.
 
-    Specifications are structured as a tree, so that each device can be composed of sub-
-    devices
+    <br> Specifications are structured as a tree, so that each device can be composed of
+    sub-devices
     """
 
     parameters = models.ManyToManyField(dfn.Parameter, through="DeviceParameter")
@@ -26,7 +26,7 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         verbose_name="Abstract Specification",
         help_text="This specifies an abstract device, e.g. 'Cell' with child members"
         " such as"
-        "'Positive Electrode, Negative Electrode, Electrolyte etc. <BR>"
+        "'Positive Electrode, Negative Electrode, Electrolyte etc. "
         "If this is set to True, then all metadata declared here must be "
         "overridden in child classes. An abstract specification cannot be used "
         "to define a physical device or batch.",
@@ -47,7 +47,6 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         "An abstract specification cannot have a device type - "
         "they define the device types.",
     )
-    # json = JSONEditableField()
 
     def clean(self):
         if self.abstract and self.device_type is not None:
@@ -78,9 +77,8 @@ class DeviceParameter(cm.HasName):
         unique_together = [("spec", "parameter", "material"), ("spec", "name")]
 
 
-class DeviceBatch(cm.BaseModelNoName, cm.HasMPTT):
-    """A device or batch of devices is a physical, tangible thing produced to a given
-    specification."""
+class Batch(cm.BaseModelNoName, cm.HasMPTT):
+    """A physical batch of devices produced to a given specification."""
 
     specification = models.ForeignKey(
         DeviceSpecification,
@@ -119,12 +117,14 @@ class DeviceBatch(cm.BaseModelNoName, cm.HasMPTT):
         )
 
     class Meta:
-        verbose_name = "Device or Batch"
-        verbose_name_plural = "Devices"
+        verbose_name = "Batch"
+        verbose_name_plural = "Batches"
 
 
-class BatchDevice(cm.HasAttributes, cm.HasNotes):
-    batch = models.ForeignKey(DeviceBatch, on_delete=models.CASCADE)
+class Device(cm.HasAttributes, cm.HasNotes):
+    """Identify an individual device in a batch."""
+
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
     seq_num = models.PositiveSmallIntegerField(
         default=1,
         validators=[
@@ -134,17 +134,21 @@ class BatchDevice(cm.HasAttributes, cm.HasNotes):
     )
 
     def get_used_in_exps(self):
+        """Provide the experiments in which the device is used."""
         return ExperimentDevice.objects.filter(
             deviceBatch=self.batch, batch_seq=self.seq_num
         )
 
-    def last_measured_SoH(self):
+    def last_measured_state_of_health(self):
+        """Provide the last time the state of health of the device was checked."""
         return self.attributes.get("state_of_health") or "Not tested"
 
     def used_in(self):
+        """String indicating the number of experiments the device is used."""
         return "%d Experiments" % self.get_used_in_exps().count()
 
     def serial(self):
+        """Provide the serial number for the device, including batch serial."""
         try:
             return self.batch.serialNo % self.seq_num
         except TypeError:
@@ -156,17 +160,19 @@ class BatchDevice(cm.HasAttributes, cm.HasNotes):
     def clean(self):
         if self.seq_num > self.batch.batch_size:
             raise ValidationError("Batch sequence ID cannot exceed batch size!")
+
         # TODO: Can compute device stats here
         self.attributes["state_of_health"] = "100%"
-        # self.attributes['used_in_exps'] = self.get_used_in_exps()
 
     def __str__(self):
         return str(self.batch.specification) + "/" + self.serial()
 
 
 class DeviceConfig(cm.BaseModel):
-    """A configuration of device templates to represent how devices are connected in a
-    module, pack, or experimental set-up."""
+    """A configuration of device templates.
+
+    These represent how devices are connected in a module, pack, or experimental
+    set-up."""
 
     TYPE_CHOICES = (
         ("module", "Module"),
@@ -182,9 +188,8 @@ class DeviceConfig(cm.BaseModel):
 
 
 class DeviceConfigNode(models.Model):
-    """
-    Self-referential model - defines a chain of devices electrically connected together,
-     like a netlist
+    """Defines a chain of devices electrically connected together, like a netlist.
+
     FIXME: I would like to use 'limit_choices_to to' dynamically restrict choices based
         on 'config',to ensure that all nodes in chain are part of the same config & net,
         i.e. you cannot link to a node in a different config.
@@ -241,6 +246,10 @@ class Parser(cm.BaseModelMandatoryName):
     TODO: In future, these could be user-defined in Python code via this interface
         (with appropriate permissions) <BR> This would require all parsing to be done
         in a sandboxed environment on a separate server (which it should anyway)
+
+    TODO: Maybe not. It should be possible to define any format by providing a
+     template specifying the contents of the file. Something along the lines of:
+     https://stackoverflow.com/q/46430471/3778792 combined with some pandas magic.
     """
 
     FORMAT_CHOICES = [
@@ -262,7 +271,12 @@ class Parser(cm.BaseModelMandatoryName):
 
 
 class Equipment(cm.BaseModel):
-    """Definitions of equipment such as cycler machines."""
+    """Definitions of equipment such as cycler machines.
+
+    FIXME: This does not make sense. Why an equipment has a device specification and
+     a serial number related to the batch number? Is it another 'batch' number we are
+     talking about here?
+    """
 
     specification = models.ForeignKey(
         DeviceSpecification,
@@ -298,6 +312,8 @@ class Experiment(cm.BaseModel):
 
     <br> Has many: data files (from cyclers) <br> Has many: devices (actual physical
     objects e.g. cells) <br>
+
+    TODO: This is incomplete. What is this meant to do?
     """
 
     date = models.DateField(default=datetime.now)
@@ -336,12 +352,13 @@ class Experiment(cm.BaseModel):
 
 
 class ExperimentDataFile(cm.BaseModel):
-    """ExperimentDataFile (EDF) is the class tying data files, parsed data tables, and
-    experiments together.
+    """EDF is the class tying together data files, parsed data tables and experiments.
 
     <>BR> It contains all of the time-series numerical data as a Postgres
     ArrayField(ArrayField(FloatField))) <br> Text data should be added as Events. Raw
     data files should be uploaded and referenced, where available.
+
+    TODO: Why the 'ts' in front of the variables?
     """
 
     ts_headers = ArrayField(
@@ -375,9 +392,10 @@ class ExperimentDataFile(cm.BaseModel):
     )
 
     devices = models.ManyToManyField(
-        DeviceBatch, through="ExperimentDevice", related_name="used_in"
+        Batch, through="ExperimentDevice", related_name="used_in"
     )
 
+    # TODO: Why is the test protocol defined in the DFN db and not here or in common?
     protocol = models.ForeignKey(
         dfn.Method,
         on_delete=models.SET_NULL,
@@ -424,7 +442,7 @@ class ExperimentDataFile(cm.BaseModel):
     file_exists.boolean = True
 
     def file_hash(self):
-        if self.raw_data_file is not None:
+        if hasattr(self, "raw_data_file"):
             return self.raw_data_file.hash
 
         return "N/A"
@@ -486,24 +504,20 @@ class UploadedFile(cm.HashedFile):
 
 
 class ExperimentDevice(models.Model):
-    """3-way join table, identifies devices in experiments, link devices to data
-    files."""
+    """Join table: identifies devices in experiments and link them to data files."""
 
     experiment = models.ForeignKey(
         Experiment, on_delete=models.CASCADE, related_name="devices"
     )
-    # FIXME: DeviceBatch  / batch_id could be a foreignKey to DeviceBatch!
-    #  but maybe this way is actually better (avoids accidental data loss at the cost
-    #  of potential inconsistency)
-    deviceBatch = models.ForeignKey(DeviceBatch, on_delete=models.CASCADE)
-    batch_seq = models.PositiveSmallIntegerField(
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
+    batch_sequence = models.PositiveSmallIntegerField(
         default=1,
         validators=[
             MinValueValidator(1),
         ],
         help_text="sequence number of device within batch",
     )
-    device_pos = models.CharField(
+    device_position = models.CharField(
         max_length=20,
         default="cell_xx",
         help_text="Device Position ID in Experiment Config - e.g. Cell_A1 for the "
@@ -518,27 +532,22 @@ class ExperimentDevice(models.Model):
         return "FIXME"
 
     def clean(self):
-        if (
-            self.deviceBatch is not None
-            and self.batch_seq > self.deviceBatch.batch_size
-        ):
+        if self.batch is not None and self.batch_sequence > self.batch.batch_size:
             raise ValidationError("Batch sequence ID cannot exceed batch size!")
-        elif self.deviceBatch is not None:
-            BatchDevice.objects.get_or_create(
-                batch=self.deviceBatch, seq_num=self.batch_seq
-            )
+        elif self.batch is not None:
+            Device.objects.get_or_create(batch=self.batch, seq_num=self.batch_sequence)
 
     def __str__(self):
-        return self.device_pos
+        return self.device_position
 
     class Meta:
         unique_together = [
             [
-                "device_pos",
+                "device_position",
                 "data_file",
             ],  # cannot have the same device position ID twice in a data file
             # cannot use the same device twice in a data file
-            ["experiment", "deviceBatch", "batch_seq", "data_file"],
+            ["experiment", "batch", "batch_sequence", "data_file"],
         ]
 
 
@@ -604,9 +613,10 @@ class DataColumn(models.Model):
 
 
 class DataRange(cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates):
-    """
-    DataRange - each data file contains numerous ranges e.g. charge & discharge cycles.
-    Their data might overlap. <br>
+    """Each data range within the data file
+
+    Each data file contains numerous ranges e.g. charge & discharge cycles. Their data
+    might overlap. <br>
     TODO: Write (or find) code to segment data into ranges. <br>
     TODO: Convert this into a JSON Schema within ExperimentData - see Git issue #23 <br>
     """
@@ -644,6 +654,8 @@ class DataRange(cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates):
 
 
 class SignalType(models.Model):
+    """Specification for a column in a data file representing a physical quantity."""
+
     parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
     col_name = models.CharField(max_length=50, default="")
     order = models.PositiveSmallIntegerField(

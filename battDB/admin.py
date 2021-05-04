@@ -6,10 +6,10 @@ import common
 from common.admin import BaseAdmin
 
 from .models import (
-    BatchDevice,
+    Batch,
     DataColumn,
     DataRange,
-    DeviceBatch,
+    Device,
     DeviceConfig,
     DeviceConfigNode,
     DeviceParameter,
@@ -57,17 +57,19 @@ class DeviceSpecAdmin(common.admin.HasMPTTAdmin):
 admin.site.register(DeviceSpecification, DeviceSpecAdmin)
 
 
-class BatchDeviceInline(common.admin.TabularInline):
-    model = BatchDevice
+class DeviceInline(common.admin.TabularInline):
+    model = Device
     extra = 0
     verbose_name_plural = "Batch Members"
     verbose_name = "member"
-    readonly_fields = ["used_in", "last_measured_SoH", "attributes"]
+    readonly_fields = ["used_in", "last_measured_state_of_health", "attributes"]
     exclude = ["attributes"]
 
 
-class DeviceBatchInline(common.admin.TabularInline):
-    model = DeviceBatch
+class BatchInline(common.admin.TabularInline):
+    """ TODO: What's the use case for these sub devices?"""
+
+    model = Batch
     extra = 0
     verbose_name = "sub-device"
     verbose_name_plural = "Sub-devices"
@@ -75,7 +77,7 @@ class DeviceBatchInline(common.admin.TabularInline):
 
 
 # class ThingAdmin(mptt.admin.MPTTModelAdmin):
-class DeviceBatchAdmin(common.admin.BaseAdmin, mptt.admin.MPTTModelAdmin):
+class BatchAdmin(common.admin.BaseAdmin, mptt.admin.MPTTModelAdmin):
     list_display = (
         ["__str__"]
         + ["manufacturer", "serialNo", "manufactured_on", "batch_size"]
@@ -84,12 +86,12 @@ class DeviceBatchAdmin(common.admin.BaseAdmin, mptt.admin.MPTTModelAdmin):
     list_filter = BaseAdmin.list_filter + ["manufacturer", "batch_size"]
     save_as = True
     inlines = [
-        DeviceBatchInline,
-        BatchDeviceInline,
+        BatchInline,
+        DeviceInline,
     ]
 
 
-admin.site.register(DeviceBatch, DeviceBatchAdmin)
+admin.site.register(Batch, BatchAdmin)
 
 
 class ExperimentDataInline(common.admin.TabularInline):
@@ -140,7 +142,10 @@ class DeviceConfigAdmin(BaseAdmin):
 
 
 admin.site.register(
-    [DeviceConfig,], DeviceConfigAdmin,
+    [
+        DeviceConfig,
+    ],
+    DeviceConfigAdmin,
 )
 
 
@@ -277,7 +282,10 @@ admin.site.register([ExperimentDataFile], DataAdmin)
 
 
 admin.site.register(
-    [Equipment,], BaseAdmin,
+    [
+        Equipment,
+    ],
+    BaseAdmin,
 )
 
 
