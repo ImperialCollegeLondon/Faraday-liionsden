@@ -2,11 +2,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import smart_text
 from rest_framework import serializers
 
-# from .models import *
+from .models import Experiment, ExperimentDataFile, UploadedFile
 
 
-# https://stackoverflow.com/questions/28009829/creating-and-saving-foreign-key-objects-using-a-slugrelatedfield
 class CreatableSlugRelatedField(serializers.SlugRelatedField):
+    """https://stackoverflow.com/questions/28009829/creating-and-saving-foreign-key-
+    objects-using-a-slugrelatedfield."""
+
     def to_internal_value(self, data):
         try:
             return self.get_queryset().get_or_create(**{self.slug_field: data})[0]
@@ -16,12 +18,6 @@ class CreatableSlugRelatedField(serializers.SlugRelatedField):
             )
         except (TypeError, ValueError):
             self.fail("invalid")
-
-
-# class DataSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = DataRange
-#         exclude=[]
 
 
 class DataFileSerializer(serializers.ModelSerializer):
@@ -40,7 +36,6 @@ class ExperimentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Experiment
         exclude = []
-        # fields = ['name']
 
 
 class DataRangeSerializer(serializers.ModelSerializer):
@@ -49,14 +44,7 @@ class DataRangeSerializer(serializers.ModelSerializer):
         exclude = []
 
 
-# class HarvesterSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Harvester
-#         exclude = []
-
-
 class FileHashSerializer(serializers.ModelSerializer):
-    # experimentdatafile = DataFileSerializer()
     edf_id = serializers.IntegerField(source="experimentdatafile.id")
 
     class Meta:
