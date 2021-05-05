@@ -21,30 +21,43 @@ class CreatableSlugRelatedField(serializers.SlugRelatedField):
 
 
 class DataFileSerializer(serializers.ModelSerializer):
+    """Serializer for existing data file objects."""
+
     class Meta:
         model = ExperimentDataFile
         exclude = []
 
 
 class NewDataFileSerializer(DataFileSerializer):
+    """Serializer for new data file objects."""
+
     class Meta:
         model = ExperimentDataFile
         exclude = ["user_owner"]
 
 
 class ExperimentSerializer(serializers.ModelSerializer):
+    """Serializer for experiment objects."""
+
     class Meta:
         model = Experiment
         exclude = []
 
 
 class DataRangeSerializer(serializers.ModelSerializer):
+    """Serializer for existing data range objects.
+
+    FIXME: Seems identical to ExperimentSerializer
+    """
+
     class Meta:
         model = Experiment
         exclude = []
 
 
 class FileHashSerializer(serializers.ModelSerializer):
+    """Serializer for file hashes."""
+
     edf_id = serializers.IntegerField(source="experimentdatafile.id")
 
     class Meta:
@@ -53,5 +66,10 @@ class FileHashSerializer(serializers.ModelSerializer):
 
 
 class GeneralSerializer(serializers.ModelSerializer):
+    """General purpose serializer.
+
+    FIXME: What is this for?
+    """
+
     class Meta:
         model = None
