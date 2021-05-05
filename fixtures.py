@@ -15,7 +15,7 @@ class AbstractModelMixinTestCase(TestCase):
     model: ModelBase
 
     @classmethod
-    def setUpTestData(cls):
+    def setUpClass(cls):
         """Create a dummy model or a schema for our model which extends the mixin.
 
         A RuntimeWarning will occur if the model is registered twice. If the table

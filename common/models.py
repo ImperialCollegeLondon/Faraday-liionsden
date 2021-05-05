@@ -3,7 +3,6 @@ import os
 
 import idutils  # for DOI validation: https://idutils.readthedocs.io/en/latest/
 from django.contrib.auth import get_user_model
-from django.core import exceptions
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import JSONField
@@ -11,43 +10,12 @@ from django.forms import forms
 from django.template.defaultfilters import filesizeformat
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
-from jsonschema import exceptions as jsonschema_exceptions
-from jsonschema import validate
 from mptt.models import MPTTModel, TreeForeignKey
 
 from .utils import hash_file
 
 # TODO: Add localised strings (l10n) using django_gettext for all string literals in
 #  this file
-
-
-class JSONSchemaField(JSONField):
-    """From https://dev.to/saadullahaleem/adding-validation-support-for-json-in-django-
-    models-5fbm."""
-
-    def __init__(self, *args, **kwargs):
-        self.schema = kwargs.pop("schema", None)
-        super().__init__(*args, **kwargs)
-
-    def _validate_schema(self, value):
-        # Disable validation when migrations are faked
-        if self.model.__module__ == "__fake__":
-            return True
-        try:
-            status = validate(value, self.schema)
-        except jsonschema_exceptions.ValidationError as e:
-            raise exceptions.ValidationError(e.message, code="invalid")
-        return status
-
-    def validate(self, value, model_instance):
-        super().validate(value, model_instance)
-        self._validate_schema(value)
-
-    def pre_save(self, model_instance, add):
-        value = super().pre_save(model_instance, add)
-        if value and not self.null:
-            self._validate_schema(value)
-        return value
 
 
 class HasName(models.Model):
@@ -217,16 +185,6 @@ class BaseModelMandatoryName(BaseModel):
     """Changed BaseModel.name to blank=False."""
 
     name = models.CharField(max_length=128, blank=False, default="", null=False)
-
-    class Meta:
-        abstract = True
-
-
-class Thing(BaseModel, HasMPTT):
-    """A generic "thing".
-
-    Todo: This should be removed or give a more meaningful name.
-    """
 
     class Meta:
         abstract = True
