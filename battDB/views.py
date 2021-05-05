@@ -26,7 +26,7 @@ from .serializers import (
 np.random.seed(9615)
 
 
-class ExperimentsView(ListView):
+class AllExperimentsView(ListView):
     model = Experiment
     template_name = "generic_list.html"
 
