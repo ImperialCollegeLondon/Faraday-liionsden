@@ -10,9 +10,11 @@ admin.site.site_title = "Liionsden Admin"
 admin.site.index_title = "Liionsden Admin"
 
 
-class ChangeformMixin:
+class ChangeFormMixin:
+    """Customize the form used in the admin site when editing/adding objects."""
+
     def get_changeform_initial_data(self, request):
-        get_data = super(ChangeformMixin, self).get_changeform_initial_data(request)
+        get_data = super(ChangeFormMixin, self).get_changeform_initial_data(request)
         get_data["user_owner"] = request.user.pk
         return get_data
 
@@ -38,7 +40,7 @@ class ChangeformMixin:
     }
 
 
-class BaseAdmin(ChangeformMixin, admin.ModelAdmin):
+class BaseAdmin(ChangeFormMixin, admin.ModelAdmin):
     list_display_extra = ["user_owner", "status", "created_on", "modified_on"]
     list_display = ["__str__"] + list_display_extra
     list_filter = ["user_owner", "status"]
@@ -94,7 +96,7 @@ admin.site.register(
 )
 
 
-class TabularInline(ChangeformMixin, admin.TabularInline):
+class TabularInline(ChangeFormMixin, admin.TabularInline):
     pass
 
 
