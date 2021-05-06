@@ -6,7 +6,7 @@ class TestHashFile(TestCase):
         import hashlib
         from pathlib import Path
 
-        from ..utils import hash_file
+        from common.utils import hash_file
 
         f = open(Path(__file__), "rb")
         expected = hashlib.md5(f.read()).hexdigest()

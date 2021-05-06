@@ -5,11 +5,11 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from fixtures import AbstractModelMixinTestCase, db_user
+from tests.fixtures import AbstractModelMixinTestCase, db_user
 
 
 class TestHasName(AbstractModelMixinTestCase):
-    from ..models import HasName
+    from common.models import HasName
 
     mixin = HasName
     model: mixin
@@ -23,7 +23,7 @@ class TestHasName(AbstractModelMixinTestCase):
 
 
 class TestHasStatus(AbstractModelMixinTestCase):
-    from ..models import HasStatus
+    from common.models import HasStatus
 
     mixin = HasStatus
     model: mixin
@@ -39,7 +39,7 @@ class TestHasStatus(AbstractModelMixinTestCase):
 
 
 class TestHasOwner(AbstractModelMixinTestCase):
-    from ..models import HasOwner
+    from common.models import HasOwner
 
     mixin = HasOwner
     model: mixin
@@ -55,7 +55,7 @@ class TestHasOwner(AbstractModelMixinTestCase):
 
 
 class TestHasCreatedModifiedDates(AbstractModelMixinTestCase):
-    from ..models import HasCreatedModifiedDates
+    from common.models import HasCreatedModifiedDates
 
     mixin = HasCreatedModifiedDates
     model: mixin
@@ -76,7 +76,7 @@ class TestHasCreatedModifiedDates(AbstractModelMixinTestCase):
 
 
 class TestHasAttributes(AbstractModelMixinTestCase):
-    from ..models import HasAttributes
+    from common.models import HasAttributes
 
     mixin = HasAttributes
     model: mixin
@@ -90,7 +90,7 @@ class TestHasAttributes(AbstractModelMixinTestCase):
 
 
 class TestHasNotes(AbstractModelMixinTestCase):
-    from ..models import HasNotes
+    from common.models import HasNotes
 
     mixin = HasNotes
     model: mixin
@@ -104,7 +104,7 @@ class TestHasNotes(AbstractModelMixinTestCase):
 
 
 class TestHasSlug(AbstractModelMixinTestCase):
-    from ..models import HasSlug
+    from common.models import HasSlug
 
     mixin = HasSlug
     model: mixin
@@ -135,7 +135,7 @@ class TestHasMPTT(TestCase):
 
 
 class TestBaseModelNoName(AbstractModelMixinTestCase):
-    from ..models import BaseModelNoName
+    from common.models import BaseModelNoName
 
     mixin = BaseModelNoName
     model: mixin
@@ -163,7 +163,7 @@ class TestBaseModelNoName(AbstractModelMixinTestCase):
 
 
 class TestBaseModel(AbstractModelMixinTestCase):
-    from ..models import BaseModel
+    from common.models import BaseModel
 
     mixin = BaseModel
     model: mixin
@@ -186,7 +186,7 @@ class TestBaseModel(AbstractModelMixinTestCase):
 
 
 class TestBaseModelMandatoryName(AbstractModelMixinTestCase):
-    from ..models import BaseModelMandatoryName
+    from common.models import BaseModelMandatoryName
 
     mixin = BaseModelMandatoryName
     model: mixin
@@ -209,7 +209,7 @@ class TestBaseModelMandatoryName(AbstractModelMixinTestCase):
 
 
 class TestOrg(TestCase):
-    from ..models import Org
+    from common.models import Org
 
     model = Org
 
@@ -236,7 +236,7 @@ class TestOrg(TestCase):
 
 
 class TestPerson(TestCase):
-    from ..models import Person
+    from common.models import Person
 
     model = Person
 
@@ -268,7 +268,7 @@ class TestPerson(TestCase):
 
 
 class TestDOIField(TestCase):
-    from ..models import DOIField
+    from common.models import DOIField
 
     model = DOIField
 
@@ -287,7 +287,7 @@ class TestDOIField(TestCase):
 
 
 class TestYearField(TestCase):
-    from ..models import YearField
+    from common.models import YearField
 
     model = YearField
 
@@ -299,7 +299,7 @@ class TestYearField(TestCase):
 
 
 class TestContentTypeRestrictedFileField(TestCase):
-    from ..models import ContentTypeRestrictedFileField
+    from common.models import ContentTypeRestrictedFileField
 
     model = ContentTypeRestrictedFileField
 
@@ -325,7 +325,7 @@ class TestContentTypeRestrictedFileField(TestCase):
 
 
 class TestPaper(TestCase):
-    from ..models import Paper
+    from common.models import Paper
 
     model = Paper
 
@@ -347,7 +347,7 @@ class TestPaper(TestCase):
 
 
 class TestHashedFile(AbstractModelMixinTestCase):
-    from ..models import HashedFile
+    from common.models import HashedFile
 
     mixin = HashedFile
     model: mixin
@@ -364,7 +364,7 @@ class TestHashedFile(AbstractModelMixinTestCase):
         self.assertEqual(obj.hash, "")
 
     def test_clean(self):
-        from ..utils import hash_file
+        from common.utils import hash_file
 
         obj = self.model.objects.get()
         self.assertEqual(obj.hash, "")
