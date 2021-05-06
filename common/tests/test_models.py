@@ -1,5 +1,5 @@
 import time
-from unittest import TestCase, expectedFailure, skip
+from unittest import TestCase, skip
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
