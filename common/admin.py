@@ -48,6 +48,23 @@ class BaseAdmin(ChangeFormMixin, admin.ModelAdmin):
     generic_fields = {"name", "notes", "status", "user_owner", "attributes"}
 
 
+class TabularInline(ChangeFormMixin, admin.TabularInline):
+    pass
+
+
+class CompositeBaseInLine(TabularInline):
+    fk_name = "parent"
+    extra = 1
+    verbose_name_plural = "Child Objects"
+
+
+class HasMPTTAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
+    inlines = [
+        CompositeBaseInLine,
+    ]
+    readonly_fields = BaseAdmin.readonly_fields + ["metadata"]
+
+
 class OrgAdmin(admin.ModelAdmin):
     list_display = [
         "name",
@@ -94,20 +111,3 @@ admin.site.register(
     ],
     PersonAdmin,
 )
-
-
-class TabularInline(ChangeFormMixin, admin.TabularInline):
-    pass
-
-
-class CompositeBaseInLine(TabularInline):
-    fk_name = "parent"
-    extra = 1
-    verbose_name_plural = "Child Objects"
-
-
-class HasMPTTAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
-    inlines = [
-        CompositeBaseInLine,
-    ]
-    readonly_fields = BaseAdmin.readonly_fields + ["metadata"]
