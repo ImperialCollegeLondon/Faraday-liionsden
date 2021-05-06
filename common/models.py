@@ -281,9 +281,6 @@ class DOIField(models.URLField):
 
 
 class YearField(models.IntegerField):
-    def __init__(self, *args, **kwargs):
-        super(YearField, self).__init__(*args, **kwargs)
-
     def validate(self, value, obj):
         """Validates the value of the year."""
         super(YearField, self).validate(value, obj)
@@ -295,9 +292,10 @@ class YearField(models.IntegerField):
             )
 
 
-# https://djangosnippets.org/snippets/2206/
 class ContentTypeRestrictedFileField(models.FileField):
     """A FileField with some extra information.
+
+    https://djangosnippets.org/snippets/2206/
 
     The extra information than can be added is:
         - content_types - list containing allowed content_types. Eg:
@@ -324,14 +322,11 @@ class ContentTypeRestrictedFileField(models.FileField):
         """Validates the value and returns the data."""
         data = super(ContentTypeRestrictedFileField, self).clean(*args, **kwargs)
 
-        file = data.file
-        content_type = file.content_type
-
-        if content_type in self.content_types:
-            if file._size > self.max_upload_size:
+        if data.content_type in self.content_types:
+            if data.size > self.max_upload_size:
                 raise forms.ValidationError(
                     _("Please keep filesize under %s. Current filesize %s")
-                    % (filesizeformat(self.max_upload_size), filesizeformat(file._size))
+                    % (filesizeformat(self.max_upload_size), filesizeformat(data.size))
                 )
         else:
             raise forms.ValidationError(_("Filetype not supported."))
@@ -365,7 +360,7 @@ class Paper(
     PDF = models.FileField(null=True, blank=True, help_text="Optional PDF copy")
 
     def has_pdf(self):
-        return self.PDF is not None
+        return True if self.PDF else False
 
     def __str__(self):
         return slugify(str(self.title) + "-" + str(self.year))
@@ -376,6 +371,9 @@ class HashedFile(models.Model):
 
     FIXME: This is pretty insecure - File format & size is not yet enforced, so any kind
      of file can be uploaded, including Python scripts, very large binary files, etc.
+
+    FIXME: Uploaded files should go somewhere else, no within the Django application
+        code structure.
     """
 
     file = models.FileField(
@@ -395,7 +393,6 @@ class HashedFile(models.Model):
 
     def clean(self):
         self.hash = hash_file(self.file)
-        print(self.hash)
         return super(HashedFile, self).clean()
 
     def __str__(self):
@@ -403,8 +400,6 @@ class HashedFile(models.Model):
 
     def exists(self):
         return self.file.storage.exists(self.file.name)
-
-    exists.boolean = True
 
     def size_bytes(self):
         return self.file.storage.size(self.file.name)

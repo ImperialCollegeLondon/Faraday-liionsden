@@ -3,6 +3,13 @@ from django.db.models.base import ModelBase
 from django.db.utils import ProgrammingError
 from django.test import TestCase
 
+db_user = dict(
+    username="MichaelF",
+    first_name="Michael",
+    last_name="Faraday",
+    password="C@cina27",
+)
+
 
 class AbstractModelMixinTestCase(TestCase):
     """
