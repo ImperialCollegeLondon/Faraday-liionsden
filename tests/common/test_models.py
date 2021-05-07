@@ -331,11 +331,9 @@ class TestPaper(TestCase):
     model = Paper
 
     def setUp(self):
-        self.expected = dict(
-            authors="Michael Faraday",
-            title="Chemical Manipulation, Being Instructions to Students in Chemistry",
-            year=1827,
-        )
+        from tests.fixtures import db_paper
+
+        self.expected = db_paper.copy()
         self.model.objects.get_or_create(**self.expected)
 
     def test_paper_creation(self):

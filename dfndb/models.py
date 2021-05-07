@@ -8,12 +8,14 @@ import common.models as cm
 class Compound(models.Model):
     """Chemical Compound or Element, e.g. Lithium, Graphite."""
 
-    name = models.CharField(max_length=100)  # "Lithium"
-    formula = models.CharField(max_length=20)  # "Li"
+    name = models.CharField(
+        max_length=100, help_text="Full name for the element or compound"
+    )
+    formula = models.CharField(max_length=20, help_text="Chemical formula")
     mass = models.FloatField(
         default=0,
         validators=[MinValueValidator(0, "Mass cannot be negative!")],
-        help_text="optional molar mass",
+        help_text="Optional molar mass, in g/mol",
     )
 
     def __str__(self):
@@ -50,7 +52,7 @@ class Material(cm.BaseModel):
     )
 
     def __str__(self):
-        return self.name
+        return self.name or ""
 
 
 class CompositionPart(models.Model):
@@ -93,7 +95,6 @@ class Method(cm.BaseModel):
         choices=METHOD_TYPE_CHOICES, default=METHOD_TYPE_MODELLING
     )
 
-    # Todo: What does this mean?
     description = models.TextField(
         blank=True, help_text="Method description in PyBaMM format"
     )
