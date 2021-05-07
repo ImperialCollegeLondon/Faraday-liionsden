@@ -1,6 +1,7 @@
-from unittest import TestCase, skip
+from unittest import skip
 
 from django.contrib.admin.sites import AdminSite
+from django.test import TestCase
 
 
 class MockRequest:
