@@ -25,8 +25,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
-#    - name: psycopg2 prerequisites
-#      run: sudo apt-get install libpq-dev
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip wheel
@@ -35,3 +33,23 @@ jobs:
       run: python manage.py migrate
     - name: Run tests
       run: python manage.py test
+
+  publish:
+    if: github.ref == 'refs/heads/master'
+    needs: test
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          repository: imperialcollegelondon/liionsden/liionsden
+          tag_with_ref: true
+          tag_with_sha: true
