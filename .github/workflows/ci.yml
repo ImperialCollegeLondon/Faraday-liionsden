@@ -53,5 +53,3 @@ jobs:
         with:
           push: true
           tags: docker.pkg.github.com/imperialcollegelondon/faraday-liionsden/liionsden
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
