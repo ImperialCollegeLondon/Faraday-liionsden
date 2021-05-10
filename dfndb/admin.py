@@ -26,9 +26,6 @@ class MethodAdmin(BaseAdmin):
     list_display = BaseAdmin.list_display + ["type"]
     list_filter = BaseAdmin.list_filter + ["type"]
 
-    def __init__(self, model, admin_site):
-        super(MethodAdmin, self).__init__(model, admin_site)
-
 
 class DataAdmin(BaseAdmin):
     inlines = (DataParameterInline,)
