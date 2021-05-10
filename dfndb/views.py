@@ -21,7 +21,7 @@ class DataListView(ListView):
 class ParametersAPIView(ListCreateAPIView):
     """API for getting and creating parameters.
 
-    TODO: Do we really want an API for this?
+    TODO: Removed from URLS. Do we really want an API for this?
     """
 
     queryset = Parameter.objects.all()

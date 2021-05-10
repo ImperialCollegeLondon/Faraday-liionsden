@@ -15,13 +15,13 @@
     <tr><td>data files count</td><td>{{ object.data_files.count }} </td></tr>
   </table>
 
-  <h3>Data files:</h3>
-  <ul>
-  {% for file in object.data_files.all %}
-    <li><a href="{% url 'viewData' file.id %}">{{ file }}</a></li>
-  {% endfor %}
-    <li><a href="upload_file">Upload new data file</a>
-  </ul>
+{#  <h3>Data files:</h3>#}
+{#  <ul>#}
+{#  {% for file in object.data_files.all %}#}
+{#    <li><a href="{% url 'viewData' file.id %}">{{ file }}</a></li>#}
+{#  {% endfor %}#}
+{#    <li><a href="upload_file">Upload new data file</a>#}
+{#  </ul>#}
 
 </div>
 

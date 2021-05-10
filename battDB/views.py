@@ -55,7 +55,7 @@ class TemplateView(TemplateResponseMixin, ContextMixin, View):
 
 
 def index(request):
-    return redirect("/admin")
+    return redirect("/exps")
 
 
 def plotData(request):
