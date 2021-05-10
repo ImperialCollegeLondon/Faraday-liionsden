@@ -52,4 +52,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: docker.pkg.github.com/imperialcollegelondon/faraday-liionsden/liionsden
+          tags: docker.pkg.github.com/imperialcollegelondon/faraday-liionsden/liionsden:latest
