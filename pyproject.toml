@@ -2,7 +2,7 @@
 exclude = "venv/|battDB/migrations/|common/migrations/|dfndb/migrations/|other/|data/"
 
 [tool.isort]
-known_third_party = ["django", "harvester", "idutils", "marshmallow", "marshmallow_dataclass", "matplotlib", "mpld3", "mptt", "numpy", "pandas", "preparenovonix", "psutil", "requests", "rest_framework", "watchdog", "xlrd", "yaml"]
+known_third_party = ["django", "idutils", "matplotlib", "mpld3", "mptt", "numpy", "pandas", "preparenovonix", "rest_framework", "xlrd", "yaml"]
 line_length = 88
 multi_line_output = 3
 include_trailing_comma = true
