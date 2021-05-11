@@ -100,13 +100,6 @@ if os.environ.get("GITHUB_WORKFLOW"):
         }
     }
 
-
-# STATICFILES_FINDERS = {
-#      'django.contrib.staticfiles.finders.FileSystemFinder',
-#      'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#      'djangular.finders.NamespacedAngularAppDirectoriesFinder'
-# }
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -142,6 +135,8 @@ USE_TZ = True
 STATIC_URL = "/static/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 INTERNAL_IPS = [
     "127.0.0.1",
