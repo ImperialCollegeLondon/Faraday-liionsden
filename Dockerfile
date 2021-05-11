@@ -1,9 +1,10 @@
 FROM python:3.8-slim-buster as python
 
 FROM python
-ENV PYTHONUNBUFFERED=1
-WORKDIR /code
-COPY requirements.txt /code/
+EXPOSE 8000
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY . /code/
+COPY --chown=nobody . /usr/src/app
+WORKDIR /usr/src/app
+USER nobody
 RUN python manage.py collectstatic --no-input

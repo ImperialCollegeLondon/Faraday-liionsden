@@ -133,17 +133,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = "/static/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
-
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
-
-# DEBUG_TOOLBAR_PANELS = {
-#     'debug_toolbar.panels.profiling.ProfilingPanel',
-# }
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
