@@ -5,7 +5,6 @@
 !liionsden
 !galvanalyser
 !templates
-!statictiles
 !data
 data/db/*
 !manage.py
