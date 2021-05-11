@@ -1,0 +1,11 @@
+*
+!battDB
+!common
+!dfndb
+!liionsden
+!galvanalyser
+!templates
+!data
+data/db/*
+!manage.py
+!requirements.txt
