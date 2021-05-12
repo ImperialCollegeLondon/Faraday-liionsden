@@ -9,8 +9,7 @@ from django.urls import reverse
 
 import common.models as cm
 import dfndb.models as dfn
-
-from .utils import parse_data_file
+from parsers import get_available_parsers, parse_data_file
 
 
 class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
@@ -252,20 +251,12 @@ class Parser(cm.BaseModelMandatoryName):
      https://stackoverflow.com/q/46430471/3778792 combined with some pandas magic.
     """
 
-    FORMAT_CHOICES = [
-        ("none", "None"),
-        ("auto", "Auto-detect"),
-        ("csv", "Generic CSV/TSV"),
-        ("biologic", "Biologic CSV/TSV/MPT"),
-        ("maccor", "Maccor XLS/XLSX"),
-        ("ivium", "Ivium TXT"),
-        ("novonix", "Novonix TXT"),
-    ]
+    FORMAT_CHOICES = [("none", "None")] + get_available_parsers()
     file_format = models.CharField(
         max_length=20,
-        default="auto",
+        default="none",
         choices=FORMAT_CHOICES,
-        help_text="File format override, or use 'auto' to attempt detection",
+        help_text="File format",
     )
     parameters = models.ManyToManyField(dfn.Parameter, through="SignalType")
 
@@ -466,13 +457,29 @@ class ExperimentDataFile(cm.BaseModel):
                 self.name = "Unnamed data set"
         if self.file_exists() and self.raw_data_file.parse:
             cols = [c.col_name for c in self.use_parser.columns.all().order_by("order")]
-            parser = parse_data_file(self, columns=cols)
-            gen = parser.get_data_generator_for_columns(self.parsed_columns(), 10)
+            filepath = "/".join(
+                [
+                    self.raw_data_file.file.storage.base_location,
+                    self.raw_data_file.file.name,
+                ]
+            )
+            file_format = self.use_parser.file_format
+            parsed_file = parse_data_file(filepath, file_format, 10, columns=cols)
+
+            self.parsed_metadata = parsed_file["metadata"]
+            self.attributes["file_columns"] = parsed_file["file_columns"]
+            self.attributes["parsed_columns"] = parsed_file["parsed_columns"]
+            self.attributes["missing_columns"] = parsed_file["missing_columns"]
+            self.attributes["file_rows"] = parsed_file["file_rows"]
+            self.attributes["range_config"] = parsed_file["range_config"]
             self.ts_headers = self.parsed_columns()
-            self.ts_data = list(gen)
+            self.ts_data = parsed_file["data"]
+
+            # This needs to be reviewed to avoid a recursion loop
+            self.save()
+
             if self.is_parsed():
                 self.create_ranges()
-            del parser
 
         super().clean()
 

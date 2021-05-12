@@ -1,20 +1,22 @@
 import logging
 import os
-from abc import ABC
-from typing import Dict, Generator, Iterable, Set
+from typing import Dict, Generator, Iterable, List
 
 import xlrd
 from xlrd.sheet import Cell
 
-from galvanalyser.harvester import battery_exceptions
-from galvanalyser.harvester.parsers.parser import Parser
+from .battery_exceptions import EmptyFileError
+from .parser import Parser
 
 
-class MaccorXLSParser(Parser, ABC):
+class MaccorXLSParser(Parser):
     """
     Parser for Maccor excel raw data
     Based on maccor_functions by Luke Pitt
     """
+
+    name = "maccor"
+    description = "Maccor XLS/XLSX"
 
     def __init__(self, file_path: str) -> None:
         """Initialises the XLS parser for Maccor"""
@@ -118,7 +120,7 @@ class MaccorXLSParser(Parser, ABC):
     def get_metadata(self) -> (Dict, Dict):
         sheet = self.workbook.sheet_by_index(0)
         if sheet.ncols < 1 or sheet.nrows < 2:
-            raise battery_exceptions.EmptyFileError()
+            raise EmptyFileError()
 
         metadata = {}
 
@@ -145,7 +147,7 @@ class MaccorXLSParser(Parser, ABC):
         return metadata, column_info
 
     def get_data_generator_for_columns(
-        self, columns: Set, first_data_row: int, col_mapping: Dict = None
+        self, columns: List, first_data_row: int, col_mapping: Dict = None
     ) -> Generator[Dict, None, None]:
         """
         Creates a generator for accessing all data in a maccor file row by row for the desired
@@ -181,19 +183,3 @@ class MaccorXLSParser(Parser, ABC):
             return float(value.replace(",", ""))
         else:
             return value
-
-
-class MaccorTSVParser(Parser, ABC):
-    def __init__(self, file_path: str) -> None:
-        super().__init__(file_path)
-
-    def get_metadata(self) -> None:
-        pass
-
-
-class MaccorCSVParser(Parser, ABC):
-    def __init__(self, file_path: str) -> None:
-        super().__init__(file_path)
-
-    def get_metadata(self) -> None:
-        pass
