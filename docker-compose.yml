@@ -17,7 +17,7 @@ services:
   web:
     build: .
     environment:
-      - DJANGO_DEBUG
+      - LOGGING_FILE=/usr/src/app/log/liionsden
     command:
       - sh
       - -c
@@ -26,6 +26,7 @@ services:
         python manage.py runserver 0:8000
     volumes:
       - .:/usr/src/app
+      - ./log:/usr/src/app/log
     ports:
       - 127.0.0.1:8000:8000
     depends_on:
