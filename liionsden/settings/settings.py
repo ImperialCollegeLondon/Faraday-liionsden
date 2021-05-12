@@ -10,32 +10,24 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 import os
+import tempfile
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get(
-    "SECRET_KEY", "3=)^c#z8vm5u7-qapuzms2#@^a22oaf^pvl&c$_60crxasq*le"
-)
+SECRET_KEY = "3=)^c#z8vm5u7-qapuzms2#@^a22oaf^pvl&c$_60crxasq*le"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DJANGO_DEBUG") == "True"
+DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"] if DEBUG else ["liionsden.rcs.ic.ac.uk"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 # Application definition
 INSTALLED_APPS = [
-    "rest_framework",
-    "rest_framework.authtoken",
-    "django_extensions",
-    "mptt",
-    "battDB.apps.BattdbConfig",
-    "common.apps.CommonConfig",
-    "dfndb.apps.DfndbConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -89,16 +81,7 @@ DATABASES = {
 }
 
 if os.environ.get("GITHUB_WORKFLOW"):
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": "postgres",
-            "USER": "postgres",
-            "PASSWORD": "postgres",
-            "HOST": "127.0.0.1",
-            "PORT": "5432",
-        }
-    }
+    DATABASES["default"]["HOST"] = "127.0.0.1"
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -111,19 +94,10 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": f"{validation}.NumericPasswordValidator"},
 ]
 
-
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.TokenAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
-    ),
-}
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en-gb"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_L10N = True
@@ -132,14 +106,46 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+STATIC_URL = "/static/"
+
+# App-specific overrides
+
+INSTALLED_APPS += [
+    "rest_framework",
+    "rest_framework.authtoken",
+    "django_extensions",
+    "mptt",
+    "battDB.apps.BattdbConfig",
+    "common.apps.CommonConfig",
+    "dfndb.apps.DfndbConfig",
+]
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ),
+}
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
-
+DEFAULT_FROM_EMAIL = "noreply@imperial.ac.uk"
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {"format": "{levelname} {asctime} {message}", "style": "{"},
+    },
+    "handlers": {
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": os.getenv(
+                "LOGGING_FILE", os.path.join(tempfile.gettempdir(), "liionsden")
+            ),
+            "formatter": "verbose",
+        },
+        "console": {"class": "logging.StreamHandler", "formatter": "verbose"},
+    },
+    "loggers": {"root": {"handlers": ["file", "console"], "level": "INFO"}},
+}

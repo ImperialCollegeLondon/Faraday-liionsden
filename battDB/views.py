@@ -1,8 +1,3 @@
-import matplotlib.pyplot as plt
-import mpld3
-import numpy as np
-import pandas as pd
-from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
@@ -22,8 +17,6 @@ from .serializers import (
     GeneralSerializer,
     NewDataFileSerializer,
 )
-
-np.random.seed(9615)
 
 
 class AllExperimentsView(ListView):
@@ -56,50 +49,6 @@ class TemplateView(TemplateResponseMixin, ContextMixin, View):
 
 def index(request):
     return redirect("/exps")
-
-
-def plotData(request):
-    """Example of plotting data with mpld3.
-
-    TODO: Remove in the future
-    """
-    # generate df
-    N = 100
-    df = pd.DataFrame(
-        (0.1 * (np.random.random((N, 5)) - 0.5)).cumsum(0),
-        columns=["a", "b", "c", "d", "e"],
-    )
-
-    # plot line + confidence interval
-    fig, ax = plt.subplots()
-    ax.grid(True, alpha=0.3)
-
-    for key, val in df.iteritems():
-        (l,) = ax.plot(val.index, val.values, label=key)
-        ax.fill_between(
-            val.index,
-            val.values * 0.5,
-            val.values * 1.5,
-            color=l.get_color(),
-            alpha=0.4,
-        )
-
-    # define interactive legend
-    handles, labels = ax.get_legend_handles_labels()  # return lines and labels
-    interactive_legend = mpld3.plugins.InteractiveLegendPlugin(
-        zip(handles, ax.collections),
-        labels,
-        alpha_unsel=0.5,
-        alpha_over=1.5,
-        start_visible=True,
-    )
-    mpld3.plugins.connect(fig, interactive_legend)
-
-    ax.set_xlabel("x")
-    ax.set_ylabel("y")
-    ax.set_title("Interactive legend", size=20)
-    g = mpld3.fig_to_html(fig, template_type="simple")
-    return HttpResponse(g)
 
 
 class UploadFileView(GenericAPIView):

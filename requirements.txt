@@ -1,11 +1,7 @@
 pandas
 psycopg2-binary
 maya
-mpld3
 django_jsoneditor
-matplotlib
-psutil
-numpy >= 1.19
 Django >= 1.9
 djangorestframework
 preparenovonix
@@ -13,9 +9,7 @@ PyYAML
 xlrd
 django-extensions
 django-ipware
-pydotplus
 coreapi-cli
 django-mptt
 idutils
-jsonschema
-wheel
+whitenoise
