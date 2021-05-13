@@ -7,7 +7,7 @@ import yaml
 from pandas.core.dtypes.common import is_numeric_dtype
 
 from .battery_exceptions import UnsupportedFileTypeError
-from .parser import Parser
+from .parser_base import Parser
 
 """
 Based on the test_resources/parser_data/BioLogic_full.txt file

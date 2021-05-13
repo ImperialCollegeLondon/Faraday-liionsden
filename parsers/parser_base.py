@@ -18,6 +18,8 @@ class Parser(abc.ABC):
     def __init_subclass__(cls: Type[Parser]):
         if len(cls.name) == 0:
             raise ValueError("A Parser subclass cannot have an empty attribute 'name'.")
+        elif cls.name in KNOWN_PARSERS:
+            raise ValueError(f"A parser named '{cls.name}' already exists.")
         KNOWN_PARSERS[cls.name] = cls
 
     @abc.abstractmethod

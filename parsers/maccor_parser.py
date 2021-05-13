@@ -6,7 +6,7 @@ import xlrd
 from xlrd.sheet import Cell
 
 from .battery_exceptions import EmptyFileError
-from .parser import Parser
+from .parser_base import Parser
 
 
 class MaccorXLSParser(Parser):

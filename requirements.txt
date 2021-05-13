@@ -1,6 +1,5 @@
 pandas
 psycopg2-binary
-maya
 django_jsoneditor
 Django >= 1.9
 djangorestframework

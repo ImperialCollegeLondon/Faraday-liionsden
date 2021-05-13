@@ -481,8 +481,6 @@ class ExperimentDataFile(cm.BaseModel):
             if self.is_parsed():
                 self.create_ranges()
 
-        super().clean()
-
     class Meta:
         verbose_name = "Data File"
 
