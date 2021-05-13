@@ -406,19 +406,19 @@ class ExperimentDataFile(cm.BaseModel):
         return self.ranges.count()
 
     def file_rows(self):
-        return self.attributes.get("file_rows") or 0
+        return self.attributes.get("total_rows", 0)
 
     def parsed_ranges(self):
-        return self.attributes.get("parsed_ranges") or []
+        return self.attributes.get("parsed_ranges", [])
 
     def parsed_columns(self):
-        return self.attributes.get("parsed_columns") or []
+        return self.attributes.get("parsed_columns", [])
 
     def missing_columns(self):
-        return self.attributes.get("missing_columns") or []
+        return self.attributes.get("missing_columns", [])
 
     def file_columns(self):
-        return self.attributes.get("file_columns") or []
+        return self.attributes.get("file_columns", [])
 
     def is_parsed(self):
         return self.raw_data_file.parse and len(self.file_columns()) > 0
@@ -439,7 +439,7 @@ class ExperimentDataFile(cm.BaseModel):
         return "N/A"
 
     def create_ranges(self):
-        ranges = self.attributes.get("range_config") or dict()
+        ranges = self.attributes.get("range_config", dict())
         for name, config in ranges.items():
             rng_q = DataRange.objects.get_or_create(dataFile=self, label=name)
             rng = rng_q[0]
@@ -455,6 +455,7 @@ class ExperimentDataFile(cm.BaseModel):
                 self.name = str(self.raw_data_file)
             except UploadedFile.DoesNotExist:
                 self.name = "Unnamed data set"
+
         if self.file_exists() and self.raw_data_file.parse:
             cols = [
                 c.col_name
