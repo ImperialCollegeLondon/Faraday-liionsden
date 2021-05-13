@@ -9,7 +9,7 @@ from django.urls import reverse
 
 import common.models as cm
 import dfndb.models as dfn
-from parsers import get_available_parsers, parse_data_file
+from parsers import available_parsers, parse_data_file
 
 
 class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
@@ -251,7 +251,7 @@ class Parser(cm.BaseModelMandatoryName):
      https://stackoverflow.com/q/46430471/3778792 combined with some pandas magic.
     """
 
-    FORMAT_CHOICES = [("none", "None")] + get_available_parsers()
+    FORMAT_CHOICES = [("none", "None")] + available_parsers()
     file_format = models.CharField(
         max_length=20,
         default="none",

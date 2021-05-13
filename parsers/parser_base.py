@@ -7,24 +7,25 @@ from warnings import warn
 import pandas.errors
 from django.core.exceptions import ValidationError
 
-KNOWN_PARSERS: Dict[str, Type[Parser]] = {}
+KNOWN_PARSERS: Dict[str, Type[ParserBase]] = {}
 
 
-class Parser(abc.ABC):
+class ParserBase(abc.ABC):
 
     name: str = ""
     description: str = ""
 
-    def __init_subclass__(cls: Type[Parser]):
+    def __init_subclass__(cls: Type[ParserBase]):
         if len(cls.name) == 0:
-            raise ValueError("A Parser subclass cannot have an empty attribute 'name'.")
+            msg = "A ParserBase subclass cannot have an empty attribute 'name'."
+            raise ValueError(msg)
         elif cls.name in KNOWN_PARSERS:
             raise ValueError(f"A parser named '{cls.name}' already exists.")
         KNOWN_PARSERS[cls.name] = cls
 
     @abc.abstractmethod
     def __init__(self, file_path: str) -> None:
-        self.file_path = file_path
+        pass
 
     @abc.abstractmethod
     def get_metadata(self) -> (Dict, Dict):
@@ -37,34 +38,32 @@ class Parser(abc.ABC):
         pass
 
 
-class DummyParser(Parser):
+class DummyParser(ParserBase):
 
     name = "Dummy"
     description = "Dummy parser that does nothing"
 
     def __init__(self, file_path: str) -> None:
-        super(DummyParser, self).__init__(file_path)
         self.file_path = file_path
 
-    def get_metadata(self):
+    def get_metadata(self) -> (Dict, Dict):
         return {"num_rows": 0}, {}
 
     def get_data_generator_for_columns(
-        self, columns=(), first_data_row=0, col_mapping=None
+        self, columns: List, first_data_row: int, col_mapping: Optional[Dict] = None
     ) -> List:
         return []
 
 
-def get_parser(file_path: str, file_format: str) -> Parser:
+def get_parser(file_format: str) -> Type[ParserBase]:
     """Provides the chosen parser or the Dummy one if none found.
 
     Args:
-        file_path: Path to the file to parse.
         file_format: String indicating the format of the file. Should match one of the
             known parsers.
 
     Warnings:
-        UserWarning if the chosen parser is not found and the Dummy one is provided
+        RuntimeWarning if the chosen parser is not found and the Dummy one is provided
             instead.
 
     Returns:
@@ -74,10 +73,10 @@ def get_parser(file_path: str, file_format: str) -> Parser:
     if parser is None:
         warn(f"No parser available for file format {file_format}!", RuntimeWarning)
         parser = DummyParser
-    return parser(file_path)
+    return parser
 
 
-def get_available_parsers() -> List[Tuple[str, str]]:
+def available_parsers() -> List[Tuple[str, str]]:
     """Generates a list of available parser names and descriptions.
 
     Returns:
@@ -110,7 +109,7 @@ def parse_data_file(
         A dictionary containing the following keys: 'metadata', 'file_columns',
         'parsed_columns', 'missing_columns', 'total_rows', 'range_config' and 'data'.
     """
-    parser = get_parser(file_path, file_format)
+    parser = get_parser(file_format)(file_path)
 
     try:
         metadata, cols = parser.get_metadata()

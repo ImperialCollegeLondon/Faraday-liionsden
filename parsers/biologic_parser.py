@@ -7,7 +7,7 @@ import yaml
 from pandas.core.dtypes.common import is_numeric_dtype
 
 from .battery_exceptions import UnsupportedFileTypeError
-from .parser_base import Parser
+from .parser_base import ParserBase
 
 """
 Based on the test_resources/parser_data/BioLogic_full.txt file
@@ -49,9 +49,9 @@ COLUMN_NAME_MAPPING = {
 }
 
 
-class BiologicCSVnTSVParser(Parser):
+class BiologicCSVnTSVParser(ParserBase):
     """
-    Parser for the csv and tsv output of the BioLogic cycler
+    ParserBase for the csv and tsv output of the BioLogic cycler
     """
 
     name = "biologic"
