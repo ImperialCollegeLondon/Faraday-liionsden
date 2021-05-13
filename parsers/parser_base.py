@@ -51,8 +51,8 @@ class DummyParser(ParserBase):
 
     def get_data_generator_for_columns(
         self, columns: List, first_data_row: int, col_mapping: Optional[Dict] = None
-    ) -> List:
-        return []
+    ) -> Generator[Dict, None, None]:
+        return iter([])
 
 
 def get_parser(file_format: str) -> Type[ParserBase]:
