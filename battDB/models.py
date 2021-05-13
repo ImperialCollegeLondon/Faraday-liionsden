@@ -421,7 +421,7 @@ class ExperimentDataFile(cm.BaseModel):
         return self.attributes.get("file_columns") or []
 
     def is_parsed(self):
-        return self.parse and len(self.file_columns()) > 0
+        return self.raw_data_file.parse and len(self.file_columns()) > 0
 
     is_parsed.boolean = True
 
@@ -456,21 +456,24 @@ class ExperimentDataFile(cm.BaseModel):
             except UploadedFile.DoesNotExist:
                 self.name = "Unnamed data set"
         if self.file_exists() and self.raw_data_file.parse:
-            cols = [c.col_name for c in self.use_parser.columns.all().order_by("order")]
+            cols = [
+                c.col_name
+                for c in self.raw_data_file.use_parser.columns.all().order_by("order")
+            ]
             filepath = "/".join(
                 [
                     self.raw_data_file.file.storage.base_location,
                     self.raw_data_file.file.name,
                 ]
             )
-            file_format = self.use_parser.file_format
+            file_format = self.raw_data_file.use_parser.file_format
             parsed_file = parse_data_file(filepath, file_format, 10, columns=cols)
 
             self.parsed_metadata = parsed_file["metadata"]
             self.attributes["file_columns"] = parsed_file["file_columns"]
             self.attributes["parsed_columns"] = parsed_file["parsed_columns"]
             self.attributes["missing_columns"] = parsed_file["missing_columns"]
-            self.attributes["file_rows"] = parsed_file["file_rows"]
+            self.attributes["total_rows"] = parsed_file["total_rows"]
             self.attributes["range_config"] = parsed_file["range_config"]
             self.ts_headers = self.parsed_columns()
             self.ts_data = parsed_file["data"]
