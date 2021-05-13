@@ -53,7 +53,7 @@ class TestDummyParser(TestCase):
         self.assertEqual(cols, exp_cols)
 
     def test_get_data_generator_for_columns(self):
-        self.assertEqual(self.parser.get_data_generator_for_columns([], 10), [])
+        self.assertEqual(list(self.parser.get_data_generator_for_columns([], 10)), [])
 
 
 class TestFunctions(TestCase):
