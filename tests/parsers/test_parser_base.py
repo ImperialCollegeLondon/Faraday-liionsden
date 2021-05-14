@@ -6,7 +6,7 @@ class TestParserBase(TestCase):
     def test_abstract_methods(self):
         from parsers.parser_base import ParserBase
 
-        expected = {"__init__", "get_metadata", "get_data_generator_for_columns"}
+        expected = {"get_metadata", "get_data_generator_for_columns"}
         self.assertEqual(ParserBase.__abstractmethods__, expected)
 
     def test_register_subclass(self):
@@ -53,7 +53,7 @@ class TestDummyParser(TestCase):
         self.assertEqual(cols, exp_cols)
 
     def test_get_data_generator_for_columns(self):
-        self.assertEqual(list(self.parser.get_data_generator_for_columns([], 10)), [])
+        self.assertEqual(list(self.parser.get_data_generator_for_columns([])), [])
 
 
 class TestFunctions(TestCase):

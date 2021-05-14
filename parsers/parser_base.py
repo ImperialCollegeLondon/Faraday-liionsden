@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import abc
-from typing import Dict, Generator, List, Optional, Tuple, Type
+from pathlib import Path
+from typing import Dict, Generator, List, Optional, Tuple, Type, Union
 from warnings import warn
 
 import pandas.errors
@@ -23,9 +24,8 @@ class ParserBase(abc.ABC):
             raise ValueError(f"A parser named '{cls.name}' already exists.")
         KNOWN_PARSERS[cls.name] = cls
 
-    @abc.abstractmethod
-    def __init__(self, file_path: str) -> None:  # noqa
-        pass
+    def __init__(self, file_path: Union[Path, str]):
+        self.file_path = Path(file_path)
 
     @abc.abstractmethod
     def get_metadata(self) -> (Dict, Dict):
@@ -33,7 +33,7 @@ class ParserBase(abc.ABC):
 
     @abc.abstractmethod
     def get_data_generator_for_columns(
-        self, columns: List, first_data_row: int, col_mapping: Optional[Dict] = None
+        self, columns: List, first_data_row: int = 0, col_mapping: Optional[Dict] = None
     ) -> Generator[Dict, None, None]:
         pass
 
@@ -43,14 +43,11 @@ class DummyParser(ParserBase):
     name = "Dummy"
     description = "Dummy parser that does nothing"
 
-    def __init__(self, file_path: str) -> None:
-        self.file_path = file_path
-
     def get_metadata(self) -> (Dict, Dict):
         return {"num_rows": 0}, {}
 
     def get_data_generator_for_columns(
-        self, columns: List, first_data_row: int, col_mapping: Optional[Dict] = None
+        self, columns: List, first_data_row: int = 0, col_mapping: Optional[Dict] = None
     ) -> Generator[Dict, None, None]:
         return iter([])  # noqa
 
@@ -88,7 +85,7 @@ def available_parsers() -> List[Tuple[str, str]]:
 def parse_data_file(
     file_path: str,
     file_format: str,
-    first_data_row: int,
+    first_data_row: int = 0,
     columns=("time/s", "Ecell/V", "I/mA"),
     col_mapping: Optional[Dict[str, str]] = None,
 ) -> Dict:
