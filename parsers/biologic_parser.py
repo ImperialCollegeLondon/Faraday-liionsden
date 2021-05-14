@@ -100,6 +100,19 @@ class BiologicCSVnTSVParser(ParserBase):
             for k in self.data.columns
         }
 
+    def _get_file_header(self) -> List[str]:
+        """Extracts the header from the Biologic file.
+
+        Returns:
+            A list of rows for the header, without the termination characters and
+            empty lines.
+        """
+        with open(self.file_path, encoding=self.encoding) as f:
+            header = list(
+                filter(len, (f.readline().strip("\n") for _ in range(self.skip_rows)))
+            )
+        return header  # noqa
+
     def get_metadata(self) -> (Dict, Dict):
         """Obtain all the metadata from the header of the file and related to the cycler
         and experimental conditions.
@@ -108,21 +121,18 @@ class BiologicCSVnTSVParser(ParserBase):
             Two dictionaries, one with the actual metadata and the other with column
             information (the output of _get_column_info)
         """
+        header = self._get_file_header()
+
         metadata = {
             "Dataset_Name": self.file_path.stem,
-            "dataset_size": os.path.getsize(self.file_path),
-            "num_rows": len(self.data.index),
+            "dataset_size": self.file_path.stat().st_size,
+            "num_rows": len(self.data),
             "data_start": self.skip_rows,
             "first_sample_no": self.skip_rows + 1,
+            "file_header": header,
+            "Device Metadata": header_to_yaml(header),
             "warnings": [],
         }
-
-        with open(self.file_path, encoding=self.encoding) as f:
-            metadata["file_header"] = list(
-                filter(len, (f.readline().strip("\n") for _ in range(self.skip_rows)))
-            )
-
-        metadata["Device Metadata"] = header_to_yaml(metadata["file_header"])
 
         if not self.MANDATORY_COLUMNS.issubset(self.data.columns):
             metadata["warnings"].append(
