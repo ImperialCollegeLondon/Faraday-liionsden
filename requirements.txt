@@ -12,3 +12,4 @@ coreapi-cli
 django-mptt
 idutils
 whitenoise
+model_bakery

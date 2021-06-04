@@ -103,7 +103,7 @@ class ExperimentDataInline(common.admin.TabularInline):
 class ExperimentDeviceInline(common.admin.TabularInline):
     model = ExperimentDevice
     extra = 1
-    readonly_fields = ["getSerialNo"]
+    readonly_fields = ["get_serial_no"]
 
 
 class ExperimentAdmin(common.admin.BaseAdmin):
