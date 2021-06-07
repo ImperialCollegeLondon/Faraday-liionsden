@@ -1,4 +1,4 @@
-from unittest import expectedFailure
+from types import SimpleNamespace
 
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
@@ -231,34 +231,117 @@ class TestDataFileInline(TestCase):
         )
 
 
-@expectedFailure
 class TestDataRangeInline(TestCase):
+    def setUp(self):
+        self.site = AdminSite()
+
+    def test_definition(self):
+        from battDB.admin import DataRangeInline
+        from battDB.models import DataRange
+
+        ma = DataRangeInline(DataRange, self.site)
+        self.assertEqual(ma.model, DataRange)
+        self.assertEqual(ma.get_extra(request), 0)
+        self.assertEqual(ma.get_exclude(request), ["attributes"])
+        self.assertEqual(
+            ma.get_readonly_fields(request), ["size", "columns", "get_graph_link"]
+        )
+
     def test_size(self):
-        self.fail()
+        from battDB.admin import DataRangeInline
+        from battDB.models import DataRange
+
+        obj = baker.make("battDB.ExperimentDataFile")
+        ma = DataRangeInline(DataRange, self.site)
+        self.assertEqual(ma.size(obj), "N/A")
 
     def test_get_graph_link(self):
-        self.fail()
+        from battDB.admin import DataRangeInline
+        from battDB.models import DataRange
+
+        obj = baker.make("battDB.ExperimentDataFile")
+        ma = DataRangeInline(DataRange, self.site)
+        self.assertEqual(ma.get_graph_link(obj), "N/A")
 
     def test_columns(self):
-        self.fail()
+        from battDB.admin import DataRangeInline
+        from battDB.models import DataRange
+
+        obj = baker.make("battDB.ExperimentDataFile")
+        ma = DataRangeInline(DataRange, self.site)
+        self.assertEqual(ma.columns(obj), "None")
 
 
-@expectedFailure
 class TestDataAdmin(TestCase):
+    def setUp(self):
+        from battDB.admin import DataAdmin
+        from battDB.models import ExperimentDataFile
+
+        self.site = AdminSite()
+        self.ma = DataAdmin(ExperimentDataFile, self.site)
+        self.obj = SimpleNamespace()
+
+    def test_definition(self):
+        from battDB.admin import DataFileInline, DataRangeInline, DeviceDataInline
+        from battDB.models import ExperimentDataFile
+
+        obj = baker.make("battDB.ExperimentDataFile")
+        self.assertEqual(self.ma.model, ExperimentDataFile)
+        self.assertEqual(
+            self.ma.get_inlines(request, obj),
+            [
+                DataFileInline,
+                DeviceDataInline,
+                DataRangeInline,
+            ],
+        )
+        self.assertIn("experiment", self.ma.get_list_filter(request))
+        self.assertEqual(
+            self.ma.get_list_display(request),
+            [
+                "__str__",
+                "user_owner",
+                "get_file_link",
+                "get_experiment_link",
+                "file_data",
+                "parsed_data",
+                "created_on",
+                "status",
+            ],
+        )
+        for d in [
+            "is_parsed",
+            "get_experiment_link",
+            "file_hash",
+            "file_columns",
+            "num_ranges",
+        ]:
+            self.assertIn(d, self.ma.get_readonly_fields(request))
+
     def test_file_data(self):
-        self.fail()
+        self.obj.file_rows = lambda: 3
+        self.obj.file_columns = lambda: 4 * ["col"]
+        self.assertEqual(self.ma.file_data(self.obj), "3x4")
 
     def test_parsed_data(self):
-        self.fail()
+        parsed = ["col1", "col2"]
+        missing = ["col3", "col4"]
+        self.obj.parsed_columns = lambda: parsed
+        self.obj.missing_columns = lambda: missing
+        self.assertEqual(
+            self.ma.parsed_data(self.obj),
+            f"{len(parsed)}/{len(parsed) + len(missing)}: {parsed}",
+        )
 
     def test_get_experiment_link(self):
-        self.fail()
+        obj = baker.make("battDB.ExperimentDataFile")
+        self.assertEqual(self.ma.get_experiment_link(obj), "N/A")
 
     def test_get_file_link(self):
-        self.fail()
+        obj = baker.make("battDB.ExperimentDataFile")
+        self.assertEqual(self.ma.get_file_link(obj), "N/A")
 
 
-@expectedFailure
 class TestFolderAdmin(TestCase):
     pass
 
