@@ -1,23 +1,6 @@
-from django.core.exceptions import ObjectDoesNotExist
-from django.utils.encoding import smart_text
 from rest_framework import serializers
 
-from .models import Experiment, ExperimentDataFile, UploadedFile
-
-
-class CreatableSlugRelatedField(serializers.SlugRelatedField):
-    """https://stackoverflow.com/questions/28009829/creating-and-saving-foreign-key-
-    objects-using-a-slugrelatedfield."""
-
-    def to_internal_value(self, data):
-        try:
-            return self.get_queryset().get_or_create(**{self.slug_field: data})[0]
-        except ObjectDoesNotExist:
-            self.fail(
-                "does_not_exist", slug_name=self.slug_field, value=smart_text(data)
-            )
-        except (TypeError, ValueError):
-            self.fail("invalid")
+from .models import DataRange, Experiment, ExperimentDataFile, UploadedFile
 
 
 class DataFileSerializer(serializers.ModelSerializer):
@@ -45,13 +28,10 @@ class ExperimentSerializer(serializers.ModelSerializer):
 
 
 class DataRangeSerializer(serializers.ModelSerializer):
-    """Serializer for existing data range objects.
-
-    FIXME: Seems identical to ExperimentSerializer
-    """
+    """Serializer for existing data range objects."""
 
     class Meta:
-        model = Experiment
+        model = DataRange
         exclude = []
 
 
@@ -66,10 +46,7 @@ class FileHashSerializer(serializers.ModelSerializer):
 
 
 class GeneralSerializer(serializers.ModelSerializer):
-    """General purpose serializer.
-
-    FIXME: What is this for?
-    """
+    """General purpose serializer."""
 
     class Meta:
         model = None

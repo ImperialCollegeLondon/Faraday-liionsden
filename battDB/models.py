@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime
 
 import django.core.exceptions
@@ -9,8 +11,7 @@ from django.urls import reverse
 
 import common.models as cm
 import dfndb.models as dfn
-
-from .utils import parse_data_file
+from parsers import available_parsers, parse_data_file
 
 
 class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
@@ -24,12 +25,13 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
     abstract = models.BooleanField(
         default=False,
         verbose_name="Abstract Specification",
-        help_text="This specifies an abstract device, e.g. 'Cell' with child members"
-        " such as"
-        "'Positive Electrode, Negative Electrode, Electrolyte etc. "
-        "If this is set to True, then all metadata declared here must be "
-        "overridden in child classes. An abstract specification cannot be used "
-        "to define a physical device or batch.",
+        help_text="""
+        This specifies an abstract device, e.g. 'Cell' with child members
+        such as 'Positive Electrode, Negative Electrode, Electrolyte etc. 
+        If this is set to True, then all metadata declared here must be 
+        overridden in child classes. An abstract specification cannot be used
+        to define a physical device or batch.
+        """,
     )
     complete = models.BooleanField(
         default=False,
@@ -43,16 +45,13 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         blank=True,
         limit_choices_to={"abstract": True},
         related_name="specifies",
-        help_text="Device type. e.g. Cell, Module, Battery Pack. <BR>"
-        "An abstract specification cannot have a device type - "
-        "they define the device types.",
+        help_text="""Device type. e.g. Cell, Module, Battery Pack. An abstract 
+        specification cannot have a device type -  they define the device types.""",
     )
 
     def clean(self):
         if self.abstract and self.device_type is not None:
-            raise django.core.exceptions.ValidationError(
-                "Abstract specifications cannot have a device type"
-            )
+            raise ValidationError("Abstract specifications cannot have a device type")
         return super(DeviceSpecification, self).clean()
 
     class Meta:
@@ -136,7 +135,7 @@ class Device(cm.HasAttributes, cm.HasNotes):
     def get_used_in_exps(self):
         """Provide the experiments in which the device is used."""
         return ExperimentDevice.objects.filter(
-            deviceBatch=self.batch, batch_seq=self.seq_num
+            batch=self.batch, batch_sequence=self.seq_num
         )
 
     def last_measured_state_of_health(self):
@@ -252,20 +251,12 @@ class Parser(cm.BaseModelMandatoryName):
      https://stackoverflow.com/q/46430471/3778792 combined with some pandas magic.
     """
 
-    FORMAT_CHOICES = [
-        ("none", "None"),
-        ("auto", "Auto-detect"),
-        ("csv", "Generic CSV/TSV"),
-        ("biologic", "Biologic CSV/TSV/MPT"),
-        ("maccor", "Maccor XLS/XLSX"),
-        ("ivium", "Ivium TXT"),
-        ("novonix", "Novonix TXT"),
-    ]
+    FORMAT_CHOICES = [("none", "None")] + available_parsers()
     file_format = models.CharField(
         max_length=20,
-        default="auto",
+        default="none",
         choices=FORMAT_CHOICES,
-        help_text="File format override, or use 'auto' to attempt detection",
+        help_text="File format",
     )
     parameters = models.ManyToManyField(dfn.Parameter, through="SignalType")
 
@@ -415,22 +406,22 @@ class ExperimentDataFile(cm.BaseModel):
         return self.ranges.count()
 
     def file_rows(self):
-        return self.attributes.get("file_rows") or 0
+        return self.attributes.get("total_rows", 0)
 
     def parsed_ranges(self):
-        return self.attributes.get("parsed_ranges") or []
+        return self.attributes.get("parsed_ranges", [])
 
     def parsed_columns(self):
-        return self.attributes.get("parsed_columns") or []
+        return self.attributes.get("parsed_columns", [])
 
     def missing_columns(self):
-        return self.attributes.get("missing_columns") or []
+        return self.attributes.get("missing_columns", [])
 
     def file_columns(self):
-        return self.attributes.get("file_columns") or []
+        return self.attributes.get("file_columns", [])
 
     def is_parsed(self):
-        return self.parse and len(self.file_columns()) > 0
+        return self.file_exists() and len(self.file_columns()) > 0
 
     is_parsed.boolean = True
 
@@ -442,13 +433,13 @@ class ExperimentDataFile(cm.BaseModel):
     file_exists.boolean = True
 
     def file_hash(self):
-        if hasattr(self, "raw_data_file"):
+        if self.file_exists():
             return self.raw_data_file.hash
 
         return "N/A"
 
     def create_ranges(self):
-        ranges = self.attributes.get("range_config") or dict()
+        ranges = self.attributes.get("range_config", dict())
         for name, config in ranges.items():
             rng_q = DataRange.objects.get_or_create(dataFile=self, label=name)
             rng = rng_q[0]
@@ -464,17 +455,35 @@ class ExperimentDataFile(cm.BaseModel):
                 self.name = str(self.raw_data_file)
             except UploadedFile.DoesNotExist:
                 self.name = "Unnamed data set"
+
         if self.file_exists() and self.raw_data_file.parse:
-            cols = [c.col_name for c in self.use_parser.columns.all().order_by("order")]
-            parser = parse_data_file(self, columns=cols)
-            gen = parser.get_data_generator_for_columns(self.parsed_columns(), 10)
+            cols = [
+                c.col_name
+                for c in self.raw_data_file.use_parser.columns.all().order_by("order")
+            ]
+            filepath = "/".join(
+                [
+                    self.raw_data_file.file.storage.base_location,
+                    self.raw_data_file.file.name,
+                ]
+            )
+            file_format = self.raw_data_file.use_parser.file_format
+            parsed_file = parse_data_file(filepath, file_format, 0, columns=cols)
+
+            self.parsed_metadata = parsed_file["metadata"]
+            self.attributes["file_columns"] = parsed_file["file_columns"]
+            self.attributes["parsed_columns"] = parsed_file["parsed_columns"]
+            self.attributes["missing_columns"] = parsed_file["missing_columns"]
+            self.attributes["total_rows"] = parsed_file["total_rows"]
+            self.attributes["range_config"] = parsed_file["range_config"]
             self.ts_headers = self.parsed_columns()
-            self.ts_data = list(gen)
+            self.ts_data = parsed_file["data"]
+
+            # This needs to be reviewed to avoid a recursion loop
+            self.save()
+
             if self.is_parsed():
                 self.create_ranges()
-            del parser
-
-        super().clean()
 
     class Meta:
         verbose_name = "Data File"
@@ -527,9 +536,9 @@ class ExperimentDevice(models.Model):
         ExperimentDataFile, null=True, blank=True, on_delete=models.SET_NULL
     )
 
-    # TODO: implement id_to_serialno and serialno_to_id functions
-    def getSerialNo(self):
-        return "FIXME"
+    def get_serial_no(self):
+        """ TODO: implement id_to_serialno and serialno_to_id functions. """
+        raise NotImplementedError
 
     def clean(self):
         if self.batch is not None and self.batch_sequence > self.batch.batch_size:
@@ -604,7 +613,7 @@ class DataColumn(models.Model):
             self.resample_n = 1
 
     def experiment(self):
-        return self.data_file.experiment()
+        return self.data_file.experiment
 
     class Meta:
         unique_together = [["device", "data_file"], ["column_name", "data_file"]]

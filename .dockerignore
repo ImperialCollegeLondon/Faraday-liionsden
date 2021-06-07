@@ -3,7 +3,7 @@
 !common
 !dfndb
 !liionsden
-!galvanalyser
+!parsers
 !templates
 !data
 data/db/*

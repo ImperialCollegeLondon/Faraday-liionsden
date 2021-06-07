@@ -76,7 +76,6 @@ class BatchInline(common.admin.TabularInline):
     exclude = ["attributes"]
 
 
-# class ThingAdmin(mptt.admin.MPTTModelAdmin):
 class BatchAdmin(common.admin.BaseAdmin, mptt.admin.MPTTModelAdmin):
     list_display = (
         ["__str__"]
@@ -103,7 +102,7 @@ class ExperimentDataInline(common.admin.TabularInline):
 class ExperimentDeviceInline(common.admin.TabularInline):
     model = ExperimentDevice
     extra = 1
-    readonly_fields = ["getSerialNo"]
+    readonly_fields = ["get_serial_no"]
 
 
 class ExperimentAdmin(common.admin.BaseAdmin):
@@ -111,9 +110,7 @@ class ExperimentAdmin(common.admin.BaseAdmin):
     list_display = (
         ["__str__"] + ["devices_", "files_", "cycles_"] + BaseAdmin.list_display_extra
     )
-    inlines = [
-        ExperimentDeviceInline,
-    ]
+    inlines = [ExperimentDeviceInline]
     save_as = True
 
     def data_files_list(self, obj):
@@ -138,7 +135,7 @@ class DeviceConfigInline(common.admin.TabularInline):
 
 class DeviceConfigAdmin(BaseAdmin):
     save_as = True
-    inlines = (DeviceConfigInline,)
+    inlines = [DeviceConfigInline]
 
 
 admin.site.register(
@@ -226,7 +223,7 @@ class DataAdmin(BaseAdmin):
     def file_data(self, obj):
         return "%dx%d" % (obj.file_rows(), len(obj.file_columns()))
 
-    file_data.short_description = "File RxC"
+    file_data.short_description = "Row x Col"
 
     def parsed_data(self, obj):
         parsed = len(obj.parsed_columns())
@@ -234,20 +231,6 @@ class DataAdmin(BaseAdmin):
         return "%d/%d: %s" % (parsed, parsed + missing, obj.parsed_columns())
 
     parsed_data.short_description = "Imported Cols"
-
-    # FIXME: This now breaks because parser is a string.
-    def show_parser(self, obj):
-        if hasattr(obj, "use_parser") and obj.use_parser is not None:
-            return mark_safe(
-                '<a href="{}">{}</a>'.format(
-                    reverse("admin:battDB_parser_change", args=(obj.use_parser.pk,)),
-                    str(obj.use_parser),
-                )
-            )
-        else:
-            return "N/A"
-
-    show_parser.short_description = "Parser Config"
 
     def get_experiment_link(self, obj):
         if hasattr(obj, "experiment") and obj.experiment is not None:
@@ -296,11 +279,13 @@ class FolderAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
 class ParserSignalInline(common.admin.TabularInline):
     model = SignalType
     extra = 1
-    ordering = ("order",)
+    ordering = ["order"]
 
 
 class ParserAdmin(BaseAdmin):
-    inlines = (ParserSignalInline,)
+    inlines = [
+        ParserSignalInline,
+    ]
     save_as = True
 
 
