@@ -76,7 +76,6 @@ class BatchInline(common.admin.TabularInline):
     exclude = ["attributes"]
 
 
-# class ThingAdmin(mptt.admin.MPTTModelAdmin):
 class BatchAdmin(common.admin.BaseAdmin, mptt.admin.MPTTModelAdmin):
     list_display = (
         ["__str__"]
@@ -103,7 +102,7 @@ class ExperimentDataInline(common.admin.TabularInline):
 class ExperimentDeviceInline(common.admin.TabularInline):
     model = ExperimentDevice
     extra = 1
-    readonly_fields = ["getSerialNo"]
+    readonly_fields = ["get_serial_no"]
 
 
 class ExperimentAdmin(common.admin.BaseAdmin):
@@ -111,9 +110,7 @@ class ExperimentAdmin(common.admin.BaseAdmin):
     list_display = (
         ["__str__"] + ["devices_", "files_", "cycles_"] + BaseAdmin.list_display_extra
     )
-    inlines = [
-        ExperimentDeviceInline,
-    ]
+    inlines = [ExperimentDeviceInline]
     save_as = True
 
     def data_files_list(self, obj):
@@ -138,7 +135,7 @@ class DeviceConfigInline(common.admin.TabularInline):
 
 class DeviceConfigAdmin(BaseAdmin):
     save_as = True
-    inlines = (DeviceConfigInline,)
+    inlines = [DeviceConfigInline]
 
 
 admin.site.register(
@@ -282,11 +279,13 @@ class FolderAdmin(mptt.admin.DraggableMPTTAdmin, BaseAdmin):
 class ParserSignalInline(common.admin.TabularInline):
     model = SignalType
     extra = 1
-    ordering = ("order",)
+    ordering = ["order"]
 
 
 class ParserAdmin(BaseAdmin):
-    inlines = (ParserSignalInline,)
+    inlines = [
+        ParserSignalInline,
+    ]
     save_as = True
 
 

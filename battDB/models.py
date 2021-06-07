@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime
 
 import django.core.exceptions
@@ -23,12 +25,13 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
     abstract = models.BooleanField(
         default=False,
         verbose_name="Abstract Specification",
-        help_text="This specifies an abstract device, e.g. 'Cell' with child members"
-        " such as"
-        "'Positive Electrode, Negative Electrode, Electrolyte etc. "
-        "If this is set to True, then all metadata declared here must be "
-        "overridden in child classes. An abstract specification cannot be used "
-        "to define a physical device or batch.",
+        help_text="""
+        This specifies an abstract device, e.g. 'Cell' with child members
+        such as 'Positive Electrode, Negative Electrode, Electrolyte etc. 
+        If this is set to True, then all metadata declared here must be 
+        overridden in child classes. An abstract specification cannot be used
+        to define a physical device or batch.
+        """,
     )
     complete = models.BooleanField(
         default=False,
@@ -42,16 +45,13 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         blank=True,
         limit_choices_to={"abstract": True},
         related_name="specifies",
-        help_text="Device type. e.g. Cell, Module, Battery Pack. <BR>"
-        "An abstract specification cannot have a device type - "
-        "they define the device types.",
+        help_text="""Device type. e.g. Cell, Module, Battery Pack. An abstract 
+        specification cannot have a device type -  they define the device types.""",
     )
 
     def clean(self):
         if self.abstract and self.device_type is not None:
-            raise django.core.exceptions.ValidationError(
-                "Abstract specifications cannot have a device type"
-            )
+            raise ValidationError("Abstract specifications cannot have a device type")
         return super(DeviceSpecification, self).clean()
 
     class Meta:
@@ -135,7 +135,7 @@ class Device(cm.HasAttributes, cm.HasNotes):
     def get_used_in_exps(self):
         """Provide the experiments in which the device is used."""
         return ExperimentDevice.objects.filter(
-            deviceBatch=self.batch, batch_seq=self.seq_num
+            batch=self.batch, batch_sequence=self.seq_num
         )
 
     def last_measured_state_of_health(self):
@@ -421,7 +421,7 @@ class ExperimentDataFile(cm.BaseModel):
         return self.attributes.get("file_columns", [])
 
     def is_parsed(self):
-        return self.raw_data_file.parse and len(self.file_columns()) > 0
+        return self.file_exists() and len(self.file_columns()) > 0
 
     is_parsed.boolean = True
 
@@ -433,7 +433,7 @@ class ExperimentDataFile(cm.BaseModel):
     file_exists.boolean = True
 
     def file_hash(self):
-        if hasattr(self, "raw_data_file"):
+        if self.file_exists():
             return self.raw_data_file.hash
 
         return "N/A"
@@ -536,9 +536,9 @@ class ExperimentDevice(models.Model):
         ExperimentDataFile, null=True, blank=True, on_delete=models.SET_NULL
     )
 
-    # TODO: implement id_to_serialno and serialno_to_id functions
-    def getSerialNo(self):
-        return "FIXME"
+    def get_serial_no(self):
+        """ TODO: implement id_to_serialno and serialno_to_id functions. """
+        raise NotImplementedError
 
     def clean(self):
         if self.batch is not None and self.batch_sequence > self.batch.batch_size:
@@ -613,7 +613,7 @@ class DataColumn(models.Model):
             self.resample_n = 1
 
     def experiment(self):
-        return self.data_file.experiment()
+        return self.data_file.experiment
 
     class Meta:
         unique_together = [["device", "data_file"], ["column_name", "data_file"]]
