@@ -67,17 +67,22 @@ TEMPLATES = [
 WSGI_APPLICATION = "liionsden.wsgi.application"
 
 # Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+DATABASE_ROUTERS = ["liionsden.router.DBRouter"]
+DATABASE_APPS_MAPPING = {"research_data": "research_db"}
 
 DATABASES = {
     "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "data/db.sqlite3"),
+    },
+    "research_db": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "postgres",
         "USER": "postgres",
         "PASSWORD": "postgres",
         "HOST": "db",
         "PORT": 5432,
-    }
+    },
 }
 
 if os.environ.get("GITHUB_WORKFLOW"):
@@ -127,7 +132,7 @@ REST_FRAMEWORK = {
     ),
 }
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "data/media")
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 DEFAULT_FROM_EMAIL = "noreply@imperial.ac.uk"
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
