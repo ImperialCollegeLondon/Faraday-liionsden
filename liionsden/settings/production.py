@@ -18,3 +18,4 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 if os.environ.get("AZURE_WORKFLOW"):
     ALLOWED_HOSTS = ["liionsden.azurewebsites.net"]
     DATABASES["default"]["HOST"] = "liionsden-db.postgres.database.azure.com"
+    DATABASES["default"]["USER"] = "postgres@liionsden-db.postgres.database.azure.com"
