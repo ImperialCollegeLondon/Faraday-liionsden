@@ -3,7 +3,7 @@ import os
 from .settings import *  # noqa: F401, F403
 
 DEBUG = False
-ALLOWED_HOSTS = ["liionsden.rcs.ic.ac.uk"]
+ALLOWED_HOSTS = ["liionsden.rcs.ic.ac.uk", "liionsden.azurewebsites.net"]
 SECRET_KEY = os.environ["SECRET_KEY"]
 EMAIL_HOST = "smarthost.cc.ic.ac.uk"
 SERVER_EMAIL = "noreply@imperial.ac.uk"
