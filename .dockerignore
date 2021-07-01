@@ -11,3 +11,4 @@ data/db/*
 !requirements.txt
 !sshd_config
 !install_ssh.sh
+!init.sh
