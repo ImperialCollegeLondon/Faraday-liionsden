@@ -10,8 +10,8 @@ RUN mkdir log
 RUN python manage.py collectstatic --no-input
 
 # ssh
-COPY install-packages.sh .
-RUN ./install-packages.sh
+COPY install_ssh.sh .
+RUN ./install_ssh.sh
 COPY sshd_config /etc/ssh/
 
 EXPOSE 8000 2222
