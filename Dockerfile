@@ -4,6 +4,7 @@ FROM python
 
 # ssh
 COPY install_ssh.sh .
+RUN chmod u+x install_ssh.sh
 RUN ./install_ssh.sh
 COPY sshd_config /etc/ssh/
 
