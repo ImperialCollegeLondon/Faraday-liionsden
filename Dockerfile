@@ -2,8 +2,6 @@ FROM python:3.8-slim-buster as python
 
 FROM python
 COPY requirements.txt .
-COPY sshd_config /etc/ssh/
-
 RUN pip install --no-cache-dir -r requirements.txt
 COPY --chown=nobody . /usr/src/app
 WORKDIR /usr/src/app
@@ -12,8 +10,8 @@ RUN mkdir log
 RUN python manage.py collectstatic --no-input
 
 # ssh
-ENV SSH_PASSWD "root:Docker!"
-RUN apk add --no-cache dialog openssh-server
-RUN echo "$SSH_PASSWD" | chpasswd 
+RUN apk add openssh \
+     && echo "root:Docker!" | chpasswd 
+COPY sshd_config /etc/ssh/
 
 EXPOSE 8000 2222
