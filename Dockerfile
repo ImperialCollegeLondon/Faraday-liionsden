@@ -13,10 +13,7 @@ RUN python manage.py collectstatic --no-input
 
 # ssh
 ENV SSH_PASSWD "root:Docker!"
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends dialog
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends openssh-server
+RUN apk add --no-cache dialog openssh-server
 RUN echo "$SSH_PASSWD" | chpasswd 
 
 EXPOSE 8000 2222
