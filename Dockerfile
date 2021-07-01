@@ -19,3 +19,8 @@ RUN python manage.py collectstatic --no-input
 
 # 8000 for the web and 2222 for ssh
 EXPOSE 8000 2222
+
+# Initialization
+COPY init.sh /usr/local/bin/
+RUN chmod u+x /usr/local/bin/init.sh
+ENTRYPOINT ["init.sh"]
