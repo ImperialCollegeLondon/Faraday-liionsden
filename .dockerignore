@@ -9,6 +9,4 @@
 data/db/*
 !manage.py
 !requirements.txt
-!sshd_config
-!install_ssh.sh
-!init.sh
+!docker
