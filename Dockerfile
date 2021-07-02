@@ -3,13 +3,13 @@ FROM python:3.8-slim-buster as python
 FROM python
 
 # ssh
-COPY docker/install_ssh.sh .
+COPY scripts/install_ssh.sh .
 RUN chmod u+x install_ssh.sh
 RUN ./install_ssh.sh
-COPY docker/sshd_config /etc/ssh/
+COPY scripts/sshd_config /etc/ssh/
 
 # Initialization
-COPY docker/init.sh /usr/local/bin/
+COPY scripts/init.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/init.sh
 ENTRYPOINT ["/usr/local/bin/init.sh"]
 

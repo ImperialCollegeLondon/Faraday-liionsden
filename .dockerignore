@@ -9,4 +9,4 @@
 data/db/*
 !manage.py
 !requirements.txt
-!docker
+!scripts

@@ -72,12 +72,16 @@ DATABASE_APPS_MAPPING = {"research_data": "research_db"}
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "data/db.sqlite3"),
-    },
-    "research_db": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
+        "NAME": "djangodb",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": "db",
+        "PORT": 5432,
+    },
+    "researchdb": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "researchdb",
         "USER": "postgres",
         "PASSWORD": "postgres",
         "HOST": "db",
