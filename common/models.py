@@ -18,6 +18,10 @@ from .utils import hash_file
 #  this file
 
 
+class ResearchDataApp:
+    app_label = "research_data"
+
+
 class HasName(models.Model):
     """Abstract base class for any model having a name."""
 
@@ -27,7 +31,7 @@ class HasName(models.Model):
         return str(self.name)
 
     # Tells Django not to create a table for this model: it's an abstract base class
-    class Meta:
+    class Meta(ResearchDataApp):
         abstract = True
 
 
@@ -46,7 +50,7 @@ class HasStatus(models.Model):
     ]
     status = models.CharField(max_length=16, default="draft", choices=OBJ_STATUS)
 
-    class Meta:
+    class Meta(ResearchDataApp):
         abstract = True
 
 
@@ -57,7 +61,7 @@ class HasOwner(models.Model):
         get_user_model(), on_delete=models.SET_NULL, null=True, blank=True
     )
 
-    class Meta:
+    class Meta(ResearchDataApp):
         abstract = True
 
 
@@ -67,7 +71,7 @@ class HasCreatedModifiedDates(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     modified_on = models.DateTimeField(auto_now=True)
 
-    class Meta:
+    class Meta(ResearchDataApp):
         abstract = True
 
 
@@ -81,7 +85,7 @@ class HasAttributes(models.Model):
         default=dict, blank=True, help_text="Optional machine-readable JSON metadata"
     )
 
-    class Meta:
+    class Meta(ResearchDataApp):
         abstract = True
 
 
@@ -92,7 +96,7 @@ class HasNotes(models.Model):
         null=True, blank=True, help_text="Optional human-readable notes"
     )
 
-    class Meta:
+    class Meta(ResearchDataApp):
         abstract = True
 
 
@@ -114,7 +118,7 @@ class HasSlug(models.Model):
         self.slug = slugify(str(self))
         return super(HasSlug, self).save(*args, **kwargs)
 
-    class Meta:
+    class Meta(ResearchDataApp):
         abstract = True
 
 
@@ -137,7 +141,7 @@ class HasMPTT(MPTTModel):
         "In this case, the metadata will be inherited.",
     )
 
-    class Meta:
+    class Meta(ResearchDataApp):
         abstract = True
 
     def metadata(self):
@@ -166,7 +170,7 @@ class BaseModelNoName(
     HasCreatedModifiedDates.
     """
 
-    class Meta:
+    class Meta(ResearchDataApp):
         abstract = True
 
 
@@ -177,7 +181,7 @@ class BaseModel(BaseModelNoName, HasName):
     HasNotes, HasCreatedModifiedDates.
     """
 
-    class Meta:
+    class Meta(ResearchDataApp):
         abstract = True
 
 
@@ -186,7 +190,7 @@ class BaseModelMandatoryName(BaseModel):
 
     name = models.CharField(max_length=128, blank=False, default="", null=False)
 
-    class Meta:
+    class Meta(ResearchDataApp):
         abstract = True
 
 
@@ -388,7 +392,7 @@ class HashedFile(models.Model):
         help_text="SHA-1 Hash of uploaded file. You cannot upload the same file twice.",
     )
 
-    class Meta:
+    class Meta(ResearchDataApp):
         abstract = True
 
     def clean(self):
