@@ -236,9 +236,6 @@ class DeviceConfigNode(models.Model):
             + str(self.device_position_id)
         )
 
-    class Meta(cm.ResearchDataApp):
-        pass
-
 
 class Parser(cm.BaseModelMandatoryName):
     """Parsers for experimental device data.
@@ -551,7 +548,7 @@ class ExperimentDevice(models.Model):
     def __str__(self):
         return self.device_position
 
-    class Meta(cm.ResearchDataApp):
+    class Meta:
         unique_together = [
             [
                 "device_position",
@@ -617,7 +614,7 @@ class DataColumn(models.Model):
     def experiment(self):
         return self.data_file.experiment
 
-    class Meta(cm.ResearchDataApp):
+    class Meta:
         unique_together = [["device", "data_file"], ["column_name", "data_file"]]
         verbose_name = "Column Mapping"
         verbose_name_plural = "Data Column Mappings to Device Parameters"
@@ -677,5 +674,5 @@ class SignalType(models.Model):
     def __str__(self):
         return self.col_name
 
-    class Meta(cm.ResearchDataApp):
+    class Meta:
         pass

@@ -11,7 +11,7 @@ COPY scripts/sshd_config /etc/ssh/
 # Initialization
 COPY scripts/init.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/init.sh
-ENTRYPOINT ["/usr/local/bin/init.sh"]
+CMD ["/usr/local/bin/init.sh"]
 
 # django
 COPY requirements.txt .

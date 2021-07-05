@@ -21,7 +21,7 @@ class Compound(models.Model):
     def __str__(self):
         return "%s (%s)" % (self.name, self.formula)
 
-    class Meta(cm.ResearchDataApp):
+    class Meta:
         unique_together = (
             "name",
             "formula",
@@ -76,7 +76,7 @@ class CompositionPart(models.Model):
     def __str__(self):
         return "%s%d" % (self.compound.formula, self.amount)
 
-    class Meta(cm.ResearchDataApp):
+    class Meta:
         unique_together = ("compound", "amount", "material")
 
 
@@ -131,7 +131,7 @@ class QuantityUnit(models.Model):
             self.unitSymbol,
         )
 
-    class Meta(cm.ResearchDataApp):
+    class Meta:
         unique_together = ("quantityName", "unitSymbol")
 
 
@@ -193,5 +193,5 @@ class DataParameter(models.Model):
     def __str__(self):
         return str(self.parameter)
 
-    class Meta(cm.ResearchDataApp):
+    class Meta:
         unique_together = ("data", "parameter", "material")

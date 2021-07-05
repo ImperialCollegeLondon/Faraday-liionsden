@@ -67,21 +67,10 @@ TEMPLATES = [
 WSGI_APPLICATION = "liionsden.wsgi.application"
 
 # Database
-DATABASE_ROUTERS = ["liionsden.router.DBRouter"]
-DATABASE_APPS_MAPPING = {"research_data": "research_db"}
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "djangodb",
-        "USER": "postgres",
-        "PASSWORD": "postgres",
-        "HOST": "db",
-        "PORT": 5432,
-    },
-    "researchdb": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "researchdb",
+        "NAME": "postgres",
         "USER": "postgres",
         "PASSWORD": "postgres",
         "HOST": "db",
