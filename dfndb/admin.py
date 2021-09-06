@@ -4,6 +4,8 @@ from common.admin import BaseAdmin
 
 from . import models as cmodels
 
+from guardian.admin import GuardedModelAdmin
+
 
 class MaterialCompositionInline(admin.TabularInline):
     model = cmodels.CompositionPart
@@ -36,7 +38,7 @@ class UnitAdmin(admin.ModelAdmin):
     list_filter = ["is_SI_unit"]
 
 
-class CompoundAdmin(admin.ModelAdmin):
+class CompoundAdmin(GuardedModelAdmin):
     list_display = ["__str__"]
 
 
