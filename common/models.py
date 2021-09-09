@@ -3,7 +3,6 @@ import os
 
 import idutils  # for DOI validation: https://idutils.readthedocs.io/en/latest/
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import JSONField
@@ -17,10 +16,6 @@ from .utils import hash_file
 
 # TODO: Add localised strings (l10n) using django_gettext for all string literals in
 #  this file
-
-class User(AbstractUser):
-    """Implement a custom user model to add flexibility in the future."""
-    pass
 
 class HasName(models.Model):
     """Abstract base class for any model having a name."""
