@@ -13,8 +13,6 @@ def populate_groups(sender, **kwargs):
     # TODO: Probably a more elegant way to do this but for now
     #       we do each role one by one
     data_apps = ['battDB', 'common', 'dfndb']
-    admin_apps = ['admin', 'auth', 'authtoken', 'guardian', 
-                'management', 'sessions']
     
     # Admins
     Group.objects.get(name='Administrator').permissions.add(*all_perms)
