@@ -155,3 +155,5 @@ LOGGING = {
     },
     "loggers": {"django": {"handlers": ["file", "console"], "level": "INFO"}},
 }
+
+AUTH_USER_MODEL = 'common.User'
