@@ -13,11 +13,7 @@ def populate_groups(sender, **kwargs):
     # TODO: Probably a more elegant way to do this but for now
     #       we do each role one by one
     data_apps = ['battDB', 'common', 'dfndb']
-    
-    # Admins can do anything
-    Group.objects.get(name='Administrator').permissions.add(*all_perms)
-    # User managers can edit users
-    # TODO: how to prevent user managers adding user to tha Admin group?
+
     user_manager_perms = [i for i in all_perms
                             if i.content_type.app_label in ['management']]
     Group.objects.get(name='User manager').permissions.add(*user_manager_perms)
