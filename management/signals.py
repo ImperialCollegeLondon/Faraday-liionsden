@@ -14,15 +14,20 @@ def populate_groups(sender, **kwargs):
     #       we do each role one by one
     data_apps = ['battDB', 'common', 'dfndb']
     
-    # Admins
+    # Admins can do anything
     Group.objects.get(name='Administrator').permissions.add(*all_perms)
-    # User managers
-    # TODO: Will need some thinking about 
-    # Maintainers
+    # User managers can edit users
+    # TODO: how to prevent user managers adding user to tha Admin group?
+    user_manager_perms = [i for i in all_perms
+                            if i.content_type.app_label in ['management']]
+    Group.objects.get(name='User manager').permissions.add(*user_manager_perms)
+    # Maintainers have access to "data apps" only (no user-related stuff)
     maintainer_perms = [i for i in all_perms 
                         if i.content_type.app_label in data_apps]
     Group.objects.get(name='Maintainer').permissions.add(*maintainer_perms)
-    # Contributors
+    # Contributors can view, add and change
+    # TODO: This should be more granular e.g. can only change their own items
+    #       and can only view "published" items of other people. 
     contrib_perms = [i for i in maintainer_perms 
                     if i.codename.split('_')[0] in ['view', 'add', 'change']]
     Group.objects.get(name='Contributor').permissions.add(*contrib_perms)               
@@ -30,6 +35,5 @@ def populate_groups(sender, **kwargs):
     read_perms = [i for i in maintainer_perms 
                     if i.codename.split('_')[0] in ['view']]
     Group.objects.get(name='Read only').permissions.add(*read_perms) 
-     
 
     # TODO: Check that no groups have unexpected permissions?

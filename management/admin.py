@@ -12,11 +12,10 @@ class CustomUserAdmin(UserAdmin):
         # Prevent changing permissions without using groups
         if not is_superuser:
             disabled_fields |= {
-                'username',
                 'is_superuser',
                 'user_permissions',
             }
-        # Prevent changing users own permissions
+        # Prevent users changing own permissions
         if (
             not is_superuser
             and obj is not None
