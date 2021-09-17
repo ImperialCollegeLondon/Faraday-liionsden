@@ -22,6 +22,7 @@ urlpatterns = [
     path("", include("battDB.urls"), name="root"),
     path("battDB/", include("battDB.urls")),
     path("admin/", admin.site.urls),
+    path("dfndb/", include("dfndb.urls"), name="dfndb"),
 ]
 
 if settings.DEBUG:

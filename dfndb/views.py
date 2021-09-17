@@ -1,9 +1,11 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView
 from rest_framework.generics import ListCreateAPIView
 
-from .models import Data, Parameter
+from .models import Data, Parameter, Compound
 from .serializers import ParameterSerializer
+from django.views.generic.edit import CreateView
+from django.views.generic.detail import DetailView
 
 
 class DataListView(ListView):
@@ -26,3 +28,17 @@ class ParametersAPIView(ListCreateAPIView):
 
     queryset = Parameter.objects.all()
     serializer_class = ParameterSerializer
+
+
+class CompoundCreateView(CreateView):
+    model = Compound
+    fields = ['name', 'formula', 'mass']
+    template_name = 'dfndb/create.html'
+
+    def get_success_url(self):
+        return reverse_lazy('dfndb:compound_detail', kwargs={'pk': self.object.pk})
+
+
+class CompoundDetail(DetailView):
+    model = Compound
+    template = 'dfndb/compound_detail.html'
