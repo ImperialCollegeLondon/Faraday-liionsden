@@ -1,6 +1,9 @@
 from django.db.utils import IntegrityError
 from django.test import TestCase
+from django.contrib.auth import get_user_model
+from ..fixtures import db_user
 
+User = get_user_model()
 
 class TestCompound(TestCase):
     from dfndb.models import Compound
@@ -8,9 +11,12 @@ class TestCompound(TestCase):
     model = Compound
 
     def setUp(self):
-        self.expected = dict(name="Carbon Dioxide", formula="CO2", mass=44.01)
+        User.objects.get_or_create(**db_user)
+        user = User.objects.get()
+        self.expected = dict(name="Carbon Dioxide", formula="CO2", mass=44.01,
+        user_owner = user)
         self.model.objects.get_or_create(
-            name="Carbon Dioxide", formula="CO2", mass=44.01
+            name="Carbon Dioxide", formula="CO2", mass=44.01, user_owner = user
         )
 
     def test_compound_creation(self):
@@ -23,7 +29,10 @@ class TestCompound(TestCase):
         self.assertEqual(obj.__str__(), "Carbon Dioxide (CO2)")
 
     def test_unique_together(self):
-        self.model.objects.create(name="Carbon Dioxide", formula="CO3", mass=44.01)
+        User.objects.get_or_create(**db_user)
+        user = User.objects.get()
+        self.model.objects.create(name="Carbon Dioxide", formula="CO3", mass=44.01,
+                            user_owner = user)
 
         self.assertRaises(
             IntegrityError,
@@ -41,9 +50,12 @@ class TestMaterial(TestCase):
 
     def setUp(self):
         from dfndb.models import CompositionPart, Compound
-
-        cmp = Compound.objects.create(name="Carbon Dioxide", formula="CO2")
-        cmp2 = Compound.objects.create(name="Sulphur", formula="S")
+        User.objects.get_or_create(**db_user)
+        user = User.objects.get()
+        cmp = Compound.objects.create(name="Carbon Dioxide", formula="CO2",
+                                        user_owner = user)
+        cmp2 = Compound.objects.create(name="Sulphur", formula="S",
+                                        user_owner = user)
         mat = self.model.objects.create(name="Contaminant", type=1, polymer=0)
         CompositionPart.objects.create(compound=cmp, material=mat, amount=3)
         CompositionPart.objects.create(compound=cmp2, material=mat, amount=2)
@@ -74,8 +86,12 @@ class TestCompositionPart(TestCase):
         from dfndb.models import Compound, Material
 
         self.amount = {"CO2": 3, "S": 2}
-        cmp = Compound.objects.create(name="Carbon Dioxide", formula="CO2")
-        cmp2 = Compound.objects.create(name="Sulphur", formula="S")
+        User.objects.get_or_create(**db_user)
+        user = User.objects.get()
+        cmp = Compound.objects.create(name="Carbon Dioxide", formula="CO2",
+                                        user_owner = user)
+        cmp2 = Compound.objects.create(name="Sulphur", formula="S",
+                                        user_owner = user)
         mat = Material.objects.create(name="Contaminant", type=1, polymer=0)
         self.model.objects.create(compound=cmp, material=mat, amount=self.amount["CO2"])
         self.model.objects.create(compound=cmp2, material=mat, amount=self.amount["S"])
@@ -223,10 +239,12 @@ class TestData(TestCase):
             QuantityUnit,
         )
         from tests.fixtures import db_paper, db_unit
-
+        User.objects.get_or_create(**db_user)
+        user = User.objects.get()
         unit = QuantityUnit.objects.create(**db_unit)
         param = Parameter.objects.create(name="Ionized donors", symbol="Nd-", unit=unit)
-        cmp = Compound.objects.create(name="Carbon Dioxide", formula="CO2")
+        cmp = Compound.objects.create(name="Carbon Dioxide", formula="CO2",
+                                                     user_owner = user)
         mat = Material.objects.create(name="Contaminant", type=1, polymer=0)
         CompositionPart.objects.create(compound=cmp, material=mat, amount=3)
         paper = Paper.objects.create(**db_paper)
@@ -266,10 +284,12 @@ class TestDataParameter(TestCase):
             QuantityUnit,
         )
         from tests.fixtures import db_paper, db_unit
-
+        User.objects.get_or_create(**db_user)
+        user = User.objects.get()
         unit = QuantityUnit.objects.create(**db_unit)
         param = Parameter.objects.create(name="Ionized donors", symbol="Nd-", unit=unit)
-        cmp = Compound.objects.create(name="Carbon Dioxide", formula="CO2")
+        cmp = Compound.objects.create(name="Carbon Dioxide", formula="CO2",
+                                            user_owner = user)
         mat = Material.objects.create(name="Contaminant", type=1, polymer=0)
         CompositionPart.objects.create(compound=cmp, material=mat, amount=3)
         paper = Paper.objects.create(**db_paper)
