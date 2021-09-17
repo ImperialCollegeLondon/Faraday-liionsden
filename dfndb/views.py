@@ -6,6 +6,7 @@ from .models import Data, Parameter, Compound
 from .serializers import ParameterSerializer
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 class DataListView(ListView):
@@ -30,10 +31,12 @@ class ParametersAPIView(ListCreateAPIView):
     serializer_class = ParameterSerializer
 
 
-class CompoundCreateView(CreateView):
+class CompoundCreateView(PermissionRequiredMixin, CreateView):
     model = Compound
     fields = ['name', 'formula', 'mass']
+    
     template_name = 'dfndb/create.html'
+    permission_required = ('dfndb.add_compound',)
 
     def get_success_url(self):
         return reverse_lazy('dfndb:compound_detail', kwargs={'pk': self.object.pk})
