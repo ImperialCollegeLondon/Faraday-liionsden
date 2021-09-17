@@ -1,6 +1,8 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Sum
+from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 import common.models as cm
 
@@ -16,6 +18,11 @@ class Compound(models.Model):
         default=0,
         validators=[MinValueValidator(0, "Mass cannot be negative!")],
         help_text="Optional molar mass, in g/mol",
+    )
+
+    # Temporary for testing permissions
+    user_owner =  models.ForeignKey(
+        get_user_model(), on_delete=models.SET_NULL, null=True, blank=True
     )
 
     def __str__(self):

@@ -34,6 +34,7 @@ class ParametersAPIView(ListCreateAPIView):
 class CompoundCreateView(PermissionRequiredMixin, CreateView):
     model = Compound
     fields = ['name', 'formula', 'mass']
+
     
     template_name = 'dfndb/create.html'
     permission_required = ('dfndb.add_compound',)
@@ -41,6 +42,10 @@ class CompoundCreateView(PermissionRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy('dfndb:compound_detail', kwargs={'pk': self.object.pk})
 
+    def form_valid(self, form):
+        form.instance.user_owner = self.request.user
+        response = super().form_valid(form)
+        return response
 
 class CompoundDetail(DetailView):
     model = Compound
