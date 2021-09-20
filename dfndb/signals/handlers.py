@@ -10,9 +10,14 @@ def set_permission(sender, instance, **kwargs):
     
     # Only creator can change     
     assign_perm("change_compound", instance.user_owner, instance)
+    # Maintainers can do everything 
+    for perm in ["delete_compound", "change_compound", "view_compound"]:
+        assign_perm(perm,
+            Group.objects.get(name='Maintainer'),
+            instance
+            )
 
-    # If public/published, give others read permissions
-    # otherwise don't. 
+    # If published, give others read permissions otherwise don't. 
     if instance.status.lower() == 'private':
         assign_perm("view_compound", instance.user_owner, instance)
     elif instance.status.lower() == 'published': 
