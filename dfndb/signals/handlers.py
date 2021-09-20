@@ -21,7 +21,7 @@ def set_permission(sender, instance, **kwargs):
     if instance.status.lower() == 'private':
         assign_perm("view_compound", instance.user_owner, instance)
     elif instance.status.lower() == 'published': 
-        for group in ["Read only", "Contributor"]:
+        for group in ["Read only", "Contributor", "User manager"]:
             assign_perm(
                 "view_compound",
                 Group.objects.get(name=group),
