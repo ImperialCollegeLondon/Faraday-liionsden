@@ -6,7 +6,7 @@ from .models import Data, Parameter, Compound
 from .serializers import ParameterSerializer
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from guardian.mixins import PermissionRequiredMixin
 
 
 class DataListView(ListView):
@@ -33,7 +33,7 @@ class ParametersAPIView(ListCreateAPIView):
 
 class CompoundCreateView(PermissionRequiredMixin, CreateView):
     model = Compound
-    fields = ['name', 'formula', 'mass']
+    fields = ['name', 'formula', 'mass', 'status']
 
     
     template_name = 'dfndb/create.html'

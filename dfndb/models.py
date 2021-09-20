@@ -20,10 +20,18 @@ class Compound(models.Model):
         help_text="Optional molar mass, in g/mol",
     )
 
-    # Temporary for testing permissions
+    ### Temporarily add owner and status for testing permissions.
+    ### These won't be needed for this particular model in production
     user_owner =  models.ForeignKey(
         get_user_model(), on_delete=models.SET_NULL, null=True, blank=True
     )
+
+    OBJ_STATUS = [
+        ("private", "Private"),  # viewable and editable only by owner
+        ("published", "Published"),  # viewable by all authenticated users
+    ]
+    status = models.CharField(max_length=16, default="draft", choices=OBJ_STATUS)
+    ###
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.formula)

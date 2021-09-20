@@ -2,6 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from guardian.shortcuts import assign_perm
 from ..models import Compound
+from django.contrib.auth.models import Group
 
 @receiver(post_save, sender=Compound)
 def set_permission(sender, instance, **kwargs):
@@ -10,5 +11,14 @@ def set_permission(sender, instance, **kwargs):
     # Only creator can change     
     assign_perm("change_compound", instance.user_owner, instance)
 
-    # TODO: If public/published, give others read permissions
-    #       Otherwise don't. 
+    # If public/published, give others read permissions
+    # otherwise don't. 
+    if instance.status.lower() == 'private':
+        assign_perm("view_compound", instance.user_owner, instance)
+    elif instance.status.lower() == 'public': 
+        for group in ["Read only", "Contributor"]:
+            assign_perm(
+                "view_compound",
+                Group.objects.get(name=group),
+                instance
+                )

@@ -118,3 +118,4 @@ GitHub.sublime-settings
 # Other excluded
 _other/
 log/
+*.DS_store*
