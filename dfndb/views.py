@@ -6,7 +6,8 @@ from .models import Data, Parameter, Compound
 from .serializers import ParameterSerializer
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
-from guardian.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from guardian.mixins import PermissionRequiredMixin as GuardianPermissionRequiredMixin
 
 
 class DataListView(ListView):
@@ -47,6 +48,7 @@ class CompoundCreateView(PermissionRequiredMixin, CreateView):
         response = super().form_valid(form)
         return response
 
-class CompoundDetail(DetailView):
+class CompoundDetail(GuardianPermissionRequiredMixin, DetailView):
     model = Compound
     template = 'dfndb/compound_detail.html'
+    permission_required = "view_compound"
