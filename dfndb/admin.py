@@ -1,10 +1,6 @@
 from django.contrib import admin
-
 from common.admin import BaseAdmin
-
 from . import models as cmodels
-
-from guardian.admin import GuardedModelAdmin
 
 
 class MaterialCompositionInline(admin.TabularInline):
@@ -38,7 +34,7 @@ class UnitAdmin(admin.ModelAdmin):
     list_filter = ["is_SI_unit"]
 
 
-class CompoundAdmin(GuardedModelAdmin):
+class CompoundAdmin(admin.ModelAdmin):
     list_display = ["__str__"]
 
 
