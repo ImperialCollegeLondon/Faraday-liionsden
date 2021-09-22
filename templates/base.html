@@ -13,6 +13,12 @@ table, th, td {
 </head>
 <body>
     <div class="page-header">
+        {% if user.is_authenticated %}
+            Hi {{ user.username }}
+            <a href="accounts/logout">logout</a>
+        {% else %}
+            <a href="accounts/login">login</a>
+        {% endif %}   
         <h1><a href="/">The Faraday Institution - LiIonsDen Electrochemistry Database</a></h1>
     </div>
     <div class="content container">
