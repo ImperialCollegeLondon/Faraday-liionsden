@@ -5,49 +5,56 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
 from django.contrib.auth.management import create_permissions
 
+
 def populate_groups(apps, schema_editor):
-    user_roles = ['User manager', 'Maintainer', 
-                'Contributor', 'Read only']
+    """
+    Sets up some basic model-level permissions for different groups when the
+    project is initialised.
+    User manager: Full permissions over the management app to add, change, delete, view
+    users.
+    Maintainer: Full permissions over the "data apps" to add, change, delete, view
+    data in the database, but not users.
+    Contributor: Initially given add permissions of models in "data apps". View, change,
+    delete is handled on a per-instance basis by Django Guardian.
+    Read only: Not given any initial permisions. View permission is handled on a
+    per instance basis by Django Guardian.
+    """
+    # Create user groups
+    user_roles = ["User manager", "Maintainer", "Contributor", "Read only"]
     for name in user_roles:
         Group.objects.create(name=name)
 
-    # Create permissions before trying to apply them
+    # Permissions have to be created before applying them
     for app_config in apps.get_app_configs():
         app_config.models_module = True
         create_permissions(app_config, verbosity=0)
         app_config.models_module = None
 
-    # Assign model-level permissions to each group
-    # differentiating between "data apps" and management apps. 
+    # Assign model-level permissions to each group differentiating between "data apps"
+    # and other apps.
     all_perms = Permission.objects.all()
-    data_apps = ['battDB', 'common', 'dfndb']
+    data_apps = ["battDB", "common", "dfndb"]
 
-    user_manager_perms = [i for i in all_perms
-                            if i.content_type.app_label in ['management']]
-    Group.objects.get(name='User manager').permissions.add(*user_manager_perms)
-    # Maintainers have access to "data apps" only (no user-related stuff)
-    maintainer_perms = [i for i in all_perms 
-                        if i.content_type.app_label in data_apps]
-    Group.objects.get(name='Maintainer').permissions.add(*maintainer_perms)
-    # Contributors can view, add and change but only view/change existing objects
-    # according to their status (public/private etc.) so initially they have add 
-    # permissions of certain models only. 
-    contrib_perms = [i for i in maintainer_perms 
-                    if i.codename.split('_')[0] in ['add']]
-    Group.objects.get(name='Contributor').permissions.add(*contrib_perms)               
-    # Read only users have object-level access to public data only. They do not
-    # get any model-level permissions from the start. 
-    read_perms = []
+    # User managers
+    user_manager_perms = [
+        i for i in all_perms if i.content_type.app_label in ["management"]
+    ]
+    Group.objects.get(name="User manager").permissions.add(*user_manager_perms)
+    # Maintainers
+    maintainer_perms = [i for i in all_perms if i.content_type.app_label in data_apps]
+    Group.objects.get(name="Maintainer").permissions.add(*maintainer_perms)
+    # Contributors
+    contrib_perms = [i for i in maintainer_perms if i.codename.split("_")[0] in ["add"]]
+    Group.objects.get(name="Contributor").permissions.add(*contrib_perms)
+
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('management', '0001_initial'),
-        ('battDB', '0003_initial'),
-        ('common', '0002_initial'),
-        ('dfndb', '0002_initial'),
+        ("management", "0001_initial"),
+        ("battDB", "0003_initial"),
+        ("common", "0002_initial"),
+        ("dfndb", "0002_initial"),
     ]
 
-    operations = [
-        migrations.RunPython(populate_groups)
-    ]
+    operations = [migrations.RunPython(populate_groups)]
