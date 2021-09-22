@@ -31,5 +31,5 @@ class TestCustomUserAdmin(TestCase):
         )
         self.assertEqual(
             list(ma.get_list_filter(request)),
-            ["is_staff", "is_superuser", "is_active", "groups"]
+            ["is_staff", "is_superuser", "is_active", "groups"],
         )

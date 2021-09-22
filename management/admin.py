@@ -4,7 +4,7 @@ from .models import User
 
 
 class CustomUserAdmin(UserAdmin):
-    """# A slightly more restrictive user admin page."""
+    """A slightly more restrictive user admin page."""
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
