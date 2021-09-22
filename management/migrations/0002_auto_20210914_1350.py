@@ -17,8 +17,8 @@ def populate_groups(apps, schema_editor):
         create_permissions(app_config, verbosity=0)
         app_config.models_module = None
 
-     # Assign model-level permissions to each group
-    # TODO: Check these are the correct permissions 
+    # Assign model-level permissions to each group
+    # differentiating between "data apps" and management apps. 
     all_perms = Permission.objects.all()
     data_apps = ['battDB', 'common', 'dfndb']
 
@@ -29,16 +29,15 @@ def populate_groups(apps, schema_editor):
     maintainer_perms = [i for i in all_perms 
                         if i.content_type.app_label in data_apps]
     Group.objects.get(name='Maintainer').permissions.add(*maintainer_perms)
-    # Contributors can view, add and change
-    # TODO: This should be more granular e.g. can only change their own items
-    #       and can only view "published" items of other people. 
+    # Contributors can view, add and change but only view/change existing objects
+    # according to their status (public/private etc.) so initially they have add 
+    # permissions of certain models only. 
     contrib_perms = [i for i in maintainer_perms 
-                    if i.codename.split('_')[0] in ['view', 'add', 'change']]
+                    if i.codename.split('_')[0] in ['add']]
     Group.objects.get(name='Contributor').permissions.add(*contrib_perms)               
-    # Read only users
-    read_perms = [i for i in maintainer_perms 
-                    if i.codename.split('_')[0] in ['view']]
-    Group.objects.get(name='Read only').permissions.add(*read_perms) 
+    # Read only users have object-level access to public data only. They do not
+    # get any model-level permissions from the start. 
+    read_perms = []
 
 class Migration(migrations.Migration):
 
