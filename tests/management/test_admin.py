@@ -1,12 +1,8 @@
 from django.test import TestCase
 from django.contrib.admin.sites import AdminSite
+from unittest.mock import MagicMock
 
-
-class MockRequest:
-    pass
-
-
-request = MockRequest()
+request = MagicMock()
 
 
 class TestCustomUserAdmin(TestCase):

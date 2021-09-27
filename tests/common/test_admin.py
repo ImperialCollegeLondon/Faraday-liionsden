@@ -1,14 +1,10 @@
 from unittest import skip
+from unittest.mock import MagicMock
 
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
 
-
-class MockRequest:
-    pass
-
-
-request = MockRequest()
+request = MagicMock()
 
 
 @skip("It is unclear how to test this one")
