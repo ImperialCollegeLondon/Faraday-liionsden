@@ -17,6 +17,7 @@ from .utils import hash_file
 # TODO: Add localised strings (l10n) using django_gettext for all string literals in
 #  this file
 
+
 class HasName(models.Model):
     """Abstract base class for any model having a name."""
 
@@ -59,7 +60,7 @@ class HasOwner(models.Model):
     class Meta:
         abstract = True
 
- 
+
 class HasCreatedModifiedDates(models.Model):
     """Abstract base for any model with creation and modified dates."""
 
