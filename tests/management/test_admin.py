@@ -1,8 +1,12 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.contrib.admin.sites import AdminSite
 from unittest.mock import MagicMock
+from tests.fixtures import db_user, staff_user
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 
 request = MagicMock()
+User = get_user_model()
 
 
 class TestCustomUserAdmin(TestCase):
@@ -36,3 +40,63 @@ class TestCustomUserAdmin(TestCase):
             list(ma.get_list_filter(request)),
             ["is_staff", "is_superuser", "is_active", "groups"],
         )
+
+
+class TestUserAdminPermissions(TestCase):
+    def setUp(self):
+        self.site = AdminSite()
+        self.factory = RequestFactory()
+
+        self.user, _ = User.objects.get_or_create(**db_user)
+        for name in ["Read only", "Contributor", "Maintainer"]:
+            group = Group.objects.get(name=name)
+            group.user_set.add(self.user)
+
+        self.staff_user, _ = User.objects.get_or_create(**staff_user)
+        user_managers = Group.objects.get(name="User manager")
+        user_managers.user_set.add(self.staff_user)
+
+    def test_user_groups(self):
+        self.assertFalse(self.user.is_staff)
+        self.assertCountEqual(
+            [i.name for i in self.user.groups.all()],
+            ["Read only", "Contributor", "Maintainer"],
+        )
+        self.assertCountEqual(
+            [i.name for i in self.staff_user.groups.all()], ["User manager"]
+        )
+        self.assertTrue(self.staff_user.is_staff)
+
+    def test_user_admin_access(self):
+        from management.admin import CustomUserAdmin
+
+        test_set = [
+            {
+                "request": self.staff_user,
+                "obj": self.staff_user,
+                "disabled": [
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                    "password",
+                ],
+            },
+            {
+                "request": self.staff_user,
+                "obj": self.user,
+                "disabled": ["is_superuser", "user_permissions", "password"],
+            },
+            {"request": self.user, "obj": self.staff_user, "disabled": ["password"]},
+        ]
+
+        for i in test_set:
+            with self.subTest(i):
+                request = self.factory.request()
+                request.user = i["request"]
+                ma = CustomUserAdmin(User, self.site)
+                form = ma.get_form(request, obj=i["obj"], change=True)
+                self.assertCountEqual(
+                    [k for k, v in form.base_fields.items() if v.disabled],
+                    i["disabled"],
+                )

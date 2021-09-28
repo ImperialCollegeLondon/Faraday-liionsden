@@ -10,6 +10,14 @@ db_user = dict(
     password="C@cina27",
 )
 
+staff_user = dict(
+    username="LinusP",
+    first_name="Linus",
+    last_name="Pauling",
+    password="V1taminC",
+    is_staff="True"
+)
+
 db_unit = dict(
     quantityName="Charge",
     quantitySymbol="Q",
