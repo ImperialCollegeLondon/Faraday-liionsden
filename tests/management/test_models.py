@@ -1,5 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+from tests.fixtures import db_user
+
 
 User = get_user_model()
 
@@ -7,6 +9,39 @@ User = get_user_model()
 class TestUser(TestCase):
     def test_user_str(self):
         self.assertEqual(str(User), "<class 'management.models.User'>")
+
+    def test_user_perms(self):
+        from django.contrib.auth.models import Group
+
+        user, _ = User.objects.get_or_create(**db_user)
+        self.assertEqual(len(user.get_all_permissions()), 0)
+
+        user, _ = User.objects.get_or_create(**db_user)
+        user.groups.add(Group.objects.get(name="Contributor"))
+        self.assertTrue(
+            all(i.split(".")[1].startswith("add") for i in user.get_all_permissions())
+        )
+
+        user, _ = User.objects.get_or_create(**db_user)
+        user.groups.add(Group.objects.get(name="Maintainer"))
+        self.assertTrue(
+            all(
+                i.startswith(("dfndb", "battDB", "common"))
+                for i in user.get_all_permissions()
+            )
+        )
+
+        user, _ = User.objects.get_or_create(**db_user)
+        user.groups.add(Group.objects.get(name="User manager"))
+        self.assertTrue(
+            {
+                "management.add_user",
+                "management.change_user",
+                "management.delete_user",
+                "management.view_user",
+            }.issubset(user.get_all_permissions())
+        )
+        
 
 
 class TestGroups(TestCase):

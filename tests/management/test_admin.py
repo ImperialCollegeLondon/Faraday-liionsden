@@ -3,7 +3,6 @@ from django.contrib.admin.sites import AdminSite
 from unittest.mock import MagicMock
 from tests.fixtures import db_user, staff_user
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
 
 request = MagicMock()
 User = get_user_model()
@@ -44,6 +43,8 @@ class TestCustomUserAdmin(TestCase):
 
 class TestUserAdminPermissions(TestCase):
     def setUp(self):
+        from django.contrib.auth.models import Group
+
         self.site = AdminSite()
         self.factory = RequestFactory()
 
@@ -70,6 +71,7 @@ class TestUserAdminPermissions(TestCase):
     def test_user_admin_access(self):
         from management.admin import CustomUserAdmin
 
+        ma = CustomUserAdmin(User, self.site)
         test_set = [
             {
                 "request": self.staff_user,
@@ -94,7 +96,6 @@ class TestUserAdminPermissions(TestCase):
             with self.subTest(i):
                 request = self.factory.request()
                 request.user = i["request"]
-                ma = CustomUserAdmin(User, self.site)
                 form = ma.get_form(request, obj=i["obj"], change=True)
                 self.assertCountEqual(
                     [k for k, v in form.base_fields.items() if v.disabled],
