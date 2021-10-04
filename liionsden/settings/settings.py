@@ -116,7 +116,7 @@ INSTALLED_APPS += [
     "battDB.apps.BattdbConfig",
     "common.apps.CommonConfig",
     "dfndb.apps.DfndbConfig",
-    "management.apps.ManagementConfig"
+    "management.apps.ManagementConfig",
 ]
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 REST_FRAMEWORK = {
@@ -149,4 +149,4 @@ LOGGING = {
     "loggers": {"django": {"handlers": ["file", "console"], "level": "INFO"}},
 }
 
-AUTH_USER_MODEL = 'management.User'
+AUTH_USER_MODEL = "management.User"
