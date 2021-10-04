@@ -1,13 +1,14 @@
 import time
 from unittest import skip
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
 from tests.fixtures import AbstractModelMixinTestCase, db_user
 
+User = get_user_model()
 
 class TestHasName(AbstractModelMixinTestCase):
     from common.models import HasName
