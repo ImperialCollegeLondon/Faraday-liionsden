@@ -12,13 +12,6 @@ class TestCustomUserAdmin(TestCase):
     def setUp(self):
         self.site = AdminSite()
 
-    def test_user_str(self):
-        from management.admin import CustomUserAdmin
-        from management.models import User
-
-        ma = CustomUserAdmin(User, self.site)
-        self.assertEqual(str(ma), "management.CustomUserAdmin")
-
     def test_definition(self):
         from management.admin import CustomUserAdmin
         from management.models import User

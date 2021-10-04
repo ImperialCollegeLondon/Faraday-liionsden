@@ -7,8 +7,9 @@ User = get_user_model()
 
 
 class TestUser(TestCase):
-    def test_user_str(self):
-        self.assertEqual(str(User), "<class 'management.models.User'>")
+    def test_user_model(self):
+        from management.models import User
+        self.assertIs(User, get_user_model())
 
     def test_user_perms(self):
         from django.contrib.auth.models import Group
