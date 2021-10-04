@@ -41,7 +41,6 @@ class TestUser(TestCase):
                 "management.view_user",
             }.issubset(user.get_all_permissions())
         )
-        
 
 
 class TestGroups(TestCase):
