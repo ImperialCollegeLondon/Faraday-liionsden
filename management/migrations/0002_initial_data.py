@@ -8,9 +8,9 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("management", "0001_initial"),
-        ("battDB", "0003_initial"),
-        ("common", "0002_initial"),
-        ("dfndb", "0002_initial"),
+        ("battDB", "0001_initial"),
+        ("common", "0001_initial"),
+        ("dfndb", "0001_initial"),
     ]
 
     operations = [migrations.RunPython(populate_groups)]
