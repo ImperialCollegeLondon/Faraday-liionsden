@@ -3,13 +3,10 @@ from types import SimpleNamespace
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
 from model_bakery import baker
+from unittest.mock import MagicMock
 
 
-class MockRequest:
-    pass
-
-
-request = MockRequest()
+request = MagicMock()
 
 
 class TestMaterialCompositionInline(TestCase):

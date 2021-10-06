@@ -2,8 +2,8 @@ import django.forms
 import mptt
 from django.contrib import admin
 from django.db import models
-
 from . import models as cmodels
+from guardian.admin import GuardedModelAdmin
 
 admin.site.site_header = "The Faraday Institution - Liionsden Electrochemistry Database"
 admin.site.site_title = "Liionsden Admin"
@@ -40,7 +40,7 @@ class ChangeFormMixin:
     }
 
 
-class BaseAdmin(ChangeFormMixin, admin.ModelAdmin):
+class BaseAdmin(ChangeFormMixin, GuardedModelAdmin):
     list_display_extra = ["user_owner", "status", "created_on", "modified_on"]
     list_display = ["__str__"] + list_display_extra
     list_filter = ["user_owner", "status"]
