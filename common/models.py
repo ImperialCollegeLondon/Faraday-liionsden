@@ -35,14 +35,9 @@ class HasStatus(models.Model):
     """Abstract base for any model having a common object status field."""
 
     OBJ_STATUS = [
-        ("draft", "Draft"),  # viewable and editable only by owner
-        ("submitted", "Submitted"),  # viewable by others, modifiable by owner
-        (
-            "accepted",
-            "Accepted",
-        ),  # cannot be modified by owner, except to return status to draft
-        ("published", "Published"),  # cannot be modified except by admin
-        ("deleted", "Deleted"),  # hidden to all except admin
+        ("private", "Private"),  # creating user can view and modify
+        ("public", "Public"),  # cannot be modified except by maintainers/admin
+        ("deleted", "Deleted"),  # hidden to all except maintainers/admin
     ]
     status = models.CharField(max_length=16, default="draft", choices=OBJ_STATUS)
 
