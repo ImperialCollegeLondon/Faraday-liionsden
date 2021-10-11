@@ -21,26 +21,21 @@ def set_permissions_standard(sender, instance, **kwargs):
     for perm in [delete, change, view]:
         assign_perm(perm, Group.objects.get(name="Maintainer"), instance)
 
-    # Contributing user and other users perms based on obj status
+    # Permissions based on obj status
     if instance.status.lower() == "private":
-        for perm in [change, view]:
-            assign_perm(perm, instance.user_owner, instance)
+        # If there is a user_owner, individual permissions can be assigned
+        if hasattr(instance, "user_owner") and instance.user_owner is not None:
+            for perm in [change, view]:
+                assign_perm(perm, instance.user_owner, instance)
 
     elif instance.status.lower() == "public":
         for group in ["Read only", "Contributor"]:
             assign_perm(view, Group.objects.get(name=group), instance)
 
 
-@receiver(post_save, sender=bdb.Device)
 @receiver(post_save, sender=bdb.DeviceConfig)
-@receiver(post_save, sender=bdb.DeviceConfigNode)
 @receiver(post_save, sender=bdb.Experiment)
 @receiver(post_save, sender=bdb.ExperimentDataFile)
-@receiver(post_save, sender=bdb.UploadedFile)
-@receiver(post_save, sender=bdb.ExperimentDevice)
-@receiver(post_save, sender=bdb.DataColumn)
-@receiver(post_save, sender=bdb.DataRange)
-@receiver(post_save, sender=bdb.SignalType)
 def set_permissions_modifiable(sender, instance, **kwargs):
     """Set object-level permissions according to a less strict setup: The contributing
     user can modify the object if status is "private" or "public".
@@ -52,9 +47,10 @@ def set_permissions_modifiable(sender, instance, **kwargs):
     for perm in [delete, change, view]:
         assign_perm(perm, Group.objects.get(name="Maintainer"), instance)
 
-    # Contributing user
-    for perm in [change, view]:
-        assign_perm(perm, instance.user_owner, instance)
+    # If there is a user_owner, individual permissions can be assigned
+    if hasattr(instance, "user_owner") and instance.user_owner is not None:
+        for perm in [change, view]:
+            assign_perm(perm, instance.user_owner, instance)
 
     # Other users perms based on obj status
     if instance.status.lower() == "public":
