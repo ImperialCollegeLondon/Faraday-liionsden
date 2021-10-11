@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 import battDB.models as bdb
 
 
-# Models in the decorators below follow "standard" permission setup.
+# Models in the decorators below follow "standard" permission setup
 @receiver(post_save, sender=bdb.DeviceSpecification)
 @receiver(post_save, sender=bdb.Batch)
 @receiver(post_save, sender=bdb.Equipment)
@@ -33,6 +33,7 @@ def set_permissions_standard(sender, instance, **kwargs):
             assign_perm(view, Group.objects.get(name=group), instance)
 
 
+# Models in the decorators below follow a less strict permissions setup
 @receiver(post_save, sender=bdb.DeviceConfig)
 @receiver(post_save, sender=bdb.Experiment)
 @receiver(post_save, sender=bdb.ExperimentDataFile)

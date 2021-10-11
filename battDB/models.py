@@ -26,8 +26,8 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         verbose_name="Abstract Specification",
         help_text="""
         This specifies an abstract device, e.g. 'Cell' with child members
-        such as 'Positive Electrode, Negative Electrode, Electrolyte etc. 
-        If this is set to True, then all metadata declared here must be 
+        such as 'Positive Electrode, Negative Electrode, Electrolyte etc.
+        If this is set to True, then all metadata declared here must be
         overridden in child classes. An abstract specification cannot be used
         to define a physical device or batch.
         """,
@@ -44,7 +44,7 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         blank=True,
         limit_choices_to={"abstract": True},
         related_name="specifies",
-        help_text="""Device type. e.g. Cell, Module, Battery Pack. An abstract 
+        help_text="""Device type. e.g. Cell, Module, Battery Pack. An abstract
         specification cannot have a device type -  they define the device types.""",
     )
 
