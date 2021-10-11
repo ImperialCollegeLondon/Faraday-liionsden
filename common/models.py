@@ -39,7 +39,7 @@ class HasStatus(models.Model):
         ("public", "Public"),  # cannot be modified except by maintainers/admin
         ("deleted", "Deleted"),  # hidden to all except maintainers/admin
     ]
-    status = models.CharField(max_length=16, default="draft", choices=OBJ_STATUS)
+    status = models.CharField(max_length=16, default="private", choices=OBJ_STATUS)
 
     class Meta:
         abstract = True
