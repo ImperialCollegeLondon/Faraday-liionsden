@@ -537,7 +537,9 @@ class ExperimentDevice(models.Model):
 
     def get_serial_no(self):
         """ TODO: implement id_to_serialno and serialno_to_id functions. """
-        raise NotImplementedError
+        # TEMP fix to allow Experiments to be created without errors
+        pass
+        #raise NotImplementedError
 
     def clean(self):
         if self.batch is not None and self.batch_sequence > self.batch.batch_size:
