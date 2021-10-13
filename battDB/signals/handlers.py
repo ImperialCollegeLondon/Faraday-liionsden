@@ -10,6 +10,7 @@ import battDB.models as bdb
 @receiver(post_save, sender=bdb.DeviceSpecification)
 @receiver(post_save, sender=bdb.Batch)
 @receiver(post_save, sender=bdb.Equipment)
+@receiver(post_save, sender=bdb.Parser)
 def set_permissions_standard(sender, instance, **kwargs):
     """Set object-level permissions according to a standard setup: The contributing
     user can modify the object if status is "private" but not if "public".
