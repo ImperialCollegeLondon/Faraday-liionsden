@@ -1,4 +1,4 @@
-from unittest import expectedFailure
+from unittest import expectedFailure, skip
 from unittest.mock import MagicMock
 
 from django.core.exceptions import ValidationError
@@ -248,6 +248,7 @@ class TestExperimentDevice(TestCase):
         self.assertTrue(hasattr(self.model, "device_position"))
         self.assertTrue(hasattr(self.model, "data_file"))
 
+    @skip("Wait until this is implemented properly before adding tests.") 
     def test_get_serial_no(self):
         self.assertRaises(NotImplementedError, self.model.get_serial_no)
 
