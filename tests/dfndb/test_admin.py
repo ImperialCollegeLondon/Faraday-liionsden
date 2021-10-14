@@ -1,7 +1,7 @@
-from django.contrib.admin.sites import AdminSite, site
-from django.test import TestCase
 from unittest.mock import MagicMock
 
+from django.contrib.admin.sites import AdminSite, site
+from django.test import TestCase
 
 request = MagicMock()
 
