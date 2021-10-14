@@ -119,7 +119,7 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
         verbose_name_plural = "Batches"
 
 
-class Device(cm.HasAttributes, cm.HasNotes):
+class Device(cm.HasAttributes, cm.HasNotes, cm.HasStatus, cm.HasOwner):
     """Identify an individual device in a batch."""
 
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
@@ -185,7 +185,7 @@ class DeviceConfig(cm.BaseModel):
         verbose_name_plural = "Device Configurations"
 
 
-class DeviceConfigNode(models.Model):
+class DeviceConfigNode(cm.HasStatus, cm.HasOwner):
     """Defines a chain of devices electrically connected together, like a netlist.
 
     FIXME: I would like to use 'limit_choices_to to' dynamically restrict choices based
@@ -488,7 +488,7 @@ class ExperimentDataFile(cm.BaseModel):
         verbose_name = "Data File"
 
 
-class UploadedFile(cm.HashedFile):
+class UploadedFile(cm.HashedFile, cm.HasStatus, cm.HasOwner):
     edf = models.OneToOneField(
         ExperimentDataFile,
         on_delete=models.CASCADE,
@@ -511,7 +511,7 @@ class UploadedFile(cm.HashedFile):
     )
 
 
-class ExperimentDevice(models.Model):
+class ExperimentDevice(cm.HasStatus, cm.HasOwner):
     """Join table: identifies devices in experiments and link them to data files."""
 
     experiment = models.ForeignKey(
@@ -539,7 +539,7 @@ class ExperimentDevice(models.Model):
         """ TODO: implement id_to_serialno and serialno_to_id functions. """
         # TEMP fix to allow Experiments to be created without errors
         pass
-        #raise NotImplementedError
+        # raise NotImplementedError
 
     def clean(self):
         if self.batch is not None and self.batch_sequence > self.batch.batch_size:
@@ -561,7 +561,7 @@ class ExperimentDevice(models.Model):
         ]
 
 
-class DataColumn(models.Model):
+class DataColumn(cm.HasStatus, cm.HasOwner):
     data_file = models.ForeignKey(ExperimentDataFile, on_delete=models.CASCADE)
     column_name = models.CharField(max_length=40, default="Ns")
 
@@ -622,7 +622,9 @@ class DataColumn(models.Model):
         verbose_name_plural = "Data Column Mappings to Device Parameters"
 
 
-class DataRange(cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates):
+class DataRange(
+    cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates, cm.HasStatus, cm.HasOwner
+):
     """Each data range within the data file
 
     Each data file contains numerous ranges e.g. charge & discharge cycles. Their data
@@ -663,7 +665,7 @@ class DataRange(cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates):
         unique_together = [["dataFile", "label"]]
 
 
-class SignalType(models.Model):
+class SignalType(cm.HasStatus, cm.HasOwner):
     """Specification for a column in a data file representing a physical quantity."""
 
     parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
