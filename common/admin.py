@@ -2,8 +2,9 @@ import django.forms
 import mptt
 from django.contrib import admin
 from django.db import models
-from . import models as cmodels
 from guardian.admin import GuardedModelAdmin
+
+from . import models as cmodels
 
 admin.site.site_header = "The Faraday Institution - Liionsden Electrochemistry Database"
 admin.site.site_title = "Liionsden Admin"

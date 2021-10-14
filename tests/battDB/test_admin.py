@@ -1,10 +1,9 @@
 from types import SimpleNamespace
+from unittest.mock import MagicMock
 
 from django.contrib.admin.sites import AdminSite
 from django.test import TestCase
 from model_bakery import baker
-from unittest.mock import MagicMock
-
 
 request = MagicMock()
 

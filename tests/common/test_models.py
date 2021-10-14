@@ -10,6 +10,7 @@ from tests.fixtures import AbstractModelMixinTestCase, db_user
 
 User = get_user_model()
 
+
 class TestHasName(AbstractModelMixinTestCase):
     from common.models import HasName
 
