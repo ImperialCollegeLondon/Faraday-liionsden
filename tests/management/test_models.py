@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from tests.fixtures import db_user
 
+from tests.fixtures import db_user
 
 User = get_user_model()
 
@@ -9,6 +9,7 @@ User = get_user_model()
 class TestUser(TestCase):
     def test_user_model(self):
         from management.models import User
+
         self.assertIs(User, get_user_model())
 
     def test_user_perms(self):

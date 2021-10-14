@@ -15,7 +15,7 @@ staff_user = dict(
     first_name="Linus",
     last_name="Pauling",
     password="V1taminC",
-    is_staff="True"
+    is_staff="True",
 )
 
 db_unit = dict(
