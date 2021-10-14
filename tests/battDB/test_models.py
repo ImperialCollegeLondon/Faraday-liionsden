@@ -1,15 +1,24 @@
 from unittest import expectedFailure, skip
 from unittest.mock import MagicMock
 
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from model_bakery import baker
+
+from ..fixtures import db_user
+
+User = get_user_model()
 
 
 class TestDeviceSpecification(TestCase):
     from battDB.models import DeviceSpecification
 
     model = DeviceSpecification
+
+    def setUp(self):
+        User.objects.get_or_create(**db_user)
+        self.user = User.objects.get(username=db_user["username"])
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "parameters"))
@@ -19,14 +28,18 @@ class TestDeviceSpecification(TestCase):
 
     def test_clean(self):
         # These three are ok
-        self.model.objects.create().clean()
-        obj = self.model.objects.create(abstract=True)
+        self.model.objects.create(user_owner=self.user).clean()
+        obj = self.model.objects.create(abstract=True, user_owner=self.user)
         obj.clean()
-        self.model.objects.create(abstract=False, device_type=obj).clean()
+        self.model.objects.create(
+            abstract=False, device_type=obj, user_owner=self.user
+        ).clean()
 
         # This is not ok
         with self.assertRaises(ValidationError):
-            self.model.objects.create(abstract=True, device_type=obj).clean()
+            self.model.objects.create(
+                abstract=True, device_type=obj, user_owner=self.user
+            ).clean()
 
 
 class TestDeviceParameter(TestCase):
@@ -108,7 +121,12 @@ class TestDeviceConfig(TestCase):
 
 class TestDeviceConfigNode(TestCase):
     def setUp(self):
-        self.model = baker.make("battDB.DeviceConfigNode")
+        User.objects.get_or_create(**db_user)
+        self.user = User.objects.get(username=db_user["username"])
+        self.model = baker.make(
+            "battDB.DeviceConfigNode",
+            device=baker.make("battDB.DeviceSpecification", user_owner=self.user),
+        )
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "device"))
@@ -248,7 +266,7 @@ class TestExperimentDevice(TestCase):
         self.assertTrue(hasattr(self.model, "device_position"))
         self.assertTrue(hasattr(self.model, "data_file"))
 
-    @skip("Wait until this is implemented properly before adding tests.") 
+    @skip("Wait until this is implemented properly before adding tests.")
     def test_get_serial_no(self):
         self.assertRaises(NotImplementedError, self.model.get_serial_no)
 
