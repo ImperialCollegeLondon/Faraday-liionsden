@@ -506,7 +506,7 @@ class ExperimentDataFile(cm.BaseModel):
         verbose_name = "Data File"
 
 
-class UploadedFile(cm.HashedFile):
+class UploadedFile(cm.HashedFile, cm.HasOwner, cm.HasStatus):
     edf = models.OneToOneField(
         ExperimentDataFile,
         on_delete=models.CASCADE,
@@ -652,7 +652,9 @@ class DataColumn(models.Model):
         verbose_name_plural = "Data Column Mappings to Device Parameters"
 
 
-class DataRange(cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates):
+class DataRange(
+    cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates, cm.HasOwner, cm.HasStatus
+):
     """Each data range within the data file
 
     Each data file contains numerous ranges e.g. charge & discharge cycles. Their data
