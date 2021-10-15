@@ -162,6 +162,9 @@ class Device(cm.HasAttributes, cm.HasNotes):
         # TODO: Can compute device stats here
         self.attributes["state_of_health"] = "100%"
 
+    def user_owner(self):
+        return self.batch.user_owner
+
     def __str__(self):
         return str(self.batch.specification) + "/" + self.serial()
 
@@ -226,6 +229,9 @@ class DeviceConfigNode(models.Model):
         blank=True,
         help_text="Name of electrical signal at negative terminal e.g. pack_-ve",
     )
+
+    def user_owner(self):
+        return self.device.user_owner
 
     def __str__(self):
         return (
@@ -547,6 +553,9 @@ class ExperimentDevice(models.Model):
         elif self.batch is not None:
             Device.objects.get_or_create(batch=self.batch, seq_num=self.batch_sequence)
 
+    def user_owner(self):
+        return self.experiment.user_owner
+
     def __str__(self):
         return self.device_position
 
@@ -616,6 +625,9 @@ class DataColumn(models.Model):
     def experiment(self):
         return self.data_file.experiment
 
+    def user_owner(self):
+        return self.data_file.user_owner
+
     class Meta:
         unique_together = [["device", "data_file"], ["column_name", "data_file"]]
         verbose_name = "Column Mapping"
@@ -672,6 +684,9 @@ class SignalType(models.Model):
         default=5, help_text="override column ordering"
     )
     parser = models.ForeignKey(Parser, on_delete=models.CASCADE, related_name="columns")
+
+    def user_owner(self):
+        return self.parser.user_owner
 
     def __str__(self):
         return self.col_name
