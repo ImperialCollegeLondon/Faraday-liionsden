@@ -46,7 +46,7 @@ class TestDeviceSpecAdmin(TestCase):
         )
         from battDB.models import DeviceSpecification
 
-        baker.make("battDB.DeviceSpecification")
+        baker.make_recipe("tests.battDB.device_specification")
         ma = DeviceSpecAdmin(DeviceSpecification, self.site)
         self.assertEqual(ma.model, DeviceSpecification)
         for d in ["device_type", "abstract", "complete"]:
@@ -98,7 +98,7 @@ class TestBatchAdmin(TestCase):
         from battDB.admin import BatchAdmin, BatchInline, DeviceInline
         from battDB.models import Batch
 
-        baker.make("battDB.Batch", manufacturer=baker.make("common.Org"))
+        baker.make_recipe("tests.battDB.batch")
         ma = BatchAdmin(Batch, self.site)
         self.assertEqual(ma.model, Batch)
         for d in ["manufacturer", "batch_size"]:
@@ -149,7 +149,7 @@ class TestExperimentAdmin(TestCase):
         from battDB.admin import ExperimentAdmin, ExperimentDeviceInline
         from battDB.models import Experiment
 
-        baker.make("battDB.Experiment")
+        baker.make_recipe("tests.battDB.experiment")
         ma = ExperimentAdmin(Experiment, self.site)
         self.assertEqual(ma.model, Experiment)
         self.assertIn("data_files_list", ma.get_readonly_fields(request))
@@ -164,7 +164,7 @@ class TestExperimentAdmin(TestCase):
         from battDB.admin import ExperimentAdmin
         from battDB.models import Experiment
 
-        baker.make("battDB.Experiment")
+        baker.make_recipe("tests.battDB.experiment")
         ma = ExperimentAdmin(Experiment, self.site)
         self.assertEqual(ma.data_files_list(Experiment.objects.get()), "")
 
@@ -190,7 +190,7 @@ class TestDeviceConfigAdmin(TestCase):
         from battDB.admin import DeviceConfigAdmin, DeviceConfigInline
         from battDB.models import DeviceConfig
 
-        baker.make("battDB.DeviceConfig")
+        baker.make_recipe("tests.battDB.device_config")
         ma = DeviceConfigAdmin(DeviceConfig, self.site)
         self.assertEqual(ma.model, DeviceConfig)
         self.assertEqual(
@@ -247,7 +247,7 @@ class TestDataRangeInline(TestCase):
         from battDB.admin import DataRangeInline
         from battDB.models import DataRange
 
-        obj = baker.make("battDB.ExperimentDataFile")
+        obj = baker.make_recipe("tests.battDB.edf")
         ma = DataRangeInline(DataRange, self.site)
         self.assertEqual(ma.size(obj), "N/A")
 
@@ -255,7 +255,7 @@ class TestDataRangeInline(TestCase):
         from battDB.admin import DataRangeInline
         from battDB.models import DataRange
 
-        obj = baker.make("battDB.ExperimentDataFile")
+        obj = baker.make_recipe("tests.battDB.edf")
         ma = DataRangeInline(DataRange, self.site)
         self.assertEqual(ma.get_graph_link(obj), "N/A")
 
@@ -263,7 +263,7 @@ class TestDataRangeInline(TestCase):
         from battDB.admin import DataRangeInline
         from battDB.models import DataRange
 
-        obj = baker.make("battDB.ExperimentDataFile")
+        obj = baker.make_recipe("tests.battDB.edf")
         ma = DataRangeInline(DataRange, self.site)
         self.assertEqual(ma.columns(obj), "None")
 
@@ -281,7 +281,7 @@ class TestDataAdmin(TestCase):
         from battDB.admin import DataFileInline, DataRangeInline, DeviceDataInline
         from battDB.models import ExperimentDataFile
 
-        obj = baker.make("battDB.ExperimentDataFile")
+        obj = baker.make_recipe("tests.battDB.edf")
         self.assertEqual(self.ma.model, ExperimentDataFile)
         self.assertEqual(
             self.ma.get_inlines(request, obj),
@@ -330,11 +330,11 @@ class TestDataAdmin(TestCase):
         )
 
     def test_get_experiment_link(self):
-        obj = baker.make("battDB.ExperimentDataFile")
+        obj = baker.make_recipe("tests.battDB.edf")
         self.assertEqual(self.ma.get_experiment_link(obj), "N/A")
 
     def test_get_file_link(self):
-        obj = baker.make("battDB.ExperimentDataFile")
+        obj = baker.make_recipe("tests.battDB.edf")
         self.assertEqual(self.ma.get_file_link(obj), "N/A")
 
 
@@ -364,7 +364,7 @@ class TestParserAdmin(TestCase):
         from battDB.admin import ParserAdmin, ParserSignalInline
         from battDB.models import Parser
 
-        baker.make("battDB.Parser")
+        baker.make_recipe("tests.battDB.parser")
         ma = ParserAdmin(Parser, self.site)
         self.assertEqual(ma.model, Parser)
         self.assertEqual(
