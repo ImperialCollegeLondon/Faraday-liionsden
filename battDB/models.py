@@ -57,7 +57,7 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         verbose_name_plural = "Device Specifications"
 
 
-class DeviceParameter(cm.HasName, cm.HasStatus, cm.HasOwner):
+class DeviceParameter(cm.HasName):
     """Parameters on device."""
 
     spec = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE)
