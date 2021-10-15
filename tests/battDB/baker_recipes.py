@@ -28,7 +28,6 @@ device_parameter = Recipe(
     spec=foreign_key(device_specification),
     parameter=foreign_key(parameter),
     material=foreign_key(material),
-    user_owner=foreign_key(user),
 )
 
 device_config = Recipe(DeviceConfig, user_owner=foreign_key(user))
@@ -37,7 +36,6 @@ device_config_node = Recipe(
     DeviceConfigNode,
     device=foreign_key(device_specification),
     config=foreign_key(device_config),
-    user_owner=foreign_key(user),
 )
 
 batch = Recipe(
@@ -47,7 +45,7 @@ batch = Recipe(
     user_owner=foreign_key(user),
 )
 
-device = Recipe(Device, batch=foreign_key(batch), user_owner=foreign_key(user))
+device = Recipe(Device, batch=foreign_key(batch))
 
 parser = Recipe(Parser, user_owner=foreign_key(user))
 
@@ -64,10 +62,7 @@ edf = Recipe(ExperimentDataFile, user_owner=foreign_key(user))
 uploaded_file = Recipe(UploadedFile, user_owner=foreign_key(user))
 
 experiment_device = Recipe(
-    ExperimentDevice,
-    experiment=foreign_key(experiment),
-    batch=foreign_key(batch),
-    user_owner=foreign_key(user),
+    ExperimentDevice, experiment=foreign_key(experiment), batch=foreign_key(batch)
 )
 
 data_column = Recipe(
@@ -76,14 +71,10 @@ data_column = Recipe(
     device=foreign_key(experiment_device),
     parameter=foreign_key(parameter),
     data_file=foreign_key(edf),
-    user_owner=foreign_key(user),
 )
 
 data_range = Recipe(DataRange, dataFile=foreign_key(edf), user_owner=foreign_key(user))
 
 signal_type = Recipe(
-    SignalType,
-    parameter=foreign_key(parameter),
-    parser=foreign_key(parser),
-    user_owner=foreign_key(user),
+    SignalType, parameter=foreign_key(parameter), parser=foreign_key(parser)
 )
