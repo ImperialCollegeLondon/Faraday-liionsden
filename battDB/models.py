@@ -119,7 +119,7 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
         verbose_name_plural = "Batches"
 
 
-class Device(cm.HasAttributes, cm.HasNotes, cm.HasStatus, cm.HasOwner):
+class Device(cm.HasAttributes, cm.HasNotes):
     """Identify an individual device in a batch."""
 
     batch = models.ForeignKey(Batch, on_delete=models.CASCADE)
@@ -185,7 +185,7 @@ class DeviceConfig(cm.BaseModel):
         verbose_name_plural = "Device Configurations"
 
 
-class DeviceConfigNode(cm.HasStatus, cm.HasOwner):
+class DeviceConfigNode(models.Model):
     """Defines a chain of devices electrically connected together, like a netlist.
 
     FIXME: I would like to use 'limit_choices_to to' dynamically restrict choices based
@@ -488,7 +488,7 @@ class ExperimentDataFile(cm.BaseModel):
         verbose_name = "Data File"
 
 
-class UploadedFile(cm.HashedFile, cm.HasStatus, cm.HasOwner):
+class UploadedFile(cm.HashedFile):
     edf = models.OneToOneField(
         ExperimentDataFile,
         on_delete=models.CASCADE,
@@ -511,7 +511,7 @@ class UploadedFile(cm.HashedFile, cm.HasStatus, cm.HasOwner):
     )
 
 
-class ExperimentDevice(cm.HasStatus, cm.HasOwner):
+class ExperimentDevice(models.Model):
     """Join table: identifies devices in experiments and link them to data files."""
 
     experiment = models.ForeignKey(
@@ -561,7 +561,7 @@ class ExperimentDevice(cm.HasStatus, cm.HasOwner):
         ]
 
 
-class DataColumn(cm.HasStatus, cm.HasOwner):
+class DataColumn(models.Model):
     data_file = models.ForeignKey(ExperimentDataFile, on_delete=models.CASCADE)
     column_name = models.CharField(max_length=40, default="Ns")
 
@@ -622,9 +622,7 @@ class DataColumn(cm.HasStatus, cm.HasOwner):
         verbose_name_plural = "Data Column Mappings to Device Parameters"
 
 
-class DataRange(
-    cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates, cm.HasStatus, cm.HasOwner
-):
+class DataRange(cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates):
     """Each data range within the data file
 
     Each data file contains numerous ranges e.g. charge & discharge cycles. Their data
@@ -665,7 +663,7 @@ class DataRange(
         unique_together = [["dataFile", "label"]]
 
 
-class SignalType(cm.HasStatus, cm.HasOwner):
+class SignalType(models.Model):
     """Specification for a column in a data file representing a physical quantity."""
 
     parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
