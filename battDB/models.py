@@ -68,6 +68,12 @@ class DeviceParameter(cm.HasName):
     value = models.JSONField(blank=True, null=True)
     inherit_to_children = models.BooleanField(default=False)
 
+    def user_owner(self):
+        return self.spec.user_owner
+
+    def status(self):
+        return self.spec.status
+
     def __str__(self):
         return str(self.parameter)
 
@@ -165,6 +171,9 @@ class Device(cm.HasAttributes, cm.HasNotes):
     def user_owner(self):
         return self.batch.user_owner
 
+    def status(self):
+        return self.batch.status
+
     def __str__(self):
         return str(self.batch.specification) + "/" + self.serial()
 
@@ -232,6 +241,9 @@ class DeviceConfigNode(models.Model):
 
     def user_owner(self):
         return self.device.user_owner
+
+    def status(self):
+        return self.device.status
 
     def __str__(self):
         return (
@@ -556,6 +568,9 @@ class ExperimentDevice(models.Model):
     def user_owner(self):
         return self.experiment.user_owner
 
+    def status(self):
+        return self.experiment.status
+
     def __str__(self):
         return self.device_position
 
@@ -628,6 +643,9 @@ class DataColumn(models.Model):
     def user_owner(self):
         return self.data_file.user_owner
 
+    def status(self):
+        return self.data_file.status
+
     class Meta:
         unique_together = [["device", "data_file"], ["column_name", "data_file"]]
         verbose_name = "Column Mapping"
@@ -687,6 +705,9 @@ class SignalType(models.Model):
 
     def user_owner(self):
         return self.parser.user_owner
+
+    def status(self):
+        return self.parser.status
 
     def __str__(self):
         return self.col_name
