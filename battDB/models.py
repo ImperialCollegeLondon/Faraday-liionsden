@@ -250,10 +250,10 @@ class Parser(cm.BaseModelMandatoryName):
      https://stackoverflow.com/q/46430471/3778792 combined with some pandas magic.
     """
 
-    FORMAT_CHOICES = [("none", "None")] + available_parsers()
+    FORMAT_CHOICES = available_parsers()
     file_format = models.CharField(
         max_length=20,
-        default="none",
+        default=FORMAT_CHOICES[0],
         choices=FORMAT_CHOICES,
         help_text="File format",
     )
