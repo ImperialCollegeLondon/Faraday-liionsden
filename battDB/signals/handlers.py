@@ -34,6 +34,12 @@ def set_permissions_standard(sender, instance, **kwargs):
         for group in ["Read only", "Contributor"]:
             assign_perm(view, Group.objects.get(name=group), instance)
 
+    elif instance.status.lower() == "deleted":
+        pass  # Maintainers already have all perms
+
+    else:
+        raise ValueError("Object status must be private, public or deleted.")
+
 
 @receiver(post_save, sender=bdb.DeviceConfig)
 @receiver(post_save, sender=bdb.Experiment)
@@ -62,6 +68,14 @@ def set_permissions_modifiable(sender, instance, **kwargs):
     if instance.status.lower() == "public":
         for group in ["Read only", "Contributor"]:
             assign_perm(view, Group.objects.get(name=group), instance)
+
+    elif instance.status.lower() in ["private", "deleted"]:
+        pass  # Maintainers already have all perms
+
+    else:
+        raise ValueError(
+            f"Object status {instance.status} not allowed; must be private, public or deleted."
+        )
 
 
 def _get_perm_codenames(model):
