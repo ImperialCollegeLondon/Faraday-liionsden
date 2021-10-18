@@ -13,6 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 
 from .utils import hash_file
+from .validators import validate_data_file
 
 # TODO: Add localised strings (l10n) using django_gettext for all string literals in
 #  this file
@@ -377,8 +378,7 @@ class HashedFile(models.Model):
     """
 
     file = models.FileField(
-        upload_to="uploaded_files",
-        null=False,
+        upload_to="uploaded_files", null=False, validators=(validate_data_file,)
     )
     hash = models.CharField(
         max_length=64,

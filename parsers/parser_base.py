@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import abc
+import functools
 from pathlib import Path
 from typing import Dict, Generator, List, Optional, Tuple, Type, Union
 from warnings import warn
@@ -82,6 +83,23 @@ def available_parsers() -> List[Tuple[str, str]]:
         A list of tuples with the parser name and its description.
     """
     return [(k, v.description) for k, v in KNOWN_PARSERS.items()]
+
+
+def mime_and_extension() -> List[Tuple[str, str]]:
+    """Generates a list of valid mime types and extensions.
+
+    Returns:
+        A list of tuples with the mime type and the extension.
+    """
+    return list(
+        set(
+            functools.reduce(
+                lambda previous, v: previous + v.valid,
+                KNOWN_PARSERS.values(),
+                [],
+            )
+        )
+    )
 
 
 def parse_data_file(
