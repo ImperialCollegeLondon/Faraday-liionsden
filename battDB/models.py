@@ -252,7 +252,7 @@ class Parser(cm.BaseModelMandatoryName):
 
     FORMAT_CHOICES = available_parsers()
     file_format = models.CharField(
-        max_length=20,
+        max_length=50,
         default=FORMAT_CHOICES[0] if len(FORMAT_CHOICES) > 0 else "none",
         choices=FORMAT_CHOICES,
         help_text="File format",
