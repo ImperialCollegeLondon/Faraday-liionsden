@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Group
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from guardian.shortcuts import assign_perm
+from guardian.shortcuts import assign_perm, remove_perm
 
 import battDB.models as bdb
 
@@ -29,13 +29,19 @@ def set_permissions_standard(sender, instance, **kwargs):
     if instance.status.lower() == "private":
         for perm in [change, view]:
             assign_perm(perm, instance.user_owner, instance)
+        for group in ["Read only", "Contributor"]:
+            remove_perm(view, Group.objects.get(name=group), instance)
 
     elif instance.status.lower() == "public":
+        remove_perm(change, instance.user_owner, instance)
         for group in ["Read only", "Contributor"]:
             assign_perm(view, Group.objects.get(name=group), instance)
 
     elif instance.status.lower() == "deleted":
-        pass  # Maintainers already have all perms
+        for group in ["Read only", "Contributor"]:
+            remove_perm(view, Group.objects.get(name=group), instance)
+        for perm in [change, view]:
+            remove_perm(perm, instance.user_owner, instance)
 
     else:
         raise ValueError("Object status must be private, public or deleted.")
@@ -60,17 +66,24 @@ def set_permissions_modifiable(sender, instance, **kwargs):
     for perm in [delete, change, view]:
         assign_perm(perm, Group.objects.get(name="Maintainer"), instance)
 
-    # Individual permissions based on ownership
-    for perm in [change, view]:
-        assign_perm(perm, instance.user_owner, instance)
-
     # Other users perms based on obj status
     if instance.status.lower() == "public":
+        for perm in [change, view]:
+            assign_perm(perm, instance.user_owner, instance)
         for group in ["Read only", "Contributor"]:
             assign_perm(view, Group.objects.get(name=group), instance)
 
-    elif instance.status.lower() in ["private", "deleted"]:
-        pass  # Maintainers already have all perms
+    elif instance.status.lower() == "private":
+        for perm in [change, view]:
+            assign_perm(perm, instance.user_owner, instance)
+        for group in ["Read only", "Contributor"]:
+            remove_perm(view, Group.objects.get(name=group), instance)
+
+    elif instance.status.lower() == "deleted":
+        for group in ["Read only", "Contributor"]:
+            remove_perm(view, Group.objects.get(name=group), instance)
+        for perm in [change, view]:
+            remove_perm(perm, instance.user_owner, instance)
 
     else:
         raise ValueError(
