@@ -68,9 +68,11 @@ class DeviceParameter(cm.HasName):
     value = models.JSONField(blank=True, null=True)
     inherit_to_children = models.BooleanField(default=False)
 
+    @property
     def user_owner(self):
         return self.spec.user_owner
 
+    @property
     def status(self):
         return self.spec.status
 
@@ -168,9 +170,11 @@ class Device(cm.HasAttributes, cm.HasNotes):
         # TODO: Can compute device stats here
         self.attributes["state_of_health"] = "100%"
 
+    @property
     def user_owner(self):
         return self.batch.user_owner
 
+    @property
     def status(self):
         return self.batch.status
 
@@ -239,9 +243,11 @@ class DeviceConfigNode(models.Model):
         help_text="Name of electrical signal at negative terminal e.g. pack_-ve",
     )
 
+    @property
     def user_owner(self):
         return self.device.user_owner
 
+    @property
     def status(self):
         return self.device.status
 
@@ -565,9 +571,11 @@ class ExperimentDevice(models.Model):
         elif self.batch is not None:
             Device.objects.get_or_create(batch=self.batch, seq_num=self.batch_sequence)
 
+    @property
     def user_owner(self):
         return self.experiment.user_owner
 
+    @property
     def status(self):
         return self.experiment.status
 
@@ -640,9 +648,11 @@ class DataColumn(models.Model):
     def experiment(self):
         return self.data_file.experiment
 
+    @property
     def user_owner(self):
         return self.data_file.user_owner
 
+    @property
     def status(self):
         return self.data_file.status
 
@@ -705,9 +715,11 @@ class SignalType(models.Model):
     )
     parser = models.ForeignKey(Parser, on_delete=models.CASCADE, related_name="columns")
 
+    @property
     def user_owner(self):
         return self.parser.user_owner
 
+    @property
     def status(self):
         return self.parser.status
 

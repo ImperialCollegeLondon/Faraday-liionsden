@@ -11,6 +11,9 @@ import battDB.models as bdb
 @receiver(post_save, sender=bdb.Batch)
 @receiver(post_save, sender=bdb.Equipment)
 @receiver(post_save, sender=bdb.Parser)
+@receiver(post_save, sender=bdb.DeviceParameter)
+@receiver(post_save, sender=bdb.SignalType)
+@receiver(post_save, sender=bdb.Device)
 def set_permissions_standard(sender, instance, **kwargs):
     """Set object-level permissions according to a standard setup: The contributing
     user can modify the object if status is "private" but not if "public".
@@ -35,6 +38,11 @@ def set_permissions_standard(sender, instance, **kwargs):
 @receiver(post_save, sender=bdb.DeviceConfig)
 @receiver(post_save, sender=bdb.Experiment)
 @receiver(post_save, sender=bdb.ExperimentDataFile)
+@receiver(post_save, sender=bdb.DeviceConfigNode)
+@receiver(post_save, sender=bdb.ExperimentDevice)
+@receiver(post_save, sender=bdb.UploadedFile)
+@receiver(post_save, sender=bdb.DataColumn)
+@receiver(post_save, sender=bdb.DataRange)
 def set_permissions_modifiable(sender, instance, **kwargs):
     """Set object-level permissions according to a less strict setup: The contributing
     user can modify the object if status is "private" or "public".
