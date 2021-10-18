@@ -15,6 +15,7 @@ class ParserBase(abc.ABC):
 
     name: str = ""
     description: str = ""
+    valid: List[Tuple[str, str]] = []
 
     def __init_subclass__(cls: Type[ParserBase]):
         if len(cls.name) == 0:
@@ -42,6 +43,7 @@ class DummyParser(ParserBase):
 
     name = "Dummy"
     description = "Dummy parser that does nothing"
+    valid: List[Tuple[str, str]] = []
 
     def get_metadata(self) -> (Dict, Dict):
         return {"num_rows": 0}, {}
