@@ -368,13 +368,8 @@ class Paper(
 
 
 class HashedFile(models.Model):
-    """A list of user-uploaded files. <BR>
-
-    FIXME: This is pretty insecure - File format & size is not yet enforced, so any kind
-     of file can be uploaded, including Python scripts, very large binary files, etc.
-
-    FIXME: Uploaded files should go somewhere else, no within the Django application
-        code structure.
+    """
+    Uploaded files with a unique hash number.
     """
 
     file = models.FileField(
