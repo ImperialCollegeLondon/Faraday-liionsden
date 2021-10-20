@@ -387,6 +387,7 @@ class HashedFile(models.Model):
         abstract = True
 
     def clean(self):
+        print(self.file.name)
         self.hash = hash_file(self.file)
         return super(HashedFile, self).clean()
 
