@@ -78,6 +78,16 @@ class TestFunctions(TestCase):
         expected = list(zip(names, descriptions))
         self.assertEqual(expected, available_parsers())
 
+    def test_mime_and_extension(self):
+        from itertools import chain
+
+        from parsers.parser_base import KNOWN_PARSERS, mime_and_extension
+
+        descriptions = [p.valid for p in KNOWN_PARSERS.values()]
+        actual = mime_and_extension()
+        for item in chain.from_iterable(descriptions):
+            assert item in actual
+
 
 class TestParseDataFile(TestCase):
     def setUp(self) -> None:

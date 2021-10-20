@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import abc
+import functools
 from pathlib import Path
 from typing import Dict, Generator, List, Optional, Tuple, Type, Union
 from warnings import warn
@@ -15,6 +16,7 @@ class ParserBase(abc.ABC):
 
     name: str = ""
     description: str = ""
+    valid: List[Tuple[str, str]] = []
 
     def __init_subclass__(cls: Type[ParserBase]):
         if len(cls.name) == 0:
@@ -42,6 +44,7 @@ class DummyParser(ParserBase):
 
     name = "Dummy"
     description = "Dummy parser that does nothing"
+    valid: List[Tuple[str, str]] = []
 
     def get_metadata(self) -> (Dict, Dict):
         return {"num_rows": 0}, {}
@@ -80,6 +83,23 @@ def available_parsers() -> List[Tuple[str, str]]:
         A list of tuples with the parser name and its description.
     """
     return [(k, v.description) for k, v in KNOWN_PARSERS.items()]
+
+
+def mime_and_extension() -> List[Tuple[str, str]]:
+    """Generates a list of valid mime types and extensions.
+
+    Returns:
+        A list of tuples with the mime type and the extension.
+    """
+    return list(
+        set(
+            functools.reduce(
+                lambda previous, v: previous + v.valid,
+                KNOWN_PARSERS.values(),
+                [],
+            )
+        )
+    )
 
 
 def parse_data_file(
