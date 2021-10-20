@@ -1,6 +1,8 @@
 from django.db.utils import IntegrityError
 from django.test import TestCase
 
+from model_bakery import baker
+
 
 class TestCompound(TestCase):
     from dfndb.models import Compound
@@ -174,25 +176,25 @@ class TestQuantityUnit(TestCase):
 class TestParameter(TestCase):
     from dfndb.models import Parameter
 
-    model = Parameter
-
     def setUp(self):
         from dfndb.models import QuantityUnit
         from tests.fixtures import db_unit
 
         unit = QuantityUnit.objects.create(**db_unit)
         self.expected = dict(name="Ionized donors", symbol="Nd-", unit=unit)
-        self.model.objects.create(**self.expected)
+        self.model = baker.make_recipe("tests.dfndb.parameter", 
+                                name="Ionized donors", 
+                                symbol="Nd-", 
+                                unit=unit
+                            )
 
     def test_parameter_creation(self):
-        obj = self.model.objects.get()
         for k, v in self.expected.items():
-            self.assertEqual(getattr(obj, k), v)
+            self.assertEqual(getattr(self.model, k), v)
 
     def test_str(self):
-        obj = self.model.objects.get()
         self.assertEqual(
-            obj.__str__(),
+            self.model.__str__(),
             "%s: %s / %s"
             % (
                 self.expected["name"],
@@ -202,9 +204,12 @@ class TestParameter(TestCase):
         )
 
     def test_unique_together(self):
+        from dfndb.models import QuantityUnit
+        from tests.fixtures import db_unit
         self.expected["symbol"] = "Na+"
-        self.model.objects.create(**self.expected)
-        self.assertRaises(IntegrityError, self.model.objects.create, **self.expected)
+        with self.assertRaises(IntegrityError):
+            baker.make_recipe("tests.dfndb.parameter", symbol="Na+", 
+            unit=QuantityUnit.objects.create(**db_unit))
 
 
 class TestData(TestCase):
