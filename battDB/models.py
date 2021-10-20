@@ -68,6 +68,14 @@ class DeviceParameter(cm.HasName):
     value = models.JSONField(blank=True, null=True)
     inherit_to_children = models.BooleanField(default=False)
 
+    @property
+    def user_owner(self):
+        return self.spec.user_owner
+
+    @property
+    def status(self):
+        return self.spec.status
+
     def __str__(self):
         return str(self.parameter)
 
@@ -162,6 +170,14 @@ class Device(cm.HasAttributes, cm.HasNotes):
         # TODO: Can compute device stats here
         self.attributes["state_of_health"] = "100%"
 
+    @property
+    def user_owner(self):
+        return self.batch.user_owner
+
+    @property
+    def status(self):
+        return self.batch.status
+
     def __str__(self):
         return str(self.batch.specification) + "/" + self.serial()
 
@@ -226,6 +242,14 @@ class DeviceConfigNode(models.Model):
         blank=True,
         help_text="Name of electrical signal at negative terminal e.g. pack_-ve",
     )
+
+    @property
+    def user_owner(self):
+        return self.device.user_owner
+
+    @property
+    def status(self):
+        return self.device.status
 
     def __str__(self):
         return (
@@ -488,7 +512,7 @@ class ExperimentDataFile(cm.BaseModel):
         verbose_name = "Data File"
 
 
-class UploadedFile(cm.HashedFile):
+class UploadedFile(cm.HashedFile, cm.HasOwner, cm.HasStatus):
     edf = models.OneToOneField(
         ExperimentDataFile,
         on_delete=models.CASCADE,
@@ -537,13 +561,23 @@ class ExperimentDevice(models.Model):
 
     def get_serial_no(self):
         """ TODO: implement id_to_serialno and serialno_to_id functions. """
-        raise NotImplementedError
+        # TEMP fix to allow Experiments to be created without errors
+        pass
+        # raise NotImplementedError
 
     def clean(self):
         if self.batch is not None and self.batch_sequence > self.batch.batch_size:
             raise ValidationError("Batch sequence ID cannot exceed batch size!")
         elif self.batch is not None:
             Device.objects.get_or_create(batch=self.batch, seq_num=self.batch_sequence)
+
+    @property
+    def user_owner(self):
+        return self.experiment.user_owner
+
+    @property
+    def status(self):
+        return self.experiment.status
 
     def __str__(self):
         return self.device_position
@@ -614,13 +648,23 @@ class DataColumn(models.Model):
     def experiment(self):
         return self.data_file.experiment
 
+    @property
+    def user_owner(self):
+        return self.data_file.user_owner
+
+    @property
+    def status(self):
+        return self.data_file.status
+
     class Meta:
         unique_together = [["device", "data_file"], ["column_name", "data_file"]]
         verbose_name = "Column Mapping"
         verbose_name_plural = "Data Column Mappings to Device Parameters"
 
 
-class DataRange(cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates):
+class DataRange(
+    cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates, cm.HasOwner, cm.HasStatus
+):
     """Each data range within the data file
 
     Each data file contains numerous ranges e.g. charge & discharge cycles. Their data
@@ -670,6 +714,14 @@ class SignalType(models.Model):
         default=5, help_text="override column ordering"
     )
     parser = models.ForeignKey(Parser, on_delete=models.CASCADE, related_name="columns")
+
+    @property
+    def user_owner(self):
+        return self.parser.user_owner
+
+    @property
+    def status(self):
+        return self.parser.status
 
     def __str__(self):
         return self.col_name

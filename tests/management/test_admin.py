@@ -1,8 +1,10 @@
-from django.test import TestCase, RequestFactory
-from django.contrib.admin.sites import AdminSite
 from unittest.mock import MagicMock
-from tests.fixtures import db_user, staff_user
+
+from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
+from django.test import RequestFactory, TestCase
+
+from tests.fixtures import db_user, staff_user
 
 request = MagicMock()
 User = get_user_model()

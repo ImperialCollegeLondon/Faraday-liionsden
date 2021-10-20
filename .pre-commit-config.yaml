@@ -12,7 +12,7 @@ repos:
     rev: "20.8b1"
     hooks:
       - id: black
-        exclude: battDB/migrations/|common/migrations/|dfndb/migrations/|_other/|data/
+        exclude: battDB/migrations/|common/migrations/|dfndb/migrations/|management/migrations/|_other/|data/
 #  - repo: https://gitlab.com/pycqa/flake8
 #    rev: 3.8.3
 #    hooks:
