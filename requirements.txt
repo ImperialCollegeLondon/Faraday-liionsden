@@ -14,3 +14,4 @@ idutils
 whitenoise
 model_bakery
 django-guardian
+django-cleanup
