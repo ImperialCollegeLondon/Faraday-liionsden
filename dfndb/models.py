@@ -73,6 +73,14 @@ class CompositionPart(models.Model):
     def percentage(self):
         return "%3.03f%%" % self.get_percentage()
 
+    @property
+    def user_owner(self):
+        return self.material.user_owner
+
+    @property
+    def status(self):
+        return self.material.status
+
     def __str__(self):
         return "%s%d" % (self.compound.formula, self.amount)
 
@@ -190,6 +198,14 @@ class DataParameter(models.Model):
     )
     value = models.JSONField(blank=True, null=True)
 
+    @property
+    def user_owner(self):
+        return self.parameter.user_owner
+
+    @property
+    def status(self):
+        return self.parameter.status
+    
     def __str__(self):
         return str(self.parameter)
 
