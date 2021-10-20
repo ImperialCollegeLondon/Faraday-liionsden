@@ -25,7 +25,7 @@ def set_permissions(sender, instance, **kwargs):
         assign_perm(perm, Group.objects.get(name="Maintainer"), instance)
     
     # If Compound or QuantityUnit, these are visible to everyone
-    if type(instance.user_owner) in [dfn.Compound, dfn.QuantityUnit]:
+    if type(instance) in [dfn.Compound, dfn.QuantityUnit]:
         for group in ["Read only", "Contributor"]:
             assign_perm(view, Group.objects.get(name=group), instance)
 
