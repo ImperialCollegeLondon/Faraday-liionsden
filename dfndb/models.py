@@ -205,7 +205,7 @@ class DataParameter(models.Model):
     @property
     def status(self):
         return self.parameter.status
-    
+
     def __str__(self):
         return str(self.parameter)
 

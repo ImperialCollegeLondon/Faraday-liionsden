@@ -5,6 +5,7 @@ from guardian.shortcuts import assign_perm, remove_perm
 
 import dfndb.models as dfn
 
+
 @receiver(post_save, sender=dfn.Compound)
 @receiver(post_save, sender=dfn.QuantityUnit)
 @receiver(post_save, sender=dfn.Parameter)
@@ -23,7 +24,7 @@ def set_permissions(sender, instance, **kwargs):
     # Maintainers get all perms
     for perm in [delete, change, view]:
         assign_perm(perm, Group.objects.get(name="Maintainer"), instance)
-    
+
     # If Compound or QuantityUnit, these are visible to everyone
     if type(instance) in [dfn.Compound, dfn.QuantityUnit]:
         for group in ["Read only", "Contributor"]:
@@ -50,6 +51,7 @@ def set_permissions(sender, instance, **kwargs):
 
         else:
             raise ValueError("Object status must be private, public or deleted.")
+
 
 def _get_perm_codenames(model):
     """Helper function to get delete, change and view permission codenames for a
