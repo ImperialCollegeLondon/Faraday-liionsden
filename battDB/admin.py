@@ -67,7 +67,7 @@ class DeviceInline(common.admin.TabularInline):
 
 
 class BatchInline(common.admin.TabularInline):
-    """ TODO: What's the use case for these sub devices?"""
+    """TODO: What's the use case for these sub devices?"""
 
     model = Batch
     extra = 0

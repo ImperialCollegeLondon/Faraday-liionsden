@@ -536,7 +536,7 @@ class ExperimentDevice(models.Model):
     )
 
     def get_serial_no(self):
-        """ TODO: implement id_to_serialno and serialno_to_id functions. """
+        """TODO: implement id_to_serialno and serialno_to_id functions."""
         raise NotImplementedError
 
     def clean(self):
