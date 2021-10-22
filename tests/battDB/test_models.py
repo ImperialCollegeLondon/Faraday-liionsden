@@ -1,4 +1,4 @@
-from unittest import expectedFailure
+from unittest import expectedFailure, skip
 from unittest.mock import MagicMock
 
 from django.core.exceptions import ValidationError
@@ -7,9 +7,21 @@ from model_bakery import baker
 
 
 class TestDeviceSpecification(TestCase):
-    from battDB.models import DeviceSpecification
-
-    model = DeviceSpecification
+    def setUp(self):
+        self.model = baker.make_recipe("tests.battDB.device_specification")
+        self.model_abstract = baker.make_recipe(
+            "tests.battDB.device_specification", abstract=True
+        )
+        self.model_defined_type = baker.make_recipe(
+            "tests.battDB.device_specification",
+            abstract=False,
+            device_type=self.model_abstract,
+        )
+        self.model_abstract_defined_type = baker.make_recipe(
+            "tests.battDB.device_specification",
+            abstract=True,
+            device_type=self.model_abstract,
+        )
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "parameters"))
@@ -19,20 +31,18 @@ class TestDeviceSpecification(TestCase):
 
     def test_clean(self):
         # These three are ok
-        self.model.objects.create().clean()
-        obj = self.model.objects.create(abstract=True)
-        obj.clean()
-        self.model.objects.create(abstract=False, device_type=obj).clean()
+        self.model.clean()
+        self.model_abstract.clean()
+        self.model_defined_type.clean()
 
         # This is not ok
         with self.assertRaises(ValidationError):
-            self.model.objects.create(abstract=True, device_type=obj).clean()
+            self.model_abstract_defined_type.clean()
 
 
 class TestDeviceParameter(TestCase):
-    from battDB.models import DeviceParameter
-
-    model = DeviceParameter
+    def setUp(self):
+        self.model = baker.make_recipe("tests.battDB.device_parameter")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "spec"))
@@ -43,9 +53,8 @@ class TestDeviceParameter(TestCase):
 
 
 class TestBatch(TestCase):
-    from battDB.models import Batch
-
-    model = Batch
+    def setUp(self):
+        self.model = baker.make_recipe("tests.battDB.batch")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "specification"))
@@ -58,8 +67,8 @@ class TestBatch(TestCase):
 
 class TestDevice(TestCase):
     def setUp(self):
-        batch = baker.make("battDB.Batch", manufacturer=baker.make("common.Org"))
-        self.model = baker.make("battDB.Device", batch=batch)
+        batch = baker.make_recipe("tests.battDB.batch")
+        self.model = baker.make_recipe("tests.battDB.device")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "batch"))
@@ -99,7 +108,7 @@ class TestDevice(TestCase):
 
 class TestDeviceConfig(TestCase):
     def setUp(self):
-        self.model = baker.make("battDB.DeviceConfig")
+        self.model = baker.make_recipe("tests.battDB.device_config")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "devices"))
@@ -108,7 +117,7 @@ class TestDeviceConfig(TestCase):
 
 class TestDeviceConfigNode(TestCase):
     def setUp(self):
-        self.model = baker.make("battDB.DeviceConfigNode")
+        self.model = baker.make_recipe("tests.battDB.device_config_node")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "device"))
@@ -120,7 +129,7 @@ class TestDeviceConfigNode(TestCase):
 
 class TestParser(TestCase):
     def setUp(self):
-        self.model = baker.make("battDB.Parser")
+        self.model = baker.make_recipe("tests.battDB.parser")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "file_format"))
@@ -129,9 +138,7 @@ class TestParser(TestCase):
 
 class TestEquipment(TestCase):
     def setUp(self):
-        self.model = baker.make(
-            "battDB.Equipment", manufacturer=baker.make("common.Org")
-        )
+        self.model = baker.make_recipe("tests.battDB.equipment")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "specification"))
@@ -142,7 +149,7 @@ class TestEquipment(TestCase):
 
 class TestExperiment(TestCase):
     def setUp(self):
-        self.model = baker.make("battDB.Experiment")
+        self.model = baker.make_recipe("tests.battDB.experiment")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "date"))
@@ -168,7 +175,7 @@ class TestExperiment(TestCase):
 
 class TestExperimentDataFile(TestCase):
     def setUp(self):
-        self.model = baker.make("battDB.ExperimentDataFile")
+        self.model = baker.make_recipe("tests.battDB.edf")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "ts_headers"))
@@ -223,7 +230,7 @@ class TestExperimentDataFile(TestCase):
 
 class TestUploadedFile(TestCase):
     def setUp(self):
-        self.model = baker.make("battDB.UploadedFile")
+        self.model = baker.make_recipe("tests.battDB.uploaded_file")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "edf"))
@@ -236,10 +243,7 @@ class TestUploadedFile(TestCase):
 
 class TestExperimentDevice(TestCase):
     def setUp(self):
-        self.model = baker.make(
-            "battDB.ExperimentDevice",
-            batch=baker.make("battDB.Batch", manufacturer=baker.make("common.Org")),
-        )
+        self.model = baker.make_recipe("tests.battDB.experiment_device")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "experiment"))
@@ -248,6 +252,7 @@ class TestExperimentDevice(TestCase):
         self.assertTrue(hasattr(self.model, "device_position"))
         self.assertTrue(hasattr(self.model, "data_file"))
 
+    @skip("Wait until this is implemented properly before adding tests.")
     def test_get_serial_no(self):
         self.assertRaises(NotImplementedError, self.model.get_serial_no)
 
@@ -264,15 +269,7 @@ class TestExperimentDevice(TestCase):
 
 class TestDataColumn(TestCase):
     def setUp(self):
-        self.model = baker.make(
-            "battDB.DataColumn",
-            resample_n=0,
-            device=baker.make(
-                "battDB.ExperimentDevice",
-                batch=baker.make("battDB.Batch", manufacturer=baker.make("common.Org")),
-            ),
-            parameter=baker.make("dfndb.Parameter"),
-        )
+        self.model = baker.make_recipe("tests.battDB.data_column")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "resample"))
@@ -296,7 +293,7 @@ class TestDataColumn(TestCase):
 
 class TestDataRange(TestCase):
     def setUp(self):
-        self.model = baker.make("battDB.DataRange")
+        self.model = baker.make_recipe("tests.battDB.data_range")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "dataFile"))
@@ -309,7 +306,7 @@ class TestDataRange(TestCase):
 
 class TestSignalType(TestCase):
     def setUp(self):
-        self.model = baker.make("battDB.SignalType")
+        self.model = baker.make_recipe("tests.battDB.signal_type")
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "parameter"))
