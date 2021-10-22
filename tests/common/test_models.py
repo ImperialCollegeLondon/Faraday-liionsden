@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
+from model_bakery import baker
 
 from tests.fixtures import AbstractModelMixinTestCase, db_user
 
@@ -212,62 +213,59 @@ class TestBaseModelMandatoryName(AbstractModelMixinTestCase):
 
 
 class TestOrg(TestCase):
-    from common.models import Org
-
-    model = Org
-
     def setUp(self):
-        User.objects.get_or_create(**db_user)
-        user = User.objects.get()
-        self.expected = dict(
+        self.model = baker.make_recipe(
+            "tests.common.org",
             name="Dharma",
-            manager=user,
             is_research=True,
             is_mfg_equip=True,
             attributes={"ranges": 2, "colour": "blue"},
             notes="Research in meteorology, zoology and electromagnetism",
             website="www.dharma.com",
         )
-        self.model.objects.create(**self.expected)
+        self.expected = dict(
+            name="Dharma",
+            is_research=True,
+            is_mfg_equip=True,
+            attributes={"ranges": 2, "colour": "blue"},
+            notes="Research in meteorology, zoology and electromagnetism",
+            website="www.dharma.com",
+        )
 
     def test_org_creation(self):
-        obj = self.model.objects.get()
         for k, v in self.expected.items():
-            self.assertEqual(getattr(obj, k), v)
-        self.assertFalse(obj.is_publisher)
-        self.assertFalse(obj.is_mfg_cells)
+            self.assertEqual(getattr(self.model, k), v)
+        self.assertFalse(self.model.is_publisher)
+        self.assertFalse(self.model.is_mfg_cells)
 
 
 class TestPerson(TestCase):
-    from common.models import Person
-
-    model = Person
-
     def setUp(self):
-        User.objects.get_or_create(**db_user)
-        user = User.objects.get()
+        self.user = baker.make_recipe(
+            "tests.management.user", first_name="Michael", last_name="Faraday"
+        )
+        self.model = baker.make_recipe(
+            "tests.common.person",
+            longName="Michael Faraday",
+            shortName="MichaelF",
+            user=self.user,
+        )
         self.expected = dict(
             longName="Michael Faraday",
             shortName="MichaelF",
-            user=user,
+            user=self.user,
         )
-        self.model.objects.get_or_create(**self.expected)
 
     def test_person_creation(self):
-        obj = self.model.objects.get()
         for k, v in self.expected.items():
-            self.assertEqual(getattr(obj, k), v)
-        self.assertIsNone(obj.org)
+            self.assertEqual(getattr(self.model, k), v)
+        self.assertIsNone(self.model.org)
 
     def test_user_firstname(self):
-        obj = self.model.objects.get()
-        usr = User.objects.get()
-        self.assertEqual(obj.user_firstname(), usr.first_name)
+        self.assertEqual(self.model.user_firstname(), self.user.first_name)
 
     def test_user_lastname(self):
-        obj = self.model.objects.get()
-        usr = User.objects.get()
-        self.assertEqual(obj.user_lastname(), usr.last_name)
+        self.assertEqual(self.model.user_lastname(), self.user.last_name)
 
 
 class TestDOIField(TestCase):
@@ -328,23 +326,25 @@ class TestContentTypeRestrictedFileField(TestCase):
 
 
 class TestPaper(TestCase):
-    from common.models import Paper
-
-    model = Paper
-
     def setUp(self):
-        from tests.fixtures import db_paper
-
-        self.expected = db_paper.copy()
-        self.model.objects.get_or_create(**self.expected)
+        self.model = baker.make_recipe(
+            "tests.common.paper",
+            authors="Michael Faraday",
+            title="Chemical Manipulation, Being Instructions to Students in Chemistry",
+            year=1827,
+        )
+        self.expected = dict(
+            authors="Michael Faraday",
+            title="Chemical Manipulation, Being Instructions to Students in Chemistry",
+            year=1827,
+        )
 
     def test_paper_creation(self):
-        obj = self.model.objects.get()
         for k, v in self.expected.items():
-            self.assertEqual(getattr(obj, k), v)
+            self.assertEqual(getattr(self.model, k), v)
 
     def test_has_pdf(self):
-        self.assertFalse(self.model.objects.get().has_pdf())
+        self.assertFalse(self.model.has_pdf())
 
 
 class TestHashedFile(AbstractModelMixinTestCase):
