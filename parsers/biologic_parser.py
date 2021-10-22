@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import Dict, Generator, List, Optional, Union
+from typing import Dict, Generator, List, Optional, Tuple, Union
 
 import pandas as pd
 import yaml
@@ -16,6 +16,13 @@ class BiologicCSVnTSVParser(ParserBase):
 
     name = "biologic"
     description = "Biologic CSV/TSV/MPT"
+    valid: List[Tuple[str, str]] = [
+        ("application/octet-stream", ".mpr"),
+        ("text/plain", ".csv"),
+        ("text/plain", ".mpt"),
+        ("text/plain", ".tsv"),
+        ("text/plain", ".txt"),
+    ]
     MANDATORY_COLUMNS = {"Time", "Rec#", "Ns"}
 
     # Assumed to be this encoding, but iot might be different...

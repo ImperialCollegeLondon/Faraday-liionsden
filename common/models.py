@@ -13,6 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 
 from .utils import hash_file
+from .validators import validate_data_file
 
 # TODO: Add localised strings (l10n) using django_gettext for all string literals in
 #  this file
@@ -35,16 +36,11 @@ class HasStatus(models.Model):
     """Abstract base for any model having a common object status field."""
 
     OBJ_STATUS = [
-        ("draft", "Draft"),  # viewable and editable only by owner
-        ("submitted", "Submitted"),  # viewable by others, modifiable by owner
-        (
-            "accepted",
-            "Accepted",
-        ),  # cannot be modified by owner, except to return status to draft
-        ("published", "Published"),  # cannot be modified except by admin
-        ("deleted", "Deleted"),  # hidden to all except admin
+        ("private", "Private"),  # creating user can view and modify
+        ("public", "Public"),  # cannot be modified except by maintainers/admin
+        ("deleted", "Deleted"),  # hidden to all except maintainers/admin
     ]
-    status = models.CharField(max_length=16, default="draft", choices=OBJ_STATUS)
+    status = models.CharField(max_length=16, default="private", choices=OBJ_STATUS)
 
     class Meta:
         abstract = True
@@ -367,18 +363,12 @@ class Paper(
 
 
 class HashedFile(models.Model):
-    """A list of user-uploaded files. <BR>
-
-    FIXME: This is pretty insecure - File format & size is not yet enforced, so any kind
-     of file can be uploaded, including Python scripts, very large binary files, etc.
-
-    FIXME: Uploaded files should go somewhere else, no within the Django application
-        code structure.
+    """
+    Uploaded files with a unique hash number.
     """
 
     file = models.FileField(
-        upload_to="uploaded_files",
-        null=False,
+        upload_to="uploaded_files", null=False, validators=(validate_data_file,)
     )
     hash = models.CharField(
         max_length=64,
@@ -392,6 +382,7 @@ class HashedFile(models.Model):
         abstract = True
 
     def clean(self):
+        print(self.file.name)
         self.hash = hash_file(self.file)
         return super(HashedFile, self).clean()
 

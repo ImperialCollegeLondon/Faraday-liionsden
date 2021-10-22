@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Dict, Generator, Iterable, List
+from typing import Dict, Generator, Iterable, List, Tuple
 
 import xlrd
 from xlrd.sheet import Cell
@@ -17,6 +17,11 @@ class MaccorXLSParser(ParserBase):
 
     name = "maccor"
     description = "Maccor XLS/XLSX"
+    valid: List[Tuple[str, str]] = [
+        ("application/vnd.ms-excel", ".xls"),
+        ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"),
+        ("text/plain", ".txt"),
+    ]
 
     def __init__(self, file_path: str) -> None:
         """Initialises the XLS parser for Maccor"""
