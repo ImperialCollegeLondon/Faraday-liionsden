@@ -32,11 +32,11 @@ class MaccorXLSParser(ParserBase):
 
     @staticmethod
     def clean_value(value: str) -> str:
-        """ Trims values """
+        """Trims values"""
         return value.replace("''", "'").strip().rstrip("\0").strip()
 
     def _get_metadata_value(self, key: str, value: Cell) -> str:
-        """ A wrapper for metadata value parsing. Handles special cases. """
+        """A wrapper for metadata value parsing. Handles special cases."""
         if "Date" in key:
             return xlrd.xldate.xldate_as_datetime(value.value, self.workbook.datemode)
         elif "Procedure" in key:
@@ -45,7 +45,7 @@ class MaccorXLSParser(ParserBase):
             return value.value
 
     def _identify_columns(self, header_row: int) -> (Dict, Dict):
-        """ Parses the file to determine column headers as well as which columns have data """
+        """Parses the file to determine column headers as well as which columns have data"""
         sheet = self.workbook.sheet_by_index(0)
         headers = [x.value for x in sheet.row_slice(header_row)]
         column_has_data = [False for _ in range(sheet.ncols)]
@@ -88,7 +88,7 @@ class MaccorXLSParser(ParserBase):
     def _check_columns_for_data(
         self, column_has_data, headers, numeric_columns, data_start
     ):
-        """ Scans the entire file for datapoints in each column """
+        """Scans the entire file for datapoints in each column"""
         total_rows, last_rec = 0, 0
         for sheet_id in range(self.workbook.nsheets):
             logging.info("Loading sheet for metadata parsing %d", sheet_id)
