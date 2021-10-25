@@ -1,131 +1,130 @@
 from django.db.utils import IntegrityError
 from django.test import TestCase
+from model_bakery import baker
+
+from dfndb.models import Data
 
 
 class TestCompound(TestCase):
-    from dfndb.models import Compound
-
-    model = Compound
-
     def setUp(self):
         self.expected = dict(name="Carbon Dioxide", formula="CO2", mass=44.01)
-        self.model.objects.get_or_create(
-            name="Carbon Dioxide", formula="CO2", mass=44.01
+        self.model = baker.make_recipe(
+            "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2", mass=44.01
         )
 
     def test_compound_creation(self):
-        obj = self.model.objects.get()
         for k, v in self.expected.items():
-            self.assertEqual(getattr(obj, k), v)
+            self.assertEqual(getattr(self.model, k), v)
 
     def test_str(self):
-        obj = self.model.objects.get()
-        self.assertEqual(obj.__str__(), "Carbon Dioxide (CO2)")
+        self.assertEqual(self.model.__str__(), "Carbon Dioxide (CO2)")
 
     def test_unique_together(self):
-        self.model.objects.create(name="Carbon Dioxide", formula="CO3", mass=44.01)
-
-        self.assertRaises(
-            IntegrityError,
-            self.model.objects.create,
-            name="Carbon Dioxide",
-            formula="CO2",
-            mass=44.01,
+        baker.make_recipe(
+            "tests.dfndb.compound", name="Carbon Dioxide", formula="CO3", mass=44.01
         )
+        with self.assertRaises(IntegrityError):
+            baker.make_recipe(
+                "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2", mass=44.01
+            )
 
 
 class TestMaterial(TestCase):
-    from dfndb.models import Material
-
-    model = Material
-
     def setUp(self):
-        from dfndb.models import CompositionPart, Compound
-
-        cmp = Compound.objects.create(name="Carbon Dioxide", formula="CO2")
-        cmp2 = Compound.objects.create(name="Sulphur", formula="S")
-        mat = self.model.objects.create(name="Contaminant", type=1, polymer=0)
-        CompositionPart.objects.create(compound=cmp, material=mat, amount=3)
-        CompositionPart.objects.create(compound=cmp2, material=mat, amount=2)
+        comp = baker.make_recipe(
+            "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2"
+        )
+        comp2 = baker.make_recipe("tests.dfndb.compound", name="Sulphur", formula="S")
+        self.model = baker.make_recipe(
+            "tests.dfndb.material", name="Contaminant", type=1, polymer=0
+        )
+        baker.make_recipe(
+            "tests.dfndb.composition_part", compound=comp, material=self.model, amount=3
+        )
+        baker.make_recipe(
+            "tests.dfndb.composition_part",
+            compound=comp2,
+            material=self.model,
+            amount=2,
+        )
 
     def test_material_creation(self):
         from dfndb.models import Compound
 
         name = "Carbon Dioxide"
-        mat = self.model.objects.get()
         cmp = Compound.objects.get(name=name)
 
-        self.assertEqual(mat.composition.all().count(), 2)
-        self.assertEqual(mat.composition.get(name=name), cmp)
-        self.assertEqual(mat.type, 1)
-        self.assertEqual(mat.polymer, 0)
+        self.assertEqual(self.model.composition.all().count(), 2)
+        self.assertEqual(self.model.composition.get(name=name), cmp)
+        self.assertEqual(self.model.type, 1)
+        self.assertEqual(self.model.polymer, 0)
 
     def test_str(self):
-        obj = self.model.objects.get()
-        self.assertEqual(obj.__str__(), "Contaminant")
+        self.assertEqual(self.model.__str__(), "Contaminant")
 
 
 class TestCompositionPart(TestCase):
-    from dfndb.models import CompositionPart
-
-    model = CompositionPart
-
     def setUp(self):
-        from dfndb.models import Compound, Material
-
         self.amount = {"CO2": 3, "S": 2}
-        cmp = Compound.objects.create(name="Carbon Dioxide", formula="CO2")
-        cmp2 = Compound.objects.create(name="Sulphur", formula="S")
-        mat = Material.objects.create(name="Contaminant", type=1, polymer=0)
-        self.model.objects.create(compound=cmp, material=mat, amount=self.amount["CO2"])
-        self.model.objects.create(compound=cmp2, material=mat, amount=self.amount["S"])
+        comp = baker.make_recipe(
+            "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2"
+        )
+        mat = baker.make_recipe("tests.dfndb.material")
+        self.model = baker.make_recipe(
+            "tests.dfndb.composition_part", compound=comp, material=mat, amount=3
+        )
+        baker.make_recipe("tests.dfndb.composition_part", material=mat, amount=2)
 
     def test_composition_part_creation(self):
         from dfndb.models import Compound, Material
 
-        cmp = Compound.objects.get(name="Carbon Dioxide")
+        comp = Compound.objects.get(name="Carbon Dioxide")
         mat = Material.objects.get()
-        cp = self.model.objects.all().first()
-        self.assertEqual(cp.compound, cmp)
-        self.assertEqual(cp.material, mat)
-        self.assertEqual(cp.amount, self.amount[cmp.formula])
+        self.assertEqual(self.model.compound, comp)
+        self.assertEqual(self.model.material, mat)
+        self.assertEqual(self.model.amount, self.amount[comp.formula])
 
     def test_percentage(self):
-        cp = self.model.objects.all().first()
-        expected = self.amount[cp.compound.formula] * 100 / sum(self.amount.values())
-        self.assertEqual(cp.get_percentage(), expected)
-        self.assertEqual(cp.percentage(), "%3.03f%%" % expected)
+        expected = (
+            self.amount[self.model.compound.formula] * 100 / sum(self.amount.values())
+        )
+        self.assertEqual(self.model.get_percentage(), expected)
+        self.assertEqual(self.model.percentage(), "%3.03f%%" % expected)
 
     def test_str(self):
         from dfndb.models import Compound
 
-        cmp = Compound.objects.get(name="Carbon Dioxide")
-        cp = self.model.objects.all().first()
-        self.assertEqual(cp.__str__(), "%s%d" % (cmp.formula, cp.amount))
+        comp = Compound.objects.get(name="Carbon Dioxide")
+        self.assertEqual(
+            self.model.__str__(), "%s%d" % (comp.formula, self.model.amount)
+        )
 
     def test_unique_together(self):
-        cp = self.model.objects.all().first()
-        self.model.objects.create(
-            compound=cp.compound, material=cp.material, amount=cp.amount * 2
+        baker.make_recipe(
+            "tests.dfndb.composition_part",
+            compound=self.model.compound,
+            material=self.model.material,
+            amount=self.model.amount * 2,
         )
 
-        self.assertRaises(
-            IntegrityError,
-            self.model.objects.create,
-            compound=cp.compound,
-            material=cp.material,
-            amount=cp.amount,
-        )
+        with self.assertRaises(IntegrityError):
+            baker.make_recipe(
+                "tests.dfndb.composition_part",
+                compound=self.model.compound,
+                material=self.model.material,
+                amount=self.model.amount,
+            )
 
 
 class TestMethod(TestCase):
-    from dfndb.models import Method
-
-    model = Method
-
     def setUp(self):
+        from dfndb.models import Method
+
+        self.model = Method
         for k, v in self.model.METHOD_TYPE_CHOICES:
-            self.model.objects.create(type=k, description=f"{v} method", name=v)
+            baker.make_recipe(
+                "tests.dfndb.method", type=k, description=f"{v} method", name=v
+            )
 
     def test_method_creation(self):
         choices = dict(self.model.METHOD_TYPE_CHOICES)
@@ -137,26 +136,31 @@ class TestMethod(TestCase):
 
 
 class TestQuantityUnit(TestCase):
-    from dfndb.models import QuantityUnit
-
-    model = QuantityUnit
-
     def setUp(self):
-        from tests.fixtures import db_unit
-
-        self.expected = db_unit.copy()
-        self.model.objects.create(**self.expected)
+        self.expected = dict(
+            quantityName="Charge",
+            quantitySymbol="Q",
+            unitName="Coulombs",
+            unitSymbol="C",
+            is_SI_unit=True,
+        )
+        self.model = baker.make_recipe(
+            "tests.dfndb.quantity_unit",
+            quantityName="Charge",
+            quantitySymbol="Q",
+            unitName="Coulombs",
+            unitSymbol="C",
+            is_SI_unit=True,
+        )
 
     def test_quantity_unit_creation(self):
-        obj = self.model.objects.get()
         for k, v in self.expected.items():
-            self.assertEqual(getattr(obj, k), v)
-        self.assertIsNone(obj.related_unit)
+            self.assertEqual(getattr(self.model, k), v)
+        self.assertIsNone(self.model.related_unit)
 
     def test_str(self):
-        obj = self.model.objects.get()
         self.assertEqual(
-            obj.__str__(),
+            self.model.__str__(),
             "%s (%s) / %s"
             % (
                 self.expected["quantityName"],
@@ -166,33 +170,40 @@ class TestQuantityUnit(TestCase):
         )
 
     def test_unique_together(self):
-        self.expected["unitSymbol"] = "e"
-        self.model.objects.create(**self.expected)
-        self.assertRaises(IntegrityError, self.model.objects.create, **self.expected)
+        baker.make_recipe(
+            "tests.dfndb.quantity_unit",
+            quantityName="Charge",
+            quantitySymbol="Q",
+            unitName="Coulombs",
+            unitSymbol="e",
+            is_SI_unit=True,
+        )
+        with self.assertRaises(IntegrityError):
+            baker.make_recipe(
+                "tests.dfndb.quantity_unit",
+                quantityName="Charge",
+                quantitySymbol="Q",
+                unitName="Coulombs",
+                unitSymbol="C",
+                is_SI_unit=True,
+            )
 
 
 class TestParameter(TestCase):
-    from dfndb.models import Parameter
-
-    model = Parameter
-
     def setUp(self):
-        from dfndb.models import QuantityUnit
-        from tests.fixtures import db_unit
-
-        unit = QuantityUnit.objects.create(**db_unit)
-        self.expected = dict(name="Ionized donors", symbol="Nd-", unit=unit)
-        self.model.objects.create(**self.expected)
+        self.unit = baker.make_recipe("tests.dfndb.quantity_unit")
+        self.expected = dict(name="Ionized donors", symbol="Nd-", unit=self.unit)
+        self.model = baker.make_recipe(
+            "tests.dfndb.parameter", name="Ionized donors", symbol="Nd-", unit=self.unit
+        )
 
     def test_parameter_creation(self):
-        obj = self.model.objects.get()
         for k, v in self.expected.items():
-            self.assertEqual(getattr(obj, k), v)
+            self.assertEqual(getattr(self.model, k), v)
 
     def test_str(self):
-        obj = self.model.objects.get()
         self.assertEqual(
-            obj.__str__(),
+            self.model.__str__(),
             "%s: %s / %s"
             % (
                 self.expected["name"],
@@ -202,102 +213,62 @@ class TestParameter(TestCase):
         )
 
     def test_unique_together(self):
-        self.expected["symbol"] = "Na+"
-        self.model.objects.create(**self.expected)
-        self.assertRaises(IntegrityError, self.model.objects.create, **self.expected)
+        baker.make_recipe(
+            "tests.dfndb.parameter", name="Ionized donors", symbol="Na+", unit=self.unit
+        )
+        with self.assertRaises(IntegrityError):
+            baker.make_recipe(
+                "tests.dfndb.parameter",
+                name="Ionized donors",
+                symbol="Nd-",
+                unit=self.unit,
+            )
 
 
 class TestData(TestCase):
-    from dfndb.models import Data
-
-    model = Data
-
     def setUp(self):
-        from common.models import Paper
-        from dfndb.models import (
-            CompositionPart,
-            Compound,
-            DataParameter,
-            Material,
-            Parameter,
-            QuantityUnit,
-        )
-        from tests.fixtures import db_paper, db_unit
-
-        unit = QuantityUnit.objects.create(**db_unit)
-        param = Parameter.objects.create(name="Ionized donors", symbol="Nd-", unit=unit)
-        cmp = Compound.objects.create(name="Carbon Dioxide", formula="CO2")
-        mat = Material.objects.create(name="Contaminant", type=1, polymer=0)
-        CompositionPart.objects.create(compound=cmp, material=mat, amount=3)
-        paper = Paper.objects.create(**db_paper)
-        data = self.model.objects.create(paper=paper)
-        DataParameter.objects.create(
-            data=data,
-            parameter=param,
-            type=DataParameter.PARAM_TYPE_NONE,
-            material=mat,
-            value={},
+        self.parameter = baker.make_recipe("tests.dfndb.parameter", _quantity=2)
+        self.paper = baker.make_recipe("tests.common.paper")
+        self.model = baker.make_recipe(
+            "tests.dfndb.data",
+            paper=self.paper,
+            parameter=self.parameter,
+            make_m2m=True,
         )
 
     def test_data_creation(self):
-        from common.models import Paper
-        from dfndb.models import Parameter
-
-        obj = self.model.objects.get()
-        param = Parameter.objects.get()
-        paper = Paper.objects.get()
-        self.assertEqual(obj.paper, paper)
-        self.assertEqual(obj.parameter.get(), param)
+        self.assertEqual(self.model.paper, self.paper)
+        self.assertIn(self.model.parameter.get_queryset().first(), self.parameter)
 
 
 class TestDataParameter(TestCase):
-    from dfndb.models import DataParameter
-
-    model = DataParameter
-
     def setUp(self):
-        from common.models import Paper
-        from dfndb.models import (
-            CompositionPart,
-            Compound,
-            Data,
-            Material,
-            Parameter,
-            QuantityUnit,
-        )
-        from tests.fixtures import db_paper, db_unit
+        from dfndb.models import DataParameter
 
-        unit = QuantityUnit.objects.create(**db_unit)
-        param = Parameter.objects.create(name="Ionized donors", symbol="Nd-", unit=unit)
-        cmp = Compound.objects.create(name="Carbon Dioxide", formula="CO2")
-        mat = Material.objects.create(name="Contaminant", type=1, polymer=0)
-        CompositionPart.objects.create(compound=cmp, material=mat, amount=3)
-        paper = Paper.objects.create(**db_paper)
-        data = Data.objects.create(paper=paper)
-        self.model.objects.create(
-            data=data,
-            parameter=param,
-            type=self.model.PARAM_TYPE_NONE,
-            material=mat,
+        model = DataParameter
+
+        self.param = baker.make_recipe("tests.dfndb.parameter")
+        self.mat = baker.make_recipe("tests.dfndb.material")
+        self.data = baker.make_recipe("tests.dfndb.data")
+        self.model = baker.make_recipe(
+            "tests.dfndb.data_parameter",
+            data=self.data,
+            parameter=self.param,
+            type=model.PARAM_TYPE_NONE,
+            material=self.mat,
             value={},
         )
 
     def test_data_parameter_creation(self):
-        from dfndb.models import Data, Material, Parameter
+        from dfndb.models import DataParameter
 
-        data = Data.objects.get()
-        param = Parameter.objects.get()
-        mat = Material.objects.get()
-        obj = self.model.objects.get()
+        model = DataParameter
 
-        self.assertEqual(obj.data, data)
-        self.assertEqual(obj.parameter, param)
-        self.assertEqual(obj.material, mat)
-        self.assertEqual(obj.value, {})
-        self.assertIn(obj.type, list(zip(*self.model.PARAM_TYPE))[0])
+        self.assertEqual(self.model.data, self.data)
+        self.assertEqual(self.model.parameter, self.param)
+        self.assertEqual(self.model.material, self.mat)
+        self.assertEqual(self.model.value, {})
+        self.assertIn(self.model.type, list(zip(*model.PARAM_TYPE))[0])
 
     def test_str(self):
-        from dfndb.models import Parameter
-
-        param = Parameter.objects.get()
-        self.assertEqual(self.model.objects.get().__str__(), str(param))
+        self.assertEqual(self.model.__str__(), str(self.param))

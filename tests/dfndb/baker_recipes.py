@@ -1,7 +1,33 @@
-from model_bakery.recipe import Recipe, foreign_key
+from model_bakery.recipe import Recipe, foreign_key, related
 
-from dfndb.models import Material, Parameter
+from dfndb.models import (
+    CompositionPart,
+    Compound,
+    Data,
+    DataParameter,
+    Material,
+    Method,
+    Parameter,
+    QuantityUnit,
+)
+from tests.management.baker_recipes import user
 
-parameter = Recipe(Parameter)
+quantity_unit = Recipe(QuantityUnit)
 
-material = Recipe(Material)
+compound = Recipe(Compound)
+
+parameter = Recipe(Parameter, user_owner=foreign_key(user))
+
+material = Recipe(Material, user_owner=foreign_key(user))
+
+composition_part = Recipe(
+    CompositionPart, material=foreign_key(material), compound=foreign_key(compound)
+)
+
+method = Recipe(Method, user_owner=foreign_key(user))
+
+data = Recipe(Data, parameter=related(parameter), user_owner=foreign_key(user))
+
+data_parameter = Recipe(
+    DataParameter, data=foreign_key(data), parameter=foreign_key(parameter)
+)
