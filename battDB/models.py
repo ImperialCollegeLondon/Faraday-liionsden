@@ -464,7 +464,9 @@ class ExperimentDataFile(cm.BaseModel):
     def create_ranges(self):
         ranges = self.attributes.get("range_config", dict())
         for name, config in ranges.items():
-            rng_q = DataRange.objects.get_or_create(dataFile=self, label=name)
+            rng_q = DataRange.objects.get_or_create(
+                dataFile=self, label=name, user_owner=self.user_owner
+            )
             rng = rng_q[0]
             rng.file_offset_start = config.get("start") or 0
             rng.file_offset_end = config.get("end") or 0
