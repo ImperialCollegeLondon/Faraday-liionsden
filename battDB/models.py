@@ -354,10 +354,6 @@ class Experiment(cm.BaseModel):
         "or all 2s2p modules, not a mixture of both.",
     )
 
-    protocol = models.TextField(
-        null=True, blank=True, help_text="Test protocol used in this experiment"
-    )
-
     def devices_(self):
         return self.devices.count()
 
