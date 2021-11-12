@@ -48,6 +48,16 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         specification cannot have a device type -  they define the device types.""",
     )
 
+    config = models.ForeignKey(
+        "DeviceConfig",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="used_in_modules",
+        limit_choices_to={"config_type": "module"},
+        help_text="Configuration of sub-devices if the device type is a module or pack.",
+    )
+
     def clean(self):
         if self.abstract and self.device_type is not None:
             raise ValidationError("Abstract specifications cannot have a device type")
