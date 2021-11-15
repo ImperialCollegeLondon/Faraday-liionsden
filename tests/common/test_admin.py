@@ -46,27 +46,24 @@ class TestOrgAdmin(TestCase):
         )
 
 
-class TestPaperAdmin(TestCase):
+class TestReferenceAdmin(TestCase):
     def setUp(self):
         self.site = AdminSite()
 
-    def test_paper_str(self):
-        from common.admin import PaperAdmin
-        from common.models import Paper
+    def test_reference_str(self):
+        from common.admin import ReferenceAdmin
+        from common.models import Reference
 
-        ma = PaperAdmin(Paper, self.site)
-        self.assertEqual(str(ma), "common.PaperAdmin")
+        ma = ReferenceAdmin(Reference, self.site)
+        self.assertEqual(str(ma), "common.ReferenceAdmin")
 
     def test_list_fields(self):
-        from common.admin import PaperAdmin
-        from common.models import Paper
+        from common.admin import ReferenceAdmin
+        from common.models import Reference
 
-        ma = PaperAdmin(Paper, self.site)
+        ma = ReferenceAdmin(Reference, self.site)
         self.assertEqual(
-            list(ma.get_list_display(request)), ["title", "DOI", "year", "has_pdf"]
-        )
-        self.assertEqual(
-            list(ma.get_list_filter(request)), ["year", "publisher", "authors"]
+            list(ma.get_list_display(request)), ["title", "DOI", "has_pdf"]
         )
 
 

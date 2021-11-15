@@ -261,20 +261,6 @@ class DOIField(models.URLField):
             )
         return super().validate(value, obj)
 
-    def get_url(self):
-        """Gets the URL of a DOI.
-
-        TODO: implement method
-        """
-        pass
-
-    def get_name(self):
-        """Fetch the document name associated to the DOI.
-
-        TODO: implement method
-        """
-        pass
-
 
 class YearField(models.IntegerField):
     def validate(self, value, obj):
@@ -330,28 +316,18 @@ class ContentTypeRestrictedFileField(models.FileField):
         return data
 
 
-class Paper(
+class Reference(
     HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
 ):
-    """An academic paper."""
+    """A source of data, typically an academic paper, but can be a dataset, repository."""
 
     DOI = DOIField(
+        blank=True,
+        null=True,
         unique=True,
-        blank=True,
-        null=True,
-        help_text="DOI for the paper.",
+        help_text="DOI for the reference.",
     )
-    year = YearField(default=datetime.date.today().year)
     title = models.CharField(max_length=300, default="")
-    authors = models.CharField(max_length=300, default="")
-    publisher = models.ForeignKey(
-        Org,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        limit_choices_to={"is_publisher": True},
-    )
-
     url = models.URLField(null=True, blank=True)
     PDF = models.FileField(null=True, blank=True, help_text="Optional PDF copy")
 
@@ -359,7 +335,7 @@ class Paper(
         return True if self.PDF else False
 
     def __str__(self):
-        return slugify(str(self.title) + "-" + str(self.year))
+        return slugify(str(self.DOI) + "-" + str(self.title))
 
 
 class HashedFile(models.Model):

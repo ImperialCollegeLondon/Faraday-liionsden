@@ -6,7 +6,7 @@ from guardian.shortcuts import assign_perm, remove_perm
 import common.models as cm
 
 
-@receiver(post_save, sender=cm.Paper)
+@receiver(post_save, sender=cm.Reference)
 def set_permissions(sender, instance, **kwargs):
     """Set object-level permissions according to a standard setup: The contributing
     user can modify the object if status is "private" but not if "public".

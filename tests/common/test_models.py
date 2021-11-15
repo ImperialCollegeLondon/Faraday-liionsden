@@ -325,21 +325,17 @@ class TestContentTypeRestrictedFileField(TestCase):
         file_field.clean(data, file_field)
 
 
-class TestPaper(TestCase):
+class TestReference(TestCase):
     def setUp(self):
         self.model = baker.make_recipe(
-            "tests.common.paper",
-            authors="Michael Faraday",
+            "tests.common.reference",
             title="Chemical Manipulation, Being Instructions to Students in Chemistry",
-            year=1827,
         )
         self.expected = dict(
-            authors="Michael Faraday",
             title="Chemical Manipulation, Being Instructions to Students in Chemistry",
-            year=1827,
         )
 
-    def test_paper_creation(self):
+    def test_reference_creation(self):
         for k, v in self.expected.items():
             self.assertEqual(getattr(self.model, k), v)
 

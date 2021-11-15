@@ -87,16 +87,16 @@ admin.site.register(
 )
 
 
-class PaperAdmin(BaseAdmin):
-    list_display = ["title", "DOI", "year", "has_pdf"]
-    list_filter = ["year", "publisher", "authors"]
+class ReferenceAdmin(BaseAdmin):
+    list_display = ["title", "DOI", "has_pdf"]
+    list_filter = ["title"]
 
 
 admin.site.register(
     [
-        cmodels.Paper,
+        cmodels.Reference,
     ],
-    PaperAdmin,
+    ReferenceAdmin,
 )
 
 
