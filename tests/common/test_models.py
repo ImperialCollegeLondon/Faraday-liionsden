@@ -299,32 +299,6 @@ class TestYearField(TestCase):
         year.validate(1982, None)
 
 
-class TestContentTypeRestrictedFileField(TestCase):
-    from common.models import ContentTypeRestrictedFileField
-
-    model = ContentTypeRestrictedFileField
-
-    def test_type_restricted_file_field_creation(self):
-        content = ["text/x-python", "application/pdf"]
-        size = 2621440
-        file_field = self.model(content_types=content, max_upload_size=size)
-        self.assertEqual(content, file_field.content_types)
-        self.assertEqual(size, file_field.max_upload_size)
-
-    def test_clean(self):
-        data = SimpleUploadedFile(
-            "best_file_eva.txt", b"these are the contents of the txt file"
-        )
-        file_field = self.model(content_types=[], max_upload_size=1)
-        self.assertRaises(ValidationError, file_field.clean, data, file_field)
-
-        file_field = self.model(content_types=["text/plain"], max_upload_size=1)
-        self.assertRaises(ValidationError, file_field.clean, data, file_field)
-
-        file_field = self.model(content_types=["text/plain"])
-        file_field.clean(data, file_field)
-
-
 class TestReference(TestCase):
     def setUp(self):
         self.model = baker.make_recipe(

@@ -274,48 +274,6 @@ class YearField(models.IntegerField):
             )
 
 
-class ContentTypeRestrictedFileField(models.FileField):
-    """A FileField with some extra information.
-
-    https://djangosnippets.org/snippets/2206/
-
-    The extra information than can be added is:
-        - content_types - list containing allowed content_types. Eg:
-            ['application/pdf', 'image/jpeg']
-        - max_upload_size - an integer number indicating the maximum file size allowed
-            in bytes. Eg.:
-                2.5MB - 2621440
-                5MB - 5242880
-                10MB - 10485760
-                20MB - 20971520
-                50MB - 5242880
-                100MB 104857600
-                250MB - 214958080
-                500MB - 429916160
-    """
-
-    def __init__(self, *args, **kwargs):
-        self.content_types = kwargs.pop("content_types", [])
-        self.max_upload_size = kwargs.pop("max_upload_size", 429916160)
-
-        super(ContentTypeRestrictedFileField, self).__init__(*args, **kwargs)
-
-    def clean(self, *args, **kwargs):
-        """Validates the value and returns the data."""
-        data = super(ContentTypeRestrictedFileField, self).clean(*args, **kwargs)
-
-        if data.content_type in self.content_types:
-            if data.size > self.max_upload_size:
-                raise forms.ValidationError(
-                    _("Please keep filesize under %s. Current filesize %s")
-                    % (filesizeformat(self.max_upload_size), filesizeformat(data.size))
-                )
-        else:
-            raise forms.ValidationError(_("Filetype not supported."))
-
-        return data
-
-
 class Reference(
     HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
 ):
