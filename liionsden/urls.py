@@ -23,6 +23,7 @@ urlpatterns = [
     path("battDB/", include("battDB.urls")),
     path("admin/", admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),
+    path("users/", include("management.urls")),
 ]
 
 if settings.DEBUG:
