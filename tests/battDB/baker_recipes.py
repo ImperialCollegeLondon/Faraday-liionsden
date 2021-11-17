@@ -50,7 +50,7 @@ device = Recipe(Device, batch=foreign_key(batch))
 parser = Recipe(Parser, user_owner=foreign_key(user))
 
 equipment = Recipe(
-    Equipment, manufacturer=foreign_key(org), user_owner=foreign_key(user)
+    Equipment, institution=foreign_key(org), user_owner=foreign_key(user)
 )
 
 experiment = Recipe(

@@ -141,8 +141,7 @@ class TestEquipment(TestCase):
         self.model = baker.make_recipe("tests.battDB.equipment")
 
     def test_definition(self):
-        self.assertTrue(hasattr(self.model, "specification"))
-        self.assertTrue(hasattr(self.model, "manufacturer"))
+        self.assertTrue(hasattr(self.model, "institution"))
         self.assertTrue(hasattr(self.model, "serialNo"))
         self.assertTrue(hasattr(self.model, "default_parser"))
 
