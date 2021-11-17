@@ -260,9 +260,16 @@ class DataAdmin(BaseAdmin):
 
     get_file_link.short_description = "View RAW"
 
+    def save_model(self, request, obj, form, change):
+        pass  # don't actually save the parent instance
+
+    def save_formset(self, request, form, formset, change):
+        form.instance.save()  # EDF must be saved first
+        formset.save()  # now save the data file
+        form.instance.full_clean()  # trigger to create ranges
+
 
 admin.site.register([ExperimentDataFile], DataAdmin)
-
 
 admin.site.register(
     [

@@ -452,14 +452,10 @@ class ExperimentDataFile(cm.BaseModel):
     def is_parsed(self):
         return self.file_exists() and len(self.file_columns()) > 0
 
-    is_parsed.boolean = True
-
     def file_exists(self):
         if hasattr(self, "raw_data_file"):
             return self.raw_data_file.exists()
         return False
-
-    file_exists.boolean = True
 
     def file_hash(self):
         if self.file_exists():
@@ -512,9 +508,7 @@ class ExperimentDataFile(cm.BaseModel):
 
             # This needs to be reviewed to avoid a recursion loop
             self.save()
-
-            if self.is_parsed():
-                self.create_ranges()
+            self.create_ranges()
 
     class Meta:
         verbose_name = "Data File"
