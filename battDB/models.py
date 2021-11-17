@@ -361,11 +361,9 @@ class Experiment(cm.BaseModel):
 class ExperimentDataFile(cm.BaseModel):
     """EDF is the class tying together data files, parsed data tables and experiments.
 
-    <>BR> It contains all of the time-series numerical data as a Postgres
+    <>BR> It contains all of the time-series  (ts) numerical data as a Postgres
     ArrayField(ArrayField(FloatField))) <br> Text data should be added as Events. Raw
     data files should be uploaded and referenced, where available.
-
-    TODO: Why the 'ts' in front of the variables?
     """
 
     ts_headers = ArrayField(
@@ -402,7 +400,6 @@ class ExperimentDataFile(cm.BaseModel):
         Batch, through="ExperimentDevice", related_name="used_in"
     )
 
-    # TODO: Why is the test protocol defined in the DFN db and not here or in common?
     protocol = models.ForeignKey(
         dfn.Method,
         on_delete=models.SET_NULL,
