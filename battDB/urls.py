@@ -2,8 +2,6 @@ from django.urls import path
 
 from .views import AllExperimentsView, ExperimentView, index
 
-app_name = "battDB"
-
 urlpatterns = [
     path("", index, name="index"),
     path("exps", AllExperimentsView.as_view(), name="Experiments"),
