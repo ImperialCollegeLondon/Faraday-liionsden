@@ -295,29 +295,16 @@ class Parser(cm.BaseModelMandatoryName):
 
 
 class Equipment(cm.BaseModel):
-    """Definitions of equipment such as cycler machines.
+    """Definitions of equipment such as cycler machines."""
 
-    FIXME: This does not make sense. Why an equipment has a device specification and
-     a serial number related to the batch number? Is it another 'batch' number we are
-     talking about here?
-    """
-
-    specification = models.ForeignKey(
-        DeviceSpecification,
-        null=True,
-        blank=False,
-        on_delete=models.SET_NULL,
-        limit_choices_to={"abstract": False},
-        help_text="Batch Specification",
-    )
-    manufacturer = models.ForeignKey(
+    institution = models.ForeignKey(
         cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True
     )
     serialNo = models.CharField(
         max_length=60,
         default="",
         blank=True,
-        help_text="Batch number, optionally indicate serial number format",
+        help_text="Serial number, if any, for this piece of equipment",
     )
     default_parser = models.ForeignKey(
         Parser,
