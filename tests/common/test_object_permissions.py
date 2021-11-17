@@ -20,39 +20,43 @@ class TestCreatePrivate(BaseObjectTest):
     @classmethod
     def setUpClass(self):
         super(TestCreatePrivate, self).setUpClass()
-        self.model = baker.make_recipe("tests.common.paper", status="private")
+        self.model = baker.make_recipe("tests.common.reference", status="private")
         self.model_owner = self.model.user_owner
 
     def test_user_perms(self):
         self.assertTrue(
             self.model_owner.has_perms(
-                ["common.view_paper", "common.change_paper"], self.model
+                ["common.view_reference", "common.change_reference"], self.model
             )
         )
-        self.assertFalse(self.model_owner.has_perm("common.delete_paper", self.model))
-        self.assertFalse(self.contributor.has_perm("common.change_paper", self.model))
+        self.assertFalse(
+            self.model_owner.has_perm("common.delete_reference", self.model)
+        )
+        self.assertFalse(
+            self.contributor.has_perm("common.change_reference", self.model)
+        )
 
     def test_group_perms(self):
         for perm in [
-            "common.view_paper",
-            "common.change_paper",
-            "common.delete_paper",
+            "common.view_reference",
+            "common.change_reference",
+            "common.delete_reference",
         ]:
             with self.subTest(perm):
                 self.assertNotIn(self.model, get_objects_for_user(self.read_only, perm))
         for perm in [
-            "common.view_paper",
-            "common.change_paper",
-            "common.delete_paper",
+            "common.view_reference",
+            "common.change_reference",
+            "common.delete_reference",
         ]:
             with self.subTest(perm):
                 self.assertNotIn(
                     self.model, get_objects_for_user(self.contributor, perm)
                 )
         for perm in [
-            "common.view_paper",
-            "common.change_paper",
-            "common.delete_paper",
+            "common.view_reference",
+            "common.change_reference",
+            "common.delete_reference",
         ]:
             with self.subTest(perm):
                 self.assertIn(self.model, get_objects_for_user(self.maintainer, perm))
@@ -62,31 +66,38 @@ class TestCreatePublic(BaseObjectTest):
     @classmethod
     def setUpClass(self):
         super(TestCreatePublic, self).setUpClass()
-        self.model = baker.make_recipe("tests.common.paper", status="public")
+        self.model = baker.make_recipe("tests.common.reference", status="public")
         self.model_owner = self.model.user_owner
 
     def test_user_perms(self):
-        self.assertFalse(self.model_owner.has_perm("common.change_paper", self.model))
-        self.assertFalse(self.model_owner.has_perm("common.delete_paper", self.model))
-        self.assertFalse(self.contributor.has_perm("common.change_paper", self.model))
+        self.assertFalse(
+            self.model_owner.has_perm("common.change_reference", self.model)
+        )
+        self.assertFalse(
+            self.model_owner.has_perm("common.delete_reference", self.model)
+        )
+        self.assertFalse(
+            self.contributor.has_perm("common.change_reference", self.model)
+        )
 
     def test_group_perms(self):
         self.assertIn(
-            self.model, get_objects_for_user(self.contributor, "common.view_paper")
+            self.model, get_objects_for_user(self.contributor, "common.view_reference")
         )
         self.assertNotIn(
-            self.model, get_objects_for_user(self.contributor, "common.change_paper")
+            self.model,
+            get_objects_for_user(self.contributor, "common.change_reference"),
         )
         self.assertIn(
-            self.model, get_objects_for_user(self.read_only, "common.view_paper")
+            self.model, get_objects_for_user(self.read_only, "common.view_reference")
         )
-        for perm in ["common.change_paper", "common.delete_paper"]:
+        for perm in ["common.change_reference", "common.delete_reference"]:
             with self.subTest(perm):
                 self.assertNotIn(self.model, get_objects_for_user(self.read_only, perm))
         for perm in [
-            "common.view_paper",
-            "common.change_paper",
-            "common.delete_paper",
+            "common.view_reference",
+            "common.change_reference",
+            "common.delete_reference",
         ]:
             with self.subTest(perm):
                 self.assertIn(self.model, get_objects_for_user(self.maintainer, perm))
@@ -96,7 +107,7 @@ class TestPublicToPrivate(BaseObjectTest):
     @classmethod
     def setUpClass(self):
         super(TestPublicToPrivate, self).setUpClass()
-        self.model = baker.make_recipe("tests.common.paper", status="public")
+        self.model = baker.make_recipe("tests.common.reference", status="public")
         self.model.status = "private"
         self.model.save()
         self.model_owner = self.model.user_owner
@@ -104,33 +115,37 @@ class TestPublicToPrivate(BaseObjectTest):
     def test_user_perms(self):
         self.assertTrue(
             self.model_owner.has_perms(
-                ["common.view_paper", "common.change_paper"], self.model
+                ["common.view_reference", "common.change_reference"], self.model
             )
         )
-        self.assertFalse(self.model_owner.has_perm("common.delete_paper", self.model))
-        self.assertFalse(self.contributor.has_perm("common.change_paper", self.model))
+        self.assertFalse(
+            self.model_owner.has_perm("common.delete_reference", self.model)
+        )
+        self.assertFalse(
+            self.contributor.has_perm("common.change_reference", self.model)
+        )
 
     def test_group_perms(self):
         for perm in [
-            "common.view_paper",
-            "common.change_paper",
-            "common.delete_paper",
+            "common.view_reference",
+            "common.change_reference",
+            "common.delete_reference",
         ]:
             with self.subTest(perm):
                 self.assertNotIn(self.model, get_objects_for_user(self.read_only, perm))
         for perm in [
-            "common.view_paper",
-            "common.change_paper",
-            "common.delete_paper",
+            "common.view_reference",
+            "common.change_reference",
+            "common.delete_reference",
         ]:
             with self.subTest(perm):
                 self.assertNotIn(
                     self.model, get_objects_for_user(self.contributor, perm)
                 )
         for perm in [
-            "common.view_paper",
-            "common.change_paper",
-            "common.delete_paper",
+            "common.view_reference",
+            "common.change_reference",
+            "common.delete_reference",
         ]:
             with self.subTest(perm):
                 self.assertIn(self.model, get_objects_for_user(self.maintainer, perm))
@@ -140,38 +155,44 @@ class TestPublicToDeleted(BaseObjectTest):
     @classmethod
     def setUpClass(self):
         super(TestPublicToDeleted, self).setUpClass()
-        self.model = baker.make_recipe("tests.common.paper", status="public")
+        self.model = baker.make_recipe("tests.common.reference", status="public")
         self.model.status = "deleted"
         self.model.save()
         self.model_owner = self.model.user_owner
 
     def test_user_perms(self):
-        self.assertFalse(self.model_owner.has_perm("common.view_paper", self.model))
-        self.assertFalse(self.model_owner.has_perm("common.change_paper", self.model))
-        self.assertFalse(self.model_owner.has_perm("common.delete_paper", self.model))
-        self.assertFalse(self.contributor.has_perm("common.change_paper", self.model))
+        self.assertFalse(self.model_owner.has_perm("common.view_reference", self.model))
+        self.assertFalse(
+            self.model_owner.has_perm("common.change_reference", self.model)
+        )
+        self.assertFalse(
+            self.model_owner.has_perm("common.delete_reference", self.model)
+        )
+        self.assertFalse(
+            self.contributor.has_perm("common.change_reference", self.model)
+        )
 
     def test_group_perms(self):
         for perm in [
-            "common.view_paper",
-            "common.change_paper",
-            "common.delete_paper",
+            "common.view_reference",
+            "common.change_reference",
+            "common.delete_reference",
         ]:
             with self.subTest(perm):
                 self.assertNotIn(self.model, get_objects_for_user(self.read_only, perm))
         for perm in [
-            "common.view_paper",
-            "common.change_paper",
-            "common.delete_paper",
+            "common.view_reference",
+            "common.change_reference",
+            "common.delete_reference",
         ]:
             with self.subTest(perm):
                 self.assertNotIn(
                     self.model, get_objects_for_user(self.contributor, perm)
                 )
         for perm in [
-            "common.view_paper",
-            "common.change_paper",
-            "common.delete_paper",
+            "common.view_reference",
+            "common.change_reference",
+            "common.delete_reference",
         ]:
             with self.subTest(perm):
                 self.assertIn(self.model, get_objects_for_user(self.maintainer, perm))

@@ -261,20 +261,6 @@ class DOIField(models.URLField):
             )
         return super().validate(value, obj)
 
-    def get_url(self):
-        """Gets the URL of a DOI.
-
-        TODO: implement method
-        """
-        pass
-
-    def get_name(self):
-        """Fetch the document name associated to the DOI.
-
-        TODO: implement method
-        """
-        pass
-
 
 class YearField(models.IntegerField):
     def validate(self, value, obj):
@@ -288,70 +274,18 @@ class YearField(models.IntegerField):
             )
 
 
-class ContentTypeRestrictedFileField(models.FileField):
-    """A FileField with some extra information.
-
-    https://djangosnippets.org/snippets/2206/
-
-    The extra information than can be added is:
-        - content_types - list containing allowed content_types. Eg:
-            ['application/pdf', 'image/jpeg']
-        - max_upload_size - an integer number indicating the maximum file size allowed
-            in bytes. Eg.:
-                2.5MB - 2621440
-                5MB - 5242880
-                10MB - 10485760
-                20MB - 20971520
-                50MB - 5242880
-                100MB 104857600
-                250MB - 214958080
-                500MB - 429916160
-    """
-
-    def __init__(self, *args, **kwargs):
-        self.content_types = kwargs.pop("content_types", [])
-        self.max_upload_size = kwargs.pop("max_upload_size", 429916160)
-
-        super(ContentTypeRestrictedFileField, self).__init__(*args, **kwargs)
-
-    def clean(self, *args, **kwargs):
-        """Validates the value and returns the data."""
-        data = super(ContentTypeRestrictedFileField, self).clean(*args, **kwargs)
-
-        if data.content_type in self.content_types:
-            if data.size > self.max_upload_size:
-                raise forms.ValidationError(
-                    _("Please keep filesize under %s. Current filesize %s")
-                    % (filesizeformat(self.max_upload_size), filesizeformat(data.size))
-                )
-        else:
-            raise forms.ValidationError(_("Filetype not supported."))
-
-        return data
-
-
-class Paper(
+class Reference(
     HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
 ):
-    """An academic paper."""
+    """A source of data, typically an academic paper, but can be a dataset, repository."""
 
     DOI = DOIField(
+        blank=True,
+        null=True,
         unique=True,
-        blank=True,
-        null=True,
-        help_text="DOI for the paper.",
+        help_text="DOI for the reference.",
     )
-    year = YearField(default=datetime.date.today().year)
     title = models.CharField(max_length=300, default="")
-    authors = models.CharField(max_length=300, default="")
-    publisher = models.ForeignKey(
-        Org,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        limit_choices_to={"is_publisher": True},
-    )
-
     url = models.URLField(null=True, blank=True)
     PDF = models.FileField(null=True, blank=True, help_text="Optional PDF copy")
 
@@ -359,7 +293,7 @@ class Paper(
         return True if self.PDF else False
 
     def __str__(self):
-        return slugify(str(self.title) + "-" + str(self.year))
+        return slugify(str(self.DOI) + "-" + str(self.title))
 
 
 class HashedFile(models.Model):

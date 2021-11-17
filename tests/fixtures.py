@@ -26,12 +26,6 @@ db_unit = dict(
     is_SI_unit=True,
 )
 
-db_paper = dict(
-    authors="Michael Faraday",
-    title="Chemical Manipulation, Being Instructions to Students in Chemistry",
-    year=1827,
-)
-
 
 class AbstractModelMixinTestCase(TestCase):
     """

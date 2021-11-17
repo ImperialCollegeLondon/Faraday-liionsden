@@ -170,7 +170,9 @@ class Data(cm.BaseModel):
     parameters described in data source are packed together here.
     """
 
-    paper = models.ForeignKey(cm.Paper, on_delete=models.CASCADE, null=True, blank=True)
+    reference = models.ForeignKey(
+        cm.Reference, on_delete=models.CASCADE, null=True, blank=True
+    )
     parameter = models.ManyToManyField(Parameter, through="DataParameter")
 
     class Meta:

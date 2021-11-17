@@ -228,16 +228,16 @@ class TestParameter(TestCase):
 class TestData(TestCase):
     def setUp(self):
         self.parameter = baker.make_recipe("tests.dfndb.parameter", _quantity=2)
-        self.paper = baker.make_recipe("tests.common.paper")
+        self.reference = baker.make_recipe("tests.common.reference")
         self.model = baker.make_recipe(
             "tests.dfndb.data",
-            paper=self.paper,
+            reference=self.reference,
             parameter=self.parameter,
             make_m2m=True,
         )
 
     def test_data_creation(self):
-        self.assertEqual(self.model.paper, self.paper)
+        self.assertEqual(self.model.reference, self.reference)
         self.assertIn(self.model.parameter.get_queryset().first(), self.parameter)
 
 
