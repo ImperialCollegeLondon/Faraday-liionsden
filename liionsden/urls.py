@@ -19,8 +19,8 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path("", include("battDB.urls"), name="root"),
-    path("battDB/", include("battDB.urls", "battDB")),
+    # path("", include("battDB.urls"), name="root"),
+    path("battDB/", include("battDB.urls")),
     path("admin/", admin.site.urls),
     # path("accounts/", include("django.contrib.auth.urls")),
     path("accounts/", include("management.urls")),

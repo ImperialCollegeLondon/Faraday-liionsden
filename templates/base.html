@@ -1,3 +1,4 @@
+{% extends 'header.html' %}
 {% include 'inc.html' %}
 
 {% load bootstrap5 %}
@@ -18,14 +19,6 @@ table, th, td {
 {% endblock %}
 </head>
 <body>
-    <div class="page-header">
-        {% if user.is_authenticated %}
-            Hi {{ user.username }}
-        {% else %}
-            <a href="/accounts/login">login</a>
-        {% endif %}   
-        <h1><a href="/">The Faraday Institution - LiIonsDen Electrochemistry Database</a></h1>
-    </div>
     <div class="content container">
         <div class="row">
             <div class="col-md-8">
