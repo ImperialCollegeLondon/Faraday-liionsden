@@ -492,7 +492,9 @@ class ExperimentDataFile(cm.BaseModel):
 
             # This needs to be reviewed to avoid a recursion loop
             self.save()
-            self.create_ranges()
+
+            if self.is_parsed():
+                self.create_ranges()
 
     class Meta:
         verbose_name = "Data File"
