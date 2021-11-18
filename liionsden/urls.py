@@ -24,7 +24,6 @@ urlpatterns = [
     path("", index, name="home"),
     path("battDB/", include("battDB.urls")),
     path("admin/", admin.site.urls),
-    # path("accounts/", include("django.contrib.auth.urls")),
     path("accounts/", include("management.urls")),
 ]
 
