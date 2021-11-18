@@ -16,7 +16,7 @@ def register_request(request, backend=backend):
             messages.success(
                 request, "Registration successful. Your account is pending approval."
             )
-            return redirect("battDB:Experiments")
+            return redirect("home")
         messages.error(request, "Unsuccessful registration. Invalid information.")
     form = NewUserForm()
     return render(

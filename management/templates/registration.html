@@ -1,8 +1,8 @@
+{% extends 'header.html' %}
 {% load bootstrap5 %}
 {% bootstrap_css %}
-{% bootstrap_javascript %}
-{% bootstrap_messages %}
 
+{% block content %}
 <!--Register-->
 <div class="container py-5">
   <h1>Register</h1>
@@ -16,3 +16,5 @@
     {% endbuttons %}
   </form>
 </div>
+
+{% endblock %}
