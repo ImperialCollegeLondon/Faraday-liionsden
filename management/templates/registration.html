@@ -3,13 +3,16 @@
 {% bootstrap_javascript %}
 {% bootstrap_messages %}
 
-{# Display a form #}
-<form action="" method="post" class="form">
-  {% csrf_token %}
-  {% bootstrap_form form %}
-  {% buttons %}
-    <button type="submit" class="btn btn-primary">
-      Submit
-    </button>
-  {% endbuttons %}
-</form>
+<!--Register-->
+<div class="container py-5">
+  <h1>Register</h1>
+  <form action="" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+      <button type="submit" class="btn btn-primary">
+        Submit
+      </button>
+    {% endbuttons %}
+  </form>
+</div>
