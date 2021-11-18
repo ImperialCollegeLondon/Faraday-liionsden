@@ -13,7 +13,9 @@ def register_request(request, backend=backend):
         form = NewUserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            messages.success(request, "Registration successful.")
+            messages.success(
+                request, "Registration successful. Your account is pending approval."
+            )
             return redirect("battDB:Experiments")
         messages.error(request, "Unsuccessful registration. Invalid information.")
     form = NewUserForm()
