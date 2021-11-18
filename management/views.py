@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect, render
 
@@ -34,7 +34,7 @@ def login_request(request, backend=backend):
             if user is not None:
                 login(request, user, backend=backend)
                 messages.info(request, f"You are now logged in as {username}.")
-                return redirect("battDB:Experiments")
+                return redirect("home")
             else:
                 messages.error(request, "Invalid username or password.")
         else:
@@ -43,3 +43,9 @@ def login_request(request, backend=backend):
     return render(
         request=request, template_name="login.html", context={"login_form": form}
     )
+
+
+def logout_request(request):
+    logout(request)
+    messages.info(request, "you have successfully logged out.")
+    return redirect("home")
