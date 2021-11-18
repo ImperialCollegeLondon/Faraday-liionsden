@@ -6,8 +6,8 @@ app_name = "battDB"
 
 urlpatterns = [
     path("", index, name="index"),
-    path("exps", AllExperimentsView.as_view(), name="Experiments"),
-    path("exps/<int:pk>", ExperimentView.as_view(), name="Experiment"),
+    path("exps/", AllExperimentsView.as_view(), name="Experiments"),
+    path("exps/<int:pk>/", ExperimentView.as_view(), name="Experiment"),
 ]
 
 """The following url patterns will be added on a need basis, as new functionality 
