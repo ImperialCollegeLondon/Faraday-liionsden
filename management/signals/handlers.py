@@ -8,4 +8,5 @@ User = get_user_model()
 @receiver(pre_save, sender=User)
 def set_new_user_inactive(sender, instance, **kwargs):
     if instance._state.adding:
-        instance.is_active = False
+        if not instance.is_superuser:
+            instance.is_active = False
