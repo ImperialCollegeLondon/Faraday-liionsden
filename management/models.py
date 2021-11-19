@@ -7,4 +7,6 @@ from django.db import models
 class User(AbstractUser):
     """Implement a custom user model to add flexibility in the future."""
 
-    pass
+    institution = models.ForeignKey(
+        "common.Org", on_delete=models.CASCADE, null=True, blank=True
+    )
