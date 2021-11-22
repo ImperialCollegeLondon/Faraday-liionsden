@@ -179,7 +179,7 @@ class Migration(migrations.Migration):
             name='UploadedFile',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('file', models.FileField(upload_to='uploaded_files')),
+                ('file', models.FileField(upload_to='')),
                 ('hash', models.CharField(editable=False, help_text='SHA-1 Hash of uploaded file. You cannot upload the same file twice.', max_length=64, unique=True)),
                 ('local_path', models.CharField(blank=True, default='', max_length=1024)),
                 ('local_date', models.DateTimeField(default=datetime.datetime.now)),
@@ -309,7 +309,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='deviceparameter',
-            unique_together={('spec', 'parameter', 'material'), ('spec', 'name')},
+            unique_together={('spec', 'name'), ('spec', 'parameter', 'material')},
         ),
         migrations.CreateModel(
             name='Device',
