@@ -10,18 +10,20 @@ db_user = dict(
     password="C@cina27",
 )
 
+staff_user = dict(
+    username="LinusP",
+    first_name="Linus",
+    last_name="Pauling",
+    password="V1taminC",
+    is_staff="True",
+)
+
 db_unit = dict(
     quantityName="Charge",
     quantitySymbol="Q",
     unitName="Coulombs",
     unitSymbol="C",
     is_SI_unit=True,
-)
-
-db_paper = dict(
-    authors="Michael Faraday",
-    title="Chemical Manipulation, Being Instructions to Students in Chemistry",
-    year=1827,
 )
 
 

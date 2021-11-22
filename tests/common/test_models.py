@@ -1,12 +1,15 @@
 import time
 from unittest import skip
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
+from model_bakery import baker
 
 from tests.fixtures import AbstractModelMixinTestCase, db_user
+
+User = get_user_model()
 
 
 class TestHasName(AbstractModelMixinTestCase):
@@ -210,62 +213,59 @@ class TestBaseModelMandatoryName(AbstractModelMixinTestCase):
 
 
 class TestOrg(TestCase):
-    from common.models import Org
-
-    model = Org
-
     def setUp(self):
-        User.objects.get_or_create(**db_user)
-        user = User.objects.get()
-        self.expected = dict(
+        self.model = baker.make_recipe(
+            "tests.common.org",
             name="Dharma",
-            manager=user,
             is_research=True,
             is_mfg_equip=True,
             attributes={"ranges": 2, "colour": "blue"},
             notes="Research in meteorology, zoology and electromagnetism",
             website="www.dharma.com",
         )
-        self.model.objects.create(**self.expected)
+        self.expected = dict(
+            name="Dharma",
+            is_research=True,
+            is_mfg_equip=True,
+            attributes={"ranges": 2, "colour": "blue"},
+            notes="Research in meteorology, zoology and electromagnetism",
+            website="www.dharma.com",
+        )
 
     def test_org_creation(self):
-        obj = self.model.objects.get()
         for k, v in self.expected.items():
-            self.assertEqual(getattr(obj, k), v)
-        self.assertFalse(obj.is_publisher)
-        self.assertFalse(obj.is_mfg_cells)
+            self.assertEqual(getattr(self.model, k), v)
+        self.assertFalse(self.model.is_publisher)
+        self.assertFalse(self.model.is_mfg_cells)
 
 
 class TestPerson(TestCase):
-    from common.models import Person
-
-    model = Person
-
     def setUp(self):
-        User.objects.get_or_create(**db_user)
-        user = User.objects.get()
+        self.user = baker.make_recipe(
+            "tests.management.user", first_name="Michael", last_name="Faraday"
+        )
+        self.model = baker.make_recipe(
+            "tests.common.person",
+            longName="Michael Faraday",
+            shortName="MichaelF",
+            user=self.user,
+        )
         self.expected = dict(
             longName="Michael Faraday",
             shortName="MichaelF",
-            user=user,
+            user=self.user,
         )
-        self.model.objects.get_or_create(**self.expected)
 
     def test_person_creation(self):
-        obj = self.model.objects.get()
         for k, v in self.expected.items():
-            self.assertEqual(getattr(obj, k), v)
-        self.assertIsNone(obj.org)
+            self.assertEqual(getattr(self.model, k), v)
+        self.assertIsNone(self.model.org)
 
     def test_user_firstname(self):
-        obj = self.model.objects.get()
-        usr = User.objects.get()
-        self.assertEqual(obj.user_firstname(), usr.first_name)
+        self.assertEqual(self.model.user_firstname(), self.user.first_name)
 
     def test_user_lastname(self):
-        obj = self.model.objects.get()
-        usr = User.objects.get()
-        self.assertEqual(obj.user_lastname(), usr.last_name)
+        self.assertEqual(self.model.user_lastname(), self.user.last_name)
 
 
 class TestDOIField(TestCase):
@@ -299,50 +299,22 @@ class TestYearField(TestCase):
         year.validate(1982, None)
 
 
-class TestContentTypeRestrictedFileField(TestCase):
-    from common.models import ContentTypeRestrictedFileField
-
-    model = ContentTypeRestrictedFileField
-
-    def test_type_restricted_file_field_creation(self):
-        content = ["text/x-python", "application/pdf"]
-        size = 2621440
-        file_field = self.model(content_types=content, max_upload_size=size)
-        self.assertEqual(content, file_field.content_types)
-        self.assertEqual(size, file_field.max_upload_size)
-
-    def test_clean(self):
-        data = SimpleUploadedFile(
-            "best_file_eva.txt", b"these are the contents of the txt file"
-        )
-        file_field = self.model(content_types=[], max_upload_size=1)
-        self.assertRaises(ValidationError, file_field.clean, data, file_field)
-
-        file_field = self.model(content_types=["text/plain"], max_upload_size=1)
-        self.assertRaises(ValidationError, file_field.clean, data, file_field)
-
-        file_field = self.model(content_types=["text/plain"])
-        file_field.clean(data, file_field)
-
-
-class TestPaper(TestCase):
-    from common.models import Paper
-
-    model = Paper
-
+class TestReference(TestCase):
     def setUp(self):
-        from tests.fixtures import db_paper
+        self.model = baker.make_recipe(
+            "tests.common.reference",
+            title="Chemical Manipulation, Being Instructions to Students in Chemistry",
+        )
+        self.expected = dict(
+            title="Chemical Manipulation, Being Instructions to Students in Chemistry",
+        )
 
-        self.expected = db_paper.copy()
-        self.model.objects.get_or_create(**self.expected)
-
-    def test_paper_creation(self):
-        obj = self.model.objects.get()
+    def test_reference_creation(self):
         for k, v in self.expected.items():
-            self.assertEqual(getattr(obj, k), v)
+            self.assertEqual(getattr(self.model, k), v)
 
     def test_has_pdf(self):
-        self.assertFalse(self.model.objects.get().has_pdf())
+        self.assertFalse(self.model.has_pdf())
 
 
 class TestHashedFile(AbstractModelMixinTestCase):

@@ -1,12 +1,9 @@
+from unittest.mock import MagicMock
+
 from django.contrib.admin.sites import AdminSite, site
 from django.test import TestCase
 
-
-class MockRequest:
-    pass
-
-
-request = MockRequest()
+request = MagicMock()
 
 
 class TestMaterialCompositionInline(TestCase):
@@ -79,7 +76,7 @@ class TestDataAdmin(TestCase):
 
     def test_data_admin(self):
         from dfndb.admin import DataAdmin, DataParameterInline
-        from dfndb.models import Data, Parameter
+        from dfndb.models import Data
 
         ma = DataAdmin(Data, self.site)
         self.assertEqual(ma.model, Data)

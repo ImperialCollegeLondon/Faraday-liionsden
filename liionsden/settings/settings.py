@@ -34,7 +34,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "guardian",
+    "django_cleanup.apps.CleanupConfig",  # <-- This must be last
 ]
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",  # this is default
+    "guardian.backends.ObjectPermissionBackend",
+)
+
+ANONYMOUS_USER_NAME = None
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -116,6 +125,7 @@ INSTALLED_APPS += [
     "battDB.apps.BattdbConfig",
     "common.apps.CommonConfig",
     "dfndb.apps.DfndbConfig",
+    "management.apps.ManagementConfig",
 ]
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 REST_FRAMEWORK = {
@@ -147,3 +157,8 @@ LOGGING = {
     },
     "loggers": {"django": {"handlers": ["file", "console"], "level": "INFO"}},
 }
+
+AUTH_USER_MODEL = "management.User"
+
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"

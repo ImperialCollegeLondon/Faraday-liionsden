@@ -2,6 +2,7 @@ import django.forms
 import mptt
 from django.contrib import admin
 from django.db import models
+from guardian.admin import GuardedModelAdmin
 
 from . import models as cmodels
 
@@ -40,7 +41,7 @@ class ChangeFormMixin:
     }
 
 
-class BaseAdmin(ChangeFormMixin, admin.ModelAdmin):
+class BaseAdmin(ChangeFormMixin, GuardedModelAdmin):
     list_display_extra = ["user_owner", "status", "created_on", "modified_on"]
     list_display = ["__str__"] + list_display_extra
     list_filter = ["user_owner", "status"]
@@ -86,16 +87,16 @@ admin.site.register(
 )
 
 
-class PaperAdmin(BaseAdmin):
-    list_display = ["title", "DOI", "year", "has_pdf"]
-    list_filter = ["year", "publisher", "authors"]
+class ReferenceAdmin(BaseAdmin):
+    list_display = ["title", "DOI", "has_pdf"]
+    list_filter = ["title"]
 
 
 admin.site.register(
     [
-        cmodels.Paper,
+        cmodels.Reference,
     ],
-    PaperAdmin,
+    ReferenceAdmin,
 )
 
 

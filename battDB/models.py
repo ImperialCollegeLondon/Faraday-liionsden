@@ -26,8 +26,8 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         verbose_name="Abstract Specification",
         help_text="""
         This specifies an abstract device, e.g. 'Cell' with child members
-        such as 'Positive Electrode, Negative Electrode, Electrolyte etc. 
-        If this is set to True, then all metadata declared here must be 
+        such as 'Positive Electrode, Negative Electrode, Electrolyte etc.
+        If this is set to True, then all metadata declared here must be
         overridden in child classes. An abstract specification cannot be used
         to define a physical device or batch.
         """,
@@ -44,8 +44,18 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         blank=True,
         limit_choices_to={"abstract": True},
         related_name="specifies",
-        help_text="""Device type. e.g. Cell, Module, Battery Pack. An abstract 
+        help_text="""Device type. e.g. Cell, Module, Battery Pack. An abstract
         specification cannot have a device type -  they define the device types.""",
+    )
+
+    config = models.ForeignKey(
+        "DeviceConfig",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="used_in_modules",
+        limit_choices_to={"config_type": "module"},
+        help_text="Configuration of sub-devices if the device type is a module or pack.",
     )
 
     def clean(self):
@@ -67,6 +77,14 @@ class DeviceParameter(cm.HasName):
     )
     value = models.JSONField(blank=True, null=True)
     inherit_to_children = models.BooleanField(default=False)
+
+    @property
+    def user_owner(self):
+        return self.spec.user_owner
+
+    @property
+    def status(self):
+        return self.spec.status
 
     def __str__(self):
         return str(self.parameter)
@@ -162,6 +180,14 @@ class Device(cm.HasAttributes, cm.HasNotes):
         # TODO: Can compute device stats here
         self.attributes["state_of_health"] = "100%"
 
+    @property
+    def user_owner(self):
+        return self.batch.user_owner
+
+    @property
+    def status(self):
+        return self.batch.status
+
     def __str__(self):
         return str(self.batch.specification) + "/" + self.serial()
 
@@ -227,6 +253,14 @@ class DeviceConfigNode(models.Model):
         help_text="Name of electrical signal at negative terminal e.g. pack_-ve",
     )
 
+    @property
+    def user_owner(self):
+        return self.device.user_owner
+
+    @property
+    def status(self):
+        return self.device.status
+
     def __str__(self):
         return (
             str(self.config)
@@ -250,10 +284,10 @@ class Parser(cm.BaseModelMandatoryName):
      https://stackoverflow.com/q/46430471/3778792 combined with some pandas magic.
     """
 
-    FORMAT_CHOICES = [("none", "None")] + available_parsers()
+    FORMAT_CHOICES = available_parsers()
     file_format = models.CharField(
-        max_length=20,
-        default="none",
+        max_length=50,
+        default=FORMAT_CHOICES[0] if len(FORMAT_CHOICES) > 0 else "none",
         choices=FORMAT_CHOICES,
         help_text="File format",
     )
@@ -261,29 +295,16 @@ class Parser(cm.BaseModelMandatoryName):
 
 
 class Equipment(cm.BaseModel):
-    """Definitions of equipment such as cycler machines.
+    """Definitions of equipment such as cycler machines."""
 
-    FIXME: This does not make sense. Why an equipment has a device specification and
-     a serial number related to the batch number? Is it another 'batch' number we are
-     talking about here?
-    """
-
-    specification = models.ForeignKey(
-        DeviceSpecification,
-        null=True,
-        blank=False,
-        on_delete=models.SET_NULL,
-        limit_choices_to={"abstract": False},
-        help_text="Batch Specification",
-    )
-    manufacturer = models.ForeignKey(
+    institution = models.ForeignKey(
         cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True
     )
     serialNo = models.CharField(
         max_length=60,
         default="",
         blank=True,
-        help_text="Batch number, optionally indicate serial number format",
+        help_text="Serial number, if any, for this piece of equipment",
     )
     default_parser = models.ForeignKey(
         Parser,
@@ -320,10 +341,6 @@ class Experiment(cm.BaseModel):
         "or all 2s2p modules, not a mixture of both.",
     )
 
-    protocol = models.TextField(
-        null=True, blank=True, help_text="Test protocol used in this experiment"
-    )
-
     def devices_(self):
         return self.devices.count()
 
@@ -344,11 +361,9 @@ class Experiment(cm.BaseModel):
 class ExperimentDataFile(cm.BaseModel):
     """EDF is the class tying together data files, parsed data tables and experiments.
 
-    <>BR> It contains all of the time-series numerical data as a Postgres
+    <>BR> It contains all of the time-series  (ts) numerical data as a Postgres
     ArrayField(ArrayField(FloatField))) <br> Text data should be added as Events. Raw
     data files should be uploaded and referenced, where available.
-
-    TODO: Why the 'ts' in front of the variables?
     """
 
     ts_headers = ArrayField(
@@ -385,7 +400,6 @@ class ExperimentDataFile(cm.BaseModel):
         Batch, through="ExperimentDevice", related_name="used_in"
     )
 
-    # TODO: Why is the test protocol defined in the DFN db and not here or in common?
     protocol = models.ForeignKey(
         dfn.Method,
         on_delete=models.SET_NULL,
@@ -422,14 +436,10 @@ class ExperimentDataFile(cm.BaseModel):
     def is_parsed(self):
         return self.file_exists() and len(self.file_columns()) > 0
 
-    is_parsed.boolean = True
-
     def file_exists(self):
         if hasattr(self, "raw_data_file"):
             return self.raw_data_file.exists()
         return False
-
-    file_exists.boolean = True
 
     def file_hash(self):
         if self.file_exists():
@@ -440,7 +450,9 @@ class ExperimentDataFile(cm.BaseModel):
     def create_ranges(self):
         ranges = self.attributes.get("range_config", dict())
         for name, config in ranges.items():
-            rng_q = DataRange.objects.get_or_create(dataFile=self, label=name)
+            rng_q = DataRange.objects.get_or_create(
+                dataFile=self, label=name, user_owner=self.user_owner
+            )
             rng = rng_q[0]
             rng.file_offset_start = config.get("start") or 0
             rng.file_offset_end = config.get("end") or 0
@@ -488,7 +500,7 @@ class ExperimentDataFile(cm.BaseModel):
         verbose_name = "Data File"
 
 
-class UploadedFile(cm.HashedFile):
+class UploadedFile(cm.HashedFile, cm.HasOwner, cm.HasStatus):
     edf = models.OneToOneField(
         ExperimentDataFile,
         on_delete=models.CASCADE,
@@ -536,14 +548,24 @@ class ExperimentDevice(models.Model):
     )
 
     def get_serial_no(self):
-        """ TODO: implement id_to_serialno and serialno_to_id functions. """
-        raise NotImplementedError
+        """TODO: implement id_to_serialno and serialno_to_id functions."""
+        # TEMP fix to allow Experiments to be created without errors
+        pass
+        # raise NotImplementedError
 
     def clean(self):
         if self.batch is not None and self.batch_sequence > self.batch.batch_size:
             raise ValidationError("Batch sequence ID cannot exceed batch size!")
         elif self.batch is not None:
             Device.objects.get_or_create(batch=self.batch, seq_num=self.batch_sequence)
+
+    @property
+    def user_owner(self):
+        return self.experiment.user_owner
+
+    @property
+    def status(self):
+        return self.experiment.status
 
     def __str__(self):
         return self.device_position
@@ -614,13 +636,23 @@ class DataColumn(models.Model):
     def experiment(self):
         return self.data_file.experiment
 
+    @property
+    def user_owner(self):
+        return self.data_file.user_owner
+
+    @property
+    def status(self):
+        return self.data_file.status
+
     class Meta:
         unique_together = [["device", "data_file"], ["column_name", "data_file"]]
         verbose_name = "Column Mapping"
         verbose_name_plural = "Data Column Mappings to Device Parameters"
 
 
-class DataRange(cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates):
+class DataRange(
+    cm.HasAttributes, cm.HasNotes, cm.HasCreatedModifiedDates, cm.HasOwner, cm.HasStatus
+):
     """Each data range within the data file
 
     Each data file contains numerous ranges e.g. charge & discharge cycles. Their data
@@ -670,6 +702,14 @@ class SignalType(models.Model):
         default=5, help_text="override column ordering"
     )
     parser = models.ForeignKey(Parser, on_delete=models.CASCADE, related_name="columns")
+
+    @property
+    def user_owner(self):
+        return self.parser.user_owner
+
+    @property
+    def status(self):
+        return self.parser.status
 
     def __str__(self):
         return self.col_name

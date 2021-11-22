@@ -1,18 +1,14 @@
 repos:
-  - repo: https://github.com/asottile/seed-isort-config
-    rev: v2.2.0
-    hooks:
-      - id: seed-isort-config
   - repo: https://github.com/timothycrosley/isort
-    rev: "5.4.2"
+    rev: "5.10.1"
     hooks:
       - id: isort
         additional_dependencies: [toml]
   - repo: https://github.com/psf/black
-    rev: "20.8b1"
+    rev: "21.11b1"
     hooks:
       - id: black
-        exclude: battDB/migrations/|common/migrations/|dfndb/migrations/|_other/|data/
+        exclude: battDB/migrations/|common/migrations/|dfndb/migrations/|management/migrations/|_other/|data/
 #  - repo: https://gitlab.com/pycqa/flake8
 #    rev: 3.8.3
 #    hooks:

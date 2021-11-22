@@ -73,6 +73,14 @@ class CompositionPart(models.Model):
     def percentage(self):
         return "%3.03f%%" % self.get_percentage()
 
+    @property
+    def user_owner(self):
+        return self.material.user_owner
+
+    @property
+    def status(self):
+        return self.material.status
+
     def __str__(self):
         return "%s%d" % (self.compound.formula, self.amount)
 
@@ -162,7 +170,9 @@ class Data(cm.BaseModel):
     parameters described in data source are packed together here.
     """
 
-    paper = models.ForeignKey(cm.Paper, on_delete=models.CASCADE, null=True, blank=True)
+    reference = models.ForeignKey(
+        cm.Reference, on_delete=models.CASCADE, null=True, blank=True
+    )
     parameter = models.ManyToManyField(Parameter, through="DataParameter")
 
     class Meta:
@@ -189,6 +199,14 @@ class DataParameter(models.Model):
         Material, on_delete=models.CASCADE, blank=True, null=True
     )
     value = models.JSONField(blank=True, null=True)
+
+    @property
+    def user_owner(self):
+        return self.parameter.user_owner
+
+    @property
+    def status(self):
+        return self.parameter.status
 
     def __str__(self):
         return str(self.parameter)

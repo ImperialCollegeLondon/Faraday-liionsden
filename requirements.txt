@@ -13,3 +13,6 @@ django-mptt
 idutils
 whitenoise
 model_bakery
+django-guardian
+django-cleanup
+python-magic
