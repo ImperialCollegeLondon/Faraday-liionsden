@@ -5,8 +5,6 @@ from django.contrib.auth import get_user_model
 from django.test import RequestFactory, TestCase
 from model_bakery import baker
 
-from tests.fixtures import db_user, staff_user
-
 request = MagicMock()
 User = get_user_model()
 

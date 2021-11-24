@@ -7,7 +7,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from model_bakery import baker
 
-from tests.fixtures import AbstractModelMixinTestCase, db_user
+from tests.fixtures import AbstractModelMixinTestCase
 
 User = get_user_model()
 
@@ -49,8 +49,7 @@ class TestHasOwner(AbstractModelMixinTestCase):
     model: mixin
 
     def setUp(self):
-        User.objects.get_or_create(**db_user)
-        user = User.objects.get()
+        user = baker.make_recipe("tests.management.user")
         self.model.objects.create(user_owner=user)
 
     def test_has_owner_creation(self):
@@ -145,8 +144,7 @@ class TestBaseModelNoName(AbstractModelMixinTestCase):
     model: mixin
 
     def setUp(self):
-        User.objects.get_or_create(**db_user)
-        user = User.objects.get()
+        user = baker.make_recipe("tests.management.user")
         self.expected = dict(
             user_owner=user,
             status="draft",
@@ -173,8 +171,7 @@ class TestBaseModel(AbstractModelMixinTestCase):
     model: mixin
 
     def setUp(self):
-        User.objects.get_or_create(**db_user)
-        user = User.objects.get()
+        user = baker.make_recipe("tests.management.user")
         self.expected = dict(
             user_owner=user,
             status="draft",
@@ -196,8 +193,7 @@ class TestBaseModelMandatoryName(AbstractModelMixinTestCase):
     model: mixin
 
     def setUp(self):
-        User.objects.get_or_create(**db_user)
-        user = User.objects.get()
+        user = baker.make_recipe("tests.management.user")
         self.expected = dict(
             user_owner=user,
             status="draft",
