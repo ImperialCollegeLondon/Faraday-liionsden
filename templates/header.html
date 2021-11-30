@@ -9,17 +9,19 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Title</title>
   
   </head>
- <body>
+ 
+  <body>
 
-  {% include 'includes/navbar.html' %}
+    {% include 'includes/navbar.html' %}
 
-  {% block content %}
+    <div class="container py-3">
+    
+      {% block content %}
 
-  {% endblock %} 
+      {% endblock %} 
       
+    </div>
   </body>
 </html>
