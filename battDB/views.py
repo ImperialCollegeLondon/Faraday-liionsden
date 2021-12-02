@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
@@ -32,7 +33,8 @@ class ExperimentView(DetailView):
     template_name = "experiment.html"
 
 
-class NewDeviceView(FormView):
+class NewDeviceView(PermissionRequiredMixin, FormView):
+    permission_required = "battDB.add_devicespecification"
     template_name = "upload_device.html"
     form_class = NewDeviceForm
     success_url = "/"
