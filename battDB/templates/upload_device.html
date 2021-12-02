@@ -1,0 +1,18 @@
+{% extends 'header.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container py-5">
+    <h1> New Device Specification </h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+        <button type="submit" class="btn btn-primary">
+            Submit
+        </button>
+        {% endbuttons %}
+    </form>
+</div>
+{% endblock %}

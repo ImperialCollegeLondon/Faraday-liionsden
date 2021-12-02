@@ -1,6 +1,8 @@
-from django.shortcuts import redirect
+from django.contrib import messages
+from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
+from django.views.generic.edit import FormView
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
@@ -8,6 +10,7 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .forms import NewDeviceForm
 from .models import DataRange, Experiment, ExperimentDataFile, UploadedFile
 from .serializers import (
     DataFileSerializer,
@@ -29,7 +32,25 @@ class ExperimentView(DetailView):
     template_name = "experiment.html"
 
 
-max_points = 1024
+class NewDeviceView(FormView):
+    template_name = "upload_device.html"
+    form_class = NewDeviceForm
+    success_url = "/"
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            device = form.save(commit=False)
+            # Do other stuff before saving here
+            device.user_owner = request.user
+            device.save()
+            messages.success(request, "New device speification created successfully.")
+            return redirect("home")
+        messages.error("Cannot save device. Invalid information.")
 
 
 class TemplateView(TemplateResponseMixin, ContextMixin, View):
