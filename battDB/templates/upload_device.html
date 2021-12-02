@@ -7,7 +7,14 @@
 
     <form method="POST">
         {% csrf_token %}
-        {% bootstrap_form form %}
+        <div class="row">
+            <div class="col-6">
+                {% bootstrap_field form.name layout='vertical' %}
+            </div>
+            <div class="col-6">
+                {% bootstrap_field form.device_type layout='vertical' %}
+            </div>
+        </div>
         {% buttons %}
         <button type="submit" class="btn btn-primary">
             Submit
