@@ -37,7 +37,7 @@ class NewDeviceView(PermissionRequiredMixin, FormView):
     permission_required = "battDB.add_devicespecification"
     template_name = "upload_device.html"
     form_class = NewDeviceForm
-    success_url = "/"
+    success_url = "/battDB/new_device/"
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
@@ -56,7 +56,7 @@ class NewDeviceView(PermissionRequiredMixin, FormView):
 
             device.save()
             messages.success(request, "New device speification created successfully.")
-            return redirect("home")
+            return redirect(self.success_url)
         messages.error(request, "Cannot save device. Invalid information.")
         return render(request, self.template_name, {"form": form})
 
