@@ -5,6 +5,9 @@ from battDB.models import DeviceSpecification
 
 
 class NewDeviceForm(ModelForm):
+    # TODO modify init to only populate dropdowns with entries the user has
+    # the permissions to view. https://stackoverflow.com/q/51939175
+
     make_public = forms.BooleanField(
         required=False, help_text="You cannot change this entry once it is public!"
     )
@@ -17,12 +20,6 @@ class NewDeviceForm(ModelForm):
             "device_type": "Must select if not specifying a new device type.",
             "parent": "Select parent device if appropriate.",
         }
-
-    def save(self, commit=True):
-        device = super(NewDeviceForm, self).save(commit=False)
-        if commit:
-            device.save()
-        return device
 
     def is_public(self):
         return self.data.get("make_public", False)

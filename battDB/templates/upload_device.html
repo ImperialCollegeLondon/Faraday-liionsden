@@ -2,9 +2,10 @@
 {% load bootstrap5 %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-4">
     <h1> New Device Specification </h1>
-
+    Just words
+    <div> </div>
     <form method="POST">
         {% csrf_token %}
         <div class="row align-items-end">
@@ -34,7 +35,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-10">
+            <div class="col-6"></div>
+            <div class="col-4">
                 <div class=float-end>
                     {% bootstrap_field form.make_public layout='vertical' show_help=True %}
                 </div>
