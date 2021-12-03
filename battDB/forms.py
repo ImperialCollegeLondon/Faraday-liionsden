@@ -5,7 +5,9 @@ from battDB.models import DeviceSpecification
 
 
 class NewDeviceForm(ModelForm):
-    make_public = forms.BooleanField(required=False)
+    make_public = forms.BooleanField(
+        required=False, help_text="You cannot change this entry once it is public!"
+    )
 
     class Meta:
         model = DeviceSpecification
