@@ -49,6 +49,11 @@ class NewDeviceView(PermissionRequiredMixin, FormView):
             device = form.save(commit=False)
             # Do other stuff before saving here
             device.user_owner = request.user
+            if form.is_public():
+                device.status = "public"
+            else:
+                device.status = "private"
+
             device.save()
             messages.success(request, "New device speification created successfully.")
             return redirect("home")

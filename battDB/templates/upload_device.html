@@ -24,15 +24,32 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-6">
+                {% bootstrap_field form.config layout='vertical' %}
+            </div>
+        </div>
+        <div class="row">
             <div class="col-12">
                 {% bootstrap_field form.notes layout='vertical' show_help=False%}
             </div>
         </div>
-        {% buttons %}
-        <button type="submit" class="btn btn-primary">
-            Submit
-        </button>
-        {% endbuttons %}
+        <div class="row">
+            <div class="col-10">
+                <div class=float-end>
+                    {% bootstrap_field form.make_public layout='vertical' %}
+                </div>
+            </div>
+            <div class="col-2">
+                    <div class=float-end>
+                    {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                        Save
+                    </button>
+                    {% endbuttons %}
+                </div>
+            </div>
+            
+        </div>
     </form>
 </div>
 {% endblock %}

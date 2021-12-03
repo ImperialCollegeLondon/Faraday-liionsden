@@ -5,6 +5,8 @@ from battDB.models import DeviceSpecification
 
 
 class NewDeviceForm(ModelForm):
+    make_public = forms.BooleanField(required=False)
+
     class Meta:
         model = DeviceSpecification
         fields = ["name", "device_type", "config", "abstract", "notes", "parent"]
@@ -19,3 +21,6 @@ class NewDeviceForm(ModelForm):
         if commit:
             device.save()
         return device
+
+    def is_public(self):
+        return self.data.get("make_public", False)
