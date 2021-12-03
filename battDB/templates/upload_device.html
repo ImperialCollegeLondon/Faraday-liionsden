@@ -7,12 +7,25 @@
 
     <form method="POST">
         {% csrf_token %}
-        <div class="row">
+        <div class="row align-items-end">
             <div class="col-6">
                 {% bootstrap_field form.name layout='vertical' %}
             </div>
             <div class="col-6">
+                {% bootstrap_field form.abstract layout='vertical' %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
                 {% bootstrap_field form.device_type layout='vertical' %}
+            </div>
+            <div class="col-6">
+                {% bootstrap_field form.parent layout='vertical' %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                {% bootstrap_field form.notes layout='vertical' show_help=False%}
             </div>
         </div>
         {% buttons %}

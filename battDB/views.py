@@ -52,7 +52,8 @@ class NewDeviceView(PermissionRequiredMixin, FormView):
             device.save()
             messages.success(request, "New device speification created successfully.")
             return redirect("home")
-        messages.error("Cannot save device. Invalid information.")
+        messages.error(request, "Cannot save device. Invalid information.")
+        return render(request, self.template_name, {"form": form})
 
 
 class TemplateView(TemplateResponseMixin, ContextMixin, View):
