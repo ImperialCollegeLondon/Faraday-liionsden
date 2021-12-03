@@ -1,6 +1,12 @@
 from django.urls import path
 
-from .views import AllExperimentsView, ExperimentView, NewDeviceView, index
+from .views import (
+    AllExperimentsView,
+    ExperimentView,
+    NewDeviceView,
+    NewEquipmentView,
+    index,
+)
 
 app_name = "battDB"
 
@@ -9,6 +15,7 @@ urlpatterns = [
     path("exps/", AllExperimentsView.as_view(), name="Experiments"),
     path("exps/<int:pk>/", ExperimentView.as_view(), name="Experiment"),
     path("new_device/", NewDeviceView.as_view(), name="New Device"),
+    path("new_equipment/", NewEquipmentView.as_view(), name="New Equipment"),
 ]
 
 """The following url patterns will be added on a need basis, as new functionality 

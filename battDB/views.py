@@ -11,7 +11,7 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .forms import NewDeviceForm
+from .forms import NewDeviceForm, NewEquipmentForm
 from .models import DataRange, Experiment, ExperimentDataFile, UploadedFile
 from .serializers import (
     DataFileSerializer,
@@ -33,11 +33,13 @@ class ExperimentView(DetailView):
     template_name = "experiment.html"
 
 
-class NewDeviceView(PermissionRequiredMixin, FormView):
-    permission_required = "battDB.add_devicespecification"
-    template_name = "upload_device.html"
-    form_class = NewDeviceForm
-    success_url = "/battDB/new_device/"
+class NewDataView(FormView):
+    """
+    Template for view for creating new entries of various models.
+    """
+
+    success_message = "New data added successfully."
+    failure_message = "Cannot add data. Invalid information."
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
@@ -46,19 +48,37 @@ class NewDeviceView(PermissionRequiredMixin, FormView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            device = form.save(commit=False)
+            obj = form.save(commit=False)
             # Do other stuff before saving here
-            device.user_owner = request.user
+            obj.user_owner = request.user
             if form.is_public():
-                device.status = "public"
+                obj.status = "public"
             else:
-                device.status = "private"
+                obj.status = "private"
 
-            device.save()
-            messages.success(request, "New device speification created successfully.")
+            obj.save()
+            messages.success(request, self.success_message)
             return redirect(self.success_url)
-        messages.error(request, "Cannot save device. Invalid information.")
+        messages.error(request, self.failure_message)
         return render(request, self.template_name, {"form": form})
+
+
+class NewDeviceView(PermissionRequiredMixin, NewDataView):
+    permission_required = "battDB.add_devicespecification"
+    template_name = "upload_device.html"
+    form_class = NewDeviceForm
+    success_url = "/battDB/new_device/"
+    success_message = "New device specification created successfully."
+    failure_message = "Could not save new device. Invalid information."
+
+
+class NewEquipmentView(PermissionRequiredMixin, NewDataView):
+    permission_required = "battDB.add_equipment"
+    template_name = "upload_equipment.html"
+    form_class = NewEquipmentForm
+    success_url = "/battDB/new_equipment/"
+    success_message = "New equipment created successfully."
+    failure_message = "Could not save new equipment. Invalid information."
 
 
 class TemplateView(TemplateResponseMixin, ContextMixin, View):

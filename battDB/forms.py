@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from battDB.models import DeviceSpecification
+from battDB.models import DeviceSpecification, Equipment
 
 
 class DataCreateForm(ModelForm):
@@ -31,3 +31,9 @@ class NewDeviceForm(DataCreateForm):
             "device_type": "Must select if not specifying a new device type.",
             "parent": "Select parent device if appropriate.",
         }
+
+
+class NewEquipmentForm(DataCreateForm):
+    class Meta:
+        model = Equipment
+        fields = ["name", "institution", "serialNo", "default_parser", "notes"]
