@@ -25,6 +25,7 @@ class TestCreatePrivate(BaseObjectTest):
         super(TestCreatePrivate, self).setUpClass()
         self.model = baker.make_recipe("tests.battDB.batch", status="private")
         self.model_owner = self.model.user_owner
+        self.model_owner.is_active = True
 
     def test_user_perms(self):
         self.assertTrue(
@@ -55,6 +56,7 @@ class TestCreatePublic(BaseObjectTest):
         super(TestCreatePublic, self).setUpClass()
         self.model = baker.make_recipe("tests.battDB.batch", status="public")
         self.model_owner = self.model.user_owner
+        self.model_owner.is_active = True
 
     def test_user_perms(self):
         self.assertFalse(self.model_owner.has_perm("battDB.change_batch", self.model))
@@ -87,6 +89,7 @@ class TestPublicToPrivate(BaseObjectTest):
         self.model.status = "private"
         self.model.save()
         self.model_owner = self.model.user_owner
+        self.model_owner.is_active = True
 
     def test_user_perms(self):
         self.assertTrue(
@@ -119,6 +122,7 @@ class TestPublicToDeleted(BaseObjectTest):
         self.model.status = "deleted"
         self.model.save()
         self.model_owner = self.model.user_owner
+        self.model_owner.is_active = True
 
     def test_user_perms(self):
         self.assertFalse(self.model_owner.has_perm("battDB.view_batch", self.model))

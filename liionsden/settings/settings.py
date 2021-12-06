@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "guardian",
+    "bootstrap5",
     "django_cleanup.apps.CleanupConfig",  # <-- This must be last
 ]
 

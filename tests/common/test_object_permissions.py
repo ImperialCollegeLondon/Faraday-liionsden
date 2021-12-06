@@ -22,6 +22,7 @@ class TestCreatePrivate(BaseObjectTest):
         super(TestCreatePrivate, self).setUpClass()
         self.model = baker.make_recipe("tests.common.reference", status="private")
         self.model_owner = self.model.user_owner
+        self.model_owner.is_active = True
 
     def test_user_perms(self):
         self.assertTrue(
@@ -68,6 +69,7 @@ class TestCreatePublic(BaseObjectTest):
         super(TestCreatePublic, self).setUpClass()
         self.model = baker.make_recipe("tests.common.reference", status="public")
         self.model_owner = self.model.user_owner
+        self.model_owner.is_active = True
 
     def test_user_perms(self):
         self.assertFalse(
@@ -111,6 +113,7 @@ class TestPublicToPrivate(BaseObjectTest):
         self.model.status = "private"
         self.model.save()
         self.model_owner = self.model.user_owner
+        self.model_owner.is_active = True
 
     def test_user_perms(self):
         self.assertTrue(
@@ -159,6 +162,7 @@ class TestPublicToDeleted(BaseObjectTest):
         self.model.status = "deleted"
         self.model.save()
         self.model_owner = self.model.user_owner
+        self.model_owner.is_active = True
 
     def test_user_perms(self):
         self.assertFalse(self.model_owner.has_perm("common.view_reference", self.model))

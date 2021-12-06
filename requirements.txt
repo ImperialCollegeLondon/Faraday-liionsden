@@ -14,5 +14,6 @@ idutils
 whitenoise
 model_bakery
 django-guardian
+django-bootstrap-v5
 django-cleanup
 python-magic

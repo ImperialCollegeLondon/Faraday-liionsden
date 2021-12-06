@@ -355,7 +355,7 @@ class Experiment(cm.BaseModel):
         return str(self.user_owner) + " " + str(self.name) + " " + str(self.date)
 
     def get_absolute_url(self):
-        return reverse("Experiment", kwargs={"pk": self.pk})
+        return reverse("battDB:Experiment", kwargs={"pk": self.pk})
 
 
 class ExperimentDataFile(cm.BaseModel):
