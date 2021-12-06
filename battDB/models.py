@@ -111,7 +111,7 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
         max_length=60,
         default=datetime.now().strftime("%Y%m%d-%H%M%S"),
         blank=True,
-        help_text="Batch number, optionally indicate serial number format",
+        help_text="Batch number, default is date-time stamp",
     )
     batch_size = models.PositiveSmallIntegerField(default=1)
     manufacturing_protocol = models.ForeignKey(
