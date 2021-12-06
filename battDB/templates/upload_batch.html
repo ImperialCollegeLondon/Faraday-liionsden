@@ -3,30 +3,28 @@
 
 {% block content %}
 <div class="container py-4">
-    <h1> New Device Specification </h1>
+    <h1> New Batch </h1>
     Just words
     <div> </div>
     <form method="POST">
         {% csrf_token %}
         <div class="row align-items-end">
             <div class="col-6">
-                {% bootstrap_field form.name layout='vertical' %}
+                {% bootstrap_field form.manufactured_on layout='vertical' %}
             </div>
             <div class="col-6">
-                {% bootstrap_field form.abstract layout='vertical' %}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                {% bootstrap_field form.device_type layout='vertical' %}
-            </div>
-            <div class="col-6">
-                {% bootstrap_field form.parent layout='vertical' %}
+                {% bootstrap_field form.manufacturer layout='vertical' %}
             </div>
         </div>
         <div class="row">
+            <div class="col-3">
+                {% bootstrap_field form.batch_size layout='vertical' %}
+            </div>
+            <div class="col-3">
+                {% bootstrap_field form.serialNo layout='vertical' %}
+            </div>
             <div class="col-6">
-                {% bootstrap_field form.config layout='vertical' %}
+                {% bootstrap_field form.specification layout='vertical' %}
             </div>
         </div>
         <div class="row">
@@ -50,6 +48,7 @@
                     {% endbuttons %}
                 </div>
             </div>
+            
         </div>
     </form>
 </div>

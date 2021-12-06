@@ -11,7 +11,7 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .forms import NewDeviceForm, NewEquipmentForm
+from .forms import NewBatchForm, NewDeviceForm, NewEquipmentForm
 from .models import DataRange, Experiment, ExperimentDataFile, UploadedFile
 from .serializers import (
     DataFileSerializer,
@@ -79,6 +79,15 @@ class NewEquipmentView(PermissionRequiredMixin, NewDataView):
     success_url = "/battDB/new_equipment/"
     success_message = "New equipment created successfully."
     failure_message = "Could not save new equipment. Invalid information."
+
+
+class NewBatchView(PermissionRequiredMixin, NewDataView):
+    permission_required = "battDB.add_batch"
+    template_name = "upload_batch.html"
+    form_class = NewBatchForm
+    success_url = "/battDB/new_batch/"
+    success_message = "New batch created successfully."
+    failure_message = "Could not save new batch. Invalid information."
 
 
 class TemplateView(TemplateResponseMixin, ContextMixin, View):

@@ -109,7 +109,7 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
     )
     serialNo = models.CharField(
         max_length=60,
-        default="%d",
+        default=datetime.now().strftime("%Y%m%d-%H%M%S"),
         blank=True,
         help_text="Batch number, optionally indicate serial number format",
     )
