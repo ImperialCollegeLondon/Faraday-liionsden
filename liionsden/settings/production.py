@@ -19,7 +19,3 @@ if os.environ.get("WEBSITE_HOSTNAME") == "liionsden.azurewebsites.net":
     ALLOWED_HOSTS = ["liionsden.azurewebsites.net"]
     DATABASES["default"]["HOST"] = "liionsden-db.postgres.database.azure.com"
     DATABASES["default"]["USER"] = "postgres@liionsden-db.postgres.database.azure.com"
-    DATABASES["researchdb"]["HOST"] = "liionsden-db.postgres.database.azure.com"
-    DATABASES["researchdb"][
-        "USER"
-    ] = "postgres@liionsden-db.postgres.database.azure.com"

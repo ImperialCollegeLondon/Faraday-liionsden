@@ -2,8 +2,6 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from model_bakery import baker
 
-from tests.fixtures import db_user
-
 User = get_user_model()
 
 
