@@ -2,6 +2,7 @@ from django import forms
 from django.forms import ModelForm
 
 from battDB.models import Batch, DeviceSpecification, Equipment
+from dfndb.models import Method
 
 
 class DataCreateForm(ModelForm):
@@ -63,5 +64,21 @@ class NewBatchForm(DataCreateForm):
             "specification",
             "batch_size",
             "serialNo",
+            "notes",
+        ]
+
+
+class NewProtocolForm(DataCreateForm):
+    """
+    Create new experimental or manufacturing protocol.
+    """
+
+    # TODO enable addition of extra array elements dynamically (widget currently doesn't work).
+    class Meta:
+        model = Method
+        fields = [
+            "name",
+            "type",
+            "description",
             "notes",
         ]

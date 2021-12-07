@@ -11,7 +11,7 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .forms import NewBatchForm, NewDeviceForm, NewEquipmentForm
+from .forms import NewBatchForm, NewDeviceForm, NewEquipmentForm, NewProtocolForm
 from .models import DataRange, Experiment, ExperimentDataFile, UploadedFile
 from .serializers import (
     DataFileSerializer,
@@ -88,6 +88,15 @@ class NewBatchView(PermissionRequiredMixin, NewDataView):
     success_url = "/battDB/new_batch/"
     success_message = "New batch created successfully."
     failure_message = "Could not save new batch. Invalid information."
+
+
+class NewProtocolView(PermissionRequiredMixin, NewDataView):
+    permission_required = "dfndb.add_method"
+    template_name = "create_protocol.html"
+    form_class = NewProtocolForm
+    success_url = "/battDB/new_protocol/"
+    success_message = "New protocol created successfully."
+    failure_message = "Could not save new protocol. Invalid information."
 
 
 class TemplateView(TemplateResponseMixin, ContextMixin, View):
