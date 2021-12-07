@@ -1,6 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Sum
+from django_better_admin_arrayfield.models.fields import ArrayField
 
 import common.models as cm
 
@@ -103,8 +104,10 @@ class Method(cm.BaseModel):
         choices=METHOD_TYPE_CHOICES, default=METHOD_TYPE_MODELLING
     )
 
-    description = models.TextField(
-        blank=True, help_text="Method description in PyBaMM format"
+    description = ArrayField(
+        models.CharField(
+            blank=True, help_text="Method description in PyBaMM format", max_length=2000
+        )
     )
 
 
