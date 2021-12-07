@@ -92,7 +92,7 @@ class TestDevice(TestCase):
 
     def test_serial(self):
         serial = self.model.serial()
-        self.assertEqual(serial, f"{self.model.seq_num}")
+        self.assertEqual(serial.split("/")[-1], f"{self.model.seq_num}")
 
         self.model.batch.serialNo = "BATT"
         serial = self.model.serial()
