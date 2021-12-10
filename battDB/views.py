@@ -65,7 +65,7 @@ class NewDataView(FormView):
 
 class NewDeviceView(PermissionRequiredMixin, NewDataView):
     permission_required = "battDB.add_devicespecification"
-    template_name = "upload_device.html"
+    template_name = "create_device.html"
     form_class = NewDeviceForm
     success_url = "/battDB/new_device/"
     success_message = "New device specification created successfully."
@@ -74,7 +74,7 @@ class NewDeviceView(PermissionRequiredMixin, NewDataView):
 
 class NewEquipmentView(PermissionRequiredMixin, NewDataView):
     permission_required = "battDB.add_equipment"
-    template_name = "upload_equipment.html"
+    template_name = "create_equipment.html"
     form_class = NewEquipmentForm
     success_url = "/battDB/new_equipment/"
     success_message = "New equipment created successfully."
@@ -83,7 +83,7 @@ class NewEquipmentView(PermissionRequiredMixin, NewDataView):
 
 class NewBatchView(PermissionRequiredMixin, NewDataView):
     permission_required = "battDB.add_batch"
-    template_name = "upload_batch.html"
+    template_name = "create_batch.html"
     form_class = NewBatchForm
     success_url = "/battDB/new_batch/"
     success_message = "New batch created successfully."
