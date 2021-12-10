@@ -5,25 +5,30 @@
 
 <!DOCTYPE html>
 <html>
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
-    <script src="/static/js/django_better_admin_arrayfield.min.js"></script>
-    <script src="/static/admin/js/jquery.init.js"></script>
-  </head>
- 
-  <body>
 
-    {% include 'includes/navbar.html' %}
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
+  <script src="/static/js/django_better_admin_arrayfield.min.js"></script>
+  <script src="/static/admin/js/jquery.init.js"></script>
+  <link href="/static/css/django_better_admin_arrayfield.min.css" type="text/css" media="all" rel="stylesheet">
+  <link href="/static/admin/css/widgets.css" type="text/css" media="all" rel="stylesheet">
+  <link href="/static/css/custom.css" type="text/css" media="all" rel="stylesheet">
+</head>
 
-    <div class="container py-3">
-    
-      {% block content %}
+<body>
 
-      {% endblock %} 
-      
-    </div>
-  </body>
+  {% include 'includes/navbar.html' %}
+
+  <div class="container py-3">
+
+    {% block content %}
+
+    {% endblock %}
+
+  </div>
+</body>
+
 </html>
