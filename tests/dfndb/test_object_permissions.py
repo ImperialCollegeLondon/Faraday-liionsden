@@ -25,6 +25,7 @@ class TestCreatePrivate(BaseObjectTest):
         super(TestCreatePrivate, self).setUpClass()
         self.model = baker.make_recipe("tests.dfndb.parameter", status="private")
         self.model_owner = self.model.user_owner
+        self.model_owner.is_active = True
 
     def test_user_perms(self):
         self.assertTrue(
@@ -71,6 +72,7 @@ class TestCreatePublic(BaseObjectTest):
         super(TestCreatePublic, self).setUpClass()
         self.model = baker.make_recipe("tests.dfndb.parameter", status="public")
         self.model_owner = self.model.user_owner
+        self.model_owner.is_active = True
 
     def test_user_perms(self):
         self.assertFalse(
@@ -113,6 +115,7 @@ class TestPublicToPrivate(BaseObjectTest):
         self.model.status = "private"
         self.model.save()
         self.model_owner = self.model.user_owner
+        self.model_owner.is_active = True
 
     def test_user_perms(self):
         self.assertTrue(

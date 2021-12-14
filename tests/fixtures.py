@@ -3,29 +3,6 @@ from django.db.models.base import ModelBase
 from django.db.utils import ProgrammingError
 from django.test import TestCase
 
-db_user = dict(
-    username="MichaelF",
-    first_name="Michael",
-    last_name="Faraday",
-    password="C@cina27",
-)
-
-staff_user = dict(
-    username="LinusP",
-    first_name="Linus",
-    last_name="Pauling",
-    password="V1taminC",
-    is_staff="True",
-)
-
-db_unit = dict(
-    quantityName="Charge",
-    quantitySymbol="Q",
-    unitName="Coulombs",
-    unitSymbol="C",
-    is_SI_unit=True,
-)
-
 
 class AbstractModelMixinTestCase(TestCase):
     """

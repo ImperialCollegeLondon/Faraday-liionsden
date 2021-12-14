@@ -1,0 +1,46 @@
+<!--Navbar-->
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+<nav class="navbar navbar-expand-sm navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">Liionsden Database</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/battDB/exps">Experiments</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="">Upload data</a>
+                </li>
+
+            </ul>
+            
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Welcome, {{user.username}}</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/accounts/logout">Logout</a>
+                </li>
+
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/accounts/login">Login</a>
+                </li>
+
+            {% endif %}
+
+
+            </ul>
+        </div>
+    </div>
+</nav>

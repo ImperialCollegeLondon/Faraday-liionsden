@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-
-from tests.fixtures import db_user
+from model_bakery import baker
 
 User = get_user_model()
 
@@ -15,16 +14,19 @@ class TestUser(TestCase):
     def test_user_perms(self):
         from django.contrib.auth.models import Group
 
-        user, _ = User.objects.get_or_create(**db_user)
+        user = baker.make_recipe("tests.management.user")
+        user.is_active = True
         self.assertEqual(len(user.get_all_permissions()), 0)
 
-        user, _ = User.objects.get_or_create(**db_user)
+        user = baker.make_recipe("tests.management.user")
+        user.is_active = True
         user.groups.add(Group.objects.get(name="Contributor"))
         self.assertTrue(
             all(i.split(".")[1].startswith("add") for i in user.get_all_permissions())
         )
 
-        user, _ = User.objects.get_or_create(**db_user)
+        user = baker.make_recipe("tests.management.user")
+        user.is_active = True
         user.groups.add(Group.objects.get(name="Maintainer"))
         self.assertTrue(
             all(
@@ -33,7 +35,8 @@ class TestUser(TestCase):
             )
         )
 
-        user, _ = User.objects.get_or_create(**db_user)
+        user = baker.make_recipe("tests.management.user")
+        user.is_active = True
         user.groups.add(Group.objects.get(name="User manager"))
         self.assertTrue(
             {

@@ -48,7 +48,7 @@ class TemplateView(TemplateResponseMixin, ContextMixin, View):
 
 
 def index(request):
-    return redirect("/exps")
+    return redirect("/")
 
 
 class UploadFileView(GenericAPIView):

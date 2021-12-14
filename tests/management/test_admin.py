@@ -3,8 +3,7 @@ from unittest.mock import MagicMock
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
 from django.test import RequestFactory, TestCase
-
-from tests.fixtures import db_user, staff_user
+from model_bakery import baker
 
 request = MagicMock()
 User = get_user_model()
@@ -43,12 +42,15 @@ class TestUserAdminPermissions(TestCase):
         self.site = AdminSite()
         self.factory = RequestFactory()
 
-        self.user, _ = User.objects.get_or_create(**db_user)
+        self.user = baker.make_recipe("tests.management.user")
+        self.user.is_active = True
         for name in ["Read only", "Contributor", "Maintainer"]:
             group = Group.objects.get(name=name)
             group.user_set.add(self.user)
 
-        self.staff_user, _ = User.objects.get_or_create(**staff_user)
+        self.staff_user = baker.make_recipe("tests.management.user")
+        self.staff_user.is_active = True
+        self.staff_user.is_staff = True
         user_managers = Group.objects.get(name="User manager")
         user_managers.user_set.add(self.staff_user)
 
