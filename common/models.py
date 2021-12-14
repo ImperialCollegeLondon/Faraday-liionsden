@@ -10,7 +10,7 @@ from django.db.models import JSONField
 from django.forms import forms
 from django.template.defaultfilters import filesizeformat
 from django.utils.text import slugify
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
 
 from .utils import hash_file
