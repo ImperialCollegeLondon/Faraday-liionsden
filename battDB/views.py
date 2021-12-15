@@ -4,6 +4,7 @@ from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
 from django.views.generic.edit import FormView
+from django_tables2 import SingleTableView
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
@@ -21,11 +22,18 @@ from .serializers import (
     GeneralSerializer,
     NewDataFileSerializer,
 )
+from .tables import ExperimentTable
 
 
 class AllExperimentsView(ListView):
     model = Experiment
     template_name = "generic_list.html"
+
+
+class ExperimentTableView(SingleTableView):
+    model = Experiment
+    table_class = ExperimentTable
+    template_name = "django_tables2/bootstrap4.html"
 
 
 class ExperimentView(DetailView):

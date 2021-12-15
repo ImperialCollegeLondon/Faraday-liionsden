@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import (
     AllExperimentsView,
+    ExperimentTableView,
     ExperimentView,
     NewBatchView,
     NewDeviceView,
