@@ -12,7 +12,13 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .forms import NewBatchForm, NewDeviceForm, NewEquipmentForm, NewProtocolForm
+from .forms import (
+    NewBatchForm,
+    NewDeviceForm,
+    NewEquipmentForm,
+    NewExperimentForm,
+    NewProtocolForm,
+)
 from .models import DataRange, Experiment, ExperimentDataFile, UploadedFile
 from .serializers import (
     DataFileSerializer,
@@ -105,6 +111,15 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
     success_url = "/battDB/new_protocol/"
     success_message = "New protocol created successfully."
     failure_message = "Could not save new protocol. Invalid information."
+
+
+class NewExperimentView(PermissionRequiredMixin, NewDataView):
+    permission_required = "battDB.add_experiment"
+    template_name = "create_experiment.html"
+    form_class = NewExperimentForm
+    success_url = "/battDB/new_experiment/"
+    success_message = "New experiment created successfully."
+    failure_message = "Could not save new experiment. Invalid information."
 
 
 class TemplateView(TemplateResponseMixin, ContextMixin, View):

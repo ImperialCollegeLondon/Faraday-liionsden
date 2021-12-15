@@ -7,6 +7,7 @@ from .views import (
     NewBatchView,
     NewDeviceView,
     NewEquipmentView,
+    NewExperimentView,
     NewProtocolView,
     index,
 )
@@ -21,6 +22,7 @@ urlpatterns = [
     path("new_equipment/", NewEquipmentView.as_view(), name="New Equipment"),
     path("new_batch/", NewBatchView.as_view(), name="New Batch"),
     path("new_protocol/", NewProtocolView.as_view(), name="New Protocol"),
+    path("new_experiment/", NewExperimentView.as_view(), name="New Experiment"),
 ]
 
 """The following url patterns will be added on a need basis, as new functionality 
