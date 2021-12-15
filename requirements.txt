@@ -17,3 +17,4 @@ django-guardian
 django-bootstrap-v5
 django-cleanup
 python-magic
+django-better-admin-arrayfield

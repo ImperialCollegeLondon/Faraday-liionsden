@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "guardian",
     "bootstrap5",
+    "django_better_admin_arrayfield",
     "django_cleanup.apps.CleanupConfig",  # <-- This must be last
 ]
 

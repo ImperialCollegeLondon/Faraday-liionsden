@@ -123,7 +123,7 @@ class TestMethod(TestCase):
         self.model = Method
         for k, v in self.model.METHOD_TYPE_CHOICES:
             baker.make_recipe(
-                "tests.dfndb.method", type=k, description=f"{v} method", name=v
+                "tests.dfndb.method", type=k, description=[f"{v} method"], name=v
             )
 
     def test_method_creation(self):
@@ -132,7 +132,7 @@ class TestMethod(TestCase):
         for obj in self.model.objects.all():
             self.assertIn(obj.type, methods)
             self.assertEqual(obj.name, choices[obj.type])
-            self.assertIn(obj.name, obj.description)
+            self.assertIn(obj.name, obj.description[0])
 
 
 class TestQuantityUnit(TestCase):

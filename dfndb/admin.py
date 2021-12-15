@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 from common.admin import BaseAdmin
 
@@ -22,7 +23,7 @@ class MaterialAdmin(BaseAdmin):
     inlines = (MaterialCompositionInline,)
 
 
-class MethodAdmin(BaseAdmin):
+class MethodAdmin(BaseAdmin, DynamicArrayMixin):
     list_display = BaseAdmin.list_display + ["type"]
     list_filter = BaseAdmin.list_filter + ["type"]
 

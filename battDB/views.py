@@ -1,6 +1,9 @@
-from django.shortcuts import redirect
+from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
+from django.views.generic.edit import FormView
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
@@ -8,6 +11,7 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .forms import NewBatchForm, NewDeviceForm, NewEquipmentForm, NewProtocolForm
 from .models import DataRange, Experiment, ExperimentDataFile, UploadedFile
 from .serializers import (
     DataFileSerializer,
@@ -29,7 +33,70 @@ class ExperimentView(DetailView):
     template_name = "experiment.html"
 
 
-max_points = 1024
+class NewDataView(FormView):
+    """
+    Template for view for creating new entries of various models.
+    """
+
+    success_message = "New data added successfully."
+    failure_message = "Cannot add data. Invalid information."
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            # Do other stuff before saving here
+            obj.user_owner = request.user
+            if form.is_public():
+                obj.status = "public"
+            else:
+                obj.status = "private"
+
+            obj.save()
+            messages.success(request, self.success_message)
+            return redirect(self.success_url)
+        messages.error(request, self.failure_message)
+        return render(request, self.template_name, {"form": form})
+
+
+class NewDeviceView(PermissionRequiredMixin, NewDataView):
+    permission_required = "battDB.add_devicespecification"
+    template_name = "create_device.html"
+    form_class = NewDeviceForm
+    success_url = "/battDB/new_device/"
+    success_message = "New device specification created successfully."
+    failure_message = "Could not save new device. Invalid information."
+
+
+class NewEquipmentView(PermissionRequiredMixin, NewDataView):
+    permission_required = "battDB.add_equipment"
+    template_name = "create_equipment.html"
+    form_class = NewEquipmentForm
+    success_url = "/battDB/new_equipment/"
+    success_message = "New equipment created successfully."
+    failure_message = "Could not save new equipment. Invalid information."
+
+
+class NewBatchView(PermissionRequiredMixin, NewDataView):
+    permission_required = "battDB.add_batch"
+    template_name = "create_batch.html"
+    form_class = NewBatchForm
+    success_url = "/battDB/new_batch/"
+    success_message = "New batch created successfully."
+    failure_message = "Could not save new batch. Invalid information."
+
+
+class NewProtocolView(PermissionRequiredMixin, NewDataView):
+    permission_required = "dfndb.add_method"
+    template_name = "create_protocol.html"
+    form_class = NewProtocolForm
+    success_url = "/battDB/new_protocol/"
+    success_message = "New protocol created successfully."
+    failure_message = "Could not save new protocol. Invalid information."
 
 
 class TemplateView(TemplateResponseMixin, ContextMixin, View):
