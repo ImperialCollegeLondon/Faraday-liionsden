@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db import transaction
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
-from django.views.generic.edit import FormView
+from django.views.generic.edit import CreateView, FormView
 from django_tables2 import SingleTableView
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
@@ -13,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .forms import (
+    ExperimentDeviceFormSet,
     NewBatchForm,
     NewDeviceForm,
     NewEquipmentForm,
@@ -113,13 +115,36 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
     failure_message = "Could not save new protocol. Invalid information."
 
 
-class NewExperimentView(PermissionRequiredMixin, NewDataView):
+class NewExperimentView(PermissionRequiredMixin, CreateView):
     permission_required = "battDB.add_experiment"
-    template_name = "create_experiment.html"
+    model = Experiment
     form_class = NewExperimentForm
-    success_url = "/battDB/new_experiment/"
+    success_url = "battDB/new_experiment"
     success_message = "New experiment created successfully."
     failure_message = "Could not save new experiment. Invalid information."
+
+    def get_context_data(self, **kwargs):
+        data = super(NewExperimentView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data["devices"] = ExperimentDeviceFormSet(self.request.POST)
+        else:
+            data["devices"] = ExperimentDeviceFormSet()
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        devices = context["devices"]
+        with transaction.atomic():
+            form.instance.created_by = self.request.user
+            self.object = form.save()
+            if devices.is_valid():
+                devices.instance = self.object
+                devices.save()
+        return super(NewExperimentView, self).form_valid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, self.success_message)
+        return redirect(self.success_url)
 
 
 class TemplateView(TemplateResponseMixin, ContextMixin, View):

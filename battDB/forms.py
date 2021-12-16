@@ -1,7 +1,14 @@
 from django import forms
 from django.forms import ModelForm
+from django.forms.models import inl, inlineformset_factory
 
-from battDB.models import Batch, DeviceSpecification, Equipment, Experiment
+from battDB.models import (
+    Batch,
+    DeviceSpecification,
+    Equipment,
+    Experiment,
+    ExperimentDevice,
+)
 from dfndb.models import Method
 
 
@@ -98,3 +105,23 @@ class NewExperimentForm(DataCreateForm):
             "config",
             "notes",
         ]
+
+
+class ExperimentDeviceForm(ModelForm):
+    """
+    For adding devices to experiments inline.
+    """
+
+    class meta:
+        modle = ExperimentDevice
+        exclude = ()
+
+
+ExperimentDeviceFormSet = inlineformset_factory(
+    Experiment,
+    ExperimentDevice,
+    form=ExperimentDeviceForm,
+    fields=["batch", "batch_sequence", "device_position"],
+    extra=1,
+    can_delete=True,
+)
