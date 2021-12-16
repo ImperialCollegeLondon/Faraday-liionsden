@@ -1,3 +1,16 @@
+import re
+
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import (
+    HTML,
+    ButtonHolder,
+    Div,
+    Field,
+    Fieldset,
+    Layout,
+    Row,
+    Submit,
+)
 from django import forms
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
@@ -10,6 +23,8 @@ from battDB.models import (
     ExperimentDevice,
 )
 from dfndb.models import Method
+
+from .custom_layout_object import Formset
 
 
 class DataCreateForm(ModelForm):
@@ -91,7 +106,7 @@ class NewProtocolForm(DataCreateForm):
         ]
 
 
-class NewExperimentForm(DataCreateForm):
+class NewExperimentForm(ModelForm):
     """
     Create new experimental or manufacturing protocol.
     """
@@ -99,12 +114,26 @@ class NewExperimentForm(DataCreateForm):
     # TODO enable addition of extra array elements dynamically (widget currently doesn't work).
     class Meta:
         model = Experiment
-        fields = [
-            "name",
-            "date",
-            "config",
-            "notes",
-        ]
+        exclude = ["user_owner"]
+
+    def __init__(self, *args, **kwargs):
+        super(NewExperimentForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_tag = True
+        self.helper.form_class = "form-horizontal"
+        self.helper.label_class = "col-md-3 create-label"
+        self.helper.field_class = "col-md-9"
+        self.helper.layout = Layout(
+            Div(
+                Field("name"),
+                Field("date"),
+                Field("config"),
+                Fieldset("Add devices", Formset("devices")),
+                Field("notes"),
+                HTML("<br>"),
+                ButtonHolder(Submit("submit", "save")),
+            )
+        )
 
 
 class ExperimentDeviceForm(ModelForm):
@@ -113,7 +142,7 @@ class ExperimentDeviceForm(ModelForm):
     """
 
     class meta:
-        modle = ExperimentDevice
+        model = ExperimentDevice
         exclude = ()
 
 

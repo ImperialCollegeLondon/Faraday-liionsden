@@ -118,6 +118,7 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
 class NewExperimentView(PermissionRequiredMixin, CreateView):
     permission_required = "battDB.add_experiment"
     model = Experiment
+    template_name = "create_experiment.html"
     form_class = NewExperimentForm
     success_url = "battDB/new_experiment"
     success_message = "New experiment created successfully."
