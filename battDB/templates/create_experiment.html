@@ -1,6 +1,7 @@
 {% extends 'header.html' %}
 {% load crispy_forms_tags %}
-
+{{ form.errors }}
+{{ form.non_field_errors }}
 
 {% block content %}
 <div class="container">

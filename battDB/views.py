@@ -137,10 +137,12 @@ class NewExperimentView(PermissionRequiredMixin, CreateView):
         devices = context["devices"]
         with transaction.atomic():
             form.instance.created_by = self.request.user
+            print(form.errors)
             self.object = form.save()
             if devices.is_valid():
                 devices.instance = self.object
                 devices.save()
+                messages.success(self.request, self.success_message)
         return super(NewExperimentView, self).form_valid(form)
 
     def form_invalid(self, form):
@@ -148,7 +150,6 @@ class NewExperimentView(PermissionRequiredMixin, CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
     def get_success_url(self):
-        messages.success(self.request, self.success_message)
         return redirect(self.success_url)
 
 

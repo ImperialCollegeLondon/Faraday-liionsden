@@ -114,7 +114,7 @@ class NewExperimentForm(ModelForm):
     # TODO enable addition of extra array elements dynamically (widget currently doesn't work).
     class Meta:
         model = Experiment
-        exclude = ["user_owner"]
+        exclude = []
 
     def __init__(self, *args, **kwargs):
         super(NewExperimentForm, self).__init__(*args, **kwargs)
@@ -128,6 +128,8 @@ class NewExperimentForm(ModelForm):
                 Field("name"),
                 Field("date"),
                 Field("config"),
+                Field("user_owner"),
+                Field("status"),
                 Fieldset("Add devices", Formset("devices")),
                 Field("notes"),
                 HTML("<br>"),
