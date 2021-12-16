@@ -143,6 +143,10 @@ class NewExperimentView(PermissionRequiredMixin, CreateView):
                 devices.save()
         return super(NewExperimentView, self).form_valid(form)
 
+    def form_invalid(self, form):
+        messages.error(self.request, self.failure_message)
+        return self.render_to_response(self.get_context_data(form=form))
+
     def get_success_url(self):
         messages.success(self.request, self.success_message)
         return redirect(self.success_url)
