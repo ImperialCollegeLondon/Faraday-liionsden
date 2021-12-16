@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from django.forms.models import inl, inlineformset_factory
+from django.forms.models import inlineformset_factory
 
 from battDB.models import (
     Batch,

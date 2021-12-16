@@ -38,8 +38,13 @@ INSTALLED_APPS = [
     "bootstrap5",
     "django_better_admin_arrayfield",
     "django_tables2",
+    "crispy_forms",
+    "crispy_bootstrap5",
     "django_cleanup.apps.CleanupConfig",  # <-- This must be last
 ]
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",  # this is default
