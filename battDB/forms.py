@@ -108,7 +108,7 @@ class NewProtocolForm(DataCreateForm):
 
 class NewExperimentForm(ModelForm):
     """
-    Create new experimental or manufacturing protocol.
+    Create new experiment.
     """
 
     # TODO enable addition of extra array elements dynamically (widget currently doesn't work).
@@ -128,14 +128,22 @@ class NewExperimentForm(ModelForm):
                 Field("name"),
                 Field("date"),
                 Field("config"),
-                Field("user_owner"),
-                Field("status"),
                 Fieldset("Add devices", Formset("devices")),
                 Field("notes"),
+                HTML("<br>"),
+                Field("status"),
                 HTML("<br>"),
                 ButtonHolder(Submit("submit", "save")),
             )
         )
+
+    make_public = forms.BooleanField(
+        required=False, help_text="You cannot change this entry once it is public!"
+    )
+
+    # TODO NOT working yet
+    def is_public(self):
+        return self.data.get("make_public", False)
 
 
 class ExperimentDeviceForm(ModelForm):

@@ -120,7 +120,7 @@ class NewExperimentView(PermissionRequiredMixin, CreateView):
     model = Experiment
     template_name = "create_experiment.html"
     form_class = NewExperimentForm
-    success_url = "battDB/new_experiment"
+    success_url = "/battDB/new_experiment"
     success_message = "New experiment created successfully."
     failure_message = "Could not save new experiment. Invalid information."
 
@@ -136,8 +136,8 @@ class NewExperimentView(PermissionRequiredMixin, CreateView):
         context = self.get_context_data()
         devices = context["devices"]
         with transaction.atomic():
-            form.instance.created_by = self.request.user
-            print(form.errors)
+            obj = form.save(commit=False)
+            obj.user_owner = self.request.user
             self.object = form.save()
             if devices.is_valid():
                 devices.instance = self.object
@@ -147,10 +147,7 @@ class NewExperimentView(PermissionRequiredMixin, CreateView):
 
     def form_invalid(self, form):
         messages.error(self.request, self.failure_message)
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def get_success_url(self):
-        return redirect(self.success_url)
+        return self.render_to_response(form.errors)
 
 
 class TemplateView(TemplateResponseMixin, ContextMixin, View):
