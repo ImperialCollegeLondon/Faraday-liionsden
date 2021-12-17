@@ -169,21 +169,6 @@ class NewExperimentView(PermissionRequiredMixin, FormView):
         return render(request, self.template_name, context)
 
 
-class TemplateView(TemplateResponseMixin, ContextMixin, View):
-    """A view that renders a template.
-
-    This view will also pass into the context any keyword arguments passed by the url
-    conf.
-
-    https://stackoverflow.com/questions/18232851/
-     django-passing-variables-to-templates-from-class-based-views
-    """
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        return self.render_to_response(context)
-
-
 def index(request):
     return redirect("/")
 
