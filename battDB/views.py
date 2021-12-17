@@ -116,6 +116,10 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
 
 
 class NewExperimentView(PermissionRequiredMixin, FormView):
+    """
+    Unique view for adding an experiment with inline addition of devices.
+    """
+
     permission_required = "battDB.add_experiment"
     model = Experiment
     template_name = "create_experiment.html"
@@ -125,6 +129,10 @@ class NewExperimentView(PermissionRequiredMixin, FormView):
     failure_message = "Could not save new experiment. Invalid information."
 
     def get_context_data(self, **kwargs):
+        """
+        Helper function to get correct context to pass to render() in get()
+        and post().
+        """
         data = super(NewExperimentView, self).get_context_data(**kwargs)
         if self.request.POST:
             data["devices"] = ExperimentDeviceFormSet(self.request.POST)
@@ -142,6 +150,7 @@ class NewExperimentView(PermissionRequiredMixin, FormView):
         context = self.get_context_data()
         devices = context["devices"]
         if form.is_valid():
+            # Save experiment incluing setting user owner and status
             with transaction.atomic():
                 obj = form.save(commit=False)
                 obj.user_owner = request.user
@@ -150,6 +159,7 @@ class NewExperimentView(PermissionRequiredMixin, FormView):
                 else:
                     obj.status = "private"
                 self.object = form.save()
+            # Save individual devices from inline form
             if devices.is_valid():
                 devices.instance = self.object
                 devices.save()

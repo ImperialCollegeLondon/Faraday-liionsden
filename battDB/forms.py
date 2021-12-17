@@ -4,6 +4,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (
     HTML,
     ButtonHolder,
+    Column,
     Div,
     Field,
     Fieldset,
@@ -115,25 +116,29 @@ class NewExperimentForm(ModelForm):
     class Meta:
         model = Experiment
         exclude = ["status"]
+        help_texts = {
+            "config": "All devices must be of the same config, e.g. Single cell."
+        }
 
     def __init__(self, *args, **kwargs):
         super(NewExperimentForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_tag = True
-        self.helper.form_class = "form-horizontal"
-        self.helper.label_class = "col-md-3 create-label"
-        self.helper.field_class = "col-md-9"
+        # self.helper.form_tag = True
+        # self.helper.form_class = "form-horizontal"
+        # self.helper.label_class = "col-md-3 create-label"
+        # self.helper.field_class = "col-12"
         self.helper.layout = Layout(
             Div(
-                Field("name"),
-                Field("date"),
-                Field("config"),
+                Column("name", css_class="col-6"),
+                Column("date", css_class="col-6"),
+                Column("config", css_class="col-6"),
                 Fieldset("Add devices", Formset("devices")),
                 Field("notes"),
                 HTML("<br>"),
                 Field("make_public"),
                 HTML("<br>"),
                 ButtonHolder(Submit("submit", "save")),
+                css_class="row",
             )
         )
 
@@ -162,4 +167,8 @@ ExperimentDeviceFormSet = inlineformset_factory(
     fields=["batch", "batch_sequence", "device_position"],
     extra=1,
     can_delete=True,
+    help_texts={
+        "batch_sequence": None,
+        "device_position": None,
+    },
 )

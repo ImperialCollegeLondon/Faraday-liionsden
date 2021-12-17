@@ -26,8 +26,14 @@
 <script src="/static/js/jquery.formset.js"></script>
 <script type="text/javascript">
     $('.formset_row-{{ formset.prefix }}').formset({
-        addText: 'add another',
-        deleteText: 'remove',
+        addText: 'Add another',
+        deleteText: 'Remove',
         prefix: '{{ formset.prefix }}',
     });
 </script>
+
+<style type="text/css">
+    td {
+      padding: 0 15px;
+    }
+  </style>
