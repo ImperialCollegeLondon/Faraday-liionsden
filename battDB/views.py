@@ -115,7 +115,7 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
     failure_message = "Could not save new protocol. Invalid information."
 
 
-class NewExperimentView(PermissionRequiredMixin, CreateView):
+class NewExperimentView(PermissionRequiredMixin, FormView):
     permission_required = "battDB.add_experiment"
     model = Experiment
     template_name = "create_experiment.html"
@@ -132,22 +132,31 @@ class NewExperimentView(PermissionRequiredMixin, CreateView):
             data["devices"] = ExperimentDeviceFormSet()
         return data
 
-    def form_valid(self, form):
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        form = self.form_class()
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
         context = self.get_context_data()
         devices = context["devices"]
-        with transaction.atomic():
-            obj = form.save(commit=False)
-            obj.user_owner = self.request.user
-            self.object = form.save()
+        if form.is_valid():
+            with transaction.atomic():
+                obj = form.save(commit=False)
+                obj.user_owner = request.user
+                if form.is_public():
+                    obj.status = "public"
+                else:
+                    obj.status = "private"
+                self.object = form.save()
             if devices.is_valid():
                 devices.instance = self.object
                 devices.save()
-                messages.success(self.request, self.success_message)
-        return super(NewExperimentView, self).form_valid(form)
-
-    def form_invalid(self, form):
-        messages.error(self.request, self.failure_message)
-        return self.render_to_response(form.errors)
+            messages.success(request, self.success_message)
+            return redirect(self.success_url)
+        messages.error(request, self.failure_message)
+        return render(request, self.template_name, context)
 
 
 class TemplateView(TemplateResponseMixin, ContextMixin, View):

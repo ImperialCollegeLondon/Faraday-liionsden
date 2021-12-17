@@ -114,7 +114,7 @@ class NewExperimentForm(ModelForm):
     # TODO enable addition of extra array elements dynamically (widget currently doesn't work).
     class Meta:
         model = Experiment
-        exclude = []
+        exclude = ["status"]
 
     def __init__(self, *args, **kwargs):
         super(NewExperimentForm, self).__init__(*args, **kwargs)
@@ -131,7 +131,7 @@ class NewExperimentForm(ModelForm):
                 Fieldset("Add devices", Formset("devices")),
                 Field("notes"),
                 HTML("<br>"),
-                Field("status"),
+                Field("make_public"),
                 HTML("<br>"),
                 ButtonHolder(Submit("submit", "save")),
             )
@@ -141,7 +141,6 @@ class NewExperimentForm(ModelForm):
         required=False, help_text="You cannot change this entry once it is public!"
     )
 
-    # TODO NOT working yet
     def is_public(self):
         return self.data.get("make_public", False)
 
