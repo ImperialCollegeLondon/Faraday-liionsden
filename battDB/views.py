@@ -184,11 +184,6 @@ class UploadFileView(GenericAPIView):
 ### SEARCH/LIST/TABLE VIEWS ###
 
 
-class AllExperimentsView(ListView):
-    model = Experiment
-    template_name = "generic_list.html"
-
-
 class ExperimentTableView(SingleTableView):
     model = Experiment
     table_class = ExperimentTable
