@@ -32,21 +32,7 @@ from .serializers import (
 )
 from .tables import ExperimentTable
 
-
-class AllExperimentsView(ListView):
-    model = Experiment
-    template_name = "generic_list.html"
-
-
-class ExperimentTableView(SingleTableView):
-    model = Experiment
-    table_class = ExperimentTable
-    template_name = "django_tables2/bootstrap4.html"
-
-
-class ExperimentView(DetailView):
-    model = Experiment
-    template_name = "experiment.html"
+### CREATE/ADD VIEWS ###
 
 
 class NewDataView(FormView):
@@ -195,6 +181,26 @@ class UploadFileView(GenericAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
+### SEARCH/LIST/TABLE VIEWS ###
+
+
+class AllExperimentsView(ListView):
+    model = Experiment
+    template_name = "generic_list.html"
+
+
+class ExperimentTableView(SingleTableView):
+    model = Experiment
+    table_class = ExperimentTable
+    template_name = "django_tables2/bootstrap4.html"
+
+
+class ExperimentView(DetailView):
+    model = Experiment
+    template_name = "experiment.html"
+
+
+### API VIEWS ###
 class ExperimentAPIView(APIView):
     queryset = Experiment.objects.all()
     serializer_class = ExperimentSerializer
