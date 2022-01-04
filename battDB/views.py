@@ -5,7 +5,9 @@ from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
 from django.views.generic.edit import CreateView, FormView
+from django_filters.views import FilterView
 from django_tables2 import SingleTableView
+from django_tables2.views import SingleTableMixin
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
@@ -13,6 +15,7 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .filters import ExperimentFilter
 from .forms import (
     ExperimentDeviceFormSet,
     NewBatchForm,
@@ -184,10 +187,11 @@ class UploadFileView(GenericAPIView):
 ### SEARCH/LIST/TABLE VIEWS ###
 
 
-class ExperimentTableView(SingleTableView):
+class ExperimentTableView(SingleTableMixin, FilterView):
     model = Experiment
     table_class = ExperimentTable
     template_name = "experiments_table.html"
+    filterset_class = ExperimentFilter
 
 
 class ExperimentView(DetailView):

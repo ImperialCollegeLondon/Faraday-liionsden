@@ -21,3 +21,4 @@ python-magic
 django-better-admin-arrayfield
 django-crispy-forms
 crispy-bootstrap5
+django-filter
