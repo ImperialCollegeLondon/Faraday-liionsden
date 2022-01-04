@@ -16,7 +16,7 @@ app_name = "battDB"
 
 urlpatterns = [
     path("", index, name="index"),
-    path("exps/", AllExperimentsView.as_view(), name="Experiments"),
+    path("exps/", ExperimentTableView.as_view(), name="Experiments"),
     path("exps/<int:pk>/", ExperimentView.as_view(), name="Experiment"),
     path("new_device/", NewDeviceView.as_view(), name="New Device"),
     path("new_equipment/", NewEquipmentView.as_view(), name="New Equipment"),

@@ -192,7 +192,7 @@ class AllExperimentsView(ListView):
 class ExperimentTableView(SingleTableView):
     model = Experiment
     table_class = ExperimentTable
-    template_name = "django_tables2/bootstrap4.html"
+    template_name = "experiments_table.html"
 
 
 class ExperimentView(DetailView):
