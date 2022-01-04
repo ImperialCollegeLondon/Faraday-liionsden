@@ -6,7 +6,7 @@
 <body>
     {% if filter %}
         <form action="" method="get" class="form form-inline">
-            {% bootstrap_form filter.form layout='inline' %}
+            {% bootstrap_form filter.form layout='inline' bound_css_class='' %}
             {% bootstrap_button 'filter' %}
         </form>
     {% endif %}
