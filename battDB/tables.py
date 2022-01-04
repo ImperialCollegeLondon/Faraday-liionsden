@@ -4,6 +4,8 @@ from .models import Experiment
 
 
 class ExperimentTable(tables.Table):
+    id = tables.Column(linkify=True)
+
     class Meta:
         model = Experiment
         template_name = "django_tables2/bootstrap4.html"
