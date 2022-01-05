@@ -16,7 +16,7 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .filters import ExperimentFilter
+from .filters import BatchFilter, ExperimentFilter
 from .forms import (
     ExperimentDeviceFormSet,
     NewBatchForm,
@@ -25,7 +25,7 @@ from .forms import (
     NewExperimentForm,
     NewProtocolForm,
 )
-from .models import DataRange, Experiment, ExperimentDataFile, UploadedFile
+from .models import Batch, DataRange, Experiment, ExperimentDataFile, UploadedFile
 from .serializers import (
     DataFileSerializer,
     DataRangeSerializer,
@@ -34,7 +34,7 @@ from .serializers import (
     GeneralSerializer,
     NewDataFileSerializer,
 )
-from .tables import ExperimentTable
+from .tables import BatchTable, ExperimentTable
 
 ### CREATE/ADD VIEWS ###
 
@@ -195,6 +195,15 @@ class ExperimentTableView(
     filterset_class = ExperimentFilter
     export_formats = ["csv", "json"]
     permission_required = "battDB.view_experiment"
+
+
+class BatchTableView(SingleTableMixin, ExportMixin, PermissionListMixin, FilterView):
+    model = Batch
+    table_class = BatchTable
+    template_name = "batch_table.html"
+    filterset_class = BatchFilter
+    export_formats = ["csv", "json"]
+    permission_required = "battDB.view_batch"
 
 
 class ExperimentView(DetailView):

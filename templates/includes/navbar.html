@@ -8,8 +8,14 @@
         
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/battDB/exps">Browse experiments</a>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="browseDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Browse data</a>
+                    <ul class="dropdown-menu" aria-labelledby="browseDropdown">
+                        <li><a class="dropdown-item", href="/battDB/exps">Experiments</a></li>
+                        <li><a class="dropdown-item", href="/battDB/batches">Batches</a></li>
+                    </ul>
+
                 </li>
 
                 <li class="nav-item dropdown">

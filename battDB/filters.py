@@ -3,7 +3,7 @@ from django_filters import CharFilter, FilterSet
 from django_filters.filters import ChoiceFilter, DateFromToRangeFilter
 from django_filters.widgets import RangeWidget
 
-from .models import Experiment
+from .models import Batch, Experiment
 
 
 class ExperimentFilter(FilterSet):
@@ -29,3 +29,31 @@ class ExperimentFilter(FilterSet):
     def __init__(self, *args, **kwargs):
         super(ExperimentFilter, self).__init__(*args, **kwargs)
         self.filters["user_owner__institution"].label = "Institution"
+
+
+class BatchFilter(FilterSet):
+    manufactured_on = DateFromToRangeFilter(
+        widget=RangeWidget(attrs={"type": "manufactured_on"}), label="Date range"
+    )
+
+    class Meta:
+        model = Batch
+        fields = [
+            "id",
+            "status",
+            "user_owner",
+            "manufacturer",
+            "manufactured_on",
+            "serialNo",
+            "specification",
+        ]
+
+        # Allow filtering on partial matches for charfield
+        filter_overrides = {
+            models.CharField: {
+                "filter_class": CharFilter,
+                "extra": lambda f: {
+                    "lookup_expr": "icontains",
+                },
+            }
+        }

@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    BatchTableView,
     ExperimentTableView,
     ExperimentView,
     NewBatchView,
@@ -17,6 +18,7 @@ urlpatterns = [
     path("", index, name="index"),
     path("exps/", ExperimentTableView.as_view(), name="Experiments"),
     path("exps/<int:pk>/", ExperimentView.as_view(), name="Experiment"),
+    path("batches/", BatchTableView.as_view(), name="Batches"),
     path("new_device/", NewDeviceView.as_view(), name="New Device"),
     path("new_equipment/", NewEquipmentView.as_view(), name="New Equipment"),
     path("new_batch/", NewBatchView.as_view(), name="New Batch"),
