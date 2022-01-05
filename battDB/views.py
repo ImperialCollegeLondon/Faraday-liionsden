@@ -6,7 +6,7 @@ from django.views.generic import DetailView, ListView
 from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
 from django.views.generic.edit import CreateView, FormView
 from django_filters.views import FilterView
-from django_tables2 import SingleTableView
+from django_tables2.export.views import ExportMixin
 from django_tables2.views import SingleTableMixin
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
@@ -185,13 +185,12 @@ class UploadFileView(GenericAPIView):
 
 
 ### SEARCH/LIST/TABLE VIEWS ###
-
-
-class ExperimentTableView(SingleTableMixin, FilterView):
+class ExperimentTableView(SingleTableMixin, ExportMixin, FilterView):
     model = Experiment
     table_class = ExperimentTable
     template_name = "experiments_table.html"
     filterset_class = ExperimentFilter
+    export_formats = ["csv", "json"]
 
 
 class ExperimentView(DetailView):

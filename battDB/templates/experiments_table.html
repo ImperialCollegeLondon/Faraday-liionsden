@@ -1,5 +1,6 @@
 {% extends 'header.html' %}
 {% load render_table from django_tables2 %}
+{% load export_url from django_tables2 %}
 {% load bootstrap5 %}
 {% block content %}
 
@@ -23,12 +24,14 @@
                     {% bootstrap_field filter.form.status layout='vertical' bound_css_class='' %}
                 </div>
             </div>
-
-
             {% bootstrap_button 'search' %}
         </form>
     {% endif %}
     {% render_table table %}
+    {% for format in view.export_formats %}
+        <a href="{% export_url format %}" class="btn btn-primary", role="button"> download {{ format }}</a>
+    {% endfor %}
+   
 </body>
 
 {% endblock %}
