@@ -186,8 +186,6 @@ class UploadFileView(GenericAPIView):
 
 
 ### SEARCH/LIST/TABLE VIEWS ###
-
-
 class ExperimentTableView(
     SingleTableMixin, ExportMixin, PermissionListMixin, FilterView
 ):

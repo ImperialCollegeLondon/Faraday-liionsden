@@ -9,6 +9,7 @@ class ExperimentFilter(django_filters.FilterSet):
         model = Experiment
         fields = ["id", "name", "date", "status"]
 
+        # Allow filtering on partial matches for charfield
         filter_overrides = {
             models.CharField: {
                 "filter_class": django_filters.CharFilter,
