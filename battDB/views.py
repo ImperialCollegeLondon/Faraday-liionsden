@@ -8,6 +8,7 @@ from django.views.generic.edit import CreateView, FormView
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
 from django_tables2.views import SingleTableMixin
+from guardian.mixins import PermissionListMixin
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
@@ -185,12 +186,17 @@ class UploadFileView(GenericAPIView):
 
 
 ### SEARCH/LIST/TABLE VIEWS ###
-class ExperimentTableView(SingleTableMixin, ExportMixin, FilterView):
+
+
+class ExperimentTableView(
+    SingleTableMixin, ExportMixin, PermissionListMixin, FilterView
+):
     model = Experiment
     table_class = ExperimentTable
     template_name = "experiments_table.html"
     filterset_class = ExperimentFilter
     export_formats = ["csv", "json"]
+    permission_required = "battDB.view_experiment"
 
 
 class ExperimentView(DetailView):
