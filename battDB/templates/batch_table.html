@@ -52,6 +52,7 @@
 </div>
 
 <div class = "container py-2">
+    <div class="alert alert-info"> Highlighted rows indicate private entries that are only visble to you and/or specific groups.</div>
     {% render_table table %}
     {% for format in view.export_formats %}
         <a href="{% export_url format %}" class="btn btn-primary", role="button"> download {{ format }}</a>
