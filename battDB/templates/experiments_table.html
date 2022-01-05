@@ -30,6 +30,14 @@
                     {% bootstrap_field filter.form.status layout='vertical' bound_css_class='' %}
                 </div>
             </div>
+            <div class="row align-items-end">
+                <div class="col-6">
+                    {% bootstrap_field filter.form.user_owner layout='vertical' bound_css_class='' %}
+                </div>
+                <div class="col-6">
+                    {% bootstrap_field filter.form.user_owner__institution layout='vertical' bound_css_class='' %}
+                </div>
+            </div>
             {% bootstrap_button 'search' %}
         </form>
     {% endif %}

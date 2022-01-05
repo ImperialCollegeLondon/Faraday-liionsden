@@ -1,6 +1,6 @@
 from django.db import models
-from django_filters import CharFilter, DateFilter, FilterSet
-from django_filters.filters import DateFromToRangeFilter
+from django_filters import CharFilter, FilterSet
+from django_filters.filters import ChoiceFilter, DateFromToRangeFilter
 from django_filters.widgets import RangeWidget
 
 from .models import Experiment
@@ -13,7 +13,7 @@ class ExperimentFilter(FilterSet):
 
     class Meta:
         model = Experiment
-        fields = ["id", "name", "status", "user_owner"]
+        fields = ["id", "name", "status", "user_owner", "user_owner__institution"]
 
         # Allow filtering on partial matches for charfield
         filter_overrides = {
@@ -24,3 +24,8 @@ class ExperimentFilter(FilterSet):
                 },
             }
         }
+
+    # Modify init slightly to add custom label(s)
+    def __init__(self, *args, **kwargs):
+        super(ExperimentFilter, self).__init__(*args, **kwargs)
+        self.filters["user_owner__institution"].label = "Institution"
