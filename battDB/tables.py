@@ -19,6 +19,7 @@ class ExperimentTable(tables.Table):
             "config",
             "created_on",
         )
+        row_attrs = {"status": lambda record: record.status}
 
 
 class BatchTable(tables.Table):
