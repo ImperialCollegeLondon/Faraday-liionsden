@@ -13,9 +13,9 @@ class ExperimentTable(tables.Table):
             "id",
             "name",
             "user_owner",
+            "user_owner__institution",
             "status",
             "date",
             "config",
             "created_on",
-            "modified_on",
         )
