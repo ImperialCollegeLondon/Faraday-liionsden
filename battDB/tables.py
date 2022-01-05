@@ -38,3 +38,4 @@ class BatchTable(tables.Table):
             "serialNo",
             "created_on",
         )
+        row_attrs = {"status": lambda record: record.status}

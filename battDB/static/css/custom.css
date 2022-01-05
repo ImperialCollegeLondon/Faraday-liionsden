@@ -5,3 +5,7 @@ ul {
 textarea {
     height: 4em;
 }
+
+tr[status='public'] {
+  background-color: #E9F3E2;
+}
