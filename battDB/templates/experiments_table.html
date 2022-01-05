@@ -18,7 +18,13 @@
             </div>
             <div class="row align-items-end">
                 <div class="col-6">
-                    {% bootstrap_field filter.form.date layout='vertical' bound_css_class='' %}
+                    <label class="form-label" for="id_date_0">Date range</label>
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <input type="date" name="date_min" class="form-control" placeholder="Date range" title="" id="id_date_0">
+                            <input type="date" name="date_max" class="form-control" placeholder="Date range" title="" id="id_date_1">
+                        </div>
+                    </div>
                 </div>
                 <div class="col-6">
                     {% bootstrap_field filter.form.status layout='vertical' bound_css_class='' %}
