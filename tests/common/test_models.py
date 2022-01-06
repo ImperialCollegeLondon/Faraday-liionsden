@@ -49,12 +49,12 @@ class TestHasOwner(AbstractModelMixinTestCase):
     model: mixin
 
     def setUp(self):
-        user = baker.make_recipe("tests.management.user")
-        self.model.objects.create(user_owner=user)
+        self.user = baker.make_recipe("tests.management.user")
+        self.model.objects.create(user_owner=self.user)
 
     def test_has_owner_creation(self):
         obj = self.model.objects.get()
-        self.assertEqual(obj.user_owner, User.objects.get())
+        self.assertEqual(obj.user_owner, self.user)
 
 
 class TestHasCreatedModifiedDates(AbstractModelMixinTestCase):

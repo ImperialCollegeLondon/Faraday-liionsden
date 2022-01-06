@@ -5,3 +5,7 @@ ul {
 textarea {
     height: 4em;
 }
+
+tr[status='private'] {
+  background-color: #D1ECF1;
+}

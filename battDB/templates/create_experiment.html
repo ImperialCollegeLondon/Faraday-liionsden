@@ -1,16 +1,12 @@
 {% extends 'header.html' %}
-<!-- templates/create_experiment.html -->
-  {{ form.media }}
-<script type="text/javascript" src="/admin/jsi18n/"></script>
-<script type="text/javascript" src="/static/admin/js/core.js"></script>
-<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js">        </script>
-<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
-<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
-<script type="text/javascript" src="/static/admin/js/actions.min.js"></script>
-<script type="text/javascript" src="/static/admin/js/calendar.js"></script>
-<h1>Create Experiment</h1>
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Submit</button>
-</form>
+{% load crispy_forms_tags %}
+{{ form.errors }}
+{{ form.non_field_errors }}
+
+{% block content %}
+<div class="container py-4">
+    <h1> New Experiment </h1>
+    Just words
+    {% crispy form %}
+</div>
+{% endblock content %}
