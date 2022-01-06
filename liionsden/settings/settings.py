@@ -52,7 +52,7 @@ AUTHENTICATION_BACKENDS = (
     "guardian.backends.ObjectPermissionBackend",
 )
 
-ANONYMOUS_USER_NAME = None
+ANONYMOUS_USER_NAME = "AnonymousUser"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
