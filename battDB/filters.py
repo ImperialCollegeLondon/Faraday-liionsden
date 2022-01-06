@@ -3,18 +3,15 @@ from django_filters import CharFilter, FilterSet
 from django_filters.filters import ChoiceFilter, DateFromToRangeFilter
 from django_filters.widgets import RangeWidget
 
-from .models import Batch, Experiment
+from .models import Batch, DeviceSpecification, Equipment, Experiment
 
 
-class ExperimentFilter(FilterSet):
-    date = DateFromToRangeFilter(
-        widget=RangeWidget(attrs={"type": "date"}), label="Date range"
-    )
+class BaseFilter(FilterSet):
+    """
+    Base class for common filter settings
+    """
 
     class Meta:
-        model = Experiment
-        fields = ["id", "name", "status", "user_owner", "user_owner__institution"]
-
         # Allow filtering on partial matches for charfield
         filter_overrides = {
             models.CharField: {
@@ -25,18 +22,28 @@ class ExperimentFilter(FilterSet):
             }
         }
 
+
+class ExperimentFilter(BaseFilter):
+    date = DateFromToRangeFilter(
+        widget=RangeWidget(attrs={"type": "date"}), label="Date range"
+    )
+
+    class Meta(BaseFilter.Meta):
+        model = Experiment
+        fields = ["id", "name", "status", "user_owner", "user_owner__institution"]
+
     # Modify init slightly to add custom label(s)
     def __init__(self, *args, **kwargs):
         super(ExperimentFilter, self).__init__(*args, **kwargs)
         self.filters["user_owner__institution"].label = "Institution"
 
 
-class BatchFilter(FilterSet):
+class BatchFilter(BaseFilter):
     manufactured_on = DateFromToRangeFilter(
         widget=RangeWidget(attrs={"type": "manufactured_on"}), label="Date range"
     )
 
-    class Meta:
+    class Meta(BaseFilter.Meta):
         model = Batch
         fields = [
             "id",
@@ -48,12 +55,32 @@ class BatchFilter(FilterSet):
             "specification",
         ]
 
-        # Allow filtering on partial matches for charfield
-        filter_overrides = {
-            models.CharField: {
-                "filter_class": CharFilter,
-                "extra": lambda f: {
-                    "lookup_expr": "icontains",
-                },
-            }
-        }
+
+class DeviceSpecificationFilter(BaseFilter):
+    class Meta(BaseFilter.Meta):
+        model = DeviceSpecification
+        fields = [
+            "id",
+            "name",
+            "status",
+            "user_owner",
+            "device_type",
+        ]
+
+    # Modify init slightly to add custom label(s)
+    def __init__(self, *args, **kwargs):
+        super(DeviceSpecificationFilter, self).__init__(*args, **kwargs)
+        self.filters["user_owner"].label = "Added by"
+
+
+class EquipmentFilter(BaseFilter):
+    class Meta(BaseFilter.Meta):
+        model = Equipment
+        fields = [
+            "id",
+            "name",
+            "user_owner",
+            "institution",
+            "serialNo",
+            "status",
+        ]

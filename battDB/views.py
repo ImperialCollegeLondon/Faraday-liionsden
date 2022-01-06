@@ -16,7 +16,12 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .filters import BatchFilter, ExperimentFilter
+from .filters import (
+    BatchFilter,
+    DeviceSpecificationFilter,
+    EquipmentFilter,
+    ExperimentFilter,
+)
 from .forms import (
     ExperimentDeviceFormSet,
     NewBatchForm,
@@ -25,7 +30,15 @@ from .forms import (
     NewExperimentForm,
     NewProtocolForm,
 )
-from .models import Batch, DataRange, Experiment, ExperimentDataFile, UploadedFile
+from .models import (
+    Batch,
+    DataRange,
+    DeviceSpecification,
+    Equipment,
+    Experiment,
+    ExperimentDataFile,
+    UploadedFile,
+)
 from .serializers import (
     DataFileSerializer,
     DataRangeSerializer,
@@ -34,7 +47,12 @@ from .serializers import (
     GeneralSerializer,
     NewDataFileSerializer,
 )
-from .tables import BatchTable, ExperimentTable
+from .tables import (
+    BatchTable,
+    DeviceSpecificationTable,
+    EquipmentTable,
+    ExperimentTable,
+)
 
 ### CREATE/ADD VIEWS ###
 
@@ -200,10 +218,32 @@ class ExperimentTableView(
 class BatchTableView(SingleTableMixin, ExportMixin, PermissionListMixin, FilterView):
     model = Batch
     table_class = BatchTable
-    template_name = "batch_table.html"
+    template_name = "batches_table.html"
     filterset_class = BatchFilter
     export_formats = ["csv", "json"]
     permission_required = "battDB.view_batch"
+
+
+class DeviceSpecificationTableView(
+    SingleTableMixin, ExportMixin, PermissionListMixin, FilterView
+):
+    model = DeviceSpecification
+    table_class = DeviceSpecificationTable
+    template_name = "device_specifications_table.html"
+    filterset_class = DeviceSpecificationFilter
+    export_formats = ["csv", "json"]
+    permission_required = "battDB.view_devicespecification"
+
+
+class EquipmentTableView(
+    SingleTableMixin, ExportMixin, PermissionListMixin, FilterView
+):
+    model = Equipment
+    table_class = EquipmentTable
+    template_name = "equipment_table.html"
+    filterset_class = EquipmentFilter
+    export_formats = ["csv", "json"]
+    permission_required = "battDB.view_equipment"
 
 
 class ExperimentView(DetailView):
