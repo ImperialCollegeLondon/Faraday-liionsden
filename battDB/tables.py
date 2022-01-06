@@ -33,6 +33,7 @@ class BatchTable(tables.Table):
             "manufacturer",
             "manufactured_on",
             "specification",
+            "batch_size",
             "serialNo",
             "created_on",
         )

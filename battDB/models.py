@@ -124,7 +124,7 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
     manufactured_on = models.DateField(default=datetime.now)
 
     def __str__(self):
-        return "%s %s (%d off) %s" % (
+        return "%s %s (%d of) %s" % (
             self.manufacturer,
             self.specification,
             self.batch_size,
