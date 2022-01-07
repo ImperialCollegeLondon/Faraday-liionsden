@@ -1,27 +1,55 @@
 <!-- experiment.html -->
 {% extends 'header.html' %}
 {% load tag_allfields %}
+{% load render_table from django_tables2 %}
+{% load export_url from django_tables2 %}
+{% load bootstrap5 %}
 
 {% block content %}
 
-<div>
-  <h2>View Experiment: <b>{{ object }}</b></h2>
-  <h3>Info</h3>
-  <table>
-  {% for key, val in object|get_fields %}
-    <tr><td>{{ key }}</td><td> {{ val }} </td></tr>
-  {% endfor %}
-    <tr><td>data files count</td><td>{{ object.data_files.count }} </td></tr>
-  </table>
+<div class="container py-4">
 
-{#  <h3>Data files:</h3>#}
-{#  <ul>#}
-{#  {% for file in object.data_files.all %}#}
-{#    <li><a href="{% url 'viewData' file.id %}">{{ file }}</a></li>#}
-{#  {% endfor %}#}
-{#    <li><a href="upload_file">Upload new data file</a>#}
-{#  </ul>#}
-
+  <table width="100%">
+    <tr>
+      <td><h4>{{ object.user_owner.institution }} </h4></td>
+      <td style="text-align:center" ><h4> {{ object.name }} </h4></td>
+      <td style="text-align:right"><h4> {{ object.created_on.date}} </h4></td>
+    </tr>
+    </table>
 </div>
+
+<div class="card border-dark mb-3" style="max-width: 100%;">
+  <div class="card-header"><h5>Experiment details</h5></div>
+  <div class="card-body">
+    Info here
+  </div>
+</div>
+
+
+<div class="card border-dark mb-3" style="max-width: 100%;">
+  <div class="card-header"><h5>Measurement data</h5></div>
+  <div class="card-body">
+    Info here
+  </div>
+</div>
+
+<div class="card border-dark mb-3" style="max-width: 100%;">
+  <div class="card-header"><h5>Additional metadata</h5></div>
+  <div class="card-body">
+    <table width="50%">
+      <tr><td><b>data files count:</b></td><td>{{ object.data_files.count }} </td></tr>
+    </table>
+  
+    {#  <h5>Data files:</h5>#}
+    {#  <ul>#}
+    {#  {% for file in object.data_files.all %}#}
+    {#    <li><a href="{% url 'viewData' file.id %}">{{ file }}</a></li>#}
+    {#  {% endfor %}#}
+    {#    <li><a href="upload_file">Upload new data file</a>#}
+    {#  </ul>#}
+  
+  </div>
+</div>
+
 
 {% endblock %}
