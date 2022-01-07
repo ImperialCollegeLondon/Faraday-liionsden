@@ -21,7 +21,12 @@
 <div class="card border-dark mb-3" style="max-width: 100%;">
   <div class="card-header"><h5>Experiment details</h5></div>
   <div class="card-body">
-    Info here
+    <b>Configuration: </b> {{object.config}}
+    <br>
+    <b>Devices:</b>
+    {% for device in object.devices.all %}
+      <li>{{ device.batch }} (batch sequence: {{device.batch_sequence}})</li>
+    {% endfor %}
   </div>
 </div>
 
@@ -29,15 +34,17 @@
 <div class="card border-dark mb-3" style="max-width: 100%;">
   <div class="card-header"><h5>Measurement data</h5></div>
   <div class="card-body">
-    Info here
+    Real data here
   </div>
 </div>
 
 <div class="card border-dark mb-3" style="max-width: 100%;">
-  <div class="card-header"><h5>Additional metadata</h5></div>
+  <div class="card-header"><h5>Metadata</h5></div>
   <div class="card-body">
     <table width="50%">
-      <tr><td><b>data files count:</b></td><td>{{ object.data_files.count }} </td></tr>
+      <tr><td><b>Owner:</b></td><td>{{ object.user_owner }} </td></tr>
+      <tr><td><b>Data files count:</b></td><td>{{ object.data_files.count }} </td></tr>
+      <tr><td><b>Notes:</b></td><td>{{ object.notes }} </td></tr>
     </table>
   
     {#  <h5>Data files:</h5>#}
