@@ -41,7 +41,7 @@ class BatchTable(tables.Table):
 
 
 class DeviceSpecificationTable(tables.Table):
-    # id = tables.Column(linkify=True)
+    id = tables.Column(linkify=True)
 
     user_owner = tables.Column(verbose_name="Added by")
 

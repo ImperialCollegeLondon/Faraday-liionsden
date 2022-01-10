@@ -251,6 +251,12 @@ class ExperimentView(PermissionRequiredMixin, DetailView):
     permission_required = "battDB.view_experiment"
 
 
+class DeviceSpecificationView(PermissionRequiredMixin, DetailView):
+    model = DeviceSpecification
+    template_name = "device_specification.html"
+    permission_required = "battDB.view_devicespecification"
+
+
 ### API VIEWS ###
 class ExperimentAPIView(APIView):
     queryset = Experiment.objects.all()

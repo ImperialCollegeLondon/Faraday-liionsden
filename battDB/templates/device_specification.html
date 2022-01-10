@@ -1,0 +1,71 @@
+<!-- device_specification.html -->
+{% extends 'header.html' %}
+{% load tag_allfields %}
+{% load render_table from django_tables2 %}
+{% load export_url from django_tables2 %}
+{% load bootstrap5 %}
+{% load mptt_tags %}
+
+{% block content %}
+
+<div class="container py-4">
+
+  <table width="100%">
+    <tr>
+      <td style="text-align:center" ><h4> {{ object.name }} </h4></td>
+    </tr>
+    </table>
+</div>
+
+<div class="card border-dark mb-3" style="max-width: 100%;">
+  <div class="card-header"><h5>Device details</h5></div>
+  <div class="card-body">
+    <b>Type</b> 
+    <br>
+    {{object.device_type}}
+    <br>
+    <b>Components</b>
+    <br>
+        {% recursetree object.get_children %}
+            <li>
+                {{ node.name }}
+                {% if not node.is_leaf_node %}
+                    <ul >
+                        {{ children }} 
+                    </ul>
+                {% endif %}
+            </li>
+        {% endrecursetree %}
+    <br>
+    <b>Composition</b>
+    <br>
+    Chemical composition here if applicable
+    <br>
+    <b>Technical documentation</b>
+    <br> 
+    Spec sheet PDF download here
+
+  </div>
+</div>
+
+<div class="card border-dark mb-3" style="max-width: 100%;">
+  <div class="card-header"><h5>Metadata</h5></div>
+  <div class="card-body">
+    <table width="50%">
+      <tr><td><b>Added by:</b></td><td>{{ object.user_owner }} </td></tr>
+      <tr><td><b>Notes:</b></td><td>{{ object.notes }} </td></tr>
+    </table>
+  
+    {#  <h5>Data files:</h5>#}
+    {#  <ul>#}
+    {#  {% for file in object.data_files.all %}#}
+    {#    <li><a href="{% url 'viewData' file.id %}">{{ file }}</a></li>#}
+    {#  {% endfor %}#}
+    {#    <li><a href="upload_file">Upload new data file</a>#}
+    {#  </ul>#}
+  
+  </div>
+</div>
+
+
+{% endblock %}

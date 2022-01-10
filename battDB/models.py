@@ -63,6 +63,9 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
             raise ValidationError("Abstract specifications cannot have a device type")
         return super(DeviceSpecification, self).clean()
 
+    def get_absolute_url(self):
+        return reverse("battDB:Device", kwargs={"pk": self.pk})
+
     class Meta:
         verbose_name_plural = "Device Specifications"
 
