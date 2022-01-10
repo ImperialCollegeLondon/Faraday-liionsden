@@ -25,7 +25,7 @@
     <br>
     <b>Devices:</b>
     {% for device in object.devices.all %}
-      <li>{{ device.batch }} (batch sequence: {{device.batch_sequence}})</li>
+      <li><b>{{ device.batch }} / {{device.batch_sequence}}</b>  ({{ device.device_position }})</li>
     {% endfor %}
   </div>
 </div>
