@@ -24,19 +24,20 @@
     <br>
     {{object.device_type}}
     <br>
-    <b>Components</b>
+    <b>Related devices</b>
     <br>
-        {% recursetree object.get_children %}
-            <li>
-                {{ node.name }}
-                {% if not node.is_leaf_node %}
-                    <ul >
-                        {{ children }} 
-                    </ul>
-                {% endif %}
-            </li>
-        {% endrecursetree %}
-    <br>
+        {% drilldown_tree_for_node object as drilldown %}
+        {% for node,structure in drilldown|tree_info %}
+        {% if structure.new_level %}<ul style="padding-left: 20px"><li>{% else %}</li><li>{% endif %}
+            {% if object.name == node.name %}
+                <a href="{{ node.get_absolute_url }}"><b>{{ node.name }}</b></a>
+            {% else %}
+                <a href="{{ node.get_absolute_url }}">{{ node.name }}</a>    
+            {% endif %}
+        {% for level in structure.closed_levels %}</li></ul>{% endfor %}
+        {% endfor %}
+    </li></ul>
+
     <b>Composition</b>
     <br>
     Chemical composition here if applicable
