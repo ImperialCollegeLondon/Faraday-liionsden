@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db import transaction
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
@@ -8,7 +7,7 @@ from django.views.generic.edit import CreateView, FormView
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
 from django_tables2.views import SingleTableMixin
-from guardian.mixins import PermissionListMixin
+from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
@@ -246,9 +245,10 @@ class EquipmentTableView(
     permission_required = "battDB.view_equipment"
 
 
-class ExperimentView(DetailView):
+class ExperimentView(PermissionRequiredMixin, DetailView):
     model = Experiment
     template_name = "experiment.html"
+    permission_required = "battDB.view_experiment"
 
 
 ### API VIEWS ###
