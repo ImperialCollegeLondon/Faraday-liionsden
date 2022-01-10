@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import (
     BatchTableView,
+    BatchView,
     DeviceSpecificationTableView,
     DeviceSpecificationView,
     EquipmentTableView,
@@ -22,6 +23,7 @@ urlpatterns = [
     path("exps/", ExperimentTableView.as_view(), name="Experiments"),
     path("exps/<int:pk>/", ExperimentView.as_view(), name="Experiment"),
     path("batches/", BatchTableView.as_view(), name="Batches"),
+    path("batches/<int:pk>/", BatchView.as_view(), name="Batch"),
     path("equipment/", EquipmentTableView.as_view(), name="Equipment"),
     path("devices/", DeviceSpecificationTableView.as_view(), name="Devices"),
     path("devices/<int:pk>/", DeviceSpecificationView.as_view(), name="Device"),

@@ -24,7 +24,7 @@
     <br>
     {{object.device_type}}
     <br>
-    <b>Related devices</b>
+    <b>Device structure</b>
     <br>
         {% drilldown_tree_for_node object as drilldown %}
         {% for node,structure in drilldown|tree_info %}
@@ -56,15 +56,6 @@
       <tr><td><b>Added by:</b></td><td>{{ object.user_owner }} </td></tr>
       <tr><td><b>Notes:</b></td><td>{{ object.notes }} </td></tr>
     </table>
-  
-    {#  <h5>Data files:</h5>#}
-    {#  <ul>#}
-    {#  {% for file in object.data_files.all %}#}
-    {#    <li><a href="{% url 'viewData' file.id %}">{{ file }}</a></li>#}
-    {#  {% endfor %}#}
-    {#    <li><a href="upload_file">Upload new data file</a>#}
-    {#  </ul>#}
-  
   </div>
 </div>
 

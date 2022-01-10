@@ -22,7 +22,7 @@ class ExperimentTable(tables.Table):
 
 
 class BatchTable(tables.Table):
-    # id = tables.Column(linkify=True)
+    id = tables.Column(linkify=True)
 
     class Meta:
         model = Batch

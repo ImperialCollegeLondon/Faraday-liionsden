@@ -134,6 +134,9 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
             self.manufactured_on,
         )
 
+    def get_absolute_url(self):
+        return reverse("battDB:Batch", kwargs={"pk": self.pk})
+
     class Meta:
         verbose_name = "Batch"
         verbose_name_plural = "Batches"
