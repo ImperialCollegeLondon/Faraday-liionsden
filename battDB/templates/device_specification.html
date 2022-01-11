@@ -41,11 +41,12 @@
     <b>Composition</b>
     <br>
     Chemical composition here if applicable
-    <br>
-    <b>Technical documentation</b>
-    <br> 
-    Spec sheet PDF download here
-
+    <br><br>
+    {% if object.spec_file %}
+      <b>Technical documentation</b>
+      <br><br>
+      <a href="{{ object.spec_file.url }}" class="btn btn-primary", role="button"> Download specification (pdf)</a>
+    {% endif %}
   </div>
 </div>
 
