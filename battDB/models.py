@@ -56,6 +56,7 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         blank=True,
         related_name="used_in_modules",
         limit_choices_to={"config_type": "module"},
+        verbose_name="Configuration",
         help_text="Configuration of sub-devices if the device type is a module or pack.",
     )
 
@@ -64,6 +65,7 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         null=True,
         blank=True,
         validators=(validate_pdf_file,),
+        verbose_name="Specification sheet",
         help_text="PDF version of spec. sheet for this type of device.",
     )
 

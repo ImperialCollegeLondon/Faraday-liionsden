@@ -55,7 +55,15 @@ class NewDeviceForm(DataCreateForm):
     # See https://shouts.dev/add-or-remove-input-fields-dynamically-using-jquery
     class Meta:
         model = DeviceSpecification
-        fields = ["name", "device_type", "config", "abstract", "notes", "parent"]
+        fields = [
+            "name",
+            "device_type",
+            "config",
+            "abstract",
+            "notes",
+            "parent",
+            "spec_file",
+        ]
         help_texts = {
             "abstract": 'This is a new device type e.g. "Cell".',
             "device_type": "Must select if not specifying a new device type.",
