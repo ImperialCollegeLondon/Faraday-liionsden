@@ -63,6 +63,9 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
             raise ValidationError("Abstract specifications cannot have a device type")
         return super(DeviceSpecification, self).clean()
 
+    def get_absolute_url(self):
+        return reverse("battDB:Device", kwargs={"pk": self.pk})
+
     class Meta:
         verbose_name_plural = "Device Specifications"
 
@@ -130,6 +133,9 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
             self.batch_size,
             self.manufactured_on,
         )
+
+    def get_absolute_url(self):
+        return reverse("battDB:Batch", kwargs={"pk": self.pk})
 
     class Meta:
         verbose_name = "Batch"
@@ -312,6 +318,9 @@ class Equipment(cm.BaseModel):
         on_delete=models.SET_NULL,
         help_text="Default parser for this equipment's data",
     )
+
+    def get_absolute_url(self):
+        return reverse("battDB:Equipment", kwargs={"pk": self.pk})
 
     class Meta:
         verbose_name_plural = "Equipment"

@@ -1,14 +1,15 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db import transaction
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
+from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import CreateView, FormView
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
+from django_tables2.tables import Table
 from django_tables2.views import SingleTableMixin
-from guardian.mixins import PermissionListMixin
+from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
@@ -48,6 +49,7 @@ from .serializers import (
     NewDataFileSerializer,
 )
 from .tables import (
+    BatchDevicesTable,
     BatchTable,
     DeviceSpecificationTable,
     EquipmentTable,
@@ -246,9 +248,28 @@ class EquipmentTableView(
     permission_required = "battDB.view_equipment"
 
 
-class ExperimentView(DetailView):
+class ExperimentView(PermissionRequiredMixin, DetailView):
     model = Experiment
     template_name = "experiment.html"
+    permission_required = "battDB.view_experiment"
+
+
+class DeviceSpecificationView(PermissionRequiredMixin, DetailView):
+    model = DeviceSpecification
+    template_name = "device_specification.html"
+    permission_required = "battDB.view_devicespecification"
+
+
+class BatchView(PermissionRequiredMixin, DetailView):
+    model = Batch
+    template_name = "batch.html"
+    permission_required = "battDB.view_batch"
+
+
+class EquipmentView(PermissionRequiredMixin, DetailView):
+    model = Equipment
+    template_name = "equipment.html"
+    permission_required = "battDB.view_equipment"
 
 
 ### API VIEWS ###

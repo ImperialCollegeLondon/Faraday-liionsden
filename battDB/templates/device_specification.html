@@ -1,0 +1,63 @@
+<!-- device_specification.html -->
+{% extends 'header.html' %}
+{% load tag_allfields %}
+{% load render_table from django_tables2 %}
+{% load export_url from django_tables2 %}
+{% load bootstrap5 %}
+{% load mptt_tags %}
+
+{% block content %}
+
+<div class="container py-4">
+
+  <table width="100%">
+    <tr>
+      <td style="text-align:center" ><h4> {{ object.name }} </h4></td>
+    </tr>
+    </table>
+</div>
+
+<div class="card border-dark mb-3" style="max-width: 100%;">
+  <div class="card-header"><h5>Device details</h5></div>
+  <div class="card-body">
+    <b>Type</b> 
+    <br>
+    {{object.device_type}}
+    <br>
+    <b>Device structure</b>
+    <br>
+        {% drilldown_tree_for_node object as drilldown %}
+        {% for node,structure in drilldown|tree_info %}
+        {% if structure.new_level %}<ul style="padding-left: 20px"><li>{% else %}</li><li>{% endif %}
+            {% if object.name == node.name %}
+                <a href="{{ node.get_absolute_url }}"><b>{{ node.name }}</b></a>
+            {% else %}
+                <a href="{{ node.get_absolute_url }}">{{ node.name }}</a>    
+            {% endif %}
+        {% for level in structure.closed_levels %}</li></ul>{% endfor %}
+        {% endfor %}
+    </li></ul>
+
+    <b>Composition</b>
+    <br>
+    Chemical composition here if applicable
+    <br>
+    <b>Technical documentation</b>
+    <br> 
+    Spec sheet PDF download here
+
+  </div>
+</div>
+
+<div class="card border-dark mb-3" style="max-width: 100%;">
+  <div class="card-header"><h5>Metadata</h5></div>
+  <div class="card-body">
+    <table width="50%">
+      <tr><td><b>Added by:</b></td><td>{{ object.user_owner }} </td></tr>
+      <tr><td><b>Notes:</b></td><td>{{ object.notes }} </td></tr>
+    </table>
+  </div>
+</div>
+
+
+{% endblock %}
