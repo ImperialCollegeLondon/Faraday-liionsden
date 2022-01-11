@@ -25,21 +25,39 @@
     <b>Device Specification</b> 
     <br>
     <a href="{{ object.specification.get_absolute_url }}"><b>{{ object.specification }}</b></a>
-    <br>
+    <br><br>
     <b>Batch/Serial Number</b> 
     <br>
     {{ object.serialNo }}
-    <br>
+    <br><br>
     <b>Batch size</b> 
     <br>
     {{ object.batch_size }}
-    <br>
-    <b>Devices used in Experiments</b>
-    <br>
-        {% for ed in object.experimentdevice_set.all %}
-        <li>{{ed.experiment.name}}</li>
-        {% endfor %}
-
+    <br><br>
+    <b>Related experiments</b>
+    <br>    
+    <table class="table">
+      <thead class= "thead-light">
+        <tr>
+          <th scope="col"> Batch sequence</th>
+          <th scope="col">Experiment ID</th>
+          <th scope="col"> Experiment name</th>
+          <th scope="col"> Date</th>
+          <th scope="col"> Device position</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for ed in object.experimentdevice_set.all %}
+        <tr>
+          <td>{{ ed.batch_sequence }}</td>
+          <td ><a href="{{ ed.experiment.get_absolute_url }}">{{ ed.experiment.id }}</a></td>
+          <td ><a href="{{ ed.experiment.get_absolute_url }}">{{ ed.experiment.name }}</a></td>
+          <td>{{ ed.experiment.date }}</td>
+          <td>{{ ed.device_position }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
   </div>
 </div>
 

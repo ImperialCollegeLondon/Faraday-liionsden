@@ -3,9 +3,11 @@ from django.db import transaction
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
+from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import CreateView, FormView
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
+from django_tables2.tables import Table
 from django_tables2.views import SingleTableMixin
 from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
 from rest_framework import permissions, status, viewsets
@@ -47,6 +49,7 @@ from .serializers import (
     NewDataFileSerializer,
 )
 from .tables import (
+    BatchDevicesTable,
     BatchTable,
     DeviceSpecificationTable,
     EquipmentTable,

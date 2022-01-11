@@ -1,6 +1,6 @@
 import django_tables2 as tables
 
-from .models import Batch, DeviceSpecification, Experiment
+from .models import Batch, DeviceSpecification, Experiment, ExperimentDevice
 
 
 class ExperimentTable(tables.Table):
@@ -71,3 +71,13 @@ class EquipmentTable(tables.Table):
             "created_on",
         )
         row_attrs = {"status": lambda record: record.status}
+
+
+class BatchDevicesTable(tables.Table):
+    class Meta:
+        model = ExperimentDevice
+        template_name = "django_tables2/bootstrap4.html"
+        fields = (
+            "id",
+            "batch",
+        )
