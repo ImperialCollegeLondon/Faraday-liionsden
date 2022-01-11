@@ -1,0 +1,67 @@
+<!-- device_specification.html -->
+{% extends 'header.html' %}
+{% load tag_allfields %}
+{% load render_table from django_tables2 %}
+{% load export_url from django_tables2 %}
+{% load bootstrap5 %}
+{% load mptt_tags %}
+
+{% block content %}
+
+<div class="container py-4">
+
+  <table width="100%">
+    <tr>
+      <td style="text-align:left" ><h4> {{ object.institution }} </h4></td>
+      <td style="text-align:center" ><h4> {{ object.name }} </h4></td>
+      <td style="text-align:right" ><h4> {{ object.SerialNo }} </h4></td>
+    </tr>
+    </table>
+</div>
+
+<div class="card border-dark mb-3" style="max-width: 100%;">
+  <div class="card-header"><h5>Equipment details</h5></div>
+  <div class="card-body">
+    <b>Serial Number</b> 
+    <br>
+    {{ object.serialNo }}
+    <br><br>
+    <b>Default parser</b> 
+    <br>
+    {{ object.default_parser }}
+    <br><br>
+    <b>Used in experiments</b>
+    <br>    
+    <table class="table">
+      <thead class= "thead-light">
+        <tr>
+          <th scope="col">Experiment ID</th>
+          <th scope="col"> Experiment name</th>
+          <th scope="col"> Date</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for edf in object.experimentdatafile_set.all %}
+        <tr>
+          <td ><a href="{{ edf.experiment.get_absolute_url }}">{{ edf.experiment.id }}</a></td>
+          <td ><a href="{{ edf.experiment.get_absolute_url }}">{{ edf.experiment.name }}</a></td>
+          <td>{{ edf.experiment.date }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card border-dark mb-3" style="max-width: 100%;">
+  <div class="card-header"><h5>Metadata</h5></div>
+  <div class="card-body">
+    <table width="50%">
+      <tr><td><b>Added by:</b></td><td>{{ object.user_owner }} </td></tr>
+      <tr><td><b>Notes:</b></td><td>{{ object.notes }} </td></tr>
+      <tr><td><b>Last modified:</b></td><td>{{ object.modified_on }} </td></tr>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

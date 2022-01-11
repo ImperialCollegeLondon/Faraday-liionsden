@@ -59,7 +59,8 @@ class DeviceSpecificationTable(tables.Table):
 
 
 class EquipmentTable(tables.Table):
-    # id = tables.Column(linkify=True)
+    id = tables.Column(linkify=True)
+
     class Meta:
         model = DeviceSpecification
         template_name = "django_tables2/bootstrap4.html"

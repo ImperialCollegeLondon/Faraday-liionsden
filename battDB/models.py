@@ -319,6 +319,9 @@ class Equipment(cm.BaseModel):
         help_text="Default parser for this equipment's data",
     )
 
+    def get_absolute_url(self):
+        return reverse("battDB:Equipment", kwargs={"pk": self.pk})
+
     class Meta:
         verbose_name_plural = "Equipment"
 
