@@ -1,8 +1,4 @@
 <!--Navbar-->
-{% load bootstrap5 %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
-{% bootstrap_messages %}
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Liionsden Database</a>
@@ -12,12 +8,28 @@
         
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/battDB/exps">Experiments</a>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="browseDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Browse data</a>
+                    <ul class="dropdown-menu" aria-labelledby="browseDropdown">
+                        <li><a class="dropdown-item", href="/battDB/exps">Experiments</a></li>
+                        <li><a class="dropdown-item", href="/battDB/batches">Batches</a></li>
+                        <li><a class="dropdown-item", href="/battDB/devices">Device specifications</a></li>
+                        <li><a class="dropdown-item", href="/battDB/equipment">Equipment</a></li>
+                    </ul>
+
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="">Upload data</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="" id="addDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Add data</a>
+                    <ul class="dropdown-menu" aria-labelledby="addDropdown">
+                        <li><a class="dropdown-item", href="/battDB/new_experiment">Experiment</a></li>
+                        <li><a class="dropdown-item", href="/battDB/new_batch">Batch</a></li>
+                        <li><a class="dropdown-item", href="/battDB/new_device">Device specification</a></li>
+                        <li><a class="dropdown-item", href="/battDB/new_equipment">Equipment</a></li>
+                        <li><a class="dropdown-item", href="/battDB/new_protocol">Protocol</a></li>
+                       
+                    </ul>
                 </li>
 
             </ul>

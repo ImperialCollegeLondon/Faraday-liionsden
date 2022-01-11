@@ -63,6 +63,9 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
             raise ValidationError("Abstract specifications cannot have a device type")
         return super(DeviceSpecification, self).clean()
 
+    def get_absolute_url(self):
+        return reverse("battDB:Device", kwargs={"pk": self.pk})
+
     class Meta:
         verbose_name_plural = "Device Specifications"
 
@@ -109,9 +112,8 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
     )
     serialNo = models.CharField(
         max_length=60,
-        default="%d",
         blank=True,
-        help_text="Batch number, optionally indicate serial number format",
+        help_text="Batch number or some other unique identifier",
     )
     batch_size = models.PositiveSmallIntegerField(default=1)
     manufacturing_protocol = models.ForeignKey(
@@ -125,12 +127,15 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
     manufactured_on = models.DateField(default=datetime.now)
 
     def __str__(self):
-        return "%s %s (%d off) %s" % (
+        return "%s %s (%d of) %s" % (
             self.manufacturer,
             self.specification,
             self.batch_size,
             self.manufactured_on,
         )
+
+    def get_absolute_url(self):
+        return reverse("battDB:Batch", kwargs={"pk": self.pk})
 
     class Meta:
         verbose_name = "Batch"
@@ -313,6 +318,9 @@ class Equipment(cm.BaseModel):
         on_delete=models.SET_NULL,
         help_text="Default parser for this equipment's data",
     )
+
+    def get_absolute_url(self):
+        return reverse("battDB:Equipment", kwargs={"pk": self.pk})
 
     class Meta:
         verbose_name_plural = "Equipment"

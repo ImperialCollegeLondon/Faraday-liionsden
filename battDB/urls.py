@@ -1,13 +1,39 @@
 from django.urls import path
 
-from .views import AllExperimentsView, ExperimentView, index
+from .views import (
+    BatchTableView,
+    BatchView,
+    DeviceSpecificationTableView,
+    DeviceSpecificationView,
+    EquipmentTableView,
+    EquipmentView,
+    ExperimentTableView,
+    ExperimentView,
+    NewBatchView,
+    NewDeviceView,
+    NewEquipmentView,
+    NewExperimentView,
+    NewProtocolView,
+    index,
+)
 
 app_name = "battDB"
 
 urlpatterns = [
     path("", index, name="index"),
-    path("exps/", AllExperimentsView.as_view(), name="Experiments"),
+    path("exps/", ExperimentTableView.as_view(), name="Experiments"),
     path("exps/<int:pk>/", ExperimentView.as_view(), name="Experiment"),
+    path("batches/", BatchTableView.as_view(), name="Batches"),
+    path("batches/<int:pk>/", BatchView.as_view(), name="Batch"),
+    path("equipment/", EquipmentTableView.as_view(), name="Equipment list"),
+    path("equipment/<int:pk>/", EquipmentView.as_view(), name="Equipment"),
+    path("devices/", DeviceSpecificationTableView.as_view(), name="Devices"),
+    path("devices/<int:pk>/", DeviceSpecificationView.as_view(), name="Device"),
+    path("new_device/", NewDeviceView.as_view(), name="New Device"),
+    path("new_equipment/", NewEquipmentView.as_view(), name="New Equipment"),
+    path("new_batch/", NewBatchView.as_view(), name="New Batch"),
+    path("new_protocol/", NewProtocolView.as_view(), name="New Protocol"),
+    path("new_experiment/", NewExperimentView.as_view(), name="New Experiment"),
 ]
 
 """The following url patterns will be added on a need basis, as new functionality 

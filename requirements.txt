@@ -15,5 +15,11 @@ whitenoise
 model_bakery
 django-guardian
 django-bootstrap-v5
+django-tables2
 django-cleanup
 python-magic
+django-better-admin-arrayfield
+django-crispy-forms
+crispy-bootstrap5
+django-filter
+tablib
