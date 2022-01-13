@@ -225,11 +225,13 @@ DeviceParameterFormSet = inlineformset_factory(
     fields=[
         "parameter",
         "value",
+        "material",
     ],
     extra=1,
     can_delete=True,
     help_texts={
-        "parameter": None,
+        "parameter": "e.g. Form factor, cathode thickness...",
         "value": None,
+        "material": "If this parameter pertains to a specific material, otherwise leave blank.",
     },
 )
