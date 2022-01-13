@@ -23,8 +23,30 @@
     <b>Type</b> 
     <br>
     {{object.device_type}}
+    <br><br>
+    
+    <table class="table">
+      <thead class= "thead-light">
+        <tr>
+          <th scope="col"> Parameter</th>
+          <th scope="col">Value</th>
+          <th scope="col">unit</th>
+          <th scope="col"> Material</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for dp in object.deviceparameter_set.all %}
+        <tr>
+          <td>{{ dp.parameter.name }}</td>
+          <td>{{ dp.value }}</td>
+          <td>{{ dp.parameter.unit.unitSymbol }}</td>
+          <td>{{ dp.material }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
     <br>
-    <b>Device structure</b>
+    <b>Related devices</b>
     <br>
         {% drilldown_tree_for_node object as drilldown %}
         {% for node,structure in drilldown|tree_info %}
@@ -38,10 +60,6 @@
         {% endfor %}
     </li></ul>
 
-    <b>Composition</b>
-    <br>
-    Chemical composition here if applicable
-    <br><br>
     {% if object.spec_file %}
       <b>Technical documentation</b>
       <br>

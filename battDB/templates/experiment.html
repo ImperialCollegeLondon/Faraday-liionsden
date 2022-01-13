@@ -21,12 +21,31 @@
 <div class="card border-dark mb-3" style="max-width: 100%;">
   <div class="card-header"><h5>Experiment details</h5></div>
   <div class="card-body">
-    <b>Configuration: </b> {{object.config}}
+    <b>Configuration </b> 
     <br>
-    <b>Devices:</b>
-    {% for device in object.devices.all %}
-      <li><b>{{ device.batch }} / {{device.batch_sequence}}</b>  ({{ device.device_position }})</li>
-    {% endfor %}
+    {{object.config}}
+    <br><br>
+    
+    <b>Devices</b>
+    <table class="table">
+      <thead class= "thead-light">
+        <tr>
+          <th scope="col"> Batch</th>
+          <th scope="col">Batch sequence</th>
+          <th scope="col">Position</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for device in object.devices.all %}
+        <tr>
+          <td><a href="{{ device.batch.get_absolute_url }}">{{ device.batch }}</a></td>
+          <td>{{ device.batch_sequence }}</td>
+          <td>{{ device.device_position }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  
   </div>
 </div>
 
