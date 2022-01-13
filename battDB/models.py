@@ -10,6 +10,7 @@ from django.urls import reverse
 
 import common.models as cm
 import dfndb.models as dfn
+from common.validators import validate_pdf_file
 from parsers import available_parsers, parse_data_file
 
 
@@ -55,7 +56,17 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         blank=True,
         related_name="used_in_modules",
         limit_choices_to={"config_type": "module"},
+        verbose_name="Configuration",
         help_text="Configuration of sub-devices if the device type is a module or pack.",
+    )
+
+    spec_file = models.FileField(
+        upload_to="uploaded_files",
+        null=True,
+        blank=True,
+        validators=(validate_pdf_file,),
+        verbose_name="Specification sheet",
+        help_text="PDF version of spec. sheet for this type of device.",
     )
 
     def clean(self):
