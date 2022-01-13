@@ -75,7 +75,16 @@ class NewDeviceForm(ModelForm):
                 Column("parent", css_class="col-6"),
                 Column("config", css_class="col-6"),
                 Column("spec_file", css_class="col-6"),
-                Fieldset("Define parameters", Formset("parameters")),
+                Fieldset(
+                    "Define parameters",
+                    Div(
+                        HTML(
+                            "Specify any device parameters below such as cathode thickness."
+                        ),
+                        css_class="container pb-4",
+                    ),
+                    Formset("parameters"),
+                ),
                 Field("notes"),
                 HTML("<br>"),
                 Field("make_public"),
