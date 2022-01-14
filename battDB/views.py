@@ -90,24 +90,27 @@ class NewDataView(FormView):
         return render(request, self.template_name, {"form": form})
 
 
-class NewDeviceView(PermissionRequiredMixin, FormView):
-    permission_required = "battDB.add_devicespecification"
-    template_name = "create_device.html"
-    form_class = NewDeviceForm
-    success_url = "/battDB/new_device/"
-    success_message = "New device specification created successfully."
-    failure_message = "Could not save new device. Invalid information."
+class NewDataViewInline(FormView):
+    """
+    Template for view for creating entries that includes an inline
+    form for e.g. adding child objects, related objects etc.
+    """
+
+    success_message = "New data added successfully."
+    failure_message = "Cannot add data. Invalid information."
+    inline_key = None  # Key for which an inline form is needed
+    formset = None  # Formset specifying the fields in the inline form
 
     def get_context_data(self, **kwargs):
         """
         Helper function to get correct context to pass to render() in get()
         and post().
         """
-        data = super(NewDeviceView, self).get_context_data(**kwargs)
+        data = super(NewDataViewInline, self).get_context_data(**kwargs)
         if self.request.POST:
-            data["parameters"] = DeviceParameterFormSet(self.request.POST)
+            data[self.inline_key] = self.formset(self.request.POST)
         else:
-            data["parameters"] = DeviceParameterFormSet()
+            data[self.inline_key] = self.formset()
         return data
 
     def get(self, request, *args, **kwargs):
@@ -118,7 +121,7 @@ class NewDeviceView(PermissionRequiredMixin, FormView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
         context = self.get_context_data()
-        parameters = context["parameters"]
+        parameters = context[self.inline_key]
         if form.is_valid():
             # Save experiment incluing setting user owner and status
             with transaction.atomic():
@@ -137,6 +140,33 @@ class NewDeviceView(PermissionRequiredMixin, FormView):
             return redirect(self.success_url)
         messages.error(request, self.failure_message)
         return render(request, self.template_name, context)
+
+
+class NewDeviceView(PermissionRequiredMixin, NewDataViewInline):
+    permission_required = "battDB.add_devicespecification"
+    template_name = "create_device.html"
+    form_class = NewDeviceForm
+    success_url = "/battDB/new_device/"
+    success_message = "New device specification created successfully."
+    failure_message = "Could not save new device. Invalid information."
+    inline_key = "parameters"
+    formset = DeviceParameterFormSet
+
+
+class NewExperimentView(PermissionRequiredMixin, NewDataViewInline):
+    """
+    Unique view for adding an experiment with inline addition of devices.
+    """
+
+    permission_required = "battDB.add_experiment"
+    model = Experiment
+    template_name = "create_experiment.html"
+    form_class = NewExperimentForm
+    success_url = "/battDB/new_experiment"
+    success_message = "New experiment created successfully."
+    failure_message = "Could not save new experiment. Invalid information."
+    inline_key = "devices"
+    formset = ExperimentDeviceFormSet
 
 
 class NewEquipmentView(PermissionRequiredMixin, NewDataView):
@@ -164,60 +194,6 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
     success_url = "/battDB/new_protocol/"
     success_message = "New protocol created successfully."
     failure_message = "Could not save new protocol. Invalid information."
-
-
-class NewExperimentView(PermissionRequiredMixin, FormView):
-    """
-    Unique view for adding an experiment with inline addition of devices.
-    """
-
-    permission_required = "battDB.add_experiment"
-    model = Experiment
-    template_name = "create_experiment.html"
-    form_class = NewExperimentForm
-    success_url = "/battDB/new_experiment"
-    success_message = "New experiment created successfully."
-    failure_message = "Could not save new experiment. Invalid information."
-
-    def get_context_data(self, **kwargs):
-        """
-        Helper function to get correct context to pass to render() in get()
-        and post().
-        """
-        data = super(NewExperimentView, self).get_context_data(**kwargs)
-        if self.request.POST:
-            data["devices"] = ExperimentDeviceFormSet(self.request.POST)
-        else:
-            data["devices"] = ExperimentDeviceFormSet()
-        return data
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data()
-        form = self.form_class()
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        context = self.get_context_data()
-        devices = context["devices"]
-        if form.is_valid():
-            # Save experiment incluing setting user owner and status
-            with transaction.atomic():
-                obj = form.save(commit=False)
-                obj.user_owner = request.user
-                if form.is_public():
-                    obj.status = "public"
-                else:
-                    obj.status = "private"
-                self.object = form.save()
-            # Save individual devices from inline form
-            if devices.is_valid():
-                devices.instance = self.object
-                devices.save()
-            messages.success(request, self.success_message)
-            return redirect(self.success_url)
-        messages.error(request, self.failure_message)
-        return render(request, self.template_name, context)
 
 
 def index(request):
