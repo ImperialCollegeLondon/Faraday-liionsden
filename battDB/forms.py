@@ -62,6 +62,7 @@ class NewDeviceForm(DataCreateForm):
         self.fields["parameters"].required = False
         self.helper = FormHelper()
         self.helper.layout = Layout(
+            Div(HTML("<h1> New Device </h1>")),
             Div(
                 Column("name", css_class="col-6"),
                 Column("abstract", css_class="col-6"),
@@ -69,6 +70,7 @@ class NewDeviceForm(DataCreateForm):
                 Column("parent", css_class="col-6"),
                 Column("config", css_class="col-6"),
                 Column("spec_file", css_class="col-6"),
+                HTML("<hr>"),
                 Fieldset(
                     "Define parameters",
                     Div(
@@ -79,13 +81,14 @@ class NewDeviceForm(DataCreateForm):
                     ),
                     Formset("parameters"),
                 ),
+                HTML("<hr>"),
                 Field("notes"),
                 HTML("<br>"),
                 Field("make_public"),
                 HTML("<br>"),
                 ButtonHolder(Submit("submit", "save")),
-                css_class="row",
-            )
+                css_class="row align-items-end",
+            ),
         )
 
 
@@ -115,6 +118,7 @@ DeviceParameterFormSet = inlineformset_factory(
         "value": None,
         "material": "If this parameter pertains to a specific material, otherwise leave blank.",
     },
+    widgets={"value": forms.TextInput()},
 )
 
 
@@ -134,6 +138,7 @@ class NewExperimentForm(DataCreateForm):
         super(NewExperimentForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
+            Div(HTML("<h1> New Experiment </h1>")),
             Div(
                 Column("name", css_class="col-6"),
                 Column("date", css_class="col-6"),
@@ -145,7 +150,7 @@ class NewExperimentForm(DataCreateForm):
                 HTML("<br>"),
                 ButtonHolder(Submit("submit", "save")),
                 css_class="row",
-            )
+            ),
         )
 
 
@@ -182,6 +187,25 @@ class NewEquipmentForm(DataCreateForm):
         model = Equipment
         fields = ["name", "institution", "serialNo", "default_parser", "notes"]
 
+    def __init__(self, *args, **kwargs):
+        super(NewEquipmentForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Div(
+                Div(HTML("<h1> New Equipment </h1>")),
+                Column("name", css_class="col-6"),
+                Column("institution", css_class="col-6"),
+                Column("serialNo", css_class="col-6"),
+                Column("default_parser", css_class="col-6"),
+                Field("notes"),
+                HTML("<br>"),
+                Field("make_public"),
+                HTML("<br>"),
+                ButtonHolder(Submit("submit", "save")),
+                css_class="row",
+            )
+        )
+
 
 class NewBatchForm(DataCreateForm):
     """
@@ -199,6 +223,26 @@ class NewBatchForm(DataCreateForm):
             "serialNo",
             "notes",
         ]
+
+    def __init__(self, *args, **kwargs):
+        super(NewBatchForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Div(
+                Div(HTML("<h1> New Batch </h1>")),
+                Column("manufactured_on", css_class="col-6"),
+                Column("manufacturer", css_class="col-6"),
+                Column("batch_size", css_class="col-3"),
+                Column("serialNo", css_class="col-3"),
+                Column("specification", css_class="col-6"),
+                Field("notes"),
+                HTML("<br>"),
+                Field("make_public"),
+                HTML("<br>"),
+                ButtonHolder(Submit("submit", "save")),
+                css_class="row",
+            )
+        )
 
 
 class NewProtocolForm(DataCreateForm):
