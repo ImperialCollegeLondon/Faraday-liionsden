@@ -195,8 +195,9 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
     failure_message = "Could not save new protocol. Invalid information."
 
 
-class UpdateBatchView(UpdateView):
+class UpdateBatchView(PermissionRequiredMixin, UpdateView):
     model = Batch
+    permission_required = "battDB.change_batch"
     template_name = "create_edit_generic.html"
     form_class = NewBatchForm
     success_url = "/battDB/batches/"
