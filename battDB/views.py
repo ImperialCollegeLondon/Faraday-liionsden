@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView
 from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
 from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import CreateView, FormView, UpdateView
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
 from django_tables2.tables import Table
@@ -82,7 +82,6 @@ class NewDataView(FormView):
                 obj.status = "public"
             else:
                 obj.status = "private"
-
             obj.save()
             messages.success(request, self.success_message)
             return redirect(self.success_url)
@@ -194,6 +193,31 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
     success_url = "/battDB/new_protocol/"
     success_message = "New protocol created successfully."
     failure_message = "Could not save new protocol. Invalid information."
+
+
+class UpdateBatchView(UpdateView):
+    model = Batch
+    template_name = "create_edit_generic.html"
+    form_class = NewBatchForm
+    success_url = "/battDB/batches/"
+    success_message = "Batch updated successfully."
+    failure_message = "Could not update batch. Invalid information."
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        if form.is_valid():
+            obj = self.get_object()
+            # Do other stuff before saving here
+            # TODO think about logic for making public
+            if form.is_public():
+                obj.status = "public"
+            else:
+                obj.status = "private"
+            obj.save()
+            messages.success(request, self.success_message)
+            return redirect(self.success_url)
+        messages.error(request, self.failure_message)
+        return render(request, self.template_name, {"form": form})
 
 
 def index(request):
