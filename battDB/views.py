@@ -35,6 +35,7 @@ from .forms import (
 from .models import (
     Batch,
     DataRange,
+    DeviceParameter,
     DeviceSpecification,
     Equipment,
     Experiment,
@@ -217,6 +218,59 @@ class UpdateDataView(UpdateView):
         return render(request, self.template_name, {"form": form})
 
 
+class UpdateDataInlineView(UpdateView):
+    """
+    Template for view for updating entries that includes an inline
+    form for e.g. adding child objects, related objects etc.
+    """
+
+    success_message = "New data added successfully."
+    failure_message = "Cannot add data. Invalid information."
+    inline_key = None  # Key for which an inline form is needed
+    formset = None  # Formset specifying the fields in the inline form
+
+    def get_context_data(self, **kwargs):
+        """
+        Helper function to get correct context to pass to render() in get()
+        and post().
+        """
+        data = super(UpdateDataInlineView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data[self.inline_key] = self.formset(
+                self.request.POST, instance=self.object
+            )
+        else:
+            data[self.inline_key] = self.formset(instance=self.object)
+        return data
+
+    # def get(self, request, *args, **kwargs):
+    #    context = self.get_context_data()
+    #    return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        context = self.get_context_data()
+        parameters = context[self.inline_key]
+        if form.is_valid():
+            # Save experiment incluing setting user owner and status
+            with transaction.atomic():
+                if form.is_public():
+                    self.object.status = "public"
+                else:
+                    self.object.status = "private"
+                form.save()
+            # Save individual parameters from inline form
+            if parameters.is_valid():
+                parameters.instance = self.object
+                parameters.save()
+            messages.success(request, self.success_message)
+            return redirect(self.success_url)
+        messages.error(request, self.failure_message)
+        return render(request, self.template_name, context)
+
+
 class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
     model = Batch
     permission_required = "battDB.change_batch"
@@ -229,12 +283,24 @@ class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
 
 class UpdateEquipmentView(PermissionRequiredMixin, UpdateDataView):
     model = Equipment
-    permission_required = "battDB.change_batch"
+    permission_required = "battDB.change_equipment"
     template_name = "create_edit_generic.html"
     form_class = NewEquipmentForm
     success_url = "/battDB/equipment/"
     success_message = "Equipment updated successfully."
     failure_message = "Could not update Equipment. Invalid information."
+
+
+class UpdateDeviceView(PermissionRequiredMixin, UpdateDataInlineView):
+    model = DeviceSpecification
+    permission_required = "battDB.change_device"
+    template_name = "create_edit_generic.html"
+    form_class = NewDeviceForm
+    success_url = "/battDB/devices/"
+    success_message = "Device specification updated successfully."
+    failure_message = "Could not update Device specification. Invalid information."
+    inline_key = "parameters"
+    formset = DeviceParameterFormSet
 
 
 def index(request):
