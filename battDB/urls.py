@@ -15,6 +15,7 @@ from .views import (
     NewExperimentView,
     NewProtocolView,
     UpdateBatchView,
+    UpdateEquipmentView,
     index,
 )
 
@@ -29,6 +30,11 @@ urlpatterns = [
     path("batches/edit/<int:pk>/", UpdateBatchView.as_view(), name="Update Batch"),
     path("equipment/", EquipmentTableView.as_view(), name="Equipment list"),
     path("equipment/<int:pk>/", EquipmentView.as_view(), name="Equipment"),
+    path(
+        "equipment/edit/<int:pk>/",
+        UpdateEquipmentView.as_view(),
+        name="Update Equipment",
+    ),
     path("devices/", DeviceSpecificationTableView.as_view(), name="Devices"),
     path("devices/<int:pk>/", DeviceSpecificationView.as_view(), name="Device"),
     path("new_device/", NewDeviceView.as_view(), name="New Device"),

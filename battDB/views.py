@@ -227,6 +227,16 @@ class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
     failure_message = "Could not update batch. Invalid information."
 
 
+class UpdateEquipmentView(PermissionRequiredMixin, UpdateDataView):
+    model = Equipment
+    permission_required = "battDB.change_batch"
+    template_name = "create_edit_generic.html"
+    form_class = NewEquipmentForm
+    success_url = "/battDB/equipment/"
+    success_message = "Equipment updated successfully."
+    failure_message = "Could not update Equipment. Invalid information."
+
+
 def index(request):
     return redirect("/")
 
