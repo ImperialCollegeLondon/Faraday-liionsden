@@ -195,14 +195,9 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
     failure_message = "Could not save new protocol. Invalid information."
 
 
-class UpdateBatchView(PermissionRequiredMixin, UpdateView):
-    model = Batch
-    permission_required = "battDB.change_batch"
-    template_name = "create_edit_generic.html"
-    form_class = NewBatchForm
-    success_url = "/battDB/batches/"
-    success_message = "Batch updated successfully."
-    failure_message = "Could not update batch. Invalid information."
+class UpdateDataView(UpdateView):
+    success_message = "Entry updated successfully."
+    failure_message = "Could not update entry. Invalid information."
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -217,9 +212,19 @@ class UpdateBatchView(PermissionRequiredMixin, UpdateView):
                 self.object.status = "private"
             form.save()
             messages.success(request, self.success_message)
-            return redirect(self.success_url)
+            return redirect(self.get_success_url())
         messages.error(request, self.failure_message)
         return render(request, self.template_name, {"form": form})
+
+
+class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
+    model = Batch
+    permission_required = "battDB.change_batch"
+    template_name = "create_edit_generic.html"
+    form_class = NewBatchForm
+    success_url = "/battDB/batches/"
+    success_message = "Batch updated successfully."
+    failure_message = "Could not update batch. Invalid information."
 
 
 def index(request):
