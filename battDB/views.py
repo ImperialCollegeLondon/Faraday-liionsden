@@ -205,16 +205,17 @@ class UpdateBatchView(PermissionRequiredMixin, UpdateView):
     failure_message = "Could not update batch. Invalid information."
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST, request.FILES)
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
         if form.is_valid():
-            obj = self.get_object()
             # Do other stuff before saving here
             # TODO think about logic for making public
             if form.is_public():
-                obj.status = "public"
+                self.object.status = "public"
             else:
-                obj.status = "private"
-            obj.save()
+                self.object.status = "private"
+            form.save()
             messages.success(request, self.success_message)
             return redirect(self.success_url)
         messages.error(request, self.failure_message)
