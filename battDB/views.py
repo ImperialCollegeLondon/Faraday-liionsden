@@ -204,14 +204,15 @@ class UpdateDataView(UpdateView):
         self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
+        # form.instance.user_owner is correct !!
         if form.is_valid():
+            # self.object.user_owner is correct !!
             # Do other stuff before saving here
-            # TODO think about logic for making public
             if form.is_public():
                 self.object.status = "public"
             else:
                 self.object.status = "private"
-            form.save()
+            self.object.save()
             messages.success(request, self.success_message)
             return redirect(self.get_success_url())
         messages.error(request, self.failure_message)
@@ -239,28 +240,29 @@ class UpdateDataInlineView(UpdateView):
             data[self.inline_key] = self.formset(
                 self.request.POST, instance=self.object
             )
+            # data['object'].user_owner is correct !!
         else:
             data[self.inline_key] = self.formset(instance=self.object)
-        return data
 
-    # def get(self, request, *args, **kwargs):
-    #    context = self.get_context_data()
-    #    return render(request, self.template_name, context)
+        return data
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         context = self.get_context_data()
+        # form.instance.user_owner is None !!
+        # self.object.user_owner is correct !!
         parameters = context[self.inline_key]
         if form.is_valid():
+            # self.object.user_owner is None !!
             # Save experiment incluing setting user owner and status
             with transaction.atomic():
                 if form.is_public():
                     self.object.status = "public"
                 else:
                     self.object.status = "private"
-                form.save()
+                self.object.save()
             # Save individual parameters from inline form
             if parameters.is_valid():
                 parameters.instance = self.object
