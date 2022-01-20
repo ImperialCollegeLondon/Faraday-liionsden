@@ -138,7 +138,7 @@ class NewExperimentForm(DataCreateForm):
 
     class Meta:
         model = Experiment
-        exclude = ["status"]
+        fields = ["name", "date", "config", "notes"]
         help_texts = {
             "config": "All devices must be of the same config, e.g. Single cell."
         }
