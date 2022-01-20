@@ -305,6 +305,18 @@ class UpdateDeviceView(PermissionRequiredMixin, UpdateDataInlineView):
     formset = DeviceParameterFormSet
 
 
+class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
+    model = Experiment
+    permission_required = "battDB.change_experiment"
+    template_name = "create_edit_generic.html"
+    form_class = NewExperimentForm
+    success_url = "/battDB/exps/"
+    success_message = "Experiment updated successfully."
+    failure_message = "Could not update experiment. Invalid information."
+    inline_key = "devices"
+    formset = ExperimentDeviceFormSet
+
+
 def index(request):
     return redirect("/")
 

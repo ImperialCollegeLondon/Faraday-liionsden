@@ -80,7 +80,7 @@
   {% get_obj_perms request.user for object as "object_perms" %}
   {% if "change_experiment" in object_perms %}
     </div>
-      <a href="/battDB/experiments/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
+      <a href="/battDB/exps/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
     </div>
   {% endif %}
 
