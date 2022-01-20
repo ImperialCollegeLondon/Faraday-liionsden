@@ -50,7 +50,16 @@ class NewDeviceForm(DataCreateForm):
 
     class Meta:
         model = DeviceSpecification
-        exclude = ["status"]
+        fields = [
+            "name",
+            "abstract",
+            "device_type",
+            "parent",
+            "config",
+            "spec_file",
+            "notes",
+            "parameters",
+        ]
         help_texts = {
             "abstract": 'This is a new device type e.g. "Cell".',
             "device_type": "Must select if not specifying a new device type.",
