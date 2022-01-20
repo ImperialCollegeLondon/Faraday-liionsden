@@ -4,6 +4,7 @@
 {% load render_table from django_tables2 %}
 {% load export_url from django_tables2 %}
 {% load bootstrap5 %}
+{% load guardian_tags %}
 
 {% block content %}
 
@@ -75,6 +76,14 @@
     {#  </ul>#}
   
   </div>
+
+  {% get_obj_perms request.user for object as "object_perms" %}
+  {% if "change_experiment" in object_perms %}
+    </div>
+      <a href="/battDB/experiments/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
+    </div>
+  {% endif %}
+
 </div>
 
 

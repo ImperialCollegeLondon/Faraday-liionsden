@@ -5,6 +5,7 @@
 {% load export_url from django_tables2 %}
 {% load bootstrap5 %}
 {% load mptt_tags %}
+{% load guardian_tags %}
 
 {% block content %}
 
@@ -71,9 +72,12 @@
     </table>
   </div>
 
-</div>
-  <a href="/battDB/batches/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
-</div>
+  {% get_obj_perms request.user for object as "object_perms" %}
+  {% if "change_batch" in object_perms %}
+    </div>
+    <a href="/battDB/batches/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
+  </div>
+  {% endif %}
 
 </div>
 
