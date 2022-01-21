@@ -13,7 +13,6 @@
 <div class = "container py-2">
     {% if filter %}
         <form action="" method="get" class="form form-inline" bound_css_class=''>
-            {% csrf_token %}
             <div class="row align-items-end">
                 <div class="col-3">
                     {% bootstrap_field filter.form.id layout='vertical' bound_css_class='' %}
