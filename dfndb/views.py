@@ -5,7 +5,7 @@ from rest_framework.generics import ListCreateAPIView
 
 from common.views import NewDataView, NewDataViewInline
 
-from .forms import NewCompoundForm
+from .forms import CompositionPartFormSet, NewCompoundForm, NewMaterialForm
 from .models import Data, Parameter
 from .serializers import ParameterSerializer
 
@@ -17,6 +17,17 @@ class NewCompoundView(PermissionRequiredMixin, NewDataView):
     success_url = "/dfndb/new_compound/"
     success_message = "New compound created successfully."
     failure_message = "Could not save new compound. Invalid information."
+
+
+class NewMaterialView(PermissionRequiredMixin, NewDataViewInline):
+    permission_required = "dfndb.add_material"
+    template_name = "create_edit_generic.html"
+    form_class = NewMaterialForm
+    success_url = "/dfndb/new_material/"
+    success_message = "New material created successfully."
+    failure_message = "Could not save new material. Invalid information."
+    inline_key = "composition"
+    formset = CompositionPartFormSet
 
 
 class DataListView(ListView):
