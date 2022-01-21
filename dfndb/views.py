@@ -1,15 +1,21 @@
 from django.urls import reverse_lazy
 from django.views.generic import ListView
+from django_filters.views import FilterView
+from django_tables2 import SingleTableMixin
+from django_tables2.export.views import ExportMixin
 from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
 from rest_framework.generics import ListCreateAPIView
 
 from common.views import NewDataView, NewDataViewInline
 
+from .filters import CompoundFilter
 from .forms import CompositionPartFormSet, NewCompoundForm, NewMaterialForm
-from .models import Data, Parameter
+from .models import Compound, Data, Parameter
 from .serializers import ParameterSerializer
+from .tables import CompoundTable
 
 
+### CREATE/ADD VIEWS ###
 class NewCompoundView(PermissionRequiredMixin, NewDataView):
     permission_required = "dfndb.add_compound"
     template_name = "create_edit_generic.html"
@@ -28,6 +34,16 @@ class NewMaterialView(PermissionRequiredMixin, NewDataViewInline):
     failure_message = "Could not save new material. Invalid information."
     inline_key = "composition"
     formset = CompositionPartFormSet
+
+
+### SEARCH/LIST/TABLE VIEWS ###
+class CompoundTableView(SingleTableMixin, ExportMixin, PermissionListMixin, FilterView):
+    model = Compound
+    table_class = CompoundTable
+    template_name = "compounds_table.html"
+    filterset_class = CompoundFilter
+    export_formats = ["csv", "json"]
+    permission_required = "dfndb.view_compound"
 
 
 class DataListView(ListView):
