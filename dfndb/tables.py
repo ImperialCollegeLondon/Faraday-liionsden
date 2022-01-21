@@ -13,7 +13,8 @@ class CompoundTable(tables.Table):
 
 
 class MaterialTable(tables.Table):
-    # id = tables.Column(linkify=True)
+    id = tables.Column(linkify=True)
+
     class Meta:
         model = Material
         template_name = "django_tables2/bootstrap4.html"

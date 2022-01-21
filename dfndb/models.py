@@ -2,6 +2,7 @@ import numpy as np
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Sum
+from django.urls import reverse
 from django_better_admin_arrayfield.models.fields import ArrayField
 
 import common.models as cm
@@ -55,6 +56,9 @@ class Material(cm.BaseModel):
 
     def __str__(self):
         return self.name or ""
+
+    def get_absolute_url(self):
+        return reverse("dfndb:Material", kwargs={"pk": self.pk})
 
 
 class CompositionPart(models.Model):
