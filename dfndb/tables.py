@@ -10,3 +10,11 @@ class CompoundTable(tables.Table):
         model = Compound
         template_name = "django_tables2/bootstrap4.html"
         fields = ("id", "name", "formula", "mass")
+
+
+class MaterialTable(tables.Table):
+    # id = tables.Column(linkify=True)
+    class Meta:
+        model = Material
+        template_name = "django_tables2/bootstrap4.html"
+        fields = ("id", "name", "composition", "type")

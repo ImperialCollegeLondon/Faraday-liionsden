@@ -8,11 +8,11 @@ from rest_framework.generics import ListCreateAPIView
 
 from common.views import NewDataView, NewDataViewInline
 
-from .filters import CompoundFilter
+from .filters import CompoundFilter, MaterialFilter
 from .forms import CompositionPartFormSet, NewCompoundForm, NewMaterialForm
-from .models import Compound, Data, Parameter
+from .models import Compound, Data, Material, Parameter
 from .serializers import ParameterSerializer
-from .tables import CompoundTable
+from .tables import CompoundTable, MaterialTable
 
 
 ### CREATE/ADD VIEWS ###
@@ -44,6 +44,15 @@ class CompoundTableView(SingleTableMixin, ExportMixin, PermissionListMixin, Filt
     filterset_class = CompoundFilter
     export_formats = ["csv", "json"]
     permission_required = "dfndb.view_compound"
+
+
+class MaterialTableView(SingleTableMixin, ExportMixin, PermissionListMixin, FilterView):
+    model = Material
+    table_class = MaterialTable
+    template_name = "materials_table.html"
+    filterset_class = MaterialFilter
+    export_formats = ["csv", "json"]
+    permission_required = "dfndb.view_material"
 
 
 class DataListView(ListView):
