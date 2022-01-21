@@ -19,3 +19,5 @@ class MaterialTable(tables.Table):
         model = Material
         template_name = "django_tables2/bootstrap4.html"
         fields = ("id", "name", "composition", "type")
+
+        row_attrs = {"status": lambda record: record.status}

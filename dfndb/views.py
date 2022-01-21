@@ -6,7 +6,12 @@ from django_tables2.export.views import ExportMixin
 from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
 from rest_framework.generics import ListCreateAPIView
 
-from common.views import NewDataView, NewDataViewInline
+from common.views import (
+    NewDataView,
+    NewDataViewInline,
+    UpdateDataInlineView,
+    UpdateDataView,
+)
 
 from .filters import CompoundFilter, MaterialFilter
 from .forms import CompositionPartFormSet, NewCompoundForm, NewMaterialForm
@@ -59,6 +64,18 @@ class MaterialView(PermissionRequiredMixin, DetailView):
     model = Material
     template_name = "material.html"
     permission_required = "dfndb.view_material"
+
+
+class UpdateMaterialView(PermissionRequiredMixin, UpdateDataInlineView):
+    model = Material
+    permission_required = "dfndb.change_material"
+    template_name = "create_edit_generic.html"
+    form_class = NewMaterialForm
+    success_url = "/dfndb/materials/"
+    sucess_message = "Material updated successfully."
+    failure_message = "Could not update material. Invalid information."
+    inline_key = "composition"
+    formset = CompositionPartFormSet
 
 
 class DataListView(ListView):
