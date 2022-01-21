@@ -1,3 +1,4 @@
+import numpy as np
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import Sum
@@ -69,7 +70,7 @@ class CompositionPart(models.Model):
         total = CompositionPart.objects.filter(material=self.material).aggregate(
             Sum("amount")
         )["amount__sum"]
-        return float(self.amount or 0) * 100 / total
+        return np.round((float(self.amount or 0) * 100 / total), decimals=2)
 
     def percentage(self):
         return "%3.03f%%" % self.get_percentage()

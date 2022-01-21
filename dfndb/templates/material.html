@@ -1,4 +1,3 @@
-<!-- equipment.html -->
 {% extends 'header.html' %}
 {% load tag_allfields %}
 {% load render_table from django_tables2 %}
@@ -13,40 +12,40 @@
 
   <table width="100%">
     <tr>
-      <td style="text-align:left" ><h4> {{ object.institution }} </h4></td>
       <td style="text-align:center" ><h4> {{ object.name }} </h4></td>
-      <td style="text-align:right" ><h4> {{ object.SerialNo }} </h4></td>
     </tr>
     </table>
 </div>
 
 <div class="card border-dark mb-3" style="max-width: 100%;">
-  <div class="card-header"><h5>Equipment details</h5></div>
+  <div class="card-header"><h5>Material details</h5></div>
   <div class="card-body">
-    <b>Serial Number</b> 
+    <b>Type</b> 
     <br>
-    {{ object.serialNo }}
+    {{ object.get_type_display }}
     <br><br>
-    <b>Default parser</b> 
+    {% if object.polymer > 0 %}
+    <b>Degree of polymerisation</b> 
     <br>
-    {{ object.default_parser }}
+    {{ object.polymer }}
     <br><br>
-    <b>Used in experiments</b>
+    {% endif %}
+    <b>Composition</b>
     <br>    
     <table class="table">
       <thead class= "thead-light">
         <tr>
-          <th scope="col">Experiment ID</th>
-          <th scope="col"> Experiment name</th>
-          <th scope="col"> Date</th>
+          <th scope="col"> Compound </th>
+          <th scope="col"> Amount </th>
+          <th scope="col"> Percentage </th>
         </tr>
       </thead>
       <tbody>
-      {% for edf in object.experimentdatafile_set.all %}
+      {% for cp in object.compositionpart_set.all %}
         <tr>
-          <td ><a href="{{ edf.experiment.get_absolute_url }}">{{ edf.experiment.id }}</a></td>
-          <td ><a href="{{ edf.experiment.get_absolute_url }}">{{ edf.experiment.name }}</a></td>
-          <td>{{ edf.experiment.date }}</td>
+          <td>{{ cp.compound }}</td>
+          <td>{{ cp.amount }}</td>
+          <td>{{ cp.get_percentage }}</td>
         </tr>
       {% endfor %}
     </tbody>
@@ -65,9 +64,9 @@
   </div>
 
   {% get_obj_perms request.user for object as "object_perms" %}
-  {% if "change_equipment" in object_perms %}
+  {% if "change_material" in object_perms %}
     </div>
-      <a href="/battDB/equipment/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
+      <a href="/dfndb/materials/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
     </div>
   {% endif %}
 

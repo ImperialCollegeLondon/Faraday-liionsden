@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView
+from django.views.generic import DetailView, ListView
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
 from django_tables2.export.views import ExportMixin
@@ -36,7 +36,7 @@ class NewMaterialView(PermissionRequiredMixin, NewDataViewInline):
     formset = CompositionPartFormSet
 
 
-### SEARCH/LIST/TABLE VIEWS ###
+### DETAIL/LIST/TABLE VIEWS ###
 class CompoundTableView(SingleTableMixin, ExportMixin, PermissionListMixin, FilterView):
     model = Compound
     table_class = CompoundTable
@@ -52,6 +52,12 @@ class MaterialTableView(SingleTableMixin, ExportMixin, PermissionListMixin, Filt
     template_name = "materials_table.html"
     filterset_class = MaterialFilter
     export_formats = ["csv", "json"]
+    permission_required = "dfndb.view_material"
+
+
+class MaterialView(PermissionRequiredMixin, DetailView):
+    model = Material
+    template_name = "material.html"
     permission_required = "dfndb.view_material"
 
 

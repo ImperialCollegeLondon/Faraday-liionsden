@@ -161,7 +161,7 @@ class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
     formset = ExperimentDeviceFormSet
 
 
-### SEARCH/LIST/TABLE VIEWS ###
+### DETAIL/LIST/TABLE VIEWS ###
 class ExperimentTableView(
     SingleTableMixin, ExportMixin, PermissionListMixin, FilterView
 ):
