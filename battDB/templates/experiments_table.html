@@ -59,4 +59,10 @@
     {% endfor %}
 </div>
 
+{% if not user.is_authenticated %}
+    <div class = "container py-2">
+    <p class="text-center">Not seeing everything you expect? <a href="/accounts/login/">Login</a> to access your private entries.</p>
+    </div>
+{% endif %}
+
 {% endblock %}
