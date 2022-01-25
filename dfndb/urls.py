@@ -6,6 +6,7 @@ from .views import (
     MaterialView,
     NewCompoundView,
     NewMaterialView,
+    UpdateCompoundView,
     UpdateMaterialView,
 )
 
@@ -14,6 +15,9 @@ app_name = "dfndb"
 urlpatterns = [
     path("new_compound/", NewCompoundView.as_view(), name="New Compound"),
     path("compounds/", CompoundTableView.as_view(), name="Compounds"),
+    path(
+        "compounds/edit/<int:pk>/", UpdateCompoundView.as_view(), name="Update Compound"
+    ),
     path("materials/", MaterialTableView.as_view(), name="Materials"),
     path("materials/<int:pk>/", MaterialView.as_view(), name="Material"),
     path("new_material/", NewMaterialView.as_view(), name="New Material"),

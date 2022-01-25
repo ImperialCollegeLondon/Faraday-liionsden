@@ -78,6 +78,18 @@ class UpdateMaterialView(PermissionRequiredMixin, UpdateDataInlineView):
     formset = CompositionPartFormSet
 
 
+class UpdateCompoundView(PermissionRequiredMixin, UpdateDataView):
+    model = Compound
+    permission_required = "dfndb.change_compound"
+    template_name = "create_edit_generic.html"
+    form_class = NewCompoundForm
+    success_url = "/dfndb/compounds/"
+    sucess_message = "Compound updated successfully."
+    failure_message = "Could not update compound. Invalid information."
+    inline_key = "composition"
+    formset = CompositionPartFormSet
+
+
 class DataListView(ListView):
     """View of available data.
 

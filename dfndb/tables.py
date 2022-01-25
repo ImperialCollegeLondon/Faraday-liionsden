@@ -4,7 +4,7 @@ from .models import Compound, Material
 
 
 class CompoundTable(tables.Table):
-    # id = tables.Column(linkify=True)
+    id = tables.Column(linkify=("dfndb:Update Compound", [tables.A("pk")]))
 
     class Meta:
         model = Compound
