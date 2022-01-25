@@ -64,7 +64,12 @@
     <table width="50%">
       <tr><td><b>Owner:</b></td><td>{{ object.user_owner }} </td></tr>
       <tr><td><b>Data files count:</b></td><td>{{ object.data_files.count }} </td></tr>
+      <tr><td><b>Created:</b></td><td>{{ object.created_on }} </td></tr>
+      <tr><td><b>Modified:</b></td><td>{{ object.modified_on }} </td></tr>
+      <tr><td><b>ID:</b></td><td>{{ object.id }} </td></tr>
+      <tr><td><b>Status:</b></td><td>{{ object.status }} </td></tr>
       <tr><td><b>Notes:</b></td><td>{{ object.notes }} </td></tr>
+      <tr><td><b>Attributes:</b></td><td>{{ object.attributes }} </td></tr>
     </table>
   
     {#  <h5>Data files:</h5>#}
