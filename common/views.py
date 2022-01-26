@@ -29,7 +29,7 @@ class NewDataView(FormView):
             obj.save()
             messages.success(request, self.success_message)
             return redirect(self.success_url)
-        messages.error(request, form.errors)
+        messages.error(request, self.failure_message)
         return render(request, self.template_name, {"form": form})
 
 
