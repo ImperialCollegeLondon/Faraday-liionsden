@@ -1,106 +1,216 @@
-from django.test import Client, TestCase
+from datetime import datetime
+
+from django.contrib.auth.models import Group
+from django.test import TestCase
 from django.urls import reverse
 from model_bakery import baker
 
-from battDB.models import Equipment
+import battDB.models as bdb
 
 
-class EquipmentUpdateTest(TestCase):
+class CreateDeviceSpecificationTest(TestCase):
     def setUp(self):
         self.user = baker.make_recipe(
             "tests.management.user",
-            username="super",
-            is_superuser=True,
+            username="test_contributor",
         )
-        self.user.set_password("superpass")
+        self.user.is_active = True
+        self.user.set_password("contribpass")
         self.user.save()
+        group = Group.objects.get(name="Contributor")
+        group.user_set.add(self.user)
 
-        self.model = baker.make_recipe(
-            "tests.battDB.equipment", name="My Cycler", user_owner=self.user
-        )
-
-    def test_owner(self):
-        self.assertEqual(self.model.user_owner.username, self.user.username)
-
-    def test_user(self):
-        self.assertEqual(self.user.username, "super")
-        self.assertTrue(self.user.is_superuser)
-
-    def test_update_equipment(self):
-        # Check login OK
+    def test_can_see_parameter_formset(self):
         login_response = self.client.post(
-            "/accounts/login/", {"username": "super", "password": "superpass"}
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contribpass"},
         )
         self.assertEqual(login_response.status_code, 302)
         self.assertEqual(login_response.url, "/")
 
-        # Check initial model name
-        self.assertEqual(self.model.name, "My Cycler")
+        response = self.client.get(reverse("battDB:New Device"))
+        self.assertContains(
+            response,
+            '<select name="deviceparameter_set-0-parameter" class="select form-select" id="id_deviceparameter_set-0-parameter">',
+        )
+        self.assertContains(
+            response,
+            '<input type="text" name="deviceparameter_set-0-value" value="null" class="textinput textInput form-control" id="id_deviceparameter_set-0-value">',
+        )
+        self.assertContains(
+            response,
+            '<select name="deviceparameter_set-0-material" class="select form-select" id="id_deviceparameter_set-0-material">',
+        )
 
-        # Change name and check again
+    def test_create_update_devices(self):
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contribpass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        # Create new abstract device spec.
+        abstract_response = self.client.post(
+            reverse("battDB:New Device"),
+            {
+                "name": "Abstract device",
+                "abstract": True,
+            },
+        )
+        self.assertEqual(abstract_response.status_code, 302)
+        self.assertEqual(abstract_response.url, "/battDB/new_device/")
+        abstract_device = bdb.DeviceSpecification.objects.get(name="Abstract device")
+        self.assertTrue(abstract_device.abstract)
+        self.assertEqual(abstract_device.status, "private")
+
+        # Create new device spec.
         response = self.client.post(
-            reverse("battDB:Update Equipment", kwargs={"pk": self.model.id}),
+            reverse("battDB:New Device"),
+            {
+                "name": "Actual device",
+                "abstract": False,
+                "device_type": abstract_device.id,
+                "notes": "Some notes",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/battDB/new_device/")
+        device = bdb.DeviceSpecification.objects.get(name="Actual device")
+        self.assertFalse(device.abstract)
+        self.assertEqual(device.user_owner.username, "test_contributor")
+        self.assertEqual(device.status, "private")
+
+        # Update device spec.
+        update_response = self.client.post(
+            reverse("battDB:Update Device", kwargs={"pk": device.id}),
+            {
+                "name": "Actual device",
+                "abstract": False,
+                "make_public": True,
+                "device_type": abstract_device.id,
+                "notes": "Some other notes",
+            },
+        )
+        self.assertEqual(update_response.status_code, 302)
+        self.assertEqual(update_response.url, "/battDB/devices/")
+
+        device.refresh_from_db()
+        self.assertEqual(device.status, "public")
+        self.assertEqual(device.notes, "Some other notes")
+
+
+class CreateEquipmentTest(TestCase):
+    def setUp(self):
+        self.user = baker.make_recipe(
+            "tests.management.user",
+            username="test_contributor",
+        )
+        self.user.is_active = True
+        self.user.set_password("contribpass")
+        self.user.save()
+        group = Group.objects.get(name="Contributor")
+        group.user_set.add(self.user)
+
+        self.institution = baker.make_recipe("tests.common.org")
+
+    def test_create_update_equipment(self):
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contribpass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        # Create new equipment
+        response = self.client.post(
+            reverse("battDB:New Equipment"),
+            {
+                "name": "A cycler",
+                "institution": self.institution.id,
+                "serialNo": "abc-123",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/battDB/new_equipment/")
+        equipment = bdb.Equipment.objects.get(name="A cycler")
+        self.assertEqual(equipment.user_owner.username, "test_contributor")
+        self.assertEqual(equipment.status, "private")
+        self.assertEqual(equipment.serialNo, "abc-123")
+
+        # Update equipment
+        update_response = self.client.post(
+            reverse("battDB:Update Equipment", kwargs={"pk": equipment.id}),
             {
                 "name": "A different cycler",
-                "institution": self.model.institution.id,
-                "serialNo": self.model.serialNo,
+                "institution": self.institution.id,
+                "serialNo": equipment.serialNo,
             },
         )
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "/battDB/equipment/")
+        self.assertEqual(update_response.status_code, 302)
+        self.assertEqual(update_response.url, "/battDB/equipment/")
 
-        self.model.refresh_from_db()
-        self.assertEqual(self.model.name, "A different cycler")
+        equipment.refresh_from_db()
+        self.assertEqual(equipment.name, "A different cycler")
 
 
-class DeviceSpecificationUpdateTest(TestCase):
+class CreateBatchTest(TestCase):
     def setUp(self):
         self.user = baker.make_recipe(
             "tests.management.user",
-            username="super",
-            is_superuser=True,
+            username="test_contributor",
         )
-        self.user.set_password("superpass")
+        self.user.is_active = True
+        self.user.set_password("contribpass")
         self.user.save()
+        group = Group.objects.get(name="Contributor")
+        group.user_set.add(self.user)
 
-        self.model_abstract = baker.make_recipe(
-            "tests.battDB.device_specification", abstract=True
-        )
-        self.model = baker.make_recipe(
-            "tests.battDB.device_specification",
-            name="Test spec",
-            user_owner=self.user,
-            device_type=self.model_abstract,
+        self.institution = baker.make_recipe("tests.common.org")
+        self.specification = baker.make_recipe(
+            "tests.battDB.device_specification", abstract=False
         )
 
-    def test_owner(self):
-        self.assertEqual(self.model.user_owner.username, self.user.username)
-
-    def test_user(self):
-        self.assertEqual(self.user.username, "super")
-        self.assertTrue(self.user.is_superuser)
-
-    def test_update_device_specification(self):
-        # Check login OK
+    def test_create_update_batch(self):
         login_response = self.client.post(
-            "/accounts/login/", {"username": "super", "password": "superpass"}
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contribpass"},
         )
         self.assertEqual(login_response.status_code, 302)
         self.assertEqual(login_response.url, "/")
 
-        # Check initial model name
-        self.assertEqual(self.model.name, "Test spec")
-
-        # Change name and check again
+        # Create new batch
         response = self.client.post(
-            reverse("battDB:Update Device", kwargs={"pk": self.model.id}),
+            reverse("battDB:New Batch"),
             {
-                "name": "A different device spec",
-                "device_type": self.model_abstract.id,
+                "manufactured_on": "01/01/2022",
+                "manufacturer": self.institution.id,
+                "batch_size": 10,
+                "serialNo": "abc-123",
+                "specification": self.specification.id,
             },
         )
+        print(response.content)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "/battDB/devices/")
+        self.assertEqual(response.url, "/battDB/new_batch/")
+        batch = bdb.Batch.objects.get(serialNo="abc-123")
+        self.assertEqual(batch.user_owner.username, "test_contributor")
+        self.assertEqual(batch.status, "private")
+        self.assertEqual(batch.serialNo, "abc-123")
 
-        self.model.refresh_from_db()
-        self.assertEqual(self.model.name, "A different device spec")
+        # Update batch
+        update_response = self.client.post(
+            reverse("battDB:Update Batch", kwargs={"pk": batch.id}),
+            {
+                "manufactured_on": "01/01/2022",
+                "manufacturer": self.institution.id,
+                "batch_size": 10,
+                "serialNo": "abc-123456",
+                "specification": self.specification.id,
+            },
+        )
+        self.assertEqual(update_response.status_code, 302)
+        self.assertEqual(update_response.url, "/battDB/batches/")
+
+        batch.refresh_from_db()
+        self.assertEqual(batch.serialNo, "abc-123456")

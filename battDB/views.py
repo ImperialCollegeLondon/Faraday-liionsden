@@ -139,7 +139,7 @@ class UpdateEquipmentView(PermissionRequiredMixin, UpdateDataView):
 
 class UpdateDeviceView(PermissionRequiredMixin, UpdateDataInlineView):
     model = DeviceSpecification
-    permission_required = "battDB.change_device"
+    permission_required = "battDB.change_devicespecification"
     template_name = "create_edit_generic.html"
     form_class = NewDeviceForm
     success_url = "/battDB/devices/"
