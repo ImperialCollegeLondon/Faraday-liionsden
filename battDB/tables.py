@@ -1,6 +1,6 @@
 import django_tables2 as tables
 
-from .models import Batch, DeviceSpecification, Experiment, ExperimentDevice
+from .models import Batch, DeviceSpecification, Equipment, Experiment, ExperimentDevice
 
 
 class ExperimentTable(tables.Table):
@@ -63,7 +63,7 @@ class EquipmentTable(tables.Table):
     id = tables.Column(linkify=True)
 
     class Meta:
-        model = DeviceSpecification
+        model = Equipment
         template_name = "django_tables2/bootstrap4.html"
         fields = (
             "id",

@@ -190,7 +190,6 @@ class CreateBatchTest(TestCase):
                 "specification": self.specification.id,
             },
         )
-        print(response.content)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, "/battDB/new_batch/")
         batch = bdb.Batch.objects.get(serialNo="abc-123")
@@ -214,3 +213,219 @@ class CreateBatchTest(TestCase):
 
         batch.refresh_from_db()
         self.assertEqual(batch.serialNo, "abc-123456")
+
+
+class ExperimentViewTest(TestCase):
+    def setUp(self):
+        self.user = baker.make_recipe(
+            "tests.management.user",
+            username="test_readonly",
+        )
+        self.user.is_active = True
+        self.user.set_password("readonlypass")
+        self.user.save()
+        group = Group.objects.get(name="Read only")
+        group.user_set.add(self.user)
+
+        self.experiment = baker.make_recipe(
+            "tests.battDB.experiment", name="test experiment", status="public"
+        )
+
+    def test_table_view(self):
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_readonly", "password": "readonlypass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        response = self.client.get(reverse("battDB:Experiments"))
+        self.assertContains(response, "<td >test experiment</td>")
+
+    def test_detail_view(self):
+        # check redirect without login
+        response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertEqual(
+            response.url,
+            "/accounts/login/?next=/battDB/exps/{}/".format(self.experiment.id),
+        )
+
+        # login
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_readonly", "password": "readonlypass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        # check can view
+        response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(
+            response, '<td style="text-align:center" ><h4> test experiment </h4></td>'
+        )
+
+
+class DeviceSpecificationViewTest(TestCase):
+    def setUp(self):
+        self.user = baker.make_recipe(
+            "tests.management.user",
+            username="test_readonly",
+        )
+        self.user.is_active = True
+        self.user.set_password("readonlypass")
+        self.user.save()
+        group = Group.objects.get(name="Read only")
+        group.user_set.add(self.user)
+
+        self.device = baker.make_recipe(
+            "tests.battDB.device_specification", name="test cell", status="public"
+        )
+
+    def test_table_view(self):
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_readonly", "password": "readonlypass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        response = self.client.get(reverse("battDB:Devices"))
+        self.assertContains(response, "<td >test cell</td>")
+
+    def test_detail_view(self):
+        # check redirect without login
+        response = self.client.get(
+            reverse("battDB:Device", kwargs={"pk": self.device.id})
+        )
+        self.assertEqual(
+            response.url,
+            "/accounts/login/?next=/battDB/devices/{}/".format(self.device.id),
+        )
+
+        # login
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_readonly", "password": "readonlypass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        # check can view
+        response = self.client.get(
+            reverse("battDB:Device", kwargs={"pk": self.device.id})
+        )
+        self.assertContains(
+            response, '<td style="text-align:center" ><h4> test cell </h4></td>'
+        )
+
+
+class EquipmentViewTest(TestCase):
+    def setUp(self):
+        self.user = baker.make_recipe(
+            "tests.management.user",
+            username="test_readonly",
+        )
+        self.user.is_active = True
+        self.user.set_password("readonlypass")
+        self.user.save()
+        group = Group.objects.get(name="Read only")
+        group.user_set.add(self.user)
+
+        self.equipment = baker.make_recipe(
+            "tests.battDB.equipment", name="test cycler", status="public"
+        )
+
+    def test_table_view(self):
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_readonly", "password": "readonlypass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        response = self.client.get(reverse("battDB:Equipment list"))
+        self.assertContains(response, "<td >test cycler</td>")
+
+    def test_detail_view(self):
+        # check redirect without login
+        response = self.client.get(
+            reverse("battDB:Equipment", kwargs={"pk": self.equipment.id})
+        )
+        self.assertEqual(
+            response.url,
+            "/accounts/login/?next=/battDB/equipment/{}/".format(self.equipment.id),
+        )
+
+        # login
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_readonly", "password": "readonlypass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        # check can view
+        response = self.client.get(
+            reverse("battDB:Equipment", kwargs={"pk": self.equipment.id})
+        )
+        self.assertContains(
+            response, '<td style="text-align:center" ><h4> test cycler </h4></td>'
+        )
+
+
+class BatchViewTest(TestCase):
+    def setUp(self):
+        self.user = baker.make_recipe(
+            "tests.management.user",
+            username="test_readonly",
+        )
+        self.user.is_active = True
+        self.user.set_password("readonlypass")
+        self.user.save()
+        group = Group.objects.get(name="Read only")
+        group.user_set.add(self.user)
+
+        self.batch = baker.make_recipe(
+            "tests.battDB.batch", serialNo="test-batch", status="public"
+        )
+
+    def test_table_view(self):
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_readonly", "password": "readonlypass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        response = self.client.get(reverse("battDB:Batches"))
+        self.assertContains(response, "<td >test-batch</td>")
+
+    def test_detail_view(self):
+        # check redirect without login
+        response = self.client.get(
+            reverse("battDB:Batch", kwargs={"pk": self.batch.id})
+        )
+        self.assertEqual(
+            response.url,
+            "/accounts/login/?next=/battDB/batches/{}/".format(self.batch.id),
+        )
+
+        # login
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_readonly", "password": "readonlypass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        # check can view
+        response = self.client.get(
+            reverse("battDB:Batch", kwargs={"pk": self.batch.id})
+        )
+        self.assertContains(
+            response, '<td style="text-align:center" ><h4> test-batch </h4></td>'
+        )
