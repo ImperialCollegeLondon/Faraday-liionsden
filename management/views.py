@@ -34,7 +34,7 @@ def login_request(request, backend=backend):
             if user is not None:
                 login(request, user, backend=backend)
                 messages.info(request, f"You are now logged in as {username}.")
-                return redirect("home")
+                return redirect(request.GET.get("next", "home"))
             else:
                 messages.error(request, "Invalid username or password.")
         else:

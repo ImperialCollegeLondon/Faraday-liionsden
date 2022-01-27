@@ -25,3 +25,21 @@ def validate_data_file(file) -> None:
         raise ValidationError(
             f"Unsupported file type and/or extension: '{(file_mime_type, extension)}'"
         )
+
+
+def validate_pdf_file(file) -> None:
+    """Validates the pdf file against the mime type and extension.
+
+    Args:
+        file (FileField): File to validate.
+
+    Raises:
+        ValidationError if validation not passed.
+    """
+
+    extension = Path(file.path).suffix
+    file_mime_type = magic.from_buffer(file.read(1024), mime=True)
+    if (file_mime_type != "application/pdf") or (extension != ".pdf"):
+        raise ValidationError(
+            f"Unsupported file type and/or extension - must be a PDF file."
+        )

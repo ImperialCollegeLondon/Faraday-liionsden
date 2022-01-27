@@ -4,6 +4,7 @@
 {% load render_table from django_tables2 %}
 {% load export_url from django_tables2 %}
 {% load bootstrap5 %}
+{% load guardian_tags %}
 
 {% block content %}
 
@@ -21,12 +22,31 @@
 <div class="card border-dark mb-3" style="max-width: 100%;">
   <div class="card-header"><h5>Experiment details</h5></div>
   <div class="card-body">
-    <b>Configuration: </b> {{object.config}}
+    <b>Configuration </b> 
     <br>
-    <b>Devices:</b>
-    {% for device in object.devices.all %}
-      <li><b>{{ device.batch }} / {{device.batch_sequence}}</b>  ({{ device.device_position }})</li>
-    {% endfor %}
+    {{object.config}}
+    <br><br>
+    
+    <b>Devices</b>
+    <table class="table">
+      <thead class= "thead-light">
+        <tr>
+          <th scope="col"> Batch</th>
+          <th scope="col">Batch sequence</th>
+          <th scope="col">Position</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for device in object.devices.all %}
+        <tr>
+          <td><a href="{{ device.batch.get_absolute_url }}">{{ device.batch }}</a></td>
+          <td>{{ device.batch_sequence }}</td>
+          <td>{{ device.device_position }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  
   </div>
 </div>
 
@@ -44,7 +64,12 @@
     <table width="50%">
       <tr><td><b>Owner:</b></td><td>{{ object.user_owner }} </td></tr>
       <tr><td><b>Data files count:</b></td><td>{{ object.data_files.count }} </td></tr>
+      <tr><td><b>Created:</b></td><td>{{ object.created_on }} </td></tr>
+      <tr><td><b>Modified:</b></td><td>{{ object.modified_on }} </td></tr>
+      <tr><td><b>ID:</b></td><td>{{ object.id }} </td></tr>
+      <tr><td><b>Status:</b></td><td>{{ object.status }} </td></tr>
       <tr><td><b>Notes:</b></td><td>{{ object.notes }} </td></tr>
+      <tr><td><b>Attributes:</b></td><td>{{ object.attributes }} </td></tr>
     </table>
   
     {#  <h5>Data files:</h5>#}
@@ -56,6 +81,14 @@
     {#  </ul>#}
   
   </div>
+
+  {% get_obj_perms request.user for object as "object_perms" %}
+  {% if "change_experiment" in object_perms %}
+    </div>
+      <a href="/battDB/exps/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
+    </div>
+  {% endif %}
+
 </div>
 
 

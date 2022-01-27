@@ -13,7 +13,6 @@
 <div class = "container py-2">
     {% if filter %}
         <form action="" method="get" class="form form-inline" bound_css_class=''>
-            {% csrf_token %}
             <div class="row align-items-end">
                 <div class="col-3">
                     {% bootstrap_field filter.form.id layout='vertical' bound_css_class='' %}
@@ -62,5 +61,11 @@
         <a href="{% export_url format %}" class="btn btn-primary", role="button"> download {{ format }}</a>
     {% endfor %}
 </div>
+
+{% if not user.is_authenticated %}
+    <div class = "container py-2">
+    <p class="text-center">Not seeing everything you expect? <a href="/accounts/login/">Login</a> to access your private entries.</p>
+    </div>
+{% endif %}
 
 {% endblock %}

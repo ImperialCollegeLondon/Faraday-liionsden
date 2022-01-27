@@ -14,6 +14,10 @@ from .views import (
     NewEquipmentView,
     NewExperimentView,
     NewProtocolView,
+    UpdateBatchView,
+    UpdateDeviceView,
+    UpdateEquipmentView,
+    UpdateExperimentView,
     index,
 )
 
@@ -23,12 +27,22 @@ urlpatterns = [
     path("", index, name="index"),
     path("exps/", ExperimentTableView.as_view(), name="Experiments"),
     path("exps/<int:pk>/", ExperimentView.as_view(), name="Experiment"),
+    path(
+        "exps/edit/<int:pk>", UpdateExperimentView.as_view(), name="Update Experiment"
+    ),
     path("batches/", BatchTableView.as_view(), name="Batches"),
     path("batches/<int:pk>/", BatchView.as_view(), name="Batch"),
+    path("batches/edit/<int:pk>/", UpdateBatchView.as_view(), name="Update Batch"),
     path("equipment/", EquipmentTableView.as_view(), name="Equipment list"),
     path("equipment/<int:pk>/", EquipmentView.as_view(), name="Equipment"),
+    path(
+        "equipment/edit/<int:pk>/",
+        UpdateEquipmentView.as_view(),
+        name="Update Equipment",
+    ),
     path("devices/", DeviceSpecificationTableView.as_view(), name="Devices"),
     path("devices/<int:pk>/", DeviceSpecificationView.as_view(), name="Device"),
+    path("devices/edit/<int:pk>/", UpdateDeviceView.as_view(), name="Update Device"),
     path("new_device/", NewDeviceView.as_view(), name="New Device"),
     path("new_equipment/", NewEquipmentView.as_view(), name="New Equipment"),
     path("new_batch/", NewBatchView.as_view(), name="New Batch"),

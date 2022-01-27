@@ -1,13 +1,7 @@
-from django.contrib import messages
-from django.db import transaction
-from django.shortcuts import redirect, render
-from django.views.generic import DetailView, ListView
-from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
-from django.views.generic.detail import SingleObjectMixin
-from django.views.generic.edit import CreateView, FormView
+from django.shortcuts import redirect
+from django.views.generic import DetailView
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
-from django_tables2.tables import Table
 from django_tables2.views import SingleTableMixin
 from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
 from rest_framework import permissions, status, viewsets
@@ -17,6 +11,13 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from common.views import (
+    NewDataView,
+    NewDataViewInline,
+    UpdateDataInlineView,
+    UpdateDataView,
+)
+
 from .filters import (
     BatchFilter,
     DeviceSpecificationFilter,
@@ -24,6 +25,7 @@ from .filters import (
     ExperimentFilter,
 )
 from .forms import (
+    DeviceParameterFormSet,
     ExperimentDeviceFormSet,
     NewBatchForm,
     NewDeviceForm,
@@ -49,58 +51,48 @@ from .serializers import (
     NewDataFileSerializer,
 )
 from .tables import (
-    BatchDevicesTable,
     BatchTable,
     DeviceSpecificationTable,
     EquipmentTable,
     ExperimentTable,
 )
 
+
+def index(request):
+    return redirect("/")
+
+
 ### CREATE/ADD VIEWS ###
-
-
-class NewDataView(FormView):
-    """
-    Template for view for creating new entries of various models.
-    """
-
-    success_message = "New data added successfully."
-    failure_message = "Cannot add data. Invalid information."
-
-    def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        return render(request, self.template_name, {"form": form})
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            obj = form.save(commit=False)
-            # Do other stuff before saving here
-            obj.user_owner = request.user
-            if form.is_public():
-                obj.status = "public"
-            else:
-                obj.status = "private"
-
-            obj.save()
-            messages.success(request, self.success_message)
-            return redirect(self.success_url)
-        messages.error(request, self.failure_message)
-        return render(request, self.template_name, {"form": form})
-
-
-class NewDeviceView(PermissionRequiredMixin, NewDataView):
+class NewDeviceView(PermissionRequiredMixin, NewDataViewInline):
     permission_required = "battDB.add_devicespecification"
-    template_name = "create_device.html"
+    template_name = "create_edit_generic.html"
     form_class = NewDeviceForm
     success_url = "/battDB/new_device/"
     success_message = "New device specification created successfully."
     failure_message = "Could not save new device. Invalid information."
+    inline_key = "parameters"
+    formset = DeviceParameterFormSet
+
+
+class NewExperimentView(PermissionRequiredMixin, NewDataViewInline):
+    """
+    Unique view for adding an experiment with inline addition of devices.
+    """
+
+    permission_required = "battDB.add_experiment"
+    model = Experiment
+    template_name = "create_edit_generic.html"
+    form_class = NewExperimentForm
+    success_url = "/battDB/new_experiment"
+    success_message = "New experiment created successfully."
+    failure_message = "Could not save new experiment. Invalid information."
+    inline_key = "devices"
+    formset = ExperimentDeviceFormSet
 
 
 class NewEquipmentView(PermissionRequiredMixin, NewDataView):
     permission_required = "battDB.add_equipment"
-    template_name = "create_equipment.html"
+    template_name = "create_edit_generic.html"
     form_class = NewEquipmentForm
     success_url = "/battDB/new_equipment/"
     success_message = "New equipment created successfully."
@@ -109,7 +101,7 @@ class NewEquipmentView(PermissionRequiredMixin, NewDataView):
 
 class NewBatchView(PermissionRequiredMixin, NewDataView):
     permission_required = "battDB.add_batch"
-    template_name = "create_batch.html"
+    template_name = "create_edit_generic.html"
     form_class = NewBatchForm
     success_url = "/battDB/new_batch/"
     success_message = "New batch created successfully."
@@ -125,87 +117,51 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
     failure_message = "Could not save new protocol. Invalid information."
 
 
-class NewExperimentView(PermissionRequiredMixin, FormView):
-    """
-    Unique view for adding an experiment with inline addition of devices.
-    """
+class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
+    model = Batch
+    permission_required = "battDB.change_batch"
+    template_name = "create_edit_generic.html"
+    form_class = NewBatchForm
+    success_url = "/battDB/batches/"
+    success_message = "Batch updated successfully."
+    failure_message = "Could not update batch. Invalid information."
 
-    permission_required = "battDB.add_experiment"
+
+class UpdateEquipmentView(PermissionRequiredMixin, UpdateDataView):
+    model = Equipment
+    permission_required = "battDB.change_equipment"
+    template_name = "create_edit_generic.html"
+    form_class = NewEquipmentForm
+    success_url = "/battDB/equipment/"
+    success_message = "Equipment updated successfully."
+    failure_message = "Could not update Equipment. Invalid information."
+
+
+class UpdateDeviceView(PermissionRequiredMixin, UpdateDataInlineView):
+    model = DeviceSpecification
+    permission_required = "battDB.change_devicespecification"
+    template_name = "create_edit_generic.html"
+    form_class = NewDeviceForm
+    success_url = "/battDB/devices/"
+    success_message = "Device specification updated successfully."
+    failure_message = "Could not update Device specification. Invalid information."
+    inline_key = "parameters"
+    formset = DeviceParameterFormSet
+
+
+class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
     model = Experiment
-    template_name = "create_experiment.html"
+    permission_required = "battDB.change_experiment"
+    template_name = "create_edit_generic.html"
     form_class = NewExperimentForm
-    success_url = "/battDB/new_experiment"
-    success_message = "New experiment created successfully."
-    failure_message = "Could not save new experiment. Invalid information."
-
-    def get_context_data(self, **kwargs):
-        """
-        Helper function to get correct context to pass to render() in get()
-        and post().
-        """
-        data = super(NewExperimentView, self).get_context_data(**kwargs)
-        if self.request.POST:
-            data["devices"] = ExperimentDeviceFormSet(self.request.POST)
-        else:
-            data["devices"] = ExperimentDeviceFormSet()
-        return data
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data()
-        form = self.form_class()
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        context = self.get_context_data()
-        devices = context["devices"]
-        if form.is_valid():
-            # Save experiment incluing setting user owner and status
-            with transaction.atomic():
-                obj = form.save(commit=False)
-                obj.user_owner = request.user
-                if form.is_public():
-                    obj.status = "public"
-                else:
-                    obj.status = "private"
-                self.object = form.save()
-            # Save individual devices from inline form
-            if devices.is_valid():
-                devices.instance = self.object
-                devices.save()
-            messages.success(request, self.success_message)
-            return redirect(self.success_url)
-        messages.error(request, self.failure_message)
-        return render(request, self.template_name, context)
+    success_url = "/battDB/exps/"
+    success_message = "Experiment updated successfully."
+    failure_message = "Could not update experiment. Invalid information."
+    inline_key = "devices"
+    formset = ExperimentDeviceFormSet
 
 
-def index(request):
-    return redirect("/")
-
-
-class UploadFileView(GenericAPIView):
-    queryset = UploadedFile.objects.all()
-    parser_classes = (FileUploadParser,)
-    permission_classes = [permissions.IsAdminUser]
-
-    def put(self, request, filename, **kwargs):
-        if "file" not in request.data:
-            raise ParseError("Empty content")
-
-        f = request.data["file"]
-        obj = UploadedFile()
-        obj.file.save(filename, f, save=True)
-        obj.user_owner = request.user
-        obj.clean()
-        obj.save()
-        response_data = FileHashSerializer(obj).data
-        return Response(response_data, status=status.HTTP_201_CREATED)
-
-    def options(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_200_OK)
-
-
-### SEARCH/LIST/TABLE VIEWS ###
+### DETAIL/LIST/TABLE VIEWS ###
 class ExperimentTableView(
     SingleTableMixin, ExportMixin, PermissionListMixin, FilterView
 ):
@@ -319,3 +275,25 @@ class GeneralViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         GeneralSerializer.Meta.model = self.kwargs.get("model")
         return GeneralSerializer
+
+
+class UploadFileView(GenericAPIView):
+    queryset = UploadedFile.objects.all()
+    parser_classes = (FileUploadParser,)
+    permission_classes = [permissions.IsAdminUser]
+
+    def put(self, request, filename, **kwargs):
+        if "file" not in request.data:
+            raise ParseError("Empty content")
+
+        f = request.data["file"]
+        obj = UploadedFile()
+        obj.file.save(filename, f, save=True)
+        obj.user_owner = request.user
+        obj.clean()
+        obj.save()
+        response_data = FileHashSerializer(obj).data
+        return Response(response_data, status=status.HTTP_201_CREATED)
+
+    def options(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_200_OK)
