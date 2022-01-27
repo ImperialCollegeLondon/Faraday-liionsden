@@ -1,6 +1,6 @@
 import django_tables2 as tables
 
-from .models import Batch, DeviceSpecification, Experiment, ExperimentDevice
+from .models import Batch, DeviceSpecification, Equipment, Experiment, ExperimentDevice
 
 
 class ExperimentTable(tables.Table):
@@ -42,8 +42,8 @@ class BatchTable(tables.Table):
 
 class DeviceSpecificationTable(tables.Table):
     id = tables.Column(linkify=True)
-
     user_owner = tables.Column(verbose_name="Added by")
+    spec_file = tables.FileColumn(text="download")
 
     class Meta:
         model = DeviceSpecification
@@ -54,6 +54,7 @@ class DeviceSpecificationTable(tables.Table):
             "user_owner",
             "device_type",
             "created_on",
+            "spec_file",
         )
         row_attrs = {"status": lambda record: record.status}
 
@@ -62,7 +63,7 @@ class EquipmentTable(tables.Table):
     id = tables.Column(linkify=True)
 
     class Meta:
-        model = DeviceSpecification
+        model = Equipment
         template_name = "django_tables2/bootstrap4.html"
         fields = (
             "id",

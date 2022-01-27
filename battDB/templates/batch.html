@@ -5,6 +5,7 @@
 {% load export_url from django_tables2 %}
 {% load bootstrap5 %}
 {% load mptt_tags %}
+{% load guardian_tags %}
 
 {% block content %}
 
@@ -65,11 +66,25 @@
   <div class="card-header"><h5>Metadata</h5></div>
   <div class="card-body">
     <table width="50%">
-      <tr><td><b>Added by:</b></td><td>{{ object.user_owner }} </td></tr>
+      <tr><td><b>Manufacturing Protocol:</b></td><td>{{ object.manufacturing_protocol }} </td></tr>
+      <tr><td><b>Owner:</b></td><td>{{ object.user_owner }} </td></tr>
+      <tr><td><b>Created:</b></td><td>{{ object.created_on }} </td></tr>
+      <tr><td><b>Modified:</b></td><td>{{ object.modified_on }} </td></tr>
+      <tr><td><b>ID:</b></td><td>{{ object.id }} </td></tr>
+      <tr><td><b>Status:</b></td><td>{{ object.status }} </td></tr>
       <tr><td><b>Notes:</b></td><td>{{ object.notes }} </td></tr>
-      <tr><td><b>Last modified:</b></td><td>{{ object.modified_on }} </td></tr>
+      <tr><td><b>Attributes:</b></td><td>{{ object.attributes }} </td></tr>
     </table>
   </div>
+
+  {% get_obj_perms request.user for object as "object_perms" %}
+  {% if "change_batch" in object_perms %}
+    </div>
+    <a href="/battDB/batches/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
+  </div>
+  {% endif %}
+
 </div>
+
 
 {% endblock %}

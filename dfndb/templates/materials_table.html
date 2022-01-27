@@ -6,8 +6,8 @@
 {% block content %}
 
 <div class="container py-2">
-    <h1> Equipment </h1>
-    Search for cyclers and other equipment using the form below:
+    <h1> Materials </h1>
+    Search for existing materials in the database below:
 </div>
 
 <div class = "container py-2">
@@ -21,18 +21,10 @@
                     {% bootstrap_field filter.form.name layout='vertical' bound_css_class='' %}
                 </div>
                 <div class="col-3">
-                    {% bootstrap_field filter.form.institution layout='vertical' bound_css_class='' %}
-                </div>
-                <div class="col-3">
-                    {% bootstrap_field filter.form.user_owner layout='vertical' bound_css_class='' %}
-                </div>
-            </div>
-            <div class="row align-items-end">
-                <div class="col-3">
-                    {% bootstrap_field filter.form.serialNo layout='vertical' bound_css_class='' %}
-                </div>
-                <div class="col-3">
                     {% bootstrap_field filter.form.status layout='vertical' bound_css_class='' %}
+                </div>
+                <div class="col-3">
+                    {% bootstrap_field filter.form.type layout='vertical' bound_css_class='' %}
                 </div>
             </div>
             {% bootstrap_button 'search' %}
