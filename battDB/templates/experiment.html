@@ -54,7 +54,25 @@
 <div class="card border-dark mb-3" style="max-width: 100%;">
   <div class="card-header"><h5>Measurement data</h5></div>
   <div class="card-body">
-    Real data here
+    <table class="table">
+      <thead class= "thead-light">
+        <tr>
+          <th scope="col"> Name</th>
+          <th scope="col">Parsed columns</th>
+          <th scope="col">All columns</th>
+          <th scope="col">Raw data</th>
+        </tr>
+      </thead>
+      <tbody>
+
+      {% for data_file in object.data_files.all %}
+        <td>{{ data_file.name }}</td>
+        <td>{{ data_file.ts_headers }}</td>
+        <td>{{ data_file.file_columns }}</td>
+        <td><a href="{{ data_file.raw_data_file.file.url }}" class="btn btn-primary", role="button"> Download </a></td>
+      {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 
