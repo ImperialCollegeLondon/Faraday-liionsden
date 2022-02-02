@@ -30,8 +30,10 @@ from .forms import (
     NewBatchForm,
     NewDeviceForm,
     NewEquipmentForm,
+    NewExperimentDataFileForm,
     NewExperimentForm,
     NewProtocolForm,
+    UploadDataFileFormset,
 )
 from .models import (
     Batch,
@@ -108,6 +110,17 @@ class NewBatchView(PermissionRequiredMixin, NewDataView):
     failure_message = "Could not save new batch. Invalid information."
 
 
+class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
+    permission_required = "battDB.add_experimentdatafile"
+    template_name = "create_edit_generic.html"
+    form_class = NewExperimentDataFileForm
+    success_url = "/battDB/new_edf/"
+    success_message = "New data_file added successfully."
+    failure_message = "Could not add new data file. Invalid information."
+    inline_key = "raw_data_file"
+    formset = UploadDataFileFormset
+
+
 class NewProtocolView(PermissionRequiredMixin, NewDataView):
     permission_required = "dfndb.add_method"
     template_name = "create_protocol.html"
@@ -157,7 +170,7 @@ class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
     success_url = "/battDB/exps/"
     success_message = "Experiment updated successfully."
     failure_message = "Could not update experiment. Invalid information."
-    inline_key = "devices"
+    inline_key = "raw_data_file"
     formset = ExperimentDeviceFormSet
 
 
