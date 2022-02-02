@@ -293,7 +293,7 @@ UploadDataFileFormset = inlineformset_factory(
     form=UploadedFileForm,
     fields=["file", "parse", "use_parser"],
     extra=1,
-    can_delete=True,
+    can_delete=False,
     help_texts={
         "file": None,
         "parse": None,
