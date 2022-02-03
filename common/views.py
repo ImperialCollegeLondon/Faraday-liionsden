@@ -51,7 +51,7 @@ class NewDataViewInline(FormView):
         """
         data = super(NewDataViewInline, self).get_context_data(**kwargs)
         if self.request.POST:
-            data[self.inline_key] = self.formset(self.request.POST)
+            data[self.inline_key] = self.formset(self.request.POST, self.request.FILES)
         else:
             data[self.inline_key] = self.formset()
         return data
@@ -66,7 +66,7 @@ class NewDataViewInline(FormView):
         context = self.get_context_data()
         parameters = context[self.inline_key]
         if form.is_valid():
-            # Save experiment incluing setting user owner and status
+            # Save instance incluing setting user owner and status
             with transaction.atomic():
                 obj = form.save(commit=False)
                 obj.user_owner = request.user

@@ -260,6 +260,7 @@ class NewExperimentDataFileForm(DataCreateForm):
     def __init__(self, *args, **kwargs):
         super(NewExperimentDataFileForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
+        self.helper.attrs = {"enctype": "multipart/form-data"}
         self.helper.layout = Layout(
             Div(
                 Div(HTML("<h1> New data file </h1>")),
@@ -291,7 +292,7 @@ UploadDataFileFormset = inlineformset_factory(
     ExperimentDataFile,
     UploadedFile,
     form=UploadedFileForm,
-    fields=["file", "parse", "use_parser"],
+    fields=["file", "parse", "use_parser", "user_owner", "status"],
     extra=1,
     can_delete=False,
     help_texts={
