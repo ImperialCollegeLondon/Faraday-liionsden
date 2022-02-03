@@ -79,6 +79,8 @@ class NewDataViewInline(FormView):
             if parameters.is_valid():
                 parameters.instance = self.object
                 parameters.save()
+                if self.inline_key == "raw_data_file":
+                    form.instance.full_clean()
             messages.success(request, self.success_message)
             return redirect(self.success_url)
         messages.error(request, self.failure_message)
