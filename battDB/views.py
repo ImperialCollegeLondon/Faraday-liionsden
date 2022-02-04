@@ -147,7 +147,7 @@ class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
     success_url = "/battDB/exps/"
     success_message = "Experiment updated successfully."
     failure_message = "Could not update experiment. Invalid information."
-    inline_key = "raw_data_file"
+    inline_key = "devices"
     formset = ExperimentDeviceFormSet
 
 
