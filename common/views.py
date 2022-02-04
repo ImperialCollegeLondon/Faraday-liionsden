@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import redirect, render  # noqa: F401
-from django.views.generic.edit import FormView, UpdateView
+from django.views.generic.edit import DeleteView, FormView, UpdateView
 
 
 class NewDataView(FormView):
@@ -169,3 +169,21 @@ class UpdateDataInlineView(UpdateView):
             return redirect(self.success_url)
         messages.error(request, self.failure_message)
         return render(request, self.template_name, context)
+
+
+class MarkAsDeletedView(DeleteView):
+    """Custom delete view that does not actually delete the object
+    but marks its status as deleted.
+    """
+
+    success_message = "Object deleted."
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.status = "deleted"
+        self.object.save()
+        messages.success(request, self.success_message)
+        return redirect(self.success_url)
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)

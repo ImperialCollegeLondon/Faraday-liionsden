@@ -1,0 +1,23 @@
+{% extends 'header.html' %}
+{% load bootstrap5 %}
+{% load mptt_tags %}
+{% load tag_objname %}
+{% block content %}
+
+<div class="card border-danger mx-auto" style="max-width: 50%;">
+    <div class="card-header"><h5>Confirm Deletion of {% model_name object %}</h5></div>
+    <div class="card-body text-danger mx-auto">
+
+        <form method="post">{% csrf_token %}
+            <p>Are you sure you want to delete "{{ object }}"?</p>
+            {{ form }}
+            <div class="container">
+                <div class="col-md-12 text-center">
+                    <input type=button value="Cancel" class="btn btn-secondary" onClick="javascript:history.go(-1);">
+                    <input type="submit" value="Delete" class="btn btn-danger">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

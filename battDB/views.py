@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from common.views import (
+    MarkAsDeletedView,
     NewDataView,
     NewDataViewInline,
     UpdateDataInlineView,
@@ -172,6 +173,13 @@ class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
     failure_message = "Could not update experiment. Invalid information."
     inline_key = "raw_data_file"
     formset = ExperimentDeviceFormSet
+
+
+class DeleteDeviceView(PermissionRequiredMixin, MarkAsDeletedView):
+    model = DeviceSpecification
+    permission_required = "battDB.change_devicespecification"
+    success_url = "/battDB/devices/"
+    template_name = "delete_generic.html"
 
 
 ### DETAIL/LIST/TABLE VIEWS ###
