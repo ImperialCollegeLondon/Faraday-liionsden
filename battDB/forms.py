@@ -264,10 +264,20 @@ class NewExperimentDataFileForm(DataCreateForm):
         self.helper.layout = Layout(
             Div(
                 Div(HTML("<h1> New data file </h1>")),
-                Column("name", css_class="col-6"),
-                Column("experiment", css_class="col-6"),
-                Column("machine", css_class="col-3"),
-                Fieldset("Upload file", Formset("raw_data_file"), required=False),
+                Column("name", css_class="col-4"),
+                Column("experiment", css_class="col-4"),
+                Column("machine", css_class="col-4"),
+                Fieldset(
+                    "Upload file",
+                    Div(
+                        HTML(
+                            "Upload the raw data file here. Select 'parse' to process the data using your chosen parser."
+                        ),
+                        css_class="container pb-4",
+                    ),
+                    Formset("raw_data_file"),
+                    required=False,
+                ),
                 Field("notes"),
                 HTML("<br>"),
                 Field("make_public"),
