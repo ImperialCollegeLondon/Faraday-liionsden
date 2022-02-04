@@ -87,7 +87,9 @@
   {% if "change_devicespecification" in object_perms %}
     </div>
       <a href="/battDB/devices/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
+      <a href="/battDB/devices/delete/{{ object.pk }}" class="btn btn-danger", role="button"> Delete entry</a>
     </div>
+    
   {% endif %}
 </div>
 

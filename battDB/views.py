@@ -65,7 +65,7 @@ def index(request):
     return redirect("/")
 
 
-### CREATE/ADD VIEWS ###
+######################## CREATE, ADD, DELETE VIEWS #########################
 class NewDeviceView(PermissionRequiredMixin, NewDataViewInline):
     permission_required = "battDB.add_devicespecification"
     template_name = "create_edit_generic.html"
@@ -78,10 +78,6 @@ class NewDeviceView(PermissionRequiredMixin, NewDataViewInline):
 
 
 class NewExperimentView(PermissionRequiredMixin, NewDataViewInline):
-    """
-    Unique view for adding an experiment with inline addition of devices.
-    """
-
     permission_required = "battDB.add_experiment"
     model = Experiment
     template_name = "create_edit_generic.html"
@@ -131,26 +127,6 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
     failure_message = "Could not save new protocol. Invalid information."
 
 
-class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
-    model = Batch
-    permission_required = "battDB.change_batch"
-    template_name = "create_edit_generic.html"
-    form_class = NewBatchForm
-    success_url = "/battDB/batches/"
-    success_message = "Batch updated successfully."
-    failure_message = "Could not update batch. Invalid information."
-
-
-class UpdateEquipmentView(PermissionRequiredMixin, UpdateDataView):
-    model = Equipment
-    permission_required = "battDB.change_equipment"
-    template_name = "create_edit_generic.html"
-    form_class = NewEquipmentForm
-    success_url = "/battDB/equipment/"
-    success_message = "Equipment updated successfully."
-    failure_message = "Could not update Equipment. Invalid information."
-
-
 class UpdateDeviceView(PermissionRequiredMixin, UpdateDataInlineView):
     model = DeviceSpecification
     permission_required = "battDB.change_devicespecification"
@@ -175,14 +151,70 @@ class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
     formset = ExperimentDeviceFormSet
 
 
+class UpdateEquipmentView(PermissionRequiredMixin, UpdateDataView):
+    model = Equipment
+    permission_required = "battDB.change_equipment"
+    template_name = "create_edit_generic.html"
+    form_class = NewEquipmentForm
+    success_url = "/battDB/equipment/"
+    success_message = "Equipment updated successfully."
+    failure_message = "Could not update Equipment. Invalid information."
+
+
+class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
+    model = Batch
+    permission_required = "battDB.change_batch"
+    template_name = "create_edit_generic.html"
+    form_class = NewBatchForm
+    success_url = "/battDB/batches/"
+    success_message = "Batch updated successfully."
+    failure_message = "Could not update batch. Invalid information."
+
+
+# TODO: UpdateDataFileView
+
+
 class DeleteDeviceView(PermissionRequiredMixin, MarkAsDeletedView):
     model = DeviceSpecification
     permission_required = "battDB.change_devicespecification"
     success_url = "/battDB/devices/"
     template_name = "delete_generic.html"
+    success_message = "Device Specification deleted successfully."
 
 
-### DETAIL/LIST/TABLE VIEWS ###
+class DeleteExperimentView(PermissionRequiredMixin, MarkAsDeletedView):
+    model = Experiment
+    permission_required = "battDB.change_experiment"
+    success_url = "/battDB/exps/"
+    template_name = "delete_generic.html"
+    success_message = "Experiment deleted successfully."
+
+
+class DeleteEquipmentView(PermissionRequiredMixin, MarkAsDeletedView):
+    model = Equipment
+    permission_required = "battDB.change_equipment"
+    success_url = "/battDB/equipment/"
+    template_name = "delete_generic.html"
+    success_message = "Equipment deleted successfully."
+
+
+class DeleteBatchView(PermissionRequiredMixin, MarkAsDeletedView):
+    model = Batch
+    permission_required = "battDB.change_batch"
+    success_url = "/battDB/batches/"
+    template_name = "delete_generic.html"
+    success_message = "Batch deleted successfully."
+
+
+class DeleteDataFileView(PermissionRequiredMixin, MarkAsDeletedView):
+    model = ExperimentDataFile
+    permission_required = "battDB.change_experimentdatafile"
+    success_url = "/battDB/exps/"
+    template_name = "delete_generic.html"
+    success_message = "Data file deleted successfully."
+
+
+#################### DETAIL, LIST, TABLE VIEWS #########################
 class ExperimentTableView(
     SingleTableMixin, ExportMixin, PermissionListMixin, FilterView
 ):
