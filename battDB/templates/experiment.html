@@ -104,6 +104,7 @@
   {% if "change_experiment" in object_perms %}
     </div>
       <a href="/battDB/exps/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
+      <a href="/battDB/exps/delete/{{ object.pk }}" class="btn btn-danger", role="button"> Delete entry</a>
     </div>
   {% endif %}
 

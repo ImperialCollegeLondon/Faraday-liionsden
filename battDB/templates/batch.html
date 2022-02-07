@@ -81,6 +81,7 @@
   {% if "change_batch" in object_perms %}
     </div>
     <a href="/battDB/batches/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
+    <a href="/battDB/batches/delete/{{ object.pk }}" class="btn btn-danger", role="button"> Delete entry</a>
   </div>
   {% endif %}
 

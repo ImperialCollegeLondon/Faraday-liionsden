@@ -7,6 +7,7 @@ from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
 from rest_framework.generics import ListCreateAPIView
 
 from common.views import (
+    MarkAsDeletedView,
     NewDataView,
     NewDataViewInline,
     UpdateDataInlineView,
@@ -20,7 +21,7 @@ from .serializers import ParameterSerializer
 from .tables import CompoundTable, MaterialTable
 
 
-### CREATE/ADD VIEWS ###
+######################## CREATE, ADD, DELETE VIEWS #########################
 class NewCompoundView(PermissionRequiredMixin, NewDataView):
     permission_required = "dfndb.add_compound"
     template_name = "create_edit_generic.html"
@@ -41,7 +42,15 @@ class NewMaterialView(PermissionRequiredMixin, NewDataViewInline):
     formset = CompositionPartFormSet
 
 
-### DETAIL/LIST/TABLE VIEWS ###
+class DeleteMaterialView(PermissionRequiredMixin, MarkAsDeletedView):
+    model = Material
+    permission_required = "dfndb.change_material"
+    success_url = "/dfndb/materials/"
+    template_name = "delete_generic.html"
+    success_message = "Material deleted successfully."
+
+
+#################### DETAIL, LIST, TABLE VIEWS #########################
 class CompoundTableView(SingleTableMixin, ExportMixin, PermissionListMixin, FilterView):
     model = Compound
     table_class = CompoundTable
