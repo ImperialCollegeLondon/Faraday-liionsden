@@ -12,28 +12,32 @@
 
   <table width="100%">
     <tr>
-      <td style="text-align:center" ><h4> {{ object.name }} </h4></td>
+      <td style="text-align:center">
+        <h4> {{ object.name }} </h4>
+      </td>
     </tr>
-    </table>
+  </table>
 </div>
 
 <div class="card border-dark mb-3" style="max-width: 100%;">
-  <div class="card-header"><h5>Material details</h5></div>
+  <div class="card-header">
+    <h5>Material details</h5>
+  </div>
   <div class="card-body">
-    <b>Type</b> 
+    <b>Type</b>
     <br>
     {{ object.get_type_display }}
     <br><br>
     {% if object.polymer > 0 %}
-    <b>Degree of polymerisation</b> 
+    <b>Degree of polymerisation</b>
     <br>
     {{ object.polymer }}
     <br><br>
     {% endif %}
     <b>Composition</b>
-    <br>    
+    <br>
     <table class="table">
-      <thead class= "thead-light">
+      <thead class="thead-light">
         <tr>
           <th scope="col"> Compound </th>
           <th scope="col"> Amount </th>
@@ -41,38 +45,62 @@
         </tr>
       </thead>
       <tbody>
-      {% for cp in object.compositionpart_set.all %}
+        {% for cp in object.compositionpart_set.all %}
         <tr>
           <td>{{ cp.compound }}</td>
           <td>{{ cp.amount }}</td>
           <td>{{ cp.get_percentage }}</td>
         </tr>
-      {% endfor %}
-    </tbody>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 </div>
 
 <div class="card border-dark mb-3" style="max-width: 100%;">
-  <div class="card-header"><h5>Metadata</h5></div>
+  <div class="card-header">
+    <h5>Metadata</h5>
+  </div>
   <div class="card-body">
     <table width="50%">
-      <tr><td><b>Owner:</b></td><td>{{ object.user_owner }} </td></tr>
-      <tr><td><b>Created:</b></td><td>{{ object.created_on }} </td></tr>
-      <tr><td><b>Modified:</b></td><td>{{ object.modified_on }} </td></tr>
-      <tr><td><b>ID:</b></td><td>{{ object.id }} </td></tr>
-      <tr><td><b>Status:</b></td><td>{{ object.status }} </td></tr>
-      <tr><td><b>Notes:</b></td><td>{{ object.notes }} </td></tr>
-      <tr><td><b>Attributes:</b></td><td>{{ object.attributes }} </td></tr>
+      <tr>
+        <td><b>Owner:</b></td>
+        <td>{{ object.user_owner }} </td>
+      </tr>
+      <tr>
+        <td><b>Created:</b></td>
+        <td>{{ object.created_on }} </td>
+      </tr>
+      <tr>
+        <td><b>Modified:</b></td>
+        <td>{{ object.modified_on }} </td>
+      </tr>
+      <tr>
+        <td><b>ID:</b></td>
+        <td>{{ object.id }} </td>
+      </tr>
+      <tr>
+        <td><b>Status:</b></td>
+        <td>{{ object.status }} </td>
+      </tr>
+      <tr>
+        <td><b>Notes:</b></td>
+        <td>{{ object.notes }} </td>
+      </tr>
+      <tr>
+        <td><b>Attributes:</b></td>
+        <td>{{ object.attributes }} </td>
+      </tr>
     </table>
   </div>
 
   {% get_obj_perms request.user for object as "object_perms" %}
   {% if "change_material" in object_perms %}
-    </div>
-      <a href="/dfndb/materials/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
-    </div>
-  {% endif %}
+</div>
+<a href="/dfndb/materials/edit/{{ object.pk }}" class="btn btn-warning" , role="button"> Edit entry</a>
+<a href="/dfndb/materials/delete/{{ object.pk }}" class="btn btn-danger" , role="button"> Delete entry</a>
+</div>
+{% endif %}
 
 </div>
 
