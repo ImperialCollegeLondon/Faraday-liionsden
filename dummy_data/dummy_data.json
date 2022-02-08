@@ -629,9 +629,7 @@
     "notes": "",
     "slug": "university-of-nottingham",
     "name": "University of Nottingham",
-    "manager": [
-      "dan"
-    ],
+    "manager": null,
     "is_research": true,
     "is_publisher": true,
     "is_mfg_cells": false,
