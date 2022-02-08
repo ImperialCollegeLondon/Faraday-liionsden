@@ -175,7 +175,7 @@ class DataRangeInline(common.admin.TabularInline):
     def get_graph_link(self, obj):
         if obj.ts_data is not None:
             return mark_safe(
-                u"""
+                """
             <button type="button"> <a href="%s">%s</a> </button>
             """
                 % ("/foo", "PLOT")
@@ -250,7 +250,7 @@ class DataAdmin(BaseAdmin):
     def get_file_link(self, obj):
         if hasattr(obj, "raw_data_file") and obj.raw_data_file is not None:
             return mark_safe(
-                u"""
+                """
             <button type="button"> <a href="%s">\u2193%s</a> </button>
             """
                 % (obj.raw_data_file.file.url, obj.raw_data_file.size())
