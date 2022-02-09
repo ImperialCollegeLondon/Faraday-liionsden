@@ -110,13 +110,17 @@ class NewBatchView(PermissionRequiredMixin, NewDataView):
 
 
 class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
-    permission_required = "battDB.add_experimentdatafile"
+    permission_required = "battDB.change_experiment"
     template_name = "create_edit_generic.html"
     form_class = NewExperimentDataFileForm
     success_message = "New data_file added successfully."
     failure_message = "Could not add new data file. Invalid information."
     inline_key = "raw_data_file"
     formset = UploadDataFileFormset
+
+    def get_permission_object(self, *args, **kwargs):
+        # Only allowed by users who can change current Experiment
+        return Experiment.objects.get(pk=self.kwargs.get("pk"))
 
     def post(self, request, *args, **kwargs):
         """
