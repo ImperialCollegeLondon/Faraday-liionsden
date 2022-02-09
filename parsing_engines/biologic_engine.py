@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import Dict, Generator, List, Optional, Tuple, Union
+from typing import Any, Dict, Generator, List, Optional, Tuple, Union
 
 import pandas as pd
 import yaml
@@ -8,16 +8,15 @@ from pandas.core.dtypes.common import is_numeric_dtype
 
 from .battery_exceptions import UnsupportedFileTypeError
 from .mappings import COLUMN_NAME_MAPPING
-from .parser_base import ParserBase
+from .parsing_engines_base import ParsingEngineBase
 
 
-class BiologicCSVnTSVParser(ParserBase):
+class BiologicCSVnTSVParser(ParsingEngineBase):
     """ParserBase for the csv and tsv output of the BioLogic cycler."""
 
     name = "biologic"
     description = "Biologic CSV/TSV/MPT"
     valid: List[Tuple[str, str]] = [
-        ("application/octet-stream", ".mpr"),
         ("text/plain", ".csv"),
         ("text/plain", ".mpt"),
         ("text/plain", ".tsv"),
@@ -67,9 +66,9 @@ class BiologicCSVnTSVParser(ParserBase):
         """
         kwargs = dict(engine="python", skiprows=self.skip_rows, encoding=self.encoding)
 
-        data = pd.read_csv(self.file_path, ",", **kwargs)
+        data = pd.read_csv(self.file_path, delimiter=",", **kwargs)
         if len(data.columns) == 1:
-            data = pd.read_csv(self.file_path, "\t", **kwargs)
+            data = pd.read_csv(self.file_path, delimiter="\t", **kwargs)
 
         if len(data.columns) == 1:
             raise UnsupportedFileTypeError()
@@ -89,7 +88,7 @@ class BiologicCSVnTSVParser(ParserBase):
         """Standardise column names using a mapping of standard names."""
         self.data.rename(columns=COLUMN_NAME_MAPPING, inplace=True)
 
-    def _get_column_info(self) -> Dict:
+    def get_column_info(self) -> Dict:
         """Gathers some metadata for each column.
 
         In particular, it gathers if it is a numeric column and if it has data.
@@ -119,24 +118,20 @@ class BiologicCSVnTSVParser(ParserBase):
             )
         return header  # noqa
 
-    def get_metadata(self) -> (Dict, Dict):
+    def get_metadata(self) -> Dict:
         """Obtain all the metadata from the header of the file and related to the cycler
         and experimental conditions.
 
         Returns:
-            Two dictionaries, one with the actual metadata and the other with column
-            information (the output of _get_column_info)
+            A dictionary with the metadata
         """
-        header = self._get_file_header()
-
-        metadata = {
+        metadata: Dict[str, Any] = {
             "Dataset_Name": self.file_path.stem,
             "dataset_size": self.file_path.stat().st_size,
             "num_rows": len(self.data),
             "data_start": self.skip_rows,
             "first_sample_no": self.skip_rows + 1,
-            "file_header": header,
-            "Device Metadata": header_to_yaml(header),
+            "file_metadata": header_to_yaml(self._get_file_header()),
             "warnings": [],
         }
 
@@ -145,7 +140,7 @@ class BiologicCSVnTSVParser(ParserBase):
                 "Not all mandatory columns are present in the raw datafile"
             )
 
-        return metadata, self._get_column_info()
+        return metadata
 
     def get_data_generator_for_columns(
         self, columns: list, first_data_row: int = 0, col_mapping: Optional[Dict] = None
@@ -186,12 +181,15 @@ yaml_replacements = {
 
 
 def header_to_yaml(header: List[str]) -> Dict:
-    """Adapt BioLox file header to YAML format.
+    """Adapt BioLog file header to YAML format.
 
-    The format of the BioLogix header is /almost/ parsable directly as YAML We can hack
+    The format of the BioLogix header is "almost" parsable directly as YAML We can hack
     in a few string replacements to make it valid. Table containg per-column metadata
     is not parseable as YAML. We skip this for now - find line where it starts,
     and end there.
+
+    TODO: The table-like part of the header contains useful information related to the
+    cycler protocol. This should be extracted somehow and making it available.
 
     Args:
         header: The header as a list fo strings.

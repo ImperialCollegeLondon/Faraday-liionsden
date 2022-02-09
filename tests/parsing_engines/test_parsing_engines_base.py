@@ -4,53 +4,58 @@ from unittest.mock import patch
 
 class TestParserBase(TestCase):
     def test_abstract_methods(self):
-        from parsers.parser_base import ParserBase
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
 
-        expected = {"get_metadata", "get_data_generator_for_columns"}
-        self.assertEqual(ParserBase.__abstractmethods__, expected)
+        expected = {"get_metadata", "get_data_generator_for_columns", "get_column_info"}
+        self.assertEqual(ParsingEngineBase.__abstractmethods__, expected)
 
     def test_register_subclass(self):
-        from parsers.parser_base import KNOWN_PARSERS, ParserBase
+        from parsing_engines.parsing_engines_base import (
+            KNOWN_PARSING_ENGINES,
+            ParsingEngineBase,
+        )
 
-        class WeirdParser(ParserBase):
+        class WeirdParser(ParsingEngineBase):
             name = "Weird Parser"
             description = "Dummy parser that does nothing"
 
-        self.assertEqual(KNOWN_PARSERS["Weird Parser"], WeirdParser)
+        self.assertEqual(KNOWN_PARSING_ENGINES["Weird Parser"], WeirdParser)
 
         # Assert existing parser with same name
         with self.assertRaises(ValueError) as info:
 
-            class SameName(ParserBase):
+            class SameName(ParsingEngineBase):
                 name = "Weird Parser"
 
         self.assertEqual(
-            str(info.exception), "A parser named 'Weird Parser' already exists."
+            str(info.exception), "A parsing engine named 'Weird Parser' already exists."
         )
 
         # Assert no name parser
         with self.assertRaises(ValueError) as info:
 
-            class NoName(ParserBase):
+            class NoName(ParsingEngineBase):
                 name = ""
 
         self.assertEqual(
             str(info.exception),
-            "A ParserBase subclass cannot have an empty attribute 'name'.",
+            "A ParsingEngineBase subclass cannot have an empty attribute 'name'.",
         )
 
 
 class TestDummyParser(TestCase):
     def setUp(self) -> None:
-        from parsers.parser_base import DummyParser
+        from parsing_engines.parsing_engines_base import DummyParsingEngine
 
-        self.parser = DummyParser("")
+        self.parser = DummyParsingEngine("")
 
     def test_get_metadata(self):
-        exp_metadata, exp_cols = {"num_rows": 0}, {}
-        metadata, cols = self.parser.get_metadata()
-        self.assertEqual(metadata, exp_metadata)
-        self.assertEqual(cols, exp_cols)
+        metadata = self.parser.get_metadata()
+        self.assertEqual(metadata, {"num_rows": 0})
+
+    def test_get_column_info(self):
+        cols = self.parser.get_column_info()
+        self.assertEqual(cols, {})
 
     def test_get_data_generator_for_columns(self):
         self.assertEqual(list(self.parser.get_data_generator_for_columns([])), [])
@@ -58,32 +63,42 @@ class TestDummyParser(TestCase):
 
 class TestFunctions(TestCase):
     def test_get_parser(self):
-        from parsers.parser_base import KNOWN_PARSERS, DummyParser, get_parser
+        from parsing_engines.parsing_engines_base import (
+            KNOWN_PARSING_ENGINES,
+            DummyParsingEngine,
+            get_parsing_engine,
+        )
 
-        for file_format, parser in KNOWN_PARSERS.items():
-            actual = get_parser(file_format)
+        for file_format, parser in KNOWN_PARSING_ENGINES.items():
+            actual = get_parsing_engine(file_format)
             self.assertEqual(actual.name, file_format)
             self.assertEqual(actual, parser)
 
         with self.assertWarns(RuntimeWarning):
-            actual = get_parser("weird parser")
+            actual = get_parsing_engine("weird parser")
             self.assertEqual(actual.name, "Dummy")
-            self.assertEqual(actual, DummyParser)
+            self.assertEqual(actual, DummyParsingEngine)
 
     def test_available_parsers(self):
-        from parsers.parser_base import KNOWN_PARSERS, available_parsers
+        from parsing_engines.parsing_engines_base import (
+            KNOWN_PARSING_ENGINES,
+            available_parsing_engines,
+        )
 
-        names = list(KNOWN_PARSERS.keys())
-        descriptions = [p.description for p in KNOWN_PARSERS.values()]
+        names = list(KNOWN_PARSING_ENGINES.keys())
+        descriptions = [p.description for p in KNOWN_PARSING_ENGINES.values()]
         expected = list(zip(names, descriptions))
-        self.assertEqual(expected, available_parsers())
+        self.assertEqual(expected, available_parsing_engines())
 
     def test_mime_and_extension(self):
         from itertools import chain
 
-        from parsers.parser_base import KNOWN_PARSERS, mime_and_extension
+        from parsing_engines.parsing_engines_base import (
+            KNOWN_PARSING_ENGINES,
+            mime_and_extension,
+        )
 
-        descriptions = [p.valid for p in KNOWN_PARSERS.values()]
+        descriptions = [p.valid for p in KNOWN_PARSING_ENGINES.values()]
         actual = mime_and_extension()
         for item in chain.from_iterable(descriptions):
             assert item in actual
@@ -100,19 +115,22 @@ class TestParseDataFile(TestCase):
                 self.file_path = file_path
 
             def get_metadata(self):
-                return self.metadata, self.cols
+                return self.metadata
+
+            def get_column_info(self):
+                return self.cols
 
             def get_data_generator_for_columns(self, *args, **kwargs):
                 return self.data
 
         self.mock_parser = MockParser
 
-    @patch("parsers.parser_base.get_parser")
+    @patch("parsing_engines.parsing_engines_base.get_parsing_engine")
     def test_parse_data_file(self, mock_parser):
 
         mock_parser.return_value = self.mock_parser
 
-        from parsers.parser_base import parse_data_file
+        from parsing_engines.parsing_engines_base import parse_data_file
 
         actual = parse_data_file("some_file.txt", "some format", 0)
         rows = self.mock_parser.metadata["num_rows"]

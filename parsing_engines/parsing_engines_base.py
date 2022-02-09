@@ -9,80 +9,88 @@ from warnings import warn
 import pandas.errors
 from django.core.exceptions import ValidationError
 
-KNOWN_PARSERS: Dict[str, Type[ParserBase]] = {}
+KNOWN_PARSING_ENGINES: Dict[str, Type[ParsingEngineBase]] = {}
+"""Registry of the known parsing engines."""
 
 
-class ParserBase(abc.ABC):
+class ParsingEngineBase(abc.ABC):
 
     name: str = ""
     description: str = ""
     valid: List[Tuple[str, str]] = []
 
-    def __init_subclass__(cls: Type[ParserBase]):
+    def __init_subclass__(cls: Type[ParsingEngineBase]):
         if len(cls.name) == 0:
-            msg = "A ParserBase subclass cannot have an empty attribute 'name'."
+            msg = "A ParsingEngineBase subclass cannot have an empty attribute 'name'."
             raise ValueError(msg)
-        elif cls.name in KNOWN_PARSERS:
-            raise ValueError(f"A parser named '{cls.name}' already exists.")
-        KNOWN_PARSERS[cls.name] = cls
+        elif cls.name in KNOWN_PARSING_ENGINES:
+            raise ValueError(f"A parsing engine named '{cls.name}' already exists.")
+        KNOWN_PARSING_ENGINES[cls.name] = cls
 
     def __init__(self, file_path: Union[Path, str]):
         self.file_path = Path(file_path)
 
     @abc.abstractmethod
-    def get_metadata(self) -> (Dict, Dict):
+    def get_metadata(self) -> Dict:
+        pass
+
+    @abc.abstractmethod
+    def get_column_info(self) -> Dict:
         pass
 
     @abc.abstractmethod
     def get_data_generator_for_columns(
         self, columns: List, first_data_row: int = 0, col_mapping: Optional[Dict] = None
-    ) -> Generator[Dict, None, None]:
+    ) -> Generator[list, None, None]:
         pass
 
 
-class DummyParser(ParserBase):
+class DummyParsingEngine(ParsingEngineBase):
 
     name = "Dummy"
-    description = "Dummy parser that does nothing"
+    description = "Dummy parsing engine that does nothing"
     valid: List[Tuple[str, str]] = []
 
-    def get_metadata(self) -> (Dict, Dict):
-        return {"num_rows": 0}, {}
+    def get_metadata(self) -> Dict:
+        return {"num_rows": 0}
+
+    def get_column_info(self) -> Dict:
+        return {}
 
     def get_data_generator_for_columns(
         self, columns: List, first_data_row: int = 0, col_mapping: Optional[Dict] = None
-    ) -> Generator[Dict, None, None]:
+    ) -> Generator[list, None, None]:
         return iter([])  # noqa
 
 
-def get_parser(file_format: str) -> Type[ParserBase]:
-    """Provides the chosen parser or the Dummy one if none found.
+def get_parsing_engine(file_format: str) -> Type[ParsingEngineBase]:
+    """Provides the chosen parsing engine or the Dummy one if none found.
 
     Args:
         file_format: String indicating the format of the file. Should match one of the
-            known parsers.
+            known parsing engines.
 
     Warnings:
-        RuntimeWarning if the chosen parser is not found and the Dummy one is provided
-            instead.
+        RuntimeWarning if the chosen parsing engine is not found and the Dummy one is
+        provided instead.
 
     Returns:
         The chosen parser for the given file
     """
-    parser = KNOWN_PARSERS.get(file_format, None)
+    parser = KNOWN_PARSING_ENGINES.get(file_format, None)
     if parser is None:
         warn(f"No parser available for file format {file_format}!", RuntimeWarning)
-        parser = DummyParser
+        parser = DummyParsingEngine
     return parser
 
 
-def available_parsers() -> List[Tuple[str, str]]:
-    """Generates a list of available parser names and descriptions.
+def available_parsing_engines() -> List[Tuple[str, str]]:
+    """Generates a list of available parsing engines names and descriptions.
 
     Returns:
         A list of tuples with the parser name and its description.
     """
-    return [(k, v.description) for k, v in KNOWN_PARSERS.items()]
+    return [(k, v.description) for k, v in KNOWN_PARSING_ENGINES.items()]
 
 
 def mime_and_extension() -> List[Tuple[str, str]]:
@@ -91,11 +99,15 @@ def mime_and_extension() -> List[Tuple[str, str]]:
     Returns:
         A list of tuples with the mime type and the extension.
     """
+
+    def aggregate(store: List, new: Type[ParsingEngineBase]) -> List:
+        return store + new.valid
+
     return list(
         set(
             functools.reduce(
-                lambda previous, v: previous + v.valid,
-                KNOWN_PARSERS.values(),
+                aggregate,
+                KNOWN_PARSING_ENGINES.values(),
                 [],
             )
         )
@@ -126,10 +138,11 @@ def parse_data_file(
         A dictionary containing the following keys: 'metadata', 'file_columns',
         'parsed_columns', 'missing_columns', 'total_rows', 'range_config' and 'data'.
     """
-    parser = get_parser(file_format)(file_path)
+    engine = get_parsing_engine(file_format)(file_path)
 
     try:
-        metadata, cols = parser.get_metadata()
+        metadata = engine.get_metadata()
+        cols = engine.get_column_info()
     except (pandas.errors.ParserError, ValueError) as e:
         raise ValidationError(
             message={"raw_data_file": "File parsing failed: " + str(e)}
@@ -140,7 +153,7 @@ def parse_data_file(
     missing_columns = [c for c in columns if c not in file_columns]
     total_rows = metadata.get("num_rows", 0)
     range_config = {"all": {"start": 1, "end": total_rows, "action": "all"}}
-    data = parser.get_data_generator_for_columns(
+    data = engine.get_data_generator_for_columns(
         parsed_columns, first_data_row, col_mapping
     )
 
