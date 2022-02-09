@@ -1,4 +1,6 @@
-from django.shortcuts import redirect
+from django.contrib import messages
+from django.db import transaction
+from django.shortcuts import redirect, render
 from django.views.generic import DetailView
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
@@ -111,11 +113,44 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
     permission_required = "battDB.add_experimentdatafile"
     template_name = "create_edit_generic.html"
     form_class = NewExperimentDataFileForm
-    success_url = "/battDB/new_edf/"
     success_message = "New data_file added successfully."
     failure_message = "Could not add new data file. Invalid information."
     inline_key = "raw_data_file"
     formset = UploadDataFileFormset
+
+    def post(self, request, *args, **kwargs):
+        """
+        Unique post method for data files to handle a) setting user_owner and
+        status of uploaded file and b) parsing pk of associated experiment.
+        """
+        form = self.form_class(request.POST, request.FILES)
+        context = self.get_context_data()
+        parameters = context[self.inline_key]
+        if form.is_valid():
+            # Save instance incluing setting user owner and status
+            with transaction.atomic():
+                obj = form.save(commit=False)
+                obj.user_owner = request.user
+                # Set experiment FK based on URL
+                obj.experiment = Experiment.objects.get(pk=self.kwargs.get("pk"))
+                if form.is_public():
+                    obj.status = "public"
+                else:
+                    obj.status = "private"
+                self.object = form.save()
+            # Save individual parameters from inline form
+            if parameters.is_valid():
+                parameters.instance = self.object
+                # Handle uploaded files in formsets slightly differently to usual
+                parameters[0].instance.user_owner = obj.user_owner
+                parameters[0].instance.status = obj.status
+                parameters.save()
+                form.instance.full_clean()
+
+            messages.success(request, self.success_message)
+            return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
+        messages.error(request, self.failure_message)
+        return render(request, self.template_name, context)
 
 
 class NewProtocolView(PermissionRequiredMixin, NewDataView):
