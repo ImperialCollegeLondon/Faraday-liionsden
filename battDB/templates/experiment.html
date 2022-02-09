@@ -6,30 +6,40 @@
 {% load bootstrap5 %}
 {% load guardian_tags %}
 
+
 {% block content %}
+{% get_obj_perms request.user for object as "object_perms" %}
 
 <div class="container py-4">
 
   <table width="100%">
     <tr>
-      <td><h4>{{ object.user_owner.institution }} </h4></td>
-      <td style="text-align:center" ><h4> {{ object.name }} </h4></td>
-      <td style="text-align:right"><h4> {{ object.created_on.date}} </h4></td>
+      <td>
+        <h4>{{ object.user_owner.institution }} </h4>
+      </td>
+      <td style="text-align:center">
+        <h4> {{ object.name }} </h4>
+      </td>
+      <td style="text-align:right">
+        <h4> {{ object.created_on.date}} </h4>
+      </td>
     </tr>
-    </table>
+  </table>
 </div>
 
 <div class="card border-dark mb-3" style="max-width: 100%;">
-  <div class="card-header"><h5>Experiment details</h5></div>
+  <div class="card-header">
+    <h5>Experiment details</h5>
+  </div>
   <div class="card-body">
-    <b>Configuration </b> 
+    <b>Configuration </b>
     <br>
     {{object.config}}
     <br><br>
-    
+
     <b>Devices</b>
     <table class="table">
-      <thead class= "thead-light">
+      <thead class="thead-light">
         <tr>
           <th scope="col"> Batch</th>
           <th scope="col">Batch sequence</th>
@@ -37,25 +47,27 @@
         </tr>
       </thead>
       <tbody>
-      {% for device in object.devices.all %}
+        {% for device in object.devices.all %}
         <tr>
           <td><a href="{{ device.batch.get_absolute_url }}">{{ device.batch }}</a></td>
           <td>{{ device.batch_sequence }}</td>
           <td>{{ device.device_position }}</td>
         </tr>
-      {% endfor %}
-    </tbody>
+        {% endfor %}
+      </tbody>
     </table>
-  
+
   </div>
 </div>
 
 
 <div class="card border-dark mb-3" style="max-width: 100%;">
-  <div class="card-header"><h5>Measurement data</h5></div>
+  <div class="card-header">
+    <h5>Measurement data</h5>
+  </div>
   <div class="card-body">
     <table class="table">
-      <thead class= "thead-light">
+      <thead class="thead-light">
         <tr>
           <th scope="col"> Name</th>
           <th scope="col">Parsed columns</th>
@@ -65,50 +77,76 @@
       </thead>
       <tbody>
 
-      {% for data_file in object.data_files.all %}
+        {% for data_file in object.data_files.all %}
         <td>{{ data_file.name }}</td>
         <td>{{ data_file.ts_headers }}</td>
         <td>{{ data_file.file_columns }}</td>
-        <td><a href="{{ data_file.raw_data_file.file.url }}" class="btn btn-primary", role="button"> Download </a></td>
-      {% endfor %}
+        <td><a href="{{ data_file.raw_data_file.file.url }}" class="btn btn-primary" , role="button"> Download </a></td>
+        {% endfor %}
       </tbody>
     </table>
+    {% if "change_experiment" in object_perms %}
+    <br>
+    <a href="/battDB/exps/add_data/{{ object.pk }}" class="btn btn-primary" , role="button"> Add more experimental data
+    </a>
+    {% endif %}
   </div>
 </div>
 
 <div class="card border-dark mb-3" style="max-width: 100%;">
-  <div class="card-header"><h5>Metadata</h5></div>
+  <div class="card-header">
+    <h5>Metadata</h5>
+  </div>
   <div class="card-body">
     <table width="50%">
-      <tr><td><b>Owner:</b></td><td>{{ object.user_owner }} </td></tr>
-      <tr><td><b>Data files count:</b></td><td>{{ object.data_files.count }} </td></tr>
-      <tr><td><b>Created:</b></td><td>{{ object.created_on }} </td></tr>
-      <tr><td><b>Modified:</b></td><td>{{ object.modified_on }} </td></tr>
-      <tr><td><b>ID:</b></td><td>{{ object.id }} </td></tr>
-      <tr><td><b>Status:</b></td><td>{{ object.status }} </td></tr>
-      <tr><td><b>Notes:</b></td><td>{{ object.notes }} </td></tr>
-      <tr><td><b>Attributes:</b></td><td>{{ object.attributes }} </td></tr>
+      <tr>
+        <td><b>Owner:</b></td>
+        <td>{{ object.user_owner }} </td>
+      </tr>
+      <tr>
+        <td><b>Data files count:</b></td>
+        <td>{{ object.data_files.count }} </td>
+      </tr>
+      <tr>
+        <td><b>Created:</b></td>
+        <td>{{ object.created_on }} </td>
+      </tr>
+      <tr>
+        <td><b>Modified:</b></td>
+        <td>{{ object.modified_on }} </td>
+      </tr>
+      <tr>
+        <td><b>ID:</b></td>
+        <td>{{ object.id }} </td>
+      </tr>
+      <tr>
+        <td><b>Status:</b></td>
+        <td>{{ object.status }} </td>
+      </tr>
+      <tr>
+        <td><b>Notes:</b></td>
+        <td>{{ object.notes }} </td>
+      </tr>
+      <tr>
+        <td><b>Attributes:</b></td>
+        <td>{{ object.attributes }} </td>
+      </tr>
     </table>
-  
-    {#  <h5>Data files:</h5>#}
-    {#  <ul>#}
-    {#  {% for file in object.data_files.all %}#}
-    {#    <li><a href="{% url 'viewData' file.id %}">{{ file }}</a></li>#}
-    {#  {% endfor %}#}
-    {#    <li><a href="upload_file">Upload new data file</a>#}
-    {#  </ul>#}
-  
+
+    {# <h5>Data files:</h5>#}
+    {# <ul>#}
+      {# {% for file in object.data_files.all %}#}
+      {# <li><a href="{% url 'viewData' file.id %}">{{ file }}</a></li>#}
+      {# {% endfor %}#}
+      {# <li><a href="upload_file">Upload new data file</a>#}
+        {# </ul>#}
+
   </div>
-
-  {% get_obj_perms request.user for object as "object_perms" %}
-  {% if "change_experiment" in object_perms %}
-    </div>
-      <a href="/battDB/exps/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
-      <a href="/battDB/exps/delete/{{ object.pk }}" class="btn btn-danger", role="button"> Delete entry</a>
-    </div>
-  {% endif %}
-
 </div>
 
+{% if "change_experiment" in object_perms %}
+<a href="/battDB/exps/edit/{{ object.pk }}" class="btn btn-warning" , role="button"> Edit entry</a>
+<a href="/battDB/exps/delete/{{ object.pk }}" class="btn btn-danger" , role="button"> Delete entry</a>
+{% endif %}
 
 {% endblock %}
