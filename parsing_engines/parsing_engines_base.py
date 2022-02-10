@@ -143,7 +143,7 @@ def parse_data_file(
     try:
         metadata = engine.get_metadata()
         cols = engine.get_column_info()
-    except (pandas.errors.ParserError, ValueError) as e:
+    except (pandas.errors.ParserError, ValueError, KeyError) as e:
         raise ValidationError(
             message={"raw_data_file": "File parsing failed: " + str(e)}
         )
