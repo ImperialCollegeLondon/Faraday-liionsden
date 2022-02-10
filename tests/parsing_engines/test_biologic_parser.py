@@ -94,7 +94,7 @@ class TestBiologicCSVnTSVParser(TestCase):
         cols = parser.get_column_info()
 
         self.assertEqual(cols, parser.get_column_info())
-        self.assertEqual(meta["Dataset_Name"], self.file_path.stem)
+        self.assertEqual(meta["dataset_name"], self.file_path.stem)
         self.assertEqual(meta["dataset_size"], self.file_path.stat().st_size)
         self.assertEqual(meta["num_rows"], len(parser.data))
         self.assertEqual(meta["data_start"], parser.skip_rows)
@@ -110,10 +110,9 @@ class TestBiologicCSVnTSVParser(TestCase):
         parser = BP(self.file_path)
 
         ncols = 5
-        first = 20
         cols = parser.data.columns[:ncols]
-        actual = list(parser.get_data_generator_for_columns(cols, first))
-        expected = [list(row) for row in parser.data[cols].values[first:]]
+        actual = list(parser.get_data_generator_for_columns(cols))
+        expected = [list(row) for row in parser.data[cols].values]
         self.assertEqual(actual, expected)
 
 
