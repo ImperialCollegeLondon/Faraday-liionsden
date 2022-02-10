@@ -6,10 +6,10 @@ import xlrd
 from xlrd.sheet import Cell
 
 from .battery_exceptions import EmptyFileError
-from .parser_base import ParserBase
+from .parsing_engines_base import ParsingEngineBase
 
 
-class MaccorXLSParser(ParserBase):
+class MaccorXLSParser(ParsingEngineBase):
     """
     ParserBase for Maccor excel raw data
     Based on maccor_functions by Luke Pitt

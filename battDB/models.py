@@ -11,7 +11,7 @@ from django.urls import reverse
 import common.models as cm
 import dfndb.models as dfn
 from common.validators import validate_pdf_file
-from parsers import available_parsers, parse_data_file
+from parsing_engines import available_parsing_engines, parse_data_file
 
 
 class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
@@ -300,9 +300,9 @@ class Parser(cm.BaseModelMandatoryName):
      https://stackoverflow.com/q/46430471/3778792 combined with some pandas magic.
     """
 
-    FORMAT_CHOICES = available_parsers()
+    FORMAT_CHOICES = available_parsing_engines()
     file_format = models.CharField(
-        max_length=50,
+        max_length=100,
         default=FORMAT_CHOICES[0] if len(FORMAT_CHOICES) > 0 else "none",
         choices=FORMAT_CHOICES,
         help_text="File format",
@@ -500,7 +500,7 @@ class ExperimentDataFile(cm.BaseModel):
             file_format = self.raw_data_file.use_parser.file_format
             parsed_file = parse_data_file(filepath, file_format, 0, columns=cols)
 
-            self.parsed_metadata = parsed_file["metadata"]
+            self.attributes["parsed_metadata"] = parsed_file["metadata"]
             self.attributes["file_columns"] = parsed_file["file_columns"]
             self.attributes["parsed_columns"] = parsed_file["parsed_columns"]
             self.attributes["missing_columns"] = parsed_file["missing_columns"]

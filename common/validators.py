@@ -3,7 +3,7 @@ from pathlib import Path
 import magic
 from django.core.exceptions import ValidationError
 
-from parsers import mime_and_extension
+from parsing_engines import mime_and_extension
 
 
 def validate_data_file(file) -> None:
