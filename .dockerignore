@@ -3,7 +3,7 @@
 !common
 !dfndb
 !liionsden
-!parsers
+!parsing_engines
 !templates
 !data
 data/db/*
