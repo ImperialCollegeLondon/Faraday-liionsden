@@ -133,12 +133,13 @@ class BiologicCSVnTSVParser(ParsingEngineBase):
             A dictionary with the metadata
         """
         metadata: Dict[str, Any] = {
-            "Dataset_Name": self.file_path.stem,
+            "dataset_name": self.file_path.stem,
             "dataset_size": self.file_path.stat().st_size,
             "num_rows": len(self.data),
             "data_start": self.skip_rows,
             "first_sample_no": self.skip_rows + 1,
             "file_metadata": header_to_yaml(self._get_file_header()),
+            "machine_type": "Biologic",
             "warnings": [],
         }
 

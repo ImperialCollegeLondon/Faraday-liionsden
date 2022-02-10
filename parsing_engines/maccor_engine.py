@@ -1,19 +1,7 @@
-from typing import (
-    Any,
-    Dict,
-    Generator,
-    Iterable,
-    List,
-    Optional,
-    Sequence,
-    Text,
-    Tuple,
-    Union,
-)
+from typing import Any, Dict, Generator, Iterable, List, Optional, Sequence, Text, Tuple
 
 import pandas as pd
 import xlrd
-from numpy.typing import NDArray
 from pandas.core.dtypes.common import is_numeric_dtype
 from xlrd.sheet import Cell
 
@@ -189,13 +177,13 @@ class MaccorXLSParser(ParsingEngineBase):
             raise EmptyFileError()
 
         metadata: Dict[str, Any] = {
-            "Dataset_Name": self.file_path.stem,
+            "dataset_name": self.file_path.stem,
             "dataset_size": self.file_path.stat().st_size,
             "num_rows": len(self.data),
             "data_start": self.skip_rows,
             "first_sample_no": self.skip_rows + 1,
             "file_metadata": self._get_file_header(),
-            "Machine Type": "Maccor",
+            "machine_type": "Maccor",
             "warnings": [],
         }
 
