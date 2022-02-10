@@ -207,7 +207,7 @@ class MaccorXLSParser(ParsingEngineBase):
         return metadata
 
     def get_data_generator_for_columns(
-        self, columns: List, first_data_row: int, col_mapping: Optional[Dict] = None
+        self, columns: List, first_data_row: int = 0, col_mapping: Optional[Dict] = None
     ) -> Generator[list, None, None]:
         """Provides the data filtered by the requested columns and a column mapping.
 

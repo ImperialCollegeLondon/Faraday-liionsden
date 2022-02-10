@@ -152,18 +152,20 @@ class BiologicCSVnTSVParser(ParsingEngineBase):
     def get_data_generator_for_columns(
         self, columns: list, first_data_row: int = 0, col_mapping: Optional[Dict] = None
     ) -> Generator[list, None, None]:
-        """Creates a Generator for accessing all data row by row for the given columns.
-
-        Columns can be renamed if the mapping is passed.
+        """Provides the data filtered by the requested columns and a column mapping.
 
         Args:
-            columns: Columns to parse.
-            first_data_row: First row of data to be returned.
-            col_mapping: Column mapping from required columns to actual columns in the
-                data.
+            columns (List): Columns of data to provide
+            first_data_row (int): First row of data to parse (NOT USED)
+            col_mapping (Optional[Dict], optional): Dictionary to map the required
+            column names to the Maccor file column names. Defaults to None.
+
+        Raises:
+            KeyError if the required columns, after applying the mapping, do not exist
+                in the data.
 
         Returns:
-            A row of data for the selected columns every time it is called.
+            Union[Generator[Dict, None, None], NDArray]: [description]
         """
         cols = (
             [col_mapping.get(c, c) for c in columns]
@@ -171,8 +173,8 @@ class BiologicCSVnTSVParser(ParsingEngineBase):
             else columns
         )
 
-        for row in self.data[cols].values[first_data_row:]:
-            yield list(row)
+        for row in self.data[cols].itertuples():
+            yield list(row)[1:]
 
 
 yaml_replacements = {
