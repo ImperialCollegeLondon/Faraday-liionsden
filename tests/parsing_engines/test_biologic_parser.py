@@ -69,7 +69,7 @@ class TestBiologicCSVnTSVParser(TestCase):
         BP._standardise_columns(self.parser)
         self.assertTrue(all_cols(self.parser.data))
 
-    def test__get_column_info(self):
+    def test_get_column_info(self):
         from parsing_engines import BiologicCSVnTSVParser as BP
 
         parser = BP(self.file_path)
