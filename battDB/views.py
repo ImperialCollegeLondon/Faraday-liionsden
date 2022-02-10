@@ -135,7 +135,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
             with transaction.atomic():
                 obj = form.save(commit=False)
                 obj.user_owner = request.user
-                # Set experiment FK based on URL
+                # Set experiment PK based on URL
                 obj.experiment = Experiment.objects.get(pk=self.kwargs.get("pk"))
                 if form.is_public():
                     obj.status = "public"
