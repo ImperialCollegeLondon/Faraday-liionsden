@@ -1,6 +1,6 @@
 from pathlib import Path
 from types import SimpleNamespace
-from unittest import TestCase, expectedFailure
+from unittest import TestCase
 
 
 class TestBiologicCSVnTSVParser(TestCase):

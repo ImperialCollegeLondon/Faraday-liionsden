@@ -66,7 +66,14 @@ class BiologicCSVnTSVParser(ParsingEngineBase):
         """
         kwargs = dict(engine="python", skiprows=self.skip_rows, encoding=self.encoding)
 
-        data = pd.read_csv(self.file_path, delimiter=",", **kwargs)
+        try:
+            data = pd.read_csv(self.file_path, delimiter=",", **kwargs)
+        except pd.errors.ParserError:
+            try:
+                data = pd.read_csv(self.file_path, delimiter="\t", **kwargs)
+            except pd.errors.ParserError:
+                raise UnsupportedFileTypeError()
+
         if len(data.columns) == 1:
             data = pd.read_csv(self.file_path, delimiter="\t", **kwargs)
 
@@ -150,7 +157,7 @@ class BiologicCSVnTSVParser(ParsingEngineBase):
         Columns can be renamed if the mapping is passed.
 
         Args:
-            columns: Columns tu parse.
+            columns: Columns to parse.
             first_data_row: First row of data to be returned.
             col_mapping: Column mapping from required columns to actual columns in the
                 data.
