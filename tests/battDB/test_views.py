@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.contrib.auth.models import Group
 from django.test import TestCase
 from django.urls import reverse
@@ -42,7 +40,7 @@ class CreateDeviceSpecificationTest(TestCase):
             '<select name="deviceparameter_set-0-material" class="select form-select" id="id_deviceparameter_set-0-material">',
         )
 
-    def test_create_update_devices(self):
+    def test_create_update_delete_devices(self):
         login_response = self.client.post(
             "/accounts/login/",
             {"username": "test_contributor", "password": "contribpass"},
@@ -99,6 +97,28 @@ class CreateDeviceSpecificationTest(TestCase):
         self.assertEqual(device.status, "public")
         self.assertEqual(device.notes, "Some other notes")
 
+        # Delete device spec.
+        delete_response = self.client.post(
+            reverse("battDB:Delete Device", kwargs={"pk": device.id})
+        )
+        # Initially check user cannot delete public entry
+        self.assertEqual(delete_response.status_code, 302)
+        self.assertEqual(
+            delete_response.url,
+            "/accounts/login/?next=/battDB/devices/delete/{}/".format(device.id),
+        )
+        # Set status manually to private and check delete mechanism
+        device.status = "private"
+        device.save()
+        device.refresh_from_db()
+        delete_response = self.client.post(
+            reverse("battDB:Delete Device", kwargs={"pk": device.id})
+        )
+        self.assertEqual(delete_response.status_code, 302)
+        self.assertEqual(delete_response.url, "/battDB/devices/")
+        device.refresh_from_db()
+        self.assertEqual(device.status, "deleted")
+
 
 class CreateEquipmentTest(TestCase):
     def setUp(self):
@@ -114,7 +134,7 @@ class CreateEquipmentTest(TestCase):
 
         self.institution = baker.make_recipe("tests.common.org")
 
-    def test_create_update_equipment(self):
+    def test_create_update_delete_equipment(self):
         login_response = self.client.post(
             "/accounts/login/",
             {"username": "test_contributor", "password": "contribpass"},
@@ -152,6 +172,15 @@ class CreateEquipmentTest(TestCase):
 
         equipment.refresh_from_db()
         self.assertEqual(equipment.name, "A different cycler")
+
+        # Delete equipment
+        delete_response = self.client.post(
+            reverse("battDB:Delete Equipment", kwargs={"pk": equipment.id})
+        )
+        self.assertEqual(delete_response.status_code, 302)
+        self.assertEqual(delete_response.url, "/battDB/equipment/")
+        equipment.refresh_from_db()
+        self.assertEqual(equipment.status, "deleted")
 
 
 class CreateBatchTest(TestCase):
@@ -214,6 +243,15 @@ class CreateBatchTest(TestCase):
         batch.refresh_from_db()
         self.assertEqual(batch.serialNo, "abc-123456")
 
+        # Delete batch
+        delete_response = self.client.post(
+            reverse("battDB:Delete Batch", kwargs={"pk": batch.id})
+        )
+        self.assertEqual(delete_response.status_code, 302)
+        self.assertEqual(delete_response.url, "/battDB/batches/")
+        batch.refresh_from_db()
+        self.assertEqual(batch.status, "deleted")
+
 
 class ExperimentViewTest(TestCase):
     def setUp(self):
@@ -264,9 +302,7 @@ class ExperimentViewTest(TestCase):
         response = self.client.get(
             reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
         )
-        self.assertContains(
-            response, '<td style="text-align:center" ><h4> test experiment </h4></td>'
-        )
+        self.assertContains(response, "<h4> test experiment </h4>")
 
 
 class DeviceSpecificationViewTest(TestCase):

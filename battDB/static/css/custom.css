@@ -9,3 +9,7 @@ textarea {
 tr[status='private'] {
   background-color: #D1ECF1;
 }
+
+tr[status='deleted'] {
+  background-color: #ff4e4e91;
+}

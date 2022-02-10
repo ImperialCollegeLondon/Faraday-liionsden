@@ -3,6 +3,11 @@ from django.urls import path
 from .views import (
     BatchTableView,
     BatchView,
+    DeleteBatchView,
+    DeleteDataFileView,
+    DeleteDeviceView,
+    DeleteEquipmentView,
+    DeleteExperimentView,
     DeviceSpecificationTableView,
     DeviceSpecificationView,
     EquipmentTableView,
@@ -10,6 +15,7 @@ from .views import (
     ExperimentTableView,
     ExperimentView,
     NewBatchView,
+    NewDataFileView,
     NewDeviceView,
     NewEquipmentView,
     NewExperimentView,
@@ -25,29 +31,47 @@ app_name = "battDB"
 
 urlpatterns = [
     path("", index, name="index"),
-    path("exps/", ExperimentTableView.as_view(), name="Experiments"),
-    path("exps/<int:pk>/", ExperimentView.as_view(), name="Experiment"),
-    path(
-        "exps/edit/<int:pk>", UpdateExperimentView.as_view(), name="Update Experiment"
-    ),
-    path("batches/", BatchTableView.as_view(), name="Batches"),
-    path("batches/<int:pk>/", BatchView.as_view(), name="Batch"),
-    path("batches/edit/<int:pk>/", UpdateBatchView.as_view(), name="Update Batch"),
-    path("equipment/", EquipmentTableView.as_view(), name="Equipment list"),
-    path("equipment/<int:pk>/", EquipmentView.as_view(), name="Equipment"),
-    path(
-        "equipment/edit/<int:pk>/",
-        UpdateEquipmentView.as_view(),
-        name="Update Equipment",
-    ),
     path("devices/", DeviceSpecificationTableView.as_view(), name="Devices"),
+    path("exps/", ExperimentTableView.as_view(), name="Experiments"),
+    path("equipment/", EquipmentTableView.as_view(), name="Equipment list"),
+    path("batches/", BatchTableView.as_view(), name="Batches"),
     path("devices/<int:pk>/", DeviceSpecificationView.as_view(), name="Device"),
-    path("devices/edit/<int:pk>/", UpdateDeviceView.as_view(), name="Update Device"),
+    path("exps/<int:pk>/", ExperimentView.as_view(), name="Experiment"),
+    path("equipment/<int:pk>/", EquipmentView.as_view(), name="Equipment"),
+    path("batches/<int:pk>/", BatchView.as_view(), name="Batch"),
     path("new_device/", NewDeviceView.as_view(), name="New Device"),
     path("new_equipment/", NewEquipmentView.as_view(), name="New Equipment"),
     path("new_batch/", NewBatchView.as_view(), name="New Batch"),
     path("new_protocol/", NewProtocolView.as_view(), name="New Protocol"),
     path("new_experiment/", NewExperimentView.as_view(), name="New Experiment"),
+    path("exps/add_data/<int:pk>/", NewDataFileView.as_view(), name="New File"),
+    path("devices/edit/<int:pk>/", UpdateDeviceView.as_view(), name="Update Device"),
+    path(
+        "exps/edit/<int:pk>", UpdateExperimentView.as_view(), name="Update Experiment"
+    ),
+    path(
+        "equipment/edit/<int:pk>/",
+        UpdateEquipmentView.as_view(),
+        name="Update Equipment",
+    ),
+    path("batches/edit/<int:pk>/", UpdateBatchView.as_view(), name="Update Batch"),
+    path("devices/delete/<int:pk>/", DeleteDeviceView.as_view(), name="Delete Device"),
+    path(
+        "exps/delete/<int:pk>/",
+        DeleteExperimentView.as_view(),
+        name="Delete Experiment",
+    ),
+    path(
+        "equipment/delete/<int:pk>/",
+        DeleteEquipmentView.as_view(),
+        name="Delete Equipment",
+    ),
+    path("batches/delete/<int:pk>/", DeleteBatchView.as_view(), name="Delete Batch"),
+    path(
+        "devices/delete/<int:pk>/",
+        DeleteDataFileView.as_view(),
+        name="Delete Data File",
+    ),
 ]
 
 """The following url patterns will be added on a need basis, as new functionality 

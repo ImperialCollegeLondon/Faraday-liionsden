@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import (
     CompoundTableView,
+    DeleteMaterialView,
     MaterialTableView,
     MaterialView,
     NewCompoundView,
@@ -23,5 +24,10 @@ urlpatterns = [
     path("new_material/", NewMaterialView.as_view(), name="New Material"),
     path(
         "materials/edit/<int:pk>/", UpdateMaterialView.as_view(), name="Update Material"
+    ),
+    path(
+        "materials/delete/<int:pk>/",
+        DeleteMaterialView.as_view(),
+        name="Delete Material",
     ),
 ]

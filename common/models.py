@@ -335,9 +335,9 @@ class HashedFile(models.Model):
             return "N/A"
         if self.size_bytes() < 1024:
             return "%dB" % self.size_bytes()
-        elif self.size_bytes() < 1024 ** 2:
+        elif self.size_bytes() < 1024**2:
             return "%2.2fkB" % (self.size_bytes() / 1024.0)
-        elif self.size_bytes() < 1024 ** 3:
-            return "%2.2fMB" % (self.size_bytes() / (1024.0 ** 2))
+        elif self.size_bytes() < 1024**3:
+            return "%2.2fMB" % (self.size_bytes() / (1024.0**2))
         else:
-            return "%2.2fGB" % (self.size_bytes() / (1024.0 ** 3))
+            return "%2.2fGB" % (self.size_bytes() / (1024.0**3))

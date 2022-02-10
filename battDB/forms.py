@@ -1,5 +1,3 @@
-import re
-
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (
     HTML,
@@ -9,7 +7,6 @@ from crispy_forms.layout import (
     Field,
     Fieldset,
     Layout,
-    Row,
     Submit,
 )
 from django import forms
@@ -22,7 +19,9 @@ from battDB.models import (
     DeviceSpecification,
     Equipment,
     Experiment,
+    ExperimentDataFile,
     ExperimentDevice,
+    UploadedFile,
 )
 from common.forms import DataCreateForm
 from dfndb.models import Method
@@ -239,6 +238,73 @@ class NewBatchForm(DataCreateForm):
                 css_class="row",
             )
         )
+
+
+class NewExperimentDataFileForm(DataCreateForm):
+    """
+    Add a new experiment data file.
+    """
+
+    class Meta:
+        model = ExperimentDataFile
+        fields = [
+            "name",
+            "machine",
+            "notes",
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(NewExperimentDataFileForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.attrs = {"enctype": "multipart/form-data"}
+        self.helper.layout = Layout(
+            Div(
+                Div(HTML("<h1> New data file </h1>")),
+                Column("name", css_class="col-3"),
+                Column("machine", css_class="col-3"),
+                Fieldset(
+                    "Upload file",
+                    Div(
+                        HTML(
+                            "Upload the raw data file here. Select 'parse' to process the data using your chosen parser."
+                        ),
+                        css_class="container pb-4",
+                    ),
+                    Formset("raw_data_file"),
+                    required=False,
+                ),
+                Field("notes"),
+                HTML("<br>"),
+                Field("make_public"),
+                HTML("<br>"),
+                ButtonHolder(Submit("submit", "save")),
+                css_class="row",
+            )
+        )
+
+
+class UploadedFileForm(ModelForm):
+    """
+    For adding files.
+    """
+
+    class meta:
+        model = UploadedFile
+        exclude = ()
+
+
+UploadDataFileFormset = inlineformset_factory(
+    ExperimentDataFile,
+    UploadedFile,
+    form=UploadedFileForm,
+    fields=["file", "parse", "use_parser"],
+    extra=1,
+    can_delete=False,
+    help_texts={
+        "file": None,
+        "parse": None,
+    },
+)
 
 
 class NewProtocolForm(DataCreateForm):

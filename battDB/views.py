@@ -1,4 +1,6 @@
-from django.shortcuts import redirect
+from django.contrib import messages
+from django.db import transaction
+from django.shortcuts import redirect, render
 from django.views.generic import DetailView
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
@@ -12,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from common.views import (
+    MarkAsDeletedView,
     NewDataView,
     NewDataViewInline,
     UpdateDataInlineView,
@@ -30,8 +33,10 @@ from .forms import (
     NewBatchForm,
     NewDeviceForm,
     NewEquipmentForm,
+    NewExperimentDataFileForm,
     NewExperimentForm,
     NewProtocolForm,
+    UploadDataFileFormset,
 )
 from .models import (
     Batch,
@@ -62,7 +67,7 @@ def index(request):
     return redirect("/")
 
 
-### CREATE/ADD VIEWS ###
+######################## CREATE, ADD, DELETE VIEWS #########################
 class NewDeviceView(PermissionRequiredMixin, NewDataViewInline):
     permission_required = "battDB.add_devicespecification"
     template_name = "create_edit_generic.html"
@@ -75,10 +80,6 @@ class NewDeviceView(PermissionRequiredMixin, NewDataViewInline):
 
 
 class NewExperimentView(PermissionRequiredMixin, NewDataViewInline):
-    """
-    Unique view for adding an experiment with inline addition of devices.
-    """
-
     permission_required = "battDB.add_experiment"
     model = Experiment
     template_name = "create_edit_generic.html"
@@ -108,6 +109,54 @@ class NewBatchView(PermissionRequiredMixin, NewDataView):
     failure_message = "Could not save new batch. Invalid information."
 
 
+class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
+    permission_required = "battDB.change_experiment"
+    template_name = "create_edit_generic.html"
+    form_class = NewExperimentDataFileForm
+    success_message = "New data_file added successfully."
+    failure_message = "Could not add new data file. Invalid information."
+    inline_key = "raw_data_file"
+    formset = UploadDataFileFormset
+
+    def get_permission_object(self, *args, **kwargs):
+        # Only allowed by users who can change current Experiment
+        return Experiment.objects.get(pk=self.kwargs.get("pk"))
+
+    def post(self, request, *args, **kwargs):
+        """
+        Unique post method for data files to handle a) setting user_owner and
+        status of uploaded file and b) parsing pk of associated experiment.
+        """
+        form = self.form_class(request.POST, request.FILES)
+        context = self.get_context_data()
+        parameters = context[self.inline_key]
+        if form.is_valid():
+            # Save instance incluing setting user owner and status
+            with transaction.atomic():
+                obj = form.save(commit=False)
+                obj.user_owner = request.user
+                # Set experiment PK based on URL
+                obj.experiment = Experiment.objects.get(pk=self.kwargs.get("pk"))
+                if form.is_public():
+                    obj.status = "public"
+                else:
+                    obj.status = "private"
+                self.object = form.save()
+            # Save individual parameters from inline form
+            if parameters.is_valid():
+                parameters.instance = self.object
+                # Handle uploaded files in formsets slightly differently to usual
+                parameters[0].instance.user_owner = obj.user_owner
+                parameters[0].instance.status = obj.status
+                parameters.save()
+                form.instance.full_clean()
+
+            messages.success(request, self.success_message)
+            return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
+        messages.error(request, self.failure_message)
+        return render(request, self.template_name, context)
+
+
 class NewProtocolView(PermissionRequiredMixin, NewDataView):
     permission_required = "dfndb.add_method"
     template_name = "create_protocol.html"
@@ -115,26 +164,6 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
     success_url = "/battDB/new_protocol/"
     success_message = "New protocol created successfully."
     failure_message = "Could not save new protocol. Invalid information."
-
-
-class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
-    model = Batch
-    permission_required = "battDB.change_batch"
-    template_name = "create_edit_generic.html"
-    form_class = NewBatchForm
-    success_url = "/battDB/batches/"
-    success_message = "Batch updated successfully."
-    failure_message = "Could not update batch. Invalid information."
-
-
-class UpdateEquipmentView(PermissionRequiredMixin, UpdateDataView):
-    model = Equipment
-    permission_required = "battDB.change_equipment"
-    template_name = "create_edit_generic.html"
-    form_class = NewEquipmentForm
-    success_url = "/battDB/equipment/"
-    success_message = "Equipment updated successfully."
-    failure_message = "Could not update Equipment. Invalid information."
 
 
 class UpdateDeviceView(PermissionRequiredMixin, UpdateDataInlineView):
@@ -161,7 +190,70 @@ class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
     formset = ExperimentDeviceFormSet
 
 
-### DETAIL/LIST/TABLE VIEWS ###
+class UpdateEquipmentView(PermissionRequiredMixin, UpdateDataView):
+    model = Equipment
+    permission_required = "battDB.change_equipment"
+    template_name = "create_edit_generic.html"
+    form_class = NewEquipmentForm
+    success_url = "/battDB/equipment/"
+    success_message = "Equipment updated successfully."
+    failure_message = "Could not update Equipment. Invalid information."
+
+
+class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
+    model = Batch
+    permission_required = "battDB.change_batch"
+    template_name = "create_edit_generic.html"
+    form_class = NewBatchForm
+    success_url = "/battDB/batches/"
+    success_message = "Batch updated successfully."
+    failure_message = "Could not update batch. Invalid information."
+
+
+# TODO: UpdateDataFileView
+
+
+class DeleteDeviceView(PermissionRequiredMixin, MarkAsDeletedView):
+    model = DeviceSpecification
+    permission_required = "battDB.change_devicespecification"
+    success_url = "/battDB/devices/"
+    template_name = "delete_generic.html"
+    success_message = "Device Specification deleted successfully."
+
+
+class DeleteExperimentView(PermissionRequiredMixin, MarkAsDeletedView):
+    model = Experiment
+    permission_required = "battDB.change_experiment"
+    success_url = "/battDB/exps/"
+    template_name = "delete_generic.html"
+    success_message = "Experiment deleted successfully."
+
+
+class DeleteEquipmentView(PermissionRequiredMixin, MarkAsDeletedView):
+    model = Equipment
+    permission_required = "battDB.change_equipment"
+    success_url = "/battDB/equipment/"
+    template_name = "delete_generic.html"
+    success_message = "Equipment deleted successfully."
+
+
+class DeleteBatchView(PermissionRequiredMixin, MarkAsDeletedView):
+    model = Batch
+    permission_required = "battDB.change_batch"
+    success_url = "/battDB/batches/"
+    template_name = "delete_generic.html"
+    success_message = "Batch deleted successfully."
+
+
+class DeleteDataFileView(PermissionRequiredMixin, MarkAsDeletedView):
+    model = ExperimentDataFile
+    permission_required = "battDB.change_experimentdatafile"
+    success_url = "/battDB/exps/"
+    template_name = "delete_generic.html"
+    success_message = "Data file deleted successfully."
+
+
+#################### DETAIL, LIST, TABLE VIEWS #########################
 class ExperimentTableView(
     SingleTableMixin, ExportMixin, PermissionListMixin, FilterView
 ):

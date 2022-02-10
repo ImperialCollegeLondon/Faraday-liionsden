@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import redirect, render  # noqa: F401
-from django.views.generic.edit import FormView, UpdateView
+from django.views.generic.edit import DeleteView, FormView, UpdateView
 
 
 class NewDataView(FormView):
@@ -51,14 +51,13 @@ class NewDataViewInline(FormView):
         """
         data = super(NewDataViewInline, self).get_context_data(**kwargs)
         if self.request.POST:
-            data[self.inline_key] = self.formset(self.request.POST)
+            data[self.inline_key] = self.formset(self.request.POST, self.request.FILES)
         else:
             data[self.inline_key] = self.formset()
         return data
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
-        form = self.form_class()
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -66,7 +65,7 @@ class NewDataViewInline(FormView):
         context = self.get_context_data()
         parameters = context[self.inline_key]
         if form.is_valid():
-            # Save experiment incluing setting user owner and status
+            # Save instance incluing setting user owner and status
             with transaction.atomic():
                 obj = form.save(commit=False)
                 obj.user_owner = request.user
@@ -79,6 +78,7 @@ class NewDataViewInline(FormView):
             if parameters.is_valid():
                 parameters.instance = self.object
                 parameters.save()
+
             messages.success(request, self.success_message)
             return redirect(self.success_url)
         messages.error(request, self.failure_message)
@@ -160,3 +160,21 @@ class UpdateDataInlineView(UpdateView):
             return redirect(self.success_url)
         messages.error(request, self.failure_message)
         return render(request, self.template_name, context)
+
+
+class MarkAsDeletedView(DeleteView):
+    """Custom delete view that does not actually delete the object
+    but marks its status as deleted.
+    """
+
+    success_message = "Object deleted."
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.status = "deleted"
+        self.object.save()
+        messages.success(request, self.success_message)
+        return redirect(self.success_url)
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
