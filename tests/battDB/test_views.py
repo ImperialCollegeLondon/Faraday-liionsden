@@ -302,9 +302,7 @@ class ExperimentViewTest(TestCase):
         response = self.client.get(
             reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
         )
-        self.assertContains(
-            response, '<td style="text-align:center" ><h4> test experiment </h4></td>'
-        )
+        self.assertContains(response, "<h4> test experiment </h4>")
 
 
 class DeviceSpecificationViewTest(TestCase):

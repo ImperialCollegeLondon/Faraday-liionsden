@@ -1,5 +1,3 @@
-import re
-
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (
     HTML,
@@ -9,7 +7,6 @@ from crispy_forms.layout import (
     Field,
     Fieldset,
     Layout,
-    Row,
     Submit,
 )
 from django import forms
@@ -252,7 +249,6 @@ class NewExperimentDataFileForm(DataCreateForm):
         model = ExperimentDataFile
         fields = [
             "name",
-            "experiment",
             "machine",
             "notes",
         ]
@@ -264,9 +260,8 @@ class NewExperimentDataFileForm(DataCreateForm):
         self.helper.layout = Layout(
             Div(
                 Div(HTML("<h1> New data file </h1>")),
-                Column("name", css_class="col-4"),
-                Column("experiment", css_class="col-4"),
-                Column("machine", css_class="col-4"),
+                Column("name", css_class="col-3"),
+                Column("machine", css_class="col-3"),
                 Fieldset(
                     "Upload file",
                     Div(

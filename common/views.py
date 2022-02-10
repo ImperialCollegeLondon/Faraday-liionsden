@@ -58,7 +58,6 @@ class NewDataViewInline(FormView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
-        form = self.form_class()
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -78,15 +77,7 @@ class NewDataViewInline(FormView):
             # Save individual parameters from inline form
             if parameters.is_valid():
                 parameters.instance = self.object
-                # Handle uploaded files in formsets slightly differently
-                if self.inline_key == "raw_data_file":
-                    parameters[0].instance.user_owner = obj.user_owner
-                    parameters[0].instance.status = obj.status
-                    parameters.save()
-                    form.instance.full_clean()
-                # Otherwise just save
-                else:
-                    parameters.save()
+                parameters.save()
 
             messages.success(request, self.success_message)
             return redirect(self.success_url)
