@@ -208,7 +208,7 @@ class MaccorXLSParser(ParsingEngineBase):
 
     def get_data_generator_for_columns(
         self, columns: List, first_data_row: int, col_mapping: Optional[Dict] = None
-    ) -> Union[Generator[Dict, None, None], NDArray]:
+    ) -> Generator[list, None, None]:
         """Provides the data filtered by the requested columns and a column mapping.
 
         Args:
@@ -230,7 +230,8 @@ class MaccorXLSParser(ParsingEngineBase):
             else columns
         )
 
-        return self.data[cols].values
+        for row in self.data[cols].itertuples():
+            yield list(row)[1:]
 
     @staticmethod
     def _sanitise_rec_val(value) -> float:
