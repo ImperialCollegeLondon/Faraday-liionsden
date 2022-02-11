@@ -31,6 +31,9 @@ class MaccorXLSParser(ParsingEngineBase):
         self.sheet = workbook.sheet_by_index(0)
         self.datemode = workbook.datemode
 
+        if self.sheet.ncols < 1 or self.sheet.nrows < 2:
+            raise EmptyFileError()
+
         self.skip_rows = self._get_header_size()
         self.data = self._load_data()
 
@@ -130,9 +133,6 @@ class MaccorXLSParser(ParsingEngineBase):
         Returns:
             Dict[str, Any]: A dictionary with the metadata
         """
-        if self.sheet.ncols < 1 or self.sheet.nrows < 2:
-            raise EmptyFileError()
-
         metadata: Dict[str, Any] = {
             "dataset_name": self.file_path.stem,
             "dataset_size": self.file_path.stat().st_size,
