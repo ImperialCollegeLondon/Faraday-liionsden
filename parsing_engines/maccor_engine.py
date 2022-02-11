@@ -6,6 +6,7 @@ from typing import (
     Dict,
     Iterable,
     List,
+    Optional,
     Sequence,
     Set,
     Text,
@@ -13,9 +14,10 @@ from typing import (
     Union,
 )
 
+import openpyxl
 import pandas as pd
 import xlrd
-from openpyxl import workbook
+from openpyxl.worksheet.worksheet import Worksheet
 from xlrd.sheet import Cell, Sheet
 
 from .battery_exceptions import EmptyFileError, UnsupportedFileTypeError
@@ -41,43 +43,25 @@ class MaccorParsingEngine(ParsingEngineBase):
         """
         ext = Path(file_path).suffix.lower()
         if ext == "xls":
-            return cls._factory_xls(file_path)
+            sheet, datemode = factory_xls(file_path)
         elif ext == "xlsx":
-            return cls._factory_xlsx(file_path)
+            sheet, datemode = factory_xlsx(file_path)
         else:
             raise UnsupportedFileTypeError(
                 "Unknown file extension for Maccor parsing engine '{ext}'."
             )
 
-    @classmethod
-    def _factory_xls(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
-        """Factory method for creating a parsing engine specific for Maccor XLS files.
-
-        Args:
-            file_path (Union[Path, str]): Path to the file to load.
-        """
-        workbook = xlrd.open_workbook(file_path, on_demand=True)
-        sheet = workbook.sheet_by_index(0)
-
         if sheet.ncols < 1 or sheet.nrows < 2:
             raise EmptyFileError()
 
-        skip_rows = get_header_size_xls(sheet, cls.MANDATORY_COLUMNS)
+        skip_rows = get_header_size(sheet, cls.MANDATORY_COLUMNS)
         data = load_maccor_data(file_path, skip_rows)
         parser = cls(file_path, skip_rows, data)
 
         parser._get_file_header_internal = partial(
-            get_file_header_xls, sheet, workbook.datemode, skip_rows
+            get_file_header, sheet, skip_rows, datemode
         )
         return parser
-
-    @classmethod
-    def _factory_xlsx(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
-        """Factory method for creating a parsing engine specific for Maccor XLSX files.
-
-        Args:
-            file_path (Union[Path, str]): Path to the file to load.
-        """
 
     def __init__(self, file_path: Union[Path, str], skip_rows: int, data: pd.DataFrame):
         """Initialises the XLS parser for Maccor"""
@@ -96,22 +80,54 @@ class MaccorParsingEngine(ParsingEngineBase):
         return self._get_file_header_internal()
 
 
-def get_file_header_xls(sheet: Sheet, datemode: int, skip_rows: int) -> Dict[str, Any]:
+def factory_xls(
+    file_path: Union[Path, str]
+) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
+    """Factory method for retrieving information specific for Maccor XLS files.
+
+    Args:
+        file_path (Union[Path, str]): Path to the file to load.
+
+    Returns:
+        A tuple with a sheet object and the datemode of the workbook.
+    """
+    book = xlrd.open_workbook(file_path, on_demand=True)
+    return book.sheet_by_index(0), book.datemode
+
+
+def factory_xlsx(
+    file_path: Union[Path, str]
+) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
+    """Factory method for retrieving information specific for Maccor XLSX files.
+
+    Args:
+        file_path (Union[Path, str]): Path to the file to load.
+
+    Returns:
+        A tuple with a sheet object and the datemode of the workbook.
+    """
+    book = openpyxl.load_workbook(file_path)
+    return book.active, None
+
+
+def get_file_header(
+    sheet: Union[Sheet, Worksheet], skip_rows: int, datemode: Optional[int]
+) -> Dict[str, Any]:
     """Extracts the header from the Maccor file.
 
     The header is spread across columns, so these need to be scan for the key/value
     pairs to extract.
 
     Args:
-        sheet (Sheet): The Excel sheet to scan.
-        datemode (int): The mode in whch dates are enconded in the excel file.
+        sheet (Union[Sheet, Worksheet]): The Excel sheet to scan.
         skip_rows (int): Number of rows containing the header.
+        datemode (Optional[int]): The encoding of dates in the excel file.
 
     Returns:
         Dict[str, Any]: A dictionary with the header information.
     """
     header: Dict[str, Any] = {}
-    for i, row in enumerate(sheet.get_rows()):
+    for i, row in enumerate(sheet):
         if i == skip_rows:
             break
 
@@ -125,13 +141,18 @@ def get_file_header_xls(sheet: Sheet, datemode: int, skip_rows: int) -> Dict[str
     return header
 
 
-def get_header_size_xls(sheet: Sheet, columns: Set) -> int:
+def get_header_size(sheet: Union[Sheet, Worksheet], columns: Set) -> int:
     """Reads the file and determines the size of the header.
 
+    Args:
+        sheet (Union[Sheet, Worksheet]): The Excel sheet to scan.
+        columns (Set): Iterable with the elements to check that would identify
+            this as NOT a metadata row.
+
     Returns:
-        Header size as an int
+        int: The size of the header.
     """
-    for i, row in enumerate(sheet.get_rows()):
+    for i, row in enumerate(sheet):
         if not is_metadata_row(row, columns):
             return i
     return 0
@@ -184,7 +205,7 @@ def is_metadata_row(row: Iterable, withnesses: Iterable) -> bool:
 
 
 def get_metadata_value(
-    idx: int, row: Sequence[Cell], datemode: int
+    idx: int, row: Sequence[Cell], datemode: Optional[int]
 ) -> Tuple[str, str, int]:
     """A wrapper for metadata value parsing, handling special cases.
 
@@ -210,7 +231,11 @@ def get_metadata_value(
         key = key.value
 
     if hasattr(key, "__iter__") and "Date" in key:
-        value = xlrd.xldate.xldate_as_datetime(row[idx + 1].value, datemode)
+        value = (
+            xlrd.xldate.xldate_as_datetime(row[idx + 1].value, datemode)
+            if datemode is not None
+            else row[idx + 1].value
+        )
         new_idx = idx + 2
     elif hasattr(key, "__iter__") and "Procedure" in key:
         value = clean_value(row[idx + 1].value) + ", " + clean_value(row[idx + 2].value)
