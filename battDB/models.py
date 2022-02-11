@@ -312,6 +312,9 @@ class Parser(cm.BaseModelMandatoryName):
     def get_absolute_url(self):
         return reverse("battDB:Parsers", kwargs={"pk": self.pk})
 
+    def get_number_parameters(self):
+        return self.columns.count()
+
 
 class Equipment(cm.BaseModel):
     """Definitions of equipment such as cycler machines."""

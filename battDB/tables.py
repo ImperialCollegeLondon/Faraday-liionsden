@@ -94,6 +94,9 @@ class BatchDevicesTable(tables.Table):
 
 class ParserTable(tables.Table):
     # name = tables.Column(linkify=True)
+    num_cols = tables.Column(
+        accessor="get_number_parameters", verbose_name="# Columns parsed"
+    )
 
     class Meta:
         model = Parser
@@ -101,6 +104,7 @@ class ParserTable(tables.Table):
         fields = (
             "name",
             "notes",
+            "num_cols",
             "created_on",
         )
         row_attrs = {"status": lambda record: record.status}
