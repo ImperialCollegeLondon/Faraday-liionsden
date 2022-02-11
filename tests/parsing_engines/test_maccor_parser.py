@@ -1,5 +1,6 @@
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Text
 from unittest import TestCase
 
 
@@ -20,13 +21,13 @@ class TestMaccorXLSParser(TestCase):
         self.parser.datemode = workbook.datemode
         actual = MP._get_header_size(self.parser)
 
-        with open(self.file_path) as f:
-            header = 0
-            for i, line in enumerate(f):
-                if "Cyc#" in line:
-                    header = i
+        expected = 0
+        for i, row in enumerate(self.parser.sheet.get_rows()):
+            if any(
+                [isinstance(cell.value, Text) and "Cyc#" in cell.value for cell in row]
+            ):
+                expected = i
 
-        expected = i - header
         self.assertEqual(actual, expected)
 
     def test_load_data(self):
@@ -127,9 +128,9 @@ class TestMaccorXLSParser(TestCase):
         self.assertEqual(len(meta["warnings"]), 0)
 
     def test_get_data_generator_for_columns(self):
-        from parsing_engines import BiologicCSVnTSVParser as BP
+        from parsing_engines import MaccorXLSParser as MP
 
-        parser = BP(self.file_path)
+        parser = MP(self.file_path)
 
         ncols = 5
         cols = parser.data.columns[:ncols]
