@@ -15,6 +15,7 @@ from typing import (
 
 import pandas as pd
 import xlrd
+from openpyxl import workbook
 from xlrd.sheet import Cell, Sheet
 
 from .battery_exceptions import EmptyFileError, UnsupportedFileTypeError
@@ -22,10 +23,6 @@ from .parsing_engines_base import ParsingEngineBase
 
 
 class MaccorParsingEngine(ParsingEngineBase):
-    """
-    ParserBase for Maccor excel raw data
-    Based on maccor_functions by Luke Pitt
-    """
 
     name = "maccor"
     description = "Maccor XLS/XLSX"
