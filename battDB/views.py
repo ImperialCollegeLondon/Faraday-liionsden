@@ -332,6 +332,12 @@ class EquipmentView(PermissionRequiredMixin, DetailView):
     permission_required = "battDB.view_equipment"
 
 
+class ParserView(PermissionRequiredMixin, DetailView):
+    model = Parser
+    template_name = "parser.html"
+    permission_required = "battDB.view_parser"
+
+
 ### API VIEWS ###
 class ExperimentAPIView(APIView):
     queryset = Experiment.objects.all()

@@ -310,7 +310,7 @@ class Parser(cm.BaseModelMandatoryName):
     parameters = models.ManyToManyField(dfn.Parameter, through="SignalType")
 
     def get_absolute_url(self):
-        return reverse("battDB:Parsers", kwargs={"pk": self.pk})
+        return reverse("battDB:Parser", kwargs={"pk": self.pk})
 
     def get_number_parameters(self):
         return self.columns.count()

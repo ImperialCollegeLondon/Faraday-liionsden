@@ -93,7 +93,7 @@ class BatchDevicesTable(tables.Table):
 
 
 class ParserTable(tables.Table):
-    # name = tables.Column(linkify=True)
+    name = tables.Column(linkify=True)
     num_cols = tables.Column(
         accessor="get_number_parameters", verbose_name="# Columns parsed"
     )
