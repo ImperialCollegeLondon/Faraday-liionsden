@@ -6,7 +6,7 @@ class TestParserBase(TestCase):
     def test_abstract_methods(self):
         from parsing_engines.parsing_engines_base import ParsingEngineBase
 
-        expected = {"get_metadata", "get_data_generator_for_columns", "get_column_info"}
+        expected = {"factory", "_get_file_header"}
         self.assertEqual(ParsingEngineBase.__abstractmethods__, expected)
 
     def test_register_subclass(self):
@@ -47,15 +47,15 @@ class TestDummyParser(TestCase):
     def setUp(self) -> None:
         from parsing_engines.parsing_engines_base import DummyParsingEngine
 
-        self.parser = DummyParsingEngine("")
+        self.parser = DummyParsingEngine.factory("")
 
     def test_get_metadata(self):
         metadata = self.parser.get_metadata()
-        self.assertEqual(metadata, {"num_rows": 0})
+        self.assertEqual(metadata["file_metadata"], {"num_rows": 0})
 
     def test_get_column_info(self):
         cols = self.parser.get_column_info()
-        self.assertEqual(cols, {})
+        self.assertEqual(cols, {"Rec#": {"is_numeric": True, "has_data": True}})
 
     def test_get_data_generator_for_columns(self):
         self.assertEqual(list(self.parser.get_data_generator_for_columns([])), [])
@@ -110,6 +110,10 @@ class TestParseDataFile(TestCase):
             cols = {"time/s": 1, "V": 2}
             metadata = {"num_rows": 150}
             data = [(1, 1), (1, 2)]
+
+            @classmethod
+            def factory(cls, file_path):
+                return cls(file_path)
 
             def __init__(self, file_path):
                 self.file_path = file_path
