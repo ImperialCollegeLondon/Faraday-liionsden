@@ -239,10 +239,10 @@ def get_metadata_value(
     else:
         key = key.value
 
-    if "Date" in key:
+    if hasattr(key, "__iter__") and "Date" in key:
         value = xlrd.xldate.xldate_as_datetime(row[idx + 1].value, datemode)
         new_idx = idx + 2
-    elif "Procedure" in key:
+    elif hasattr(key, "__iter__") and "Procedure" in key:
         value = clean_value(row[idx + 1].value) + ", " + clean_value(row[idx + 2].value)
         new_idx = idx + 3
     else:

@@ -137,3 +137,53 @@ class TestMaccorXLSParser(TestCase):
         actual = list(parser.get_data_generator_for_columns(cols))
         expected = [list(row) for row in parser.data[cols].values]
         self.assertEqual(actual, expected)
+
+
+class TestMaccorFunctions(TestCase):
+    def test_clean_value(self):
+        from parsing_engines.maccor_engine import clean_value
+
+        value = " Someone''s dirty string\n\0\n"
+        expected = "Someone's dirty string"
+        self.assertEqual(clean_value(value), expected)
+
+    def test_is_metadata_row(self):
+        from parsing_engines.maccor_engine import is_metadata_row
+
+        row = ["A", "B", "C", "D"]
+        withnesses = [1, 2]
+        self.assertTrue(is_metadata_row(row, withnesses))
+
+        withnesses = [1, "A"]
+        self.assertFalse(is_metadata_row(row, withnesses))
+
+    def test_get_metadata_value(self):
+        import xlrd
+
+        from parsing_engines.maccor_engine import get_metadata_value
+
+        row = [None, SimpleNamespace(value=42)]
+        expected = "", 42, 2
+        self.assertEqual(get_metadata_value(0, row, 0), expected)
+
+        row = [
+            SimpleNamespace(value="Question"),
+        ]
+        expected = "Question", "", 2
+        self.assertEqual(get_metadata_value(0, row, 0), expected)
+
+        row = [
+            SimpleNamespace(value="Procedure"),
+            SimpleNamespace(value="42"),
+            SimpleNamespace(value="84"),
+        ]
+        expected = "Procedure", "42, 84", 3
+        self.assertEqual(get_metadata_value(0, row, 0), expected)
+
+        raw_date = 43237
+        row = [
+            SimpleNamespace(value="Date:"),
+            SimpleNamespace(value=raw_date),
+        ]
+        expected = "Date", xlrd.xldate.xldate_as_datetime(raw_date, 0), 2
+        self.assertEqual(get_metadata_value(0, row, 0), expected)
