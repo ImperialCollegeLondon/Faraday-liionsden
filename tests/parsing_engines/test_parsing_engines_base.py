@@ -136,7 +136,7 @@ class TestParseDataFile(TestCase):
 
         from parsing_engines.parsing_engines_base import parse_data_file
 
-        actual = parse_data_file("some_file.txt", "some format", 0)
+        actual = parse_data_file("some_file.txt", "some format")
         rows = self.mock_parser.metadata["num_rows"]
         self.assertEqual(actual["metadata"], self.mock_parser.metadata)
         self.assertEqual(actual["data"], self.mock_parser.data)

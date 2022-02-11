@@ -71,7 +71,7 @@ class ParsingEngineBase(abc.ABC):
 
     def _standardise_columns(self) -> None:
         """Standardise column names using a mapping of standard names."""
-        self.data.rename(columns=COLUMN_NAME_MAPPING, inplace=True)
+        self.data = self.data.rename(columns=COLUMN_NAME_MAPPING)
 
     def get_column_info(self) -> Dict:
         """Gathers some metadata for each column.
@@ -222,7 +222,6 @@ def mime_and_extension() -> List[Tuple[str, str]]:
 def parse_data_file(
     file_path: str,
     file_format: str,
-    first_data_row: int = 0,
     columns=("time/s", "Ecell/V", "I/mA"),
     col_mapping: Optional[Dict[str, str]] = None,
 ) -> Dict:
@@ -232,7 +231,6 @@ def parse_data_file(
         file_path: Path to the file to parse.
         file_format: String indicating the format of the file. Should match one of the
             known parsers.
-        first_data_row: First row that contains data.
         columns: Columns that will be retrieved, if possible.
         col_mapping: Mapping of column names to match the standard 'columns' above.
 
@@ -258,9 +256,7 @@ def parse_data_file(
     missing_columns = [c for c in columns if c not in file_columns]
     total_rows = metadata.get("num_rows", 0)
     range_config = {"all": {"start": 1, "end": total_rows, "action": "all"}}
-    data = engine.get_data_generator_for_columns(
-        parsed_columns, first_data_row, col_mapping
-    )
+    data = engine.get_data_generator_for_columns(parsed_columns, col_mapping)
 
     return {
         "metadata": metadata,

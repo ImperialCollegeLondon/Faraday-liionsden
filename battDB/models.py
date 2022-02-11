@@ -498,7 +498,7 @@ class ExperimentDataFile(cm.BaseModel):
                 ]
             )
             file_format = self.raw_data_file.use_parser.file_format
-            parsed_file = parse_data_file(filepath, file_format, 0, columns=cols)
+            parsed_file = parse_data_file(filepath, file_format, columns=cols)
 
             self.attributes["parsed_metadata"] = parsed_file["metadata"]
             self.attributes["file_columns"] = parsed_file["file_columns"]
