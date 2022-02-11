@@ -1,7 +1,5 @@
 from django.urls import path
 
-from battDB.forms import NewExperimentDataFileForm
-
 from .views import (
     BatchTableView,
     BatchView,
@@ -46,7 +44,7 @@ urlpatterns = [
     path("new_batch/", NewBatchView.as_view(), name="New Batch"),
     path("new_protocol/", NewProtocolView.as_view(), name="New Protocol"),
     path("new_experiment/", NewExperimentView.as_view(), name="New Experiment"),
-    path("new_edf/", NewDataFileView.as_view(), name="New File"),
+    path("exps/add_data/<int:pk>/", NewDataFileView.as_view(), name="New File"),
     path("devices/edit/<int:pk>/", UpdateDeviceView.as_view(), name="Update Device"),
     path(
         "exps/edit/<int:pk>", UpdateExperimentView.as_view(), name="Update Experiment"
