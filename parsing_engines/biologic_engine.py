@@ -112,7 +112,7 @@ class BiologicCSVnTSVParser(ParsingEngineBase):
             for k in self.data.columns
         }
 
-    def _get_file_header(self) -> List[str]:
+    def _get_file_header(self) -> Dict[str, Any]:
         """Extracts the header from the Biologic file.
 
         Returns:
@@ -123,7 +123,7 @@ class BiologicCSVnTSVParser(ParsingEngineBase):
             header = list(
                 filter(len, (f.readline().strip("\n") for _ in range(self.skip_rows)))
             )
-        return header  # noqa
+        return header_to_yaml(header)
 
     def get_metadata(self) -> Dict:
         """Obtain all the metadata from the header of the file and related to the cycler
@@ -138,8 +138,8 @@ class BiologicCSVnTSVParser(ParsingEngineBase):
             "num_rows": len(self.data),
             "data_start": self.skip_rows,
             "first_sample_no": self.skip_rows + 1,
-            "file_metadata": header_to_yaml(self._get_file_header()),
-            "machine_type": "Biologic",
+            "file_metadata": self._get_file_header(),
+            "machine_type": self.name,
             "warnings": [],
         }
 

@@ -140,7 +140,7 @@ class MaccorXLSParser(ParsingEngineBase):
             "data_start": self.skip_rows,
             "first_sample_no": self.skip_rows + 1,
             "file_metadata": self._get_file_header(),
-            "machine_type": "Maccor",
+            "machine_type": self.name,
             "warnings": [],
         }
 
