@@ -42,13 +42,13 @@ class MaccorParsingEngine(ParsingEngineBase):
             file_path (Union[Path, str]): Path to the file to load.
         """
         ext = Path(file_path).suffix.lower()
-        if ext == "xls":
+        if ext == ".xls":
             sheet, datemode = factory_xls(file_path)
-        elif ext == "xlsx":
+        elif ext == ".xlsx":
             sheet, datemode = factory_xlsx(file_path)
         else:
             raise UnsupportedFileTypeError(
-                "Unknown file extension for Maccor parsing engine '{ext}'."
+                f"Unknown file extension for Maccor parsing engine '{ext}'."
             )
 
         if sheet.ncols < 1 or sheet.nrows < 2:

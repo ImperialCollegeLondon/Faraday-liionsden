@@ -14,12 +14,12 @@ class TestMaccorXLSParser(TestCase):
     def test_get_header_size(self):
         import xlrd
 
-        from parsing_engines import MaccorParsingEngine as MP
+        from parsing_engines.maccor_engine import get_header_size
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         self.parser.sheet = workbook.sheet_by_index(0)
         self.parser.datemode = workbook.datemode
-        actual = MP._get_header_size(self.parser)
+        actual = get_header_size(self.parser.sheet, self.parser.MANDATORY_COLUMNS)
 
         expected = 0
         for i, row in enumerate(self.parser.sheet.get_rows()):
@@ -33,14 +33,16 @@ class TestMaccorXLSParser(TestCase):
     def test_load_data(self):
         import xlrd
 
-        from parsing_engines import MaccorParsingEngine as MP
+        from parsing_engines.maccor_engine import get_header_size, load_maccor_data
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         self.parser.sheet = workbook.sheet_by_index(0)
         self.parser.datemode = workbook.datemode
-        self.parser.skip_rows = MP._get_header_size(self.parser)
+        self.parser.skip_rows = get_header_size(
+            self.parser.sheet, self.parser.MANDATORY_COLUMNS
+        )
 
-        actual = MP._load_data(self.parser)
+        actual = load_maccor_data(self.parser.file_path, self.parser.skip_rows)
         self.assertGreater(len(actual.columns), 1)
         self.assertGreater(len(actual), 30)
 
@@ -48,12 +50,17 @@ class TestMaccorXLSParser(TestCase):
         import xlrd
 
         from parsing_engines import MaccorParsingEngine as MP
+        from parsing_engines.maccor_engine import get_header_size, load_maccor_data
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         self.parser.sheet = workbook.sheet_by_index(0)
         self.parser.datemode = workbook.datemode
-        self.parser.skip_rows = MP._get_header_size(self.parser)
-        self.parser.data = MP._load_data(self.parser)
+        self.parser.skip_rows = get_header_size(
+            self.parser.sheet, self.parser.MANDATORY_COLUMNS
+        )
+        self.parser.data = load_maccor_data(
+            self.parser.file_path, self.parser.skip_rows
+        )
 
         self.assertNotIn("Rec#", self.parser.data.columns)
         MP._create_rec_no(self.parser)
@@ -63,12 +70,17 @@ class TestMaccorXLSParser(TestCase):
         import xlrd
 
         from parsing_engines import MaccorParsingEngine as MP
+        from parsing_engines.maccor_engine import get_header_size, load_maccor_data
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         self.parser.sheet = workbook.sheet_by_index(0)
         self.parser.datemode = workbook.datemode
-        self.parser.skip_rows = MP._get_header_size(self.parser)
-        self.parser.data = MP._load_data(self.parser)
+        self.parser.skip_rows = get_header_size(
+            self.parser.sheet, self.parser.MANDATORY_COLUMNS
+        )
+        self.parser.data = load_maccor_data(
+            self.parser.file_path, self.parser.skip_rows
+        )
 
         if sum(self.parser.data.columns.str.contains("^Unnamed")) > 0:
             MP._drop_unnamed_columns(self.parser)
@@ -78,13 +90,18 @@ class TestMaccorXLSParser(TestCase):
         import xlrd
 
         from parsing_engines import MaccorParsingEngine as MP
+        from parsing_engines.maccor_engine import get_header_size, load_maccor_data
         from parsing_engines.mappings import COLUMN_NAME_MAPPING
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         self.parser.sheet = workbook.sheet_by_index(0)
         self.parser.datemode = workbook.datemode
-        self.parser.skip_rows = MP._get_header_size(self.parser)
-        self.parser.data = MP._load_data(self.parser)
+        self.parser.skip_rows = get_header_size(
+            self.parser.sheet, self.parser.MANDATORY_COLUMNS
+        )
+        self.parser.data = load_maccor_data(
+            self.parser.file_path, self.parser.skip_rows
+        )
         MP._drop_unnamed_columns(self.parser)
 
         def all_cols(data):
@@ -99,7 +116,7 @@ class TestMaccorXLSParser(TestCase):
     def test_get_column_info(self):
         from parsing_engines import MaccorParsingEngine as MP
 
-        parser = MP(self.file_path)
+        parser = MP.factory(self.file_path)
         cols = parser.get_column_info()
         for c in parser.data.columns:
             self.assertEqual(list(cols[c].keys()), ["is_numeric", "has_data"])
@@ -107,14 +124,14 @@ class TestMaccorXLSParser(TestCase):
     def test_get_file_header(self):
         from parsing_engines import MaccorParsingEngine as MP
 
-        parser = MP(self.file_path)
+        parser = MP.factory(self.file_path)
         header = parser._get_file_header()
         self.assertGreater(len(header), 2)
 
     def test_get_metadata(self):
         from parsing_engines import MaccorParsingEngine as MP
 
-        parser = MP(self.file_path)
+        parser = MP.factory(self.file_path)
         meta = parser.get_metadata()
         cols = parser.get_column_info()
 
@@ -130,7 +147,7 @@ class TestMaccorXLSParser(TestCase):
     def test_get_data_generator_for_columns(self):
         from parsing_engines import MaccorParsingEngine as MP
 
-        parser = MP(self.file_path)
+        parser = MP.factory(self.file_path)
 
         ncols = 5
         cols = parser.data.columns[:ncols]
