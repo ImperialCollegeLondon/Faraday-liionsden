@@ -1,16 +1,27 @@
-from typing import Any, Dict, Generator, Iterable, List, Optional, Sequence, Text, Tuple
+from functools import partial
+from pathlib import Path
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    List,
+    Sequence,
+    Set,
+    Text,
+    Tuple,
+    Union,
+)
 
 import pandas as pd
 import xlrd
-from pandas.core.dtypes.common import is_numeric_dtype
-from xlrd.sheet import Cell
+from xlrd.sheet import Cell, Sheet
 
-from .battery_exceptions import EmptyFileError
-from .mappings import COLUMN_NAME_MAPPING
+from .battery_exceptions import EmptyFileError, UnsupportedFileTypeError
 from .parsing_engines_base import ParsingEngineBase
 
 
-class MaccorXLSParser(ParsingEngineBase):
+class MaccorParsingEngine(ParsingEngineBase):
     """
     ParserBase for Maccor excel raw data
     Based on maccor_functions by Luke Pitt
@@ -22,81 +33,59 @@ class MaccorXLSParser(ParsingEngineBase):
         ("application/vnd.ms-excel", ".xls"),
         ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"),
     ]
-    MANDATORY_COLUMNS = {"Cyc#", "Step"}
+    MANDATORY_COLUMNS: Set[str] = {"Cyc#", "Step"}
 
-    def __init__(self, file_path: str) -> None:
-        """Initialises the XLS parser for Maccor"""
-        super().__init__(file_path)
+    @classmethod
+    def factory(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
+        """Factory method for creating a parsing engine.
+
+        Args:
+            file_path (Union[Path, str]): Path to the file to load.
+        """
+        ext = Path(file_path).suffix.lower()
+        if ext == "xls":
+            return cls._factory_xls(file_path)
+        elif ext == "xlsx":
+            return cls._factory_xlsx(file_path)
+        else:
+            raise UnsupportedFileTypeError(
+                "Unknown file extension for Maccor parsing engine '{ext}'."
+            )
+
+    @classmethod
+    def _factory_xls(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
+        """Factory method for creating a parsing engine specific for Maccor XLS files.
+
+        Args:
+            file_path (Union[Path, str]): Path to the file to load.
+        """
         workbook = xlrd.open_workbook(file_path, on_demand=True)
-        self.sheet = workbook.sheet_by_index(0)
-        self.datemode = workbook.datemode
+        sheet = workbook.sheet_by_index(0)
 
-        if self.sheet.ncols < 1 or self.sheet.nrows < 2:
+        if sheet.ncols < 1 or sheet.nrows < 2:
             raise EmptyFileError()
 
-        self.skip_rows = self._get_header_size()
-        self.data = self._load_data()
+        skip_rows = get_header_size_xls(sheet, cls.MANDATORY_COLUMNS)
+        data = load_maccor_data(file_path, skip_rows)
+        parser = cls(file_path, skip_rows, data)
 
-        # Some preprocessing that can be done straight away
-        self._drop_unnamed_columns()
-        self._standardise_columns()
-        self._create_rec_no()
-
-    def _get_header_size(self) -> int:
-        """Reads the file and determines the size of the header.
-
-        Returns:
-            Header size as an int
-        """
-        for i, row in enumerate(self.sheet.get_rows()):
-            if not is_metadata_row(row, self.MANDATORY_COLUMNS):
-                return i
-        return 0
-
-    def _load_data(self) -> pd.DataFrame:
-        """Loads the data as a Pandas data frame.
-
-        Returns:
-            A pandas dataframe with all the data.
-        """
-        data = pd.read_excel(
-            self.file_path, sheet_name=None, header=self.skip_rows, index_col=None
+        parser._get_file_header_internal = partial(
+            get_file_header_xls, sheet, workbook.datemode, skip_rows
         )
+        return parser
 
-        if isinstance(data, dict):
-            data = pd.concat(data.values(), ignore_index=True)
+    @classmethod
+    def _factory_xlsx(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
+        """Factory method for creating a parsing engine specific for Maccor XLSX files.
 
-        return data
+        Args:
+            file_path (Union[Path, str]): Path to the file to load.
+        """
 
-    def _create_rec_no(self) -> None:
-        """Adds Rec# to the dataset if it was not already present."""
-        if "Rec#" not in self.data.columns:
-            self.data["Rec#"] = range(len(self.data))
-
-    def _drop_unnamed_columns(self) -> None:
-        """Drops columns of the internal parser dataframe that have no name."""
-        self.data = self.data.loc[:, ~self.data.columns.str.contains("^Unnamed")]
-
-    def _standardise_columns(self) -> None:
-        """Standardise column names using a mapping of standard names."""
-        self.data.rename(columns=COLUMN_NAME_MAPPING, inplace=True)
-
-    def get_column_info(self) -> Dict:
-        """Gathers some metadata for each column.
-
-        In particular, it gathers if it is a numeric column and if it has data.
-
-        Returns:
-            A nested dictionary with the above information for each column, proved as
-            keys 'is_numeric' and 'has_data.
-        """ ""
-        return {
-            k: {
-                "is_numeric": is_numeric_dtype(self.data[k].dtype),
-                "has_data": True,
-            }
-            for k in self.data.columns
-        }
+    def __init__(self, file_path: Union[Path, str], skip_rows: int, data: pd.DataFrame):
+        """Initialises the XLS parser for Maccor"""
+        super(MaccorParsingEngine, self).__init__(file_path, skip_rows, data)
+        self._get_file_header_internal: Callable[[], Dict[str, Any]]
 
     def _get_file_header(self) -> Dict[str, Any]:
         """Extracts the header from the Maccor file.
@@ -107,76 +96,67 @@ class MaccorXLSParser(ParsingEngineBase):
         Returns:
             A dictionary with the header information.
         """
-        if self.sheet.ncols < 1 or self.sheet.nrows < 2:
-            raise EmptyFileError()
+        return self._get_file_header_internal()
 
-        header: Dict[str, Any] = {}
-        for i, row in enumerate(self.sheet.get_rows()):
-            if i == self.skip_rows:
-                break
 
-            current = 0
-            while current < len(row):
-                key, value, current = get_metadata_value(current, row, self.datemode)
-                if key == "":
-                    continue
-                header[key] = value
+def get_file_header_xls(sheet: Sheet, datemode: int, skip_rows: int) -> Dict[str, Any]:
+    """Extracts the header from the Maccor file.
 
-        return header
+    The header is spread across columns, so these need to be scan for the key/value
+    pairs to extract.
 
-    def get_metadata(self) -> Dict[str, Any]:
-        """Puts together the metadata for the file
+    Args:
+        sheet (Sheet): The Excel sheet to scan.
+        datemode (int): The mode in whch dates are enconded in the excel file.
+        skip_rows (int): Number of rows containing the header.
 
-        Raises:
-            EmptyFileError: If the file is found to be empty.
+    Returns:
+        Dict[str, Any]: A dictionary with the header information.
+    """
+    header: Dict[str, Any] = {}
+    for i, row in enumerate(sheet.get_rows()):
+        if i == skip_rows:
+            break
 
-        Returns:
-            Dict[str, Any]: A dictionary with the metadata
-        """
-        metadata: Dict[str, Any] = {
-            "dataset_name": self.file_path.stem,
-            "dataset_size": self.file_path.stat().st_size,
-            "num_rows": len(self.data),
-            "data_start": self.skip_rows,
-            "first_sample_no": self.skip_rows + 1,
-            "file_metadata": self._get_file_header(),
-            "machine_type": self.name,
-            "warnings": [],
-        }
+        current = 0
+        while current < len(row):
+            key, value, current = get_metadata_value(current, row, datemode)
+            if key == "":
+                continue
+            header[key] = value
 
-        if not self.MANDATORY_COLUMNS.issubset(self.data.columns):
-            metadata["warnings"].append(
-                "Not all mandatory columns are present in the raw datafile"
-            )
+    return header
 
-        return metadata
 
-    def get_data_generator_for_columns(
-        self, columns: List, first_data_row: int = 0, col_mapping: Optional[Dict] = None
-    ) -> Generator[list, None, None]:
-        """Provides the data filtered by the requested columns and a column mapping.
+def get_header_size_xls(sheet: Sheet, columns: Set) -> int:
+    """Reads the file and determines the size of the header.
 
-        Args:
-            columns (List): Columns of data to provide
-            first_data_row (int): First row of data to parse (NOT USED)
-            col_mapping (Optional[Dict], optional): Dictionary to map the required
-            column names to the Maccor file column names. Defaults to None.
+    Returns:
+        Header size as an int
+    """
+    for i, row in enumerate(sheet.get_rows()):
+        if not is_metadata_row(row, columns):
+            return i
+    return 0
 
-        Raises:
-            KeyError if the required columns, after applying the mapping, do not exist
-                in the data.
 
-        Returns:
-            Union[Generator[Dict, None, None], NDArray]: [description]
-        """
-        cols = (
-            [col_mapping.get(c, c) for c in columns]
-            if col_mapping is not None
-            else columns
-        )
+def load_maccor_data(file_path: Union[Path, str], skip_rows: int) -> pd.DataFrame:
+    """Loads the data as a Pandas data frame.
 
-        for row in self.data[cols].itertuples():
-            yield list(row)[1:]
+    Args:
+        file_path (Union[Path, str]): File to load the data from.
+        skip_rows (int): Location of the header, assumed equal to the number of rows to
+            skip.
+
+    Returns:
+        pd.DataFrame: A pandas dataframe with all the data.
+    """
+    data = pd.read_excel(file_path, sheet_name=None, header=skip_rows, index_col=None)
+
+    if isinstance(data, dict):
+        data = pd.concat(data.values(), ignore_index=True)
+
+    return data
 
 
 def clean_value(value: str) -> str:

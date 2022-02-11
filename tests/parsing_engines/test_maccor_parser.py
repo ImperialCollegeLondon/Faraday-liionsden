@@ -14,7 +14,7 @@ class TestMaccorXLSParser(TestCase):
     def test_get_header_size(self):
         import xlrd
 
-        from parsing_engines import MaccorXLSParser as MP
+        from parsing_engines import MaccorParsingEngine as MP
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         self.parser.sheet = workbook.sheet_by_index(0)
@@ -33,7 +33,7 @@ class TestMaccorXLSParser(TestCase):
     def test_load_data(self):
         import xlrd
 
-        from parsing_engines import MaccorXLSParser as MP
+        from parsing_engines import MaccorParsingEngine as MP
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         self.parser.sheet = workbook.sheet_by_index(0)
@@ -47,7 +47,7 @@ class TestMaccorXLSParser(TestCase):
     def test_create_rec_no(self):
         import xlrd
 
-        from parsing_engines import MaccorXLSParser as MP
+        from parsing_engines import MaccorParsingEngine as MP
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         self.parser.sheet = workbook.sheet_by_index(0)
@@ -62,7 +62,7 @@ class TestMaccorXLSParser(TestCase):
     def test_drop_unnamed_columns(self):
         import xlrd
 
-        from parsing_engines import MaccorXLSParser as MP
+        from parsing_engines import MaccorParsingEngine as MP
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         self.parser.sheet = workbook.sheet_by_index(0)
@@ -77,7 +77,7 @@ class TestMaccorXLSParser(TestCase):
     def test_standardise_columns(self):
         import xlrd
 
-        from parsing_engines import MaccorXLSParser as MP
+        from parsing_engines import MaccorParsingEngine as MP
         from parsing_engines.mappings import COLUMN_NAME_MAPPING
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
@@ -97,7 +97,7 @@ class TestMaccorXLSParser(TestCase):
         self.assertTrue(all_cols(self.parser.data))
 
     def test_get_column_info(self):
-        from parsing_engines import MaccorXLSParser as MP
+        from parsing_engines import MaccorParsingEngine as MP
 
         parser = MP(self.file_path)
         cols = parser.get_column_info()
@@ -105,14 +105,14 @@ class TestMaccorXLSParser(TestCase):
             self.assertEqual(list(cols[c].keys()), ["is_numeric", "has_data"])
 
     def test_get_file_header(self):
-        from parsing_engines import MaccorXLSParser as MP
+        from parsing_engines import MaccorParsingEngine as MP
 
         parser = MP(self.file_path)
         header = parser._get_file_header()
         self.assertGreater(len(header), 2)
 
     def test_get_metadata(self):
-        from parsing_engines import MaccorXLSParser as MP
+        from parsing_engines import MaccorParsingEngine as MP
 
         parser = MP(self.file_path)
         meta = parser.get_metadata()
@@ -128,7 +128,7 @@ class TestMaccorXLSParser(TestCase):
         self.assertEqual(len(meta["warnings"]), 0)
 
     def test_get_data_generator_for_columns(self):
-        from parsing_engines import MaccorXLSParser as MP
+        from parsing_engines import MaccorParsingEngine as MP
 
         parser = MP(self.file_path)
 

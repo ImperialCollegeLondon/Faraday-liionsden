@@ -71,12 +71,17 @@ def load_biologic_data(
     that the separator is a comma (,). If there is only 1 column, it is reloaded
     using tabs. If there is still only 1 column, an erro is raised.
 
+    Args:
+        file_path (Union[Path, str]): File to load the data from.
+        skip_rows (int): Location of the header, assumed equal to the number of rows to
+            skip.
+
     Raises:
         UnsupportedFileTypeError: If only one column is found after trying comma and
         tabs as separators.
 
     Returns:
-        A pandas dataframe with all the data.
+        pd.DataFrame: A pandas dataframe with all the data.
     """
     kwargs = dict(engine="python", skiprows=skip_rows, encoding=encoding)
 
