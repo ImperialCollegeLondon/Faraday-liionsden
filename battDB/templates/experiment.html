@@ -76,12 +76,14 @@
         </tr>
       </thead>
       <tbody>
-
         {% for data_file in object.data_files.all %}
-        <td>{{ data_file.name }}</td>
-        <td>{{ data_file.ts_headers }}</td>
-        <td>{{ data_file.file_columns }}</td>
-        <td><a href="{{ data_file.raw_data_file.file.url }}" class="btn btn-primary" , role="button"> Download </a></td>
+        <tr>
+          <td>{{ data_file.name }}</td>
+          <td>{{ data_file.ts_headers }}</td>
+          <td>{{ data_file.file_columns }}</td>
+          <td><a href="{{ data_file.raw_data_file.file.url }}" class="btn btn-primary" , role="button"> Download </a>
+          </td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>
