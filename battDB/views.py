@@ -26,6 +26,7 @@ from .filters import (
     DeviceSpecificationFilter,
     EquipmentFilter,
     ExperimentFilter,
+    ParserFilter,
 )
 from .forms import (
     DeviceParameterFormSet,
@@ -45,6 +46,7 @@ from .models import (
     Equipment,
     Experiment,
     ExperimentDataFile,
+    Parser,
     UploadedFile,
 )
 from .serializers import (
@@ -60,6 +62,7 @@ from .tables import (
     DeviceSpecificationTable,
     EquipmentTable,
     ExperimentTable,
+    ParserTable,
 )
 
 
@@ -294,6 +297,15 @@ class EquipmentTableView(
     filterset_class = EquipmentFilter
     export_formats = ["csv", "json"]
     permission_required = "battDB.view_equipment"
+
+
+class ParserTableView(SingleTableMixin, ExportMixin, PermissionListMixin, FilterView):
+    model = Parser
+    table_class = ParserTable
+    template_name = "parser_table.html"
+    filterset_class = ParserFilter
+    export_formats = ["csv", "json"]
+    permission_required = "battDB.view_parser"
 
 
 class ExperimentView(PermissionRequiredMixin, DetailView):

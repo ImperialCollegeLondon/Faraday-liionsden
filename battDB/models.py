@@ -309,6 +309,9 @@ class Parser(cm.BaseModelMandatoryName):
     )
     parameters = models.ManyToManyField(dfn.Parameter, through="SignalType")
 
+    def get_absolute_url(self):
+        return reverse("battDB:Parsers", kwargs={"pk": self.pk})
+
 
 class Equipment(cm.BaseModel):
     """Definitions of equipment such as cycler machines."""

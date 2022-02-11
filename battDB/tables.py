@@ -1,6 +1,13 @@
 import django_tables2 as tables
 
-from .models import Batch, DeviceSpecification, Equipment, Experiment, ExperimentDevice
+from .models import (
+    Batch,
+    DeviceSpecification,
+    Equipment,
+    Experiment,
+    ExperimentDevice,
+    Parser,
+)
 
 
 class ExperimentTable(tables.Table):
@@ -83,3 +90,17 @@ class BatchDevicesTable(tables.Table):
             "id",
             "batch",
         )
+
+
+class ParserTable(tables.Table):
+    # name = tables.Column(linkify=True)
+
+    class Meta:
+        model = Parser
+        template_name = "django_tables2/bootstrap4.html"
+        fields = (
+            "name",
+            "notes",
+            "created_on",
+        )
+        row_attrs = {"status": lambda record: record.status}

@@ -3,7 +3,7 @@ from django_filters.widgets import RangeWidget
 
 from common.filters import BaseFilter
 
-from .models import Batch, DeviceSpecification, Equipment, Experiment
+from .models import Batch, DeviceSpecification, Equipment, Experiment, Parser
 
 
 class ExperimentFilter(BaseFilter):
@@ -65,5 +65,14 @@ class EquipmentFilter(BaseFilter):
             "user_owner",
             "institution",
             "serialNo",
+            "status",
+        ]
+
+
+class ParserFilter(BaseFilter):
+    class Meta(BaseFilter.Meta):
+        model = Parser
+        fields = [
+            "name",
             "status",
         ]
