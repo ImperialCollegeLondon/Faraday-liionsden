@@ -132,7 +132,8 @@ class ParsingEngineBase(abc.ABC):
                 in the data.
 
         Returns:
-            Union[Generator[Dict, None, None], NDArray]: [description]
+            Generator[Dict, None, None]: A generator that produces each row of the data
+                as a list.
         """
         cols = (
             [col_mapping.get(c, c) for c in columns]
