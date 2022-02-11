@@ -11,10 +11,10 @@ class TestBiologicCSVnTSVParser(TestCase):
 
         self.parser = SimpleNamespace(file_path=self.file_path, encoding=BP.encoding)
 
-    def test__get_header_size(self):
-        from parsing_engines import BiologicCSVnTSVParser as BP
+    def test_get_header_size(self):
+        from parsing_engines.biologic_engine import get_header_size
 
-        actual = BP._get_header_size(self.parser)
+        actual = get_header_size(self.parser.file_path, encoding="iso-8859-1")
 
         with open(self.file_path, encoding="iso-8859-1") as f:
             for line in f:
@@ -23,30 +23,42 @@ class TestBiologicCSVnTSVParser(TestCase):
 
         self.assertEqual(actual, expected)
 
-    def test__load_data(self):
-        from parsing_engines import BiologicCSVnTSVParser as BP
+    def test_load_data(self):
+        from parsing_engines.biologic_engine import get_header_size, load_biologic_data
 
-        self.parser.skip_rows = BP._get_header_size(self.parser)
+        skip_rows = get_header_size(self.parser.file_path, encoding="iso-8859-1")
 
-        actual = BP._load_data(self.parser)
+        actual = load_biologic_data(
+            self.parser.file_path, skip_rows, encoding="iso-8859-1"
+        )
         self.assertGreater(len(actual.columns), 1)
         self.assertGreater(len(actual), 100)
 
-    def test__create_rec_no(self):
+    def test_create_rec_no(self):
         from parsing_engines import BiologicCSVnTSVParser as BP
+        from parsing_engines.biologic_engine import get_header_size, load_biologic_data
 
-        self.parser.skip_rows = BP._get_header_size(self.parser)
-        self.parser.data = BP._load_data(self.parser)
+        self.parser.skip_rows = get_header_size(
+            self.parser.file_path, encoding="iso-8859-1"
+        )
+        self.parser.data = load_biologic_data(
+            self.parser.file_path, self.parser.skip_rows, encoding="iso-8859-1"
+        )
 
         self.assertNotIn("Rec#", self.parser.data.columns)
         BP._create_rec_no(self.parser)
         self.assertIn("Rec#", self.parser.data.columns)
 
-    def test__drop_unnamed_columns(self):
+    def test_drop_unnamed_columns(self):
         from parsing_engines import BiologicCSVnTSVParser as BP
+        from parsing_engines.biologic_engine import get_header_size, load_biologic_data
 
-        self.parser.skip_rows = BP._get_header_size(self.parser)
-        self.parser.data = BP._load_data(self.parser)
+        self.parser.skip_rows = get_header_size(
+            self.parser.file_path, encoding="iso-8859-1"
+        )
+        self.parser.data = load_biologic_data(
+            self.parser.file_path, self.parser.skip_rows, encoding="iso-8859-1"
+        )
 
         self.assertGreater(sum(self.parser.data.columns.str.contains("^Unnamed")), 0)
         BP._drop_unnamed_columns(self.parser)
@@ -54,10 +66,15 @@ class TestBiologicCSVnTSVParser(TestCase):
 
     def test__standardise_columns(self):
         from parsing_engines import BiologicCSVnTSVParser as BP
+        from parsing_engines.biologic_engine import get_header_size, load_biologic_data
         from parsing_engines.mappings import COLUMN_NAME_MAPPING
 
-        self.parser.skip_rows = BP._get_header_size(self.parser)
-        self.parser.data = BP._load_data(self.parser)
+        self.parser.skip_rows = get_header_size(
+            self.parser.file_path, encoding="iso-8859-1"
+        )
+        self.parser.data = load_biologic_data(
+            self.parser.file_path, self.parser.skip_rows, encoding="iso-8859-1"
+        )
         BP._drop_unnamed_columns(self.parser)
 
         def all_cols(data):
@@ -72,24 +89,23 @@ class TestBiologicCSVnTSVParser(TestCase):
     def test_get_column_info(self):
         from parsing_engines import BiologicCSVnTSVParser as BP
 
-        parser = BP(self.file_path)
+        parser = BP.factory(self.file_path)
         cols = parser.get_column_info()
         for c in parser.data.columns:
             self.assertEqual(list(cols[c].keys()), ["is_numeric", "has_data"])
 
-    def test__get_file_header(self):
+    def test_get_file_header(self):
         from parsing_engines import BiologicCSVnTSVParser as BP
 
-        parser = BP(self.file_path)
+        parser = BP.factory(self.file_path)
         header = parser._get_file_header()
         self.assertGreater(len(header), 2)
         self.assertLess(len(header), parser.skip_rows)
 
     def test_get_metadata(self):
         from parsing_engines import BiologicCSVnTSVParser as BP
-        from parsing_engines.biologic_engine import header_to_yaml
 
-        parser = BP(self.file_path)
+        parser = BP.factory(self.file_path)
         meta = parser.get_metadata()
         cols = parser.get_column_info()
 
@@ -99,15 +115,13 @@ class TestBiologicCSVnTSVParser(TestCase):
         self.assertEqual(meta["num_rows"], len(parser.data))
         self.assertEqual(meta["data_start"], parser.skip_rows)
         self.assertEqual(meta["first_sample_no"], parser.skip_rows + 1)
-        self.assertEqual(
-            meta["file_metadata"], header_to_yaml(parser._get_file_header())
-        )
+        self.assertEqual(meta["file_metadata"], parser._get_file_header())
         self.assertGreater(len(meta["warnings"]), 0)
 
     def test_get_data_generator_for_columns(self):
         from parsing_engines import BiologicCSVnTSVParser as BP
 
-        parser = BP(self.file_path)
+        parser = BP.factory(self.file_path)
 
         ncols = 5
         cols = parser.data.columns[:ncols]
@@ -122,12 +136,18 @@ class TestHeaderToYaml(TestCase):
     def setUp(self) -> None:
         from parsing_engines import BiologicCSVnTSVParser as BP
 
-        self.parser = BP(self.file_path)
+        self.parser = BP.factory(self.file_path)
 
     def test_header_to_yaml(self):
         from parsing_engines.biologic_engine import header_to_yaml, yaml_replacements
 
-        header = self.parser._get_file_header()
+        with open(self.parser.file_path, encoding=self.parser.encoding) as f:
+            header = list(
+                filter(
+                    len,
+                    (f.readline().strip("\n") for _ in range(self.parser.skip_rows)),
+                )
+            )
         meta = header_to_yaml(header)
 
         self.assertLess(len(meta), len(header))
