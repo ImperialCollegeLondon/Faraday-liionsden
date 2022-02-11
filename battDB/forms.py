@@ -266,7 +266,10 @@ class NewExperimentDataFileForm(DataCreateForm):
                     "Upload file",
                     Div(
                         HTML(
-                            "Upload the raw data file here. Select 'parse' to process the data using your chosen parser."
+                            "Upload the raw data file here. Select 'parse' to process the data using your chosen parser. "
+                        ),
+                        HTML(
+                            "<b>Find detailed information about the behaviour of each parser <a href='/battDB/parsers/'  target='_blank'>here</a><b>."
                         ),
                         css_class="container pb-4",
                     ),
