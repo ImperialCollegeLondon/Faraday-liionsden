@@ -260,8 +260,8 @@ class NewExperimentDataFileForm(DataCreateForm):
         self.helper.layout = Layout(
             Div(
                 Div(HTML("<h1> New data file </h1>")),
-                Column("name", css_class="col-3"),
-                Column("machine", css_class="col-3"),
+                Column("name", css_class="col-6"),
+                Column("machine", css_class="col-6"),
                 Fieldset(
                     "Upload file",
                     Div(
