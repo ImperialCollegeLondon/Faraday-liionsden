@@ -39,49 +39,6 @@ class MaccorXLSParser(ParsingEngineBase):
         self._standardise_columns()
         self._create_rec_no()
 
-    def _get_metadata_value(
-        self, idx: int, row: Sequence[Cell]
-    ) -> Tuple[str, str, int]:
-        """A wrapper for metadata value parsing, handling special cases.
-
-        Args:
-            idx (int): Index of the cell with the next key to check
-            row (Sequence[Cell]): Row of cells
-
-        Raises:
-            ValueError: If the index of the next cell is not bigger than the current
-                one.
-
-        Returns:
-            Tuple[str, str, int]: A tuple with the processed key, value and the next
-            index to check.
-        """
-        key = row[idx]
-        if not key:
-            key = ""
-        elif isinstance(key.value, Text):
-            key = key.value.replace("''", "'").strip().rstrip(":")
-        else:
-            key = key.value
-
-        if "Date" in key:
-            value = xlrd.xldate.xldate_as_datetime(row[idx + 1].value, self.datemode)
-            new_idx = idx + 2
-        elif "Procedure" in key:
-            value = (
-                clean_value(row[idx + 1].value) + ", " + clean_value(row[idx + 2].value)
-            )
-            new_idx = idx + 3
-        else:
-            value = row[idx + 1].value if idx + 1 < len(row) else ""
-            new_idx = idx + 2
-
-        if new_idx <= idx:
-            raise ValueError(
-                "Non-increasing index number when processing metadata cells."
-            )
-        return key, value, new_idx
-
     def _get_header_size(self) -> int:
         """Reads the file and determines the size of the header.
 
@@ -157,7 +114,7 @@ class MaccorXLSParser(ParsingEngineBase):
 
             current = 0
             while current < len(row):
-                key, value, current = self._get_metadata_value(current, row)
+                key, value, current = get_metadata_value(current, row, self.datemode)
                 if key == "":
                     continue
                 header[key] = value
@@ -254,3 +211,44 @@ def is_metadata_row(row: Iterable, withnesses: Iterable) -> bool:
     """
     row_values = [y.value if hasattr(y, "value") else y for y in row]
     return not any(x in withnesses for x in row_values)
+
+
+def get_metadata_value(
+    idx: int, row: Sequence[Cell], datemode: int
+) -> Tuple[str, str, int]:
+    """A wrapper for metadata value parsing, handling special cases.
+
+    Args:
+        idx (int): Index of the cell with the next key to check
+        row (Sequence[Cell]): Row of cells
+        datemode (int): The datemode the cell containing dates are using.
+
+    Raises:
+        ValueError: If the index of the next cell is not bigger than the current
+            one.
+
+    Returns:
+        Tuple[str, str, int]: A tuple with the processed key, value and the next
+        index to check.
+    """
+    key = row[idx]
+    if not key:
+        key = ""
+    elif isinstance(key.value, Text):
+        key = key.value.replace("''", "'").strip().rstrip(":")
+    else:
+        key = key.value
+
+    if "Date" in key:
+        value = xlrd.xldate.xldate_as_datetime(row[idx + 1].value, datemode)
+        new_idx = idx + 2
+    elif "Procedure" in key:
+        value = clean_value(row[idx + 1].value) + ", " + clean_value(row[idx + 2].value)
+        new_idx = idx + 3
+    else:
+        value = row[idx + 1].value if idx + 1 < len(row) else ""
+        new_idx = idx + 2
+
+    if new_idx <= idx:
+        raise ValueError("Non-increasing index number when processing metadata cells.")
+    return key, value, new_idx
