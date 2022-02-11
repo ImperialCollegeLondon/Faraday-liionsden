@@ -178,13 +178,6 @@ class MaccorXLSParser(ParsingEngineBase):
         for row in self.data[cols].itertuples():
             yield list(row)[1:]
 
-    @staticmethod
-    def _sanitise_rec_val(value) -> float:
-        if isinstance(value, str):
-            return float(value.replace(",", ""))
-        else:
-            return value
-
 
 def clean_value(value: str) -> str:
     """Cleans up the string and trims special characters.
