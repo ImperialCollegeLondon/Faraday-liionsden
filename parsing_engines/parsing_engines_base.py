@@ -44,6 +44,11 @@ class ParsingEngineBase(abc.ABC):
 
     @abc.abstractmethod
     def _get_file_header(self) -> Dict[str, Any]:
+        """Extracts the header from the experiment data file.
+
+        Returns:
+            A dictionary with the relevant key/value entries extracted from the header.
+        """
         pass
 
     def __init__(self, file_path: Union[Path, str], skip_rows: int, data: pd.DataFrame):
@@ -143,18 +148,23 @@ class DummyParsingEngine(ParsingEngineBase):
 
     name = "Dummy"
     description = "Dummy parsing engine that does nothing"
-    valid: List[Tuple[str, str]] = []
 
-    def get_metadata(self) -> Dict:
+    @classmethod
+    def factory(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
+        """Factory method for creating a parsing engine.
+
+        Args:
+            file_path (Union[Path, str]): Path to the file to load.
+        """
+        return cls(file_path=file_path, skip_rows=0, data=pd.DataFrame([]))
+
+    def _get_file_header(self) -> Dict[str, Any]:
+        """Extracts the header from the experiment data file.
+
+        Returns:
+            A dictionary with the relevant key/value entries extracted from the header.
+        """
         return {"num_rows": 0}
-
-    def get_column_info(self) -> Dict:
-        return {}
-
-    def get_data_generator_for_columns(
-        self, columns: List, first_data_row: int = 0, col_mapping: Optional[Dict] = None
-    ) -> Generator[list, None, None]:
-        return iter([])  # noqa
 
 
 def get_parsing_engine(file_format: str) -> Type[ParsingEngineBase]:
