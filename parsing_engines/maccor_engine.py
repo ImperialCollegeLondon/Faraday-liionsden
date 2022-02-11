@@ -1,8 +1,6 @@
-from functools import partial
 from pathlib import Path
 from typing import (
     Any,
-    Callable,
     Dict,
     Iterable,
     List,
@@ -32,7 +30,7 @@ class MaccorParsingEngine(ParsingEngineBase):
         ("application/vnd.ms-excel", ".xls"),
         ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"),
     ]
-    MANDATORY_COLUMNS: Set[str] = {"Cyc#", "Step"}
+    mandatory_columns: Set[str] = {"Cyc#", "Step"}
 
     @classmethod
     def factory(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
@@ -54,30 +52,10 @@ class MaccorParsingEngine(ParsingEngineBase):
         if sheet.ncols < 1 or sheet.nrows < 2:
             raise EmptyFileError()
 
-        skip_rows = get_header_size(sheet, cls.MANDATORY_COLUMNS)
+        skip_rows = get_header_size(sheet, cls.mandatory_columns)
         data = load_maccor_data(file_path, skip_rows)
-        parser = cls(file_path, skip_rows, data)
-
-        parser._get_file_header_internal = partial(
-            get_file_header, sheet, skip_rows, datemode
-        )
-        return parser
-
-    def __init__(self, file_path: Union[Path, str], skip_rows: int, data: pd.DataFrame):
-        """Initialises the XLS parser for Maccor"""
-        super(MaccorParsingEngine, self).__init__(file_path, skip_rows, data)
-        self._get_file_header_internal: Callable[[], Dict[str, Any]]
-
-    def _get_file_header(self) -> Dict[str, Any]:
-        """Extracts the header from the Maccor file.
-
-        The header is spread across columns, so these need to be scan for the key/value
-        pairs to extract.
-
-        Returns:
-            A dictionary with the header information.
-        """
-        return self._get_file_header_internal()
+        file_metadata = get_file_header(sheet, skip_rows, datemode)
+        return cls(file_path, skip_rows, data, file_metadata)
 
 
 def factory_xls(

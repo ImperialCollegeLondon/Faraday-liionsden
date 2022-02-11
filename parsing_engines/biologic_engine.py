@@ -1,12 +1,13 @@
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union, Set
 
 import pandas as pd
 import yaml
 
 from .battery_exceptions import UnsupportedFileTypeError
 from .parsing_engines_base import ParsingEngineBase
+from .mappings import COLUMN_NAME_MAPPING
 
 
 class BiologicCSVnTSVParser(ParsingEngineBase):
@@ -20,7 +21,8 @@ class BiologicCSVnTSVParser(ParsingEngineBase):
         ("text/plain", ".tsv"),
         ("text/plain", ".txt"),
     ]
-    MANDATORY_COLUMNS = {"Time", "Rec#", "Ns"}
+    mandatory_columns: Set[str] = {"Time", "Rec#", "Ns"}
+    column_name_mapping = COLUMN_NAME_MAPPING
 
     # Assumed to be this encoding, but it might be different...
     encoding = "iso-8859-1"
@@ -34,24 +36,36 @@ class BiologicCSVnTSVParser(ParsingEngineBase):
         """
         skip_rows = get_header_size(file_path, cls.encoding)
         data = load_biologic_data(file_path, skip_rows, cls.encoding)
-        return cls(file_path, skip_rows, data)
+        file_metadata = get_file_header(file_path, skip_rows, cls.encoding)
+        return cls(file_path, skip_rows, data, file_metadata)
 
-    def _get_file_header(self) -> Dict[str, Any]:
-        """Extracts the header from the Biologic file.
 
-        Returns:
-            A list of rows for the header, without the termination characters and
-            empty lines.
-        """
-        with open(self.file_path, encoding=self.encoding) as f:
-            header = list(
-                filter(len, (f.readline().strip("\n") for _ in range(self.skip_rows)))
-            )
-        return header_to_yaml(header)
+def get_file_header(
+    file_path: Union[Path, str], skip_rows: int, encoding: str
+) -> Dict[str, Any]:
+    """Extracts the header from the Biologic file.
+
+    Args:
+        file_path (Union[Path, str]): File to load the data from.
+        skip_rows (int): Location of the header, assumed equal to the number of rows to
+            skip.
+        encoding (str): Encoding of the file.
+
+    Returns:
+        A list of rows for the header, without the termination characters and
+        empty lines.
+    """
+    with open(file_path, encoding=encoding) as f:
+        header = list(filter(len, (f.readline().strip("\n") for _ in range(skip_rows))))
+    return header_to_yaml(header)
 
 
 def get_header_size(file_path: Union[Path, str], encoding: str) -> int:
     """Reads the file and determines the size of the header.
+
+    Args:
+        file_path (Union[Path, str]): File to load the data from.
+        encoding (str): Encoding of the file.
 
     Returns:
         Header size as an int
@@ -75,6 +89,7 @@ def load_biologic_data(
         file_path (Union[Path, str]): File to load the data from.
         skip_rows (int): Location of the header, assumed equal to the number of rows to
             skip.
+        encoding (str): Encoding of the file.
 
     Raises:
         UnsupportedFileTypeError: If only one column is found after trying comma and

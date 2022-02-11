@@ -11,8 +11,6 @@ import pandas.errors
 from django.core.exceptions import ValidationError
 from pandas.core.dtypes.common import is_numeric_dtype
 
-from .mappings import COLUMN_NAME_MAPPING
-
 KNOWN_PARSING_ENGINES: Dict[str, Type[ParsingEngineBase]] = {}
 """Registry of the known parsing engines."""
 
@@ -22,7 +20,8 @@ class ParsingEngineBase(abc.ABC):
     name: str = ""
     description: str = ""
     valid: List[Tuple[str, str]] = []
-    MANDATORY_COLUMNS: Set[str] = set()
+    mandatory_columns: Set[str] = set()
+    column_name_mapping: Dict[str, str] = dict()
 
     def __init_subclass__(cls: Type[ParsingEngineBase]):
         if len(cls.name) == 0:
@@ -42,19 +41,17 @@ class ParsingEngineBase(abc.ABC):
         """
         pass
 
-    @abc.abstractmethod
-    def _get_file_header(self) -> Dict[str, Any]:
-        """Extracts the header from the experiment data file.
-
-        Returns:
-            A dictionary with the relevant key/value entries extracted from the header.
-        """
-        pass
-
-    def __init__(self, file_path: Union[Path, str], skip_rows: int, data: pd.DataFrame):
+    def __init__(
+        self,
+        file_path: Union[Path, str],
+        skip_rows: int,
+        data: pd.DataFrame,
+        file_metadata: Dict[str, Any],
+    ):
         self.file_path = Path(file_path)
         self.skip_rows = skip_rows
         self.data = data
+        self.file_metadata = file_metadata
 
         self._drop_unnamed_columns()
         self._standardise_columns()
@@ -71,7 +68,7 @@ class ParsingEngineBase(abc.ABC):
 
     def _standardise_columns(self) -> None:
         """Standardise column names using a mapping of standard names."""
-        self.data = self.data.rename(columns=COLUMN_NAME_MAPPING)
+        self.data = self.data.rename(columns=self.column_name_mapping)
 
     def get_column_info(self) -> Dict:
         """Gathers some metadata for each column.
@@ -105,12 +102,12 @@ class ParsingEngineBase(abc.ABC):
             "num_rows": len(self.data),
             "data_start": self.skip_rows,
             "first_sample_no": self.skip_rows + 1,
-            "file_metadata": self._get_file_header(),
+            "file_metadata": self.file_metadata,
             "machine_type": self.name,
             "warnings": [],
         }
 
-        if not self.MANDATORY_COLUMNS.issubset(self.data.columns):
+        if not self.mandatory_columns.issubset(self.data.columns):
             metadata["warnings"].append(
                 "Not all mandatory columns are present in the raw datafile"
             )
@@ -157,15 +154,12 @@ class DummyParsingEngine(ParsingEngineBase):
         Args:
             file_path (Union[Path, str]): Path to the file to load.
         """
-        return cls(file_path=file_path, skip_rows=0, data=pd.DataFrame([]))
-
-    def _get_file_header(self) -> Dict[str, Any]:
-        """Extracts the header from the experiment data file.
-
-        Returns:
-            A dictionary with the relevant key/value entries extracted from the header.
-        """
-        return {"num_rows": 0}
+        return cls(
+            file_path=file_path,
+            skip_rows=0,
+            data=pd.DataFrame([]),
+            file_metadata={"num_rows": 0},
+        )
 
 
 def get_parsing_engine(file_format: str) -> Type[ParsingEngineBase]:
