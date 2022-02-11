@@ -151,6 +151,8 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                 # Handle uploaded files in formsets slightly differently to usual
                 parameters[0].instance.user_owner = obj.user_owner
                 parameters[0].instance.status = obj.status
+                if parameters[0].instance.use_parser:
+                    parameters[0].instance.parse = True
                 parameters.save()
                 form.instance.full_clean()
 

@@ -300,12 +300,11 @@ UploadDataFileFormset = inlineformset_factory(
     ExperimentDataFile,
     UploadedFile,
     form=UploadedFileForm,
-    fields=["file", "parse", "use_parser"],
+    fields=["file", "use_parser"],
     extra=1,
     can_delete=False,
     help_texts={
         "file": None,
-        "parse": None,
     },
 )
 
