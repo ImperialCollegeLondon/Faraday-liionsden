@@ -57,7 +57,7 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         related_name="used_in_modules",
         limit_choices_to={"config_type": "module"},
         verbose_name="Configuration",
-        help_text="Configuration of sub-devices if the device type is a module or pack.",
+        help_text="Configuration of subdevices if the device type is a module or pack.",
     )
 
     spec_file = models.FileField(
