@@ -26,6 +26,7 @@ from .filters import (
     DeviceSpecificationFilter,
     EquipmentFilter,
     ExperimentFilter,
+    ParserFilter,
 )
 from .forms import (
     DeviceParameterFormSet,
@@ -45,6 +46,7 @@ from .models import (
     Equipment,
     Experiment,
     ExperimentDataFile,
+    Parser,
     UploadedFile,
 )
 from .serializers import (
@@ -60,6 +62,7 @@ from .tables import (
     DeviceSpecificationTable,
     EquipmentTable,
     ExperimentTable,
+    ParserTable,
 )
 
 
@@ -148,6 +151,8 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                 # Handle uploaded files in formsets slightly differently to usual
                 parameters[0].instance.user_owner = obj.user_owner
                 parameters[0].instance.status = obj.status
+                if parameters[0].instance.use_parser:
+                    parameters[0].instance.parse = True
                 parameters.save()
                 form.instance.full_clean()
 
@@ -296,6 +301,15 @@ class EquipmentTableView(
     permission_required = "battDB.view_equipment"
 
 
+class ParserTableView(SingleTableMixin, ExportMixin, PermissionListMixin, FilterView):
+    model = Parser
+    table_class = ParserTable
+    template_name = "parser_table.html"
+    filterset_class = ParserFilter
+    export_formats = ["csv", "json"]
+    permission_required = "battDB.view_parser"
+
+
 class ExperimentView(PermissionRequiredMixin, DetailView):
     model = Experiment
     template_name = "experiment.html"
@@ -318,6 +332,12 @@ class EquipmentView(PermissionRequiredMixin, DetailView):
     model = Equipment
     template_name = "equipment.html"
     permission_required = "battDB.view_equipment"
+
+
+class ParserView(PermissionRequiredMixin, DetailView):
+    model = Parser
+    template_name = "parser.html"
+    permission_required = "battDB.view_parser"
 
 
 ### API VIEWS ###

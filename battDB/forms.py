@@ -260,13 +260,16 @@ class NewExperimentDataFileForm(DataCreateForm):
         self.helper.layout = Layout(
             Div(
                 Div(HTML("<h1> New data file </h1>")),
-                Column("name", css_class="col-3"),
-                Column("machine", css_class="col-3"),
+                Column("name", css_class="col-6"),
+                Column("machine", css_class="col-6"),
                 Fieldset(
                     "Upload file",
                     Div(
                         HTML(
-                            "Upload the raw data file here. Select 'parse' to process the data using your chosen parser."
+                            "Upload the raw data file here. Select 'parse' to process the data using your chosen parser. "
+                        ),
+                        HTML(
+                            "<b>Find detailed information about the behaviour of each parser <a href='/battDB/parsers/'  target='_blank'>here</a></b>."
                         ),
                         css_class="container pb-4",
                     ),
@@ -297,12 +300,11 @@ UploadDataFileFormset = inlineformset_factory(
     ExperimentDataFile,
     UploadedFile,
     form=UploadedFileForm,
-    fields=["file", "parse", "use_parser"],
+    fields=["file", "use_parser"],
     extra=1,
     can_delete=False,
     help_texts={
         "file": None,
-        "parse": None,
     },
 )
 
