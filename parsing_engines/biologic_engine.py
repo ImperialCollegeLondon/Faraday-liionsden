@@ -10,7 +10,7 @@ from .parsing_engines_base import ParsingEngineBase
 from .mappings import COLUMN_NAME_MAPPING
 
 
-class BiologicCSVnTSVParser(ParsingEngineBase):
+class BiologicParsingEngine(ParsingEngineBase):
     """ParserBase for the csv and tsv output of the BioLogic cycler."""
 
     name = "biologic"

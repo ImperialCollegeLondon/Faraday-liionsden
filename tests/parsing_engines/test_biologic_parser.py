@@ -5,16 +5,16 @@ from unittest.mock import patch
 
 
 class TestBiologicCSVnTSVParser(TestCase):
-    @patch("parsing_engines.BiologicCSVnTSVParser._drop_unnamed_columns")
-    @patch("parsing_engines.BiologicCSVnTSVParser._standardise_columns")
-    @patch("parsing_engines.BiologicCSVnTSVParser._create_rec_no")
+    @patch("parsing_engines.BiologicParsingEngine._drop_unnamed_columns")
+    @patch("parsing_engines.BiologicParsingEngine._standardise_columns")
+    @patch("parsing_engines.BiologicParsingEngine._create_rec_no")
     @patch("parsing_engines.biologic_engine.get_header_size")
     @patch("parsing_engines.biologic_engine.load_biologic_data")
     @patch("parsing_engines.biologic_engine.get_file_header")
     def test_factory(
         self, mock_head, mock_data, mock_size, mock_create, mock_standard, mock_drop
     ):
-        from parsing_engines import BiologicCSVnTSVParser as BP
+        from parsing_engines import BiologicParsingEngine as BP
         import pandas as pd
 
         mock_data.return_value = pd.DataFrame()
@@ -41,7 +41,7 @@ class TestBiologicFunctions(TestCase):
     file_path = Path(__file__).parent / "biologic_example.csv"
 
     def setUp(self) -> None:
-        from parsing_engines import BiologicCSVnTSVParser as BP
+        from parsing_engines import BiologicParsingEngine as BP
 
         self.parser = SimpleNamespace(file_path=self.file_path, encoding=BP.encoding)
 
@@ -84,7 +84,7 @@ class TestHeaderToYaml(TestCase):
     file_path = Path(__file__).parent / "biologic_example.csv"
 
     def setUp(self) -> None:
-        from parsing_engines import BiologicCSVnTSVParser as BP
+        from parsing_engines import BiologicParsingEngine as BP
 
         self.parser = BP.factory(self.file_path)
 
