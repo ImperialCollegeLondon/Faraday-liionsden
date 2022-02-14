@@ -1,12 +1,13 @@
 from unittest import TestCase
 from unittest.mock import patch
+from types import SimpleNamespace as SName
 
 
-class TestParserBase(TestCase):
+class TestParsingEngineBase(TestCase):
     def test_abstract_methods(self):
         from parsing_engines.parsing_engines_base import ParsingEngineBase
 
-        expected = {"factory", "_get_file_header"}
+        expected = {"factory"}
         self.assertEqual(ParsingEngineBase.__abstractmethods__, expected)
 
     def test_register_subclass(self):
@@ -41,6 +42,107 @@ class TestParserBase(TestCase):
             str(info.exception),
             "A ParsingEngineBase subclass cannot have an empty attribute 'name'.",
         )
+
+    def test_create_rec_no(self):
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
+        import pandas as pd
+
+        engine = SName(data=pd.DataFrame())
+        self.assertNotIn("Rec#", engine.data.columns)
+        ParsingEngineBase._create_rec_no(engine)
+        self.assertIn("Rec#", engine.data.columns)
+
+    def test_drop_unnamed_columns(self):
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
+        import pandas as pd
+
+        engine = SName(data=pd.DataFrame({"^Unnamed": [1, 2, 3], "Voltage": [4, 5, 6]}))
+        self.assertIn("^Unnamed", engine.data.columns)
+        ParsingEngineBase._drop_unnamed_columns(engine)
+        self.assertNotIn("^Unnamed", engine.data.columns)
+
+    def test_standardise_columns(self):
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
+        import pandas as pd
+
+        engine = SName(
+            data=pd.DataFrame({"Voltage": [4, 5, 6]}),
+            column_name_mapping={"Voltage": "Volt / V"},
+        )
+        self.assertNotIn("Volt / V", engine.data.columns)
+        ParsingEngineBase._standardise_columns(engine)
+        self.assertIn("Volt / V", engine.data.columns)
+
+    def test_get_column_info(self):
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
+        import pandas as pd
+
+        engine = SName(
+            data=pd.DataFrame({"Voltage": [4, 5, 6], "Trash": [None, None, None]}),
+            column_name_mapping={"Voltage": "Volt / V"},
+        )
+        expected = {
+            "Voltage": {
+                "is_numeric": True,
+                "has_data": True,
+            },
+            "Trash": {
+                "is_numeric": False,
+                "has_data": False,
+            },
+        }
+        actual = ParsingEngineBase.get_column_info(engine)
+        self.assertEqual(actual, expected)
+
+    def test_get_metadata(self):
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
+        import pandas as pd
+        from pathlib import Path
+
+        filename = Path(__file__)
+        engine = SName(
+            data=pd.DataFrame({"Voltage": [4, 5, 6], "Trash": [None, None, None]}),
+            skip_rows=0,
+            file_path=filename,
+            file_metadata={"temperature": 42},
+            name="test",
+            mandatory_columns={"Voltage", "Current"},
+        )
+        expected = {
+            "dataset_name": filename.stem,
+            "dataset_size": filename.stat().st_size,
+            "num_rows": 3,
+            "data_start": 0,
+            "first_sample_no": 1,
+            "file_metadata": {"temperature": 42},
+            "machine_type": "test",
+        }
+        actual = ParsingEngineBase.get_metadata(engine)
+        for i in expected:
+            self.assertEqual(actual[i], expected[i])
+
+        self.assertTrue(len(actual["warnings"]) > 0)
+        self.assertIn("mandatory columns", actual["warnings"][0])
+
+    def test_get_data_generator_for_columns(self):
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
+        import pandas as pd
+
+        engine = SName(
+            data=pd.DataFrame(
+                {
+                    "Voltage": [4, 5, 6],
+                    "I / A": [1, 2, 3],
+                    "Trash": [None, None, None],
+                }
+            ),
+        )
+        column_name_mapping = {"Volt / V": "Voltage"}
+        actual = ParsingEngineBase.get_data_generator_for_columns(
+            engine, columns=["Volt / V", "I / A"], col_mapping=column_name_mapping
+        )
+        for i, row in enumerate(actual):
+            self.assertEqual(row, list(engine.data.loc[i, ["Voltage", "I / A"]].values))
 
 
 class TestDummyParser(TestCase):

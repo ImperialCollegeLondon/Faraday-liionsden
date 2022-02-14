@@ -64,7 +64,8 @@ class ParsingEngineBase(abc.ABC):
 
     def _drop_unnamed_columns(self) -> None:
         """Drops columns of the internal parser dataframe that have no name."""
-        self.data = self.data.loc[:, ~self.data.columns.str.contains("^Unnamed")]
+        cols = [c for c in self.data.columns if c != "^Unnamed"]
+        self.data = self.data.loc[:, cols]
 
     def _standardise_columns(self) -> None:
         """Standardise column names using a mapping of standard names."""
@@ -82,7 +83,7 @@ class ParsingEngineBase(abc.ABC):
         return {
             k: {
                 "is_numeric": is_numeric_dtype(self.data[k].dtype),
-                "has_data": True,
+                "has_data": not self.data[k].isnull().values.all(),
             }
             for k in self.data.columns
         }
