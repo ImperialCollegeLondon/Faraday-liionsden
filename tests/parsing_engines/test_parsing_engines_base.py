@@ -153,7 +153,7 @@ class TestDummyParsingEngine(TestCase):
         "parsing_engines.parsing_engines_base.DummyParsingEngine._standardise_columns"
     )
     @patch("parsing_engines.parsing_engines_base.DummyParsingEngine._create_rec_no")
-    def test_factory(self, mock_drop, mock_standard, mock_create) -> None:
+    def test_factory(self, mock_create, mock_standard, mock_drop):
         from pathlib import Path
         from parsing_engines.parsing_engines_base import DummyParsingEngine
 

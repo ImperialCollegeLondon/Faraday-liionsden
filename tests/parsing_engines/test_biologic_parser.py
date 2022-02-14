@@ -1,9 +1,43 @@
 from pathlib import Path
 from types import SimpleNamespace
 from unittest import TestCase
+from unittest.mock import patch
 
 
 class TestBiologicCSVnTSVParser(TestCase):
+    @patch("parsing_engines.BiologicCSVnTSVParser._drop_unnamed_columns")
+    @patch("parsing_engines.BiologicCSVnTSVParser._standardise_columns")
+    @patch("parsing_engines.BiologicCSVnTSVParser._create_rec_no")
+    @patch("parsing_engines.biologic_engine.get_header_size")
+    @patch("parsing_engines.biologic_engine.load_biologic_data")
+    @patch("parsing_engines.biologic_engine.get_file_header")
+    def test_factory(
+        self, mock_head, mock_data, mock_size, mock_create, mock_standard, mock_drop
+    ):
+        from parsing_engines import BiologicCSVnTSVParser as BP
+        import pandas as pd
+
+        mock_data.return_value = pd.DataFrame()
+        mock_size.return_value = 0
+        mock_head.return_value = {"answer": 42}
+
+        file_path = Path("biologic_example.csv")
+
+        parser = BP.factory(file_path=file_path)
+        mock_drop.assert_called_once()
+        mock_standard.assert_called_once()
+        mock_create.assert_called_once()
+        mock_size.assert_called_once_with(file_path, BP.encoding)
+        mock_data.assert_called_once_with(file_path, 0, BP.encoding)
+        mock_head.assert_called_once_with(file_path, 0, BP.encoding)
+        self.assertEqual(len(parser.data), 0)
+        self.assertEqual(parser.name, "biologic")
+        self.assertEqual(parser.skip_rows, 0)
+        self.assertEqual(parser.file_path, file_path)
+        self.assertEqual(parser.file_metadata, {"answer": 42})
+
+
+class TestBiologicFunctions(TestCase):
     file_path = Path(__file__).parent / "biologic_example.csv"
 
     def setUp(self) -> None:
@@ -20,6 +54,7 @@ class TestBiologicCSVnTSVParser(TestCase):
             for line in f:
                 if "Nb header lines" in line:
                     expected = int(line.strip().split(" ")[-1]) - 1
+                    break
 
         self.assertEqual(actual, expected)
 
@@ -34,100 +69,15 @@ class TestBiologicCSVnTSVParser(TestCase):
         self.assertGreater(len(actual.columns), 1)
         self.assertGreater(len(actual), 100)
 
-    def test_create_rec_no(self):
-        from parsing_engines import BiologicCSVnTSVParser as BP
-        from parsing_engines.biologic_engine import get_header_size, load_biologic_data
-
-        self.parser.skip_rows = get_header_size(
-            self.parser.file_path, encoding="iso-8859-1"
-        )
-        self.parser.data = load_biologic_data(
-            self.parser.file_path, self.parser.skip_rows, encoding="iso-8859-1"
-        )
-
-        self.assertNotIn("Rec#", self.parser.data.columns)
-        BP._create_rec_no(self.parser)
-        self.assertIn("Rec#", self.parser.data.columns)
-
-    def test_drop_unnamed_columns(self):
-        from parsing_engines import BiologicCSVnTSVParser as BP
-        from parsing_engines.biologic_engine import get_header_size, load_biologic_data
-
-        self.parser.skip_rows = get_header_size(
-            self.parser.file_path, encoding="iso-8859-1"
-        )
-        self.parser.data = load_biologic_data(
-            self.parser.file_path, self.parser.skip_rows, encoding="iso-8859-1"
-        )
-
-        self.assertGreater(sum(self.parser.data.columns.str.contains("^Unnamed")), 0)
-        BP._drop_unnamed_columns(self.parser)
-        self.assertEqual(sum(self.parser.data.columns.str.contains("^Unnamed")), 0)
-
-    def test__standardise_columns(self):
-        from parsing_engines import BiologicCSVnTSVParser as BP
-        from parsing_engines.biologic_engine import get_header_size, load_biologic_data
-        from parsing_engines.mappings import COLUMN_NAME_MAPPING
-
-        self.parser.skip_rows = get_header_size(
-            self.parser.file_path, encoding="iso-8859-1"
-        )
-        self.parser.data = load_biologic_data(
-            self.parser.file_path, self.parser.skip_rows, encoding="iso-8859-1"
-        )
-        BP._drop_unnamed_columns(self.parser)
-
-        def all_cols(data):
-            return sum(
-                [COLUMN_NAME_MAPPING.get(c, c) == c for c in data.columns]
-            ) == len(data.columns)
-
-        self.assertFalse(all_cols(self.parser.data))
-        BP._standardise_columns(self.parser)
-        self.assertTrue(all_cols(self.parser.data))
-
-    def test_get_column_info(self):
-        from parsing_engines import BiologicCSVnTSVParser as BP
-
-        parser = BP.factory(self.file_path)
-        cols = parser.get_column_info()
-        for c in parser.data.columns:
-            self.assertEqual(list(cols[c].keys()), ["is_numeric", "has_data"])
-
     def test_get_file_header(self):
-        from parsing_engines import BiologicCSVnTSVParser as BP
+        from parsing_engines.biologic_engine import get_file_header, get_header_size
 
-        parser = BP.factory(self.file_path)
-        header = parser._get_file_header()
-        self.assertGreater(len(header), 2)
-        self.assertLess(len(header), parser.skip_rows)
+        skip_rows = get_header_size(self.parser.file_path, encoding="iso-8859-1")
 
-    def test_get_metadata(self):
-        from parsing_engines import BiologicCSVnTSVParser as BP
-
-        parser = BP.factory(self.file_path)
-        meta = parser.get_metadata()
-        cols = parser.get_column_info()
-
-        self.assertEqual(cols, parser.get_column_info())
-        self.assertEqual(meta["dataset_name"], self.file_path.stem)
-        self.assertEqual(meta["dataset_size"], self.file_path.stat().st_size)
-        self.assertEqual(meta["num_rows"], len(parser.data))
-        self.assertEqual(meta["data_start"], parser.skip_rows)
-        self.assertEqual(meta["first_sample_no"], parser.skip_rows + 1)
-        self.assertEqual(meta["file_metadata"], parser._get_file_header())
-        self.assertGreater(len(meta["warnings"]), 0)
-
-    def test_get_data_generator_for_columns(self):
-        from parsing_engines import BiologicCSVnTSVParser as BP
-
-        parser = BP.factory(self.file_path)
-
-        ncols = 5
-        cols = parser.data.columns[:ncols]
-        actual = list(parser.get_data_generator_for_columns(cols))
-        expected = [list(row) for row in parser.data[cols].values]
-        self.assertEqual(actual, expected)
+        header = get_file_header(
+            self.parser.file_path, skip_rows, encoding="iso-8859-1"
+        )
+        self.assertGreaterEqual(len(header), 1)
 
 
 class TestHeaderToYaml(TestCase):
