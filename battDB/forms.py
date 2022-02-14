@@ -82,6 +82,9 @@ class NewDeviceForm(DataCreateForm):
                 Field("make_public"),
                 HTML("<br>"),
                 ButtonHolder(Submit("submit", "save")),
+                HTML("<br>"),
+                HTML("<br>"),
+                ButtonHolder(Submit("another", "save and add another")),
                 css_class="row align-items-end",
             ),
         )
@@ -144,6 +147,9 @@ class NewExperimentForm(DataCreateForm):
                 Field("make_public"),
                 HTML("<br>"),
                 ButtonHolder(Submit("submit", "save")),
+                HTML("<br>"),
+                HTML("<br>"),
+                ButtonHolder(Submit("another", "save and add another")),
                 css_class="row",
             ),
         )
@@ -238,6 +244,9 @@ class NewBatchForm(DataCreateForm):
                 Field("make_public"),
                 HTML("<br>"),
                 ButtonHolder(Submit("submit", "save")),
+                HTML("<br>"),
+                HTML("<br>"),
+                ButtonHolder(Submit("another", "save and add another")),
                 css_class="row",
             )
         )
@@ -284,6 +293,9 @@ class NewExperimentDataFileForm(DataCreateForm):
                 Field("make_public"),
                 HTML("<br>"),
                 ButtonHolder(Submit("submit", "save")),
+                HTML("<br>"),
+                HTML("<br>"),
+                ButtonHolder(Submit("another", "save and add another")),
                 css_class="row",
             )
         )

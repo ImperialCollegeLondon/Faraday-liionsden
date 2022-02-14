@@ -7,7 +7,6 @@ from crispy_forms.layout import (
     Field,
     Fieldset,
     Layout,
-    Row,
     Submit,
 )
 from django.forms import ModelForm, inlineformset_factory
@@ -36,6 +35,9 @@ class NewCompoundForm(DataCreateForm):
                 Column("formula", css_class="col-4"),
                 Column("mass", css_class="col-4"),
                 ButtonHolder(Submit("submit", "save")),
+                HTML("<br>"),
+                HTML("<br>"),
+                ButtonHolder(Submit("another", "save and add another")),
                 css_class="row",
             )
         )
