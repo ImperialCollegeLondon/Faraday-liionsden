@@ -12,6 +12,7 @@ from .models import (
 
 class ExperimentTable(tables.Table):
     id = tables.Column(linkify=True)
+    num_files = tables.Column(accessor="viewable_files_", verbose_name="# Data files")
 
     class Meta:
         model = Experiment

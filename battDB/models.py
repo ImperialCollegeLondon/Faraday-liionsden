@@ -6,6 +6,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 
 import common.models as cm
@@ -371,6 +372,9 @@ class Experiment(cm.BaseModel):
 
     def files_(self):
         return self.data_files.count()
+
+    def viewable_files_(self):
+        return self.data_files.filter(~Q(status="deleted")).count()
 
     def cycles_(self):
         # TODO: Count total number of cycles
