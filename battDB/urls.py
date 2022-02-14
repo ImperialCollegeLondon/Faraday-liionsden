@@ -72,7 +72,7 @@ urlpatterns = [
     ),
     path("batches/delete/<int:pk>/", DeleteBatchView.as_view(), name="Delete Batch"),
     path(
-        "devices/delete/<int:pk>/",
+        "data_files/delete/<int:pk>/",
         DeleteDataFileView.as_view(),
         name="Delete Data File",
     ),
