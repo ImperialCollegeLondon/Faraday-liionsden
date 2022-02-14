@@ -72,6 +72,9 @@ class NewMaterialForm(DataCreateForm):
                 Field("make_public"),
                 HTML("<br>"),
                 ButtonHolder(Submit("submit", "save")),
+                HTML("<br>"),
+                HTML("<br>"),
+                ButtonHolder(Submit("another", "save and add another")),
                 css_class="row",
             )
         )
