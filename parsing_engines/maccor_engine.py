@@ -84,7 +84,7 @@ def factory_xlsx(
     Returns:
         A tuple with a sheet object and the datemode of the workbook.
     """
-    book = openpyxl.load_workbook(file_path)
+    book = openpyxl.load_workbook(file_path, read_only=True)
     return book.active, None
 
 
