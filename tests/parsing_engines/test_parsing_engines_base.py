@@ -145,22 +145,27 @@ class TestParsingEngineBase(TestCase):
             self.assertEqual(row, list(engine.data.loc[i, ["Voltage", "I / A"]].values))
 
 
-class TestDummyParser(TestCase):
-    def setUp(self) -> None:
+class TestDummyParsingEngine(TestCase):
+    @patch(
+        "parsing_engines.parsing_engines_base.DummyParsingEngine._drop_unnamed_columns"
+    )
+    @patch(
+        "parsing_engines.parsing_engines_base.DummyParsingEngine._standardise_columns"
+    )
+    @patch("parsing_engines.parsing_engines_base.DummyParsingEngine._create_rec_no")
+    def test_factory(self, mock_drop, mock_standard, mock_create) -> None:
+        from pathlib import Path
         from parsing_engines.parsing_engines_base import DummyParsingEngine
 
-        self.parser = DummyParsingEngine.factory("")
-
-    def test_get_metadata(self):
-        metadata = self.parser.get_metadata()
-        self.assertEqual(metadata["file_metadata"], {"num_rows": 0})
-
-    def test_get_column_info(self):
-        cols = self.parser.get_column_info()
-        self.assertEqual(cols, {"Rec#": {"is_numeric": True, "has_data": True}})
-
-    def test_get_data_generator_for_columns(self):
-        self.assertEqual(list(self.parser.get_data_generator_for_columns([])), [])
+        parser = DummyParsingEngine.factory("")
+        mock_drop.assert_called_once()
+        mock_standard.assert_called_once()
+        mock_create.assert_called_once()
+        self.assertEqual(len(parser.data), 0)
+        self.assertEqual(parser.name, "Dummy")
+        self.assertEqual(parser.skip_rows, 0)
+        self.assertEqual(parser.file_path, Path(""))
+        self.assertEqual(parser.file_metadata, {"num_rows": 0})
 
 
 class TestFunctions(TestCase):
