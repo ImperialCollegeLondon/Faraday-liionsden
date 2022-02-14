@@ -244,9 +244,18 @@ class DeleteBatchView(PermissionRequiredMixin, MarkAsDeletedView):
 class DeleteDataFileView(PermissionRequiredMixin, MarkAsDeletedView):
     model = ExperimentDataFile
     permission_required = "battDB.change_experimentdatafile"
-    success_url = "/battDB/exps/"
     template_name = "delete_generic.html"
     success_message = "Data file deleted successfully."
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.status = "deleted"
+        self.object.save()
+        messages.success(request, self.success_message)
+        return redirect(self.object.experiment)
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
 
 
 #################### DETAIL, LIST, TABLE VIEWS #########################
