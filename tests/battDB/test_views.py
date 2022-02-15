@@ -56,9 +56,11 @@ class CreateDeviceSpecificationTest(TestCase):
                 "abstract": True,
             },
         )
-        self.assertEqual(abstract_response.status_code, 302)
-        self.assertEqual(abstract_response.url, "/battDB/new_device/")
         abstract_device = bdb.DeviceSpecification.objects.get(name="Abstract device")
+        self.assertEqual(abstract_response.status_code, 302)
+        self.assertEqual(
+            abstract_response.url, "/battDB/devices/{}/".format(abstract_device.id)
+        )
         self.assertTrue(abstract_device.abstract)
         self.assertEqual(abstract_device.status, "private")
 
@@ -72,9 +74,9 @@ class CreateDeviceSpecificationTest(TestCase):
                 "notes": "Some notes",
             },
         )
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "/battDB/new_device/")
         device = bdb.DeviceSpecification.objects.get(name="Actual device")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/battDB/devices/{}/".format(device.id))
         self.assertFalse(device.abstract)
         self.assertEqual(device.user_owner.username, "test_contributor")
         self.assertEqual(device.status, "private")
@@ -91,7 +93,7 @@ class CreateDeviceSpecificationTest(TestCase):
             },
         )
         self.assertEqual(update_response.status_code, 302)
-        self.assertEqual(update_response.url, "/battDB/devices/")
+        self.assertEqual(update_response.url, "/battDB/devices/{}/".format(device.id))
 
         device.refresh_from_db()
         self.assertEqual(device.status, "public")
@@ -151,9 +153,9 @@ class CreateEquipmentTest(TestCase):
                 "serialNo": "abc-123",
             },
         )
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "/battDB/new_equipment/")
         equipment = bdb.Equipment.objects.get(name="A cycler")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/battDB/equipment/{}/".format(equipment.id))
         self.assertEqual(equipment.user_owner.username, "test_contributor")
         self.assertEqual(equipment.status, "private")
         self.assertEqual(equipment.serialNo, "abc-123")
@@ -168,7 +170,9 @@ class CreateEquipmentTest(TestCase):
             },
         )
         self.assertEqual(update_response.status_code, 302)
-        self.assertEqual(update_response.url, "/battDB/equipment/")
+        self.assertEqual(
+            update_response.url, "/battDB/equipment/{}/".format(equipment.id)
+        )
 
         equipment.refresh_from_db()
         self.assertEqual(equipment.name, "A different cycler")
@@ -219,9 +223,9 @@ class CreateBatchTest(TestCase):
                 "specification": self.specification.id,
             },
         )
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "/battDB/new_batch/")
         batch = bdb.Batch.objects.get(serialNo="abc-123")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/battDB/batches/{}/".format(batch.id))
         self.assertEqual(batch.user_owner.username, "test_contributor")
         self.assertEqual(batch.status, "private")
         self.assertEqual(batch.serialNo, "abc-123")
@@ -238,7 +242,7 @@ class CreateBatchTest(TestCase):
             },
         )
         self.assertEqual(update_response.status_code, 302)
-        self.assertEqual(update_response.url, "/battDB/batches/")
+        self.assertEqual(update_response.url, "/battDB/batches/{}/".format(batch.id))
 
         batch.refresh_from_db()
         self.assertEqual(batch.serialNo, "abc-123456")
