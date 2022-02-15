@@ -38,7 +38,6 @@ class NewDeviceForm(DataCreateForm):
         model = DeviceSpecification
         fields = [
             "name",
-            "abstract",
             "device_type",
             "parent",
             "config",
@@ -47,9 +46,8 @@ class NewDeviceForm(DataCreateForm):
             "parameters",
         ]
         help_texts = {
-            "abstract": 'This is a new device type e.g. "Cell".',
-            "device_type": "Must select if not specifying a new device type.",
-            "parent": "Select parent device if appropriate.",
+            "device_type": "Is  this a cell or a module?",
+            "parent": "Select parent if this cell is part of a particular module.",
         }
 
     def __init__(self, *args, **kwargs):
@@ -59,12 +57,11 @@ class NewDeviceForm(DataCreateForm):
         self.helper.layout = Layout(
             Div(HTML("<h1> New Device </h1>")),
             Div(
-                Column("name", css_class="col-6"),
-                Column("abstract", css_class="col-6"),
-                Column("device_type", css_class="col-6"),
-                Column("parent", css_class="col-6"),
-                Column("config", css_class="col-6"),
-                Column("spec_file", css_class="col-6"),
+                Column("name", css_class="col-4"),
+                Column("device_type", css_class="col-4"),
+                Column("spec_file", css_class="col-4"),
+                Column("parent", css_class="col-4"),
+                Column("config", css_class="col-4"),
                 HTML("<hr>"),
                 Fieldset(
                     "Define parameters",
@@ -85,7 +82,7 @@ class NewDeviceForm(DataCreateForm):
                 HTML("<br>"),
                 HTML("<br>"),
                 ButtonHolder(Submit("another", "save and add another")),
-                css_class="row align-items-end",
+                css_class="row align-items-top",
             ),
         )
 
