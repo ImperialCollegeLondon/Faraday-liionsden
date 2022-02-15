@@ -49,21 +49,9 @@ class CreateDeviceSpecificationTest(TestCase):
         self.assertEqual(login_response.url, "/")
 
         # Create new abstract device spec.
-        abstract_response = self.client.post(
-            reverse("battDB:New Device"),
-            {
-                "name": "Abstract device",
-                "abstract": True,
-            },
+        abstract_device = baker.make_recipe(
+            "tests.battDB.device_specification", name="Abstract Device", abstract=True
         )
-        abstract_device = bdb.DeviceSpecification.objects.get(name="Abstract device")
-        self.assertEqual(abstract_response.status_code, 302)
-        self.assertEqual(
-            abstract_response.url, "/battDB/devices/{}/".format(abstract_device.id)
-        )
-        self.assertTrue(abstract_device.abstract)
-        self.assertEqual(abstract_device.status, "private")
-
         # Create new device spec.
         response = self.client.post(
             reverse("battDB:New Device"),
