@@ -12,57 +12,65 @@
 
 <div class="container py-2">
     {% if filter %}
-        <form action="" method="get" class="form form-inline" bound_css_class=''>
-            <div class="row align-items-end">
-                <div class="col-3">
-                    {% bootstrap_field filter.form.id layout='vertical' bound_css_class='' %}
-                </div>
-                <div class="col-3">
-                    {% bootstrap_field filter.form.name layout='vertical' bound_css_class='' %}
-                </div>
-                <div class="col-3">
-                    {% bootstrap_field filter.form.user_owner layout='vertical' bound_css_class='' %}
-                </div>
-                <div class="col-3">
-                    {% bootstrap_field filter.form.user_owner__institution layout='vertical' bound_css_class='' %}
-                </div>
+    <form action="" method="get" class="form form-inline" bound_css_class=''>
+        <div class="row align-items-end">
+            <div class="col-3">
+                {% bootstrap_field filter.form.id layout='vertical' bound_css_class='' %}
             </div>
-            <div class="row align-items-end">
-                <div class="col-6">
-                    <label class="form-label" for="id_date_0">Date range</label>
-                    <div class="mb-3">
-                        <div class="input-group">
-                            <input type="date" name="date_min" class="form-control" placeholder="Date range" title="" id="id_date_0">
-                            <input type="date" name="date_max" class="form-control" placeholder="Date range" title="" id="id_date_1">
-                        </div>
+            <div class="col-3">
+                {% bootstrap_field filter.form.name layout='vertical' bound_css_class='' %}
+            </div>
+            <div class="col-3">
+                {% bootstrap_field filter.form.user_owner layout='vertical' bound_css_class='' %}
+            </div>
+            <div class="col-3">
+                {% bootstrap_field filter.form.user_owner__institution layout='vertical' bound_css_class='' %}
+            </div>
+        </div>
+        <div class="row align-items-end">
+            <div class="col-6">
+                <label class="form-label" for="id_date_0">Date range</label>
+                <div class="mb-3">
+                    <div class="input-group">
+                        <input type="date" name="date_min" class="form-control" placeholder="Date range" title=""
+                            id="id_date_0">
+                        <input type="date" name="date_max" class="form-control" placeholder="Date range" title=""
+                            id="id_date_1">
                     </div>
                 </div>
-                <div class="col-3">
-                    {% bootstrap_field filter.form.status layout='vertical' bound_css_class='' %}
-                </div>
             </div>
-            {% bootstrap_button 'search' %}
-        </form>
+            <div class="col-3">
+                {% bootstrap_field filter.form.status layout='vertical' bound_css_class='' %}
+            </div>
+        </div>
+        {% bootstrap_button 'search' %}
+    </form>
     {% endif %}
     <hr>
 </div>
 
 <div class="container py-2">
     <div class="alert alert-info alert-dismissible d-flex align-items-center fade show">
-        <i class="bi-info-circle-fill"></i> 
+        <i class="bi-info-circle-fill"></i>
         <div> &nbsp; Highlighted rows indicate private entries that are only visble to you and/or specific groups.</div>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
     {% render_table table %}
     {% for format in view.export_formats %}
-        <a href="{% export_url format %}" class="btn btn-primary", role="button"> download {{ format }}</a>
+    <a href="{% export_url format %}" class="btn btn-primary" , role="button"> download {{ format }}</a>
     {% endfor %}
+    {% if perms.battDB.can_add_experiment %}
+    <a href="{% url 'battDB:New Experiment' %}" class="btn btn-success bi bi-plus" , role="button"
+        style="float: right;"> Add
+        another</a>
+    {% endif %}
 </div>
 
 {% if not user.is_authenticated %}
-    <div class = "container py-2">
-    <p class="text-center">Not seeing everything you expect? <a href="/accounts/login/">Login</a> to access your private entries.</p>
-    </div>
+<div class="container py-2">
+    <p class="text-center">Not seeing everything you expect? <a href="/accounts/login/">Login</a> to access your private
+        entries.</p>
+</div>
 {% endif %}
 
 {% endblock %}
