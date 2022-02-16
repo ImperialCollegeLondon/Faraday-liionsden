@@ -321,7 +321,7 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
 
     def get_tables(self):
         """
-        Overriding to include all columns dynamically..
+        Overriding to include all columns dynamically.
         """
         data = self.get_tables_data()
         data_files = self.object.data_files.all()
@@ -339,7 +339,7 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
 
     def get_tables_data(self):
         """
-        Overriding to get top 20 rows of data displayed
+        Overriding to get top 20 rows of data displayed.
         """
         data_files = self.object.data_files.all()
         data_previews = []

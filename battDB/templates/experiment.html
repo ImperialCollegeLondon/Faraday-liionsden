@@ -5,6 +5,7 @@
 {% load export_url from django_tables2 %}
 {% load bootstrap5 %}
 {% load guardian_tags %}
+{% load tag_zip %}
 
 
 {% block content %}
@@ -60,54 +61,70 @@
   </div>
 </div>
 
-
+{% for data_file, table in object.data_files.all|zip:tables %}
+{% get_obj_perms request.user for data_file as "df_perms" %}
+{% if "view_experimentdatafile" in df_perms %}
 <div class="card border-dark mb-3" style="max-width: 100%;">
   <div class="card-header">
-    <h5>Measurement data</h5>
+    <h5>Measurement data: {{data_file.name}}</h5>
   </div>
   <div class="card-body">
-    <table class="table">
+    <table width="100%">
       <thead class="thead-light">
         <tr>
-          <th scope="col"> Name</th>
-          <th scope="col">Parsed columns</th>
-          <th scope="col">All columns</th>
-          <th scope="col">Raw data</th>
-          {% get_obj_perms request.user for object as "object_perms" %}
-          {% if "change_experiment" in object_perms %}
-          <th scope="col">Delete?</th>
-          {% endif %}
+          <th scope="col" style="width: 30%"></th>
+          <th scope="col" style="width: 70%"></th>
         </tr>
       </thead>
       <tbody>
-        {% for data_file in object.data_files.all %}
-        {% get_obj_perms request.user for data_file as "df_perms" %}
-        {% if "view_experimentdatafile" in df_perms %}
         <tr>
-          <td>{{ data_file.name }}</td>
-          <td>{{ data_file.ts_headers }}</td>
-          <td>{{ data_file.file_columns }}</td>
-          <td><a href="{{ data_file.raw_data_file.file.url }}" class="btn btn-primary" , role="button"> Download </a>
-          </td>
-          {% if "change_experimentdatafile" in df_perms %}
-          <td><a href="/battDB/data_files/delete/{{data_file.pk}}" class="btn btn-danger" , role="button"> Delete </a>
-          </td>
-          {% endif %}
+          <td><b>File name:</b></td>
+          <td>{{ data_file.raw_data_file.file.name }} </td>
+        </tr>
+        <tr>
+          <td><b>Parsed columns:</b></td>
+          <td>{{ data_file.ts_headers }} </td>
+        </tr>
+        <tr>
+          <td><b>Number of rows:</b></td>
+          <td>{{ data_file.attributes.total_rows }}</td>
+        </tr>
+        <tr>
+          <td><b>Equipment used:</b></td>
+          <td>{{ data_file.machine }}</td>
+        </tr>
+        <tr>
+          <td><b>Parser used:</b></td>
+          <td>{{ data_file.raw_data_file.use_parser }}</td>
+        </tr>
+        <tr>
+          <td><b>Uploaded on:</b></td>
+          <td>{{ data_file.raw_data_file.local_date }}</td>
+        </tr>
+        <tr>
+          <td><b>Size:</b></td>
+          <td>{{ data_file.raw_data_file.size }}</td>
+        </tr>
+        {% if data_file.notes %}
+        <tr>
+          <td><b>Notes:</b></td>
+          <td>{{ data_file.notes }}</td>
         </tr>
         {% endif %}
-        {% endfor %}
       </tbody>
     </table>
-    {% for table in tables %}
-    {% render_table table %}
-    {% endfor %}
-    {% if "change_experiment" in object_perms %}
     <br>
-    <a href="/battDB/exps/add_data/{{ object.pk }}" class="btn btn-primary" , role="button"> Add more experimental data
-    </a>
+    <b> Parsed data preview </b>
+    <br>
+    {% render_table table %}
+    <a href="{{ data_file.raw_data_file.file.url }}" class="btn btn-primary" , role="button"> Download raw data file</a>
+    {% if "change_experimentdatafile" in df_perms %}
+    <a href="/battDB/data_files/delete/{{data_file.pk}}" class="btn btn-danger" , role="button"> Delete </a>
     {% endif %}
   </div>
 </div>
+{% endif %}
+{% endfor %}
 
 <div class="card border-dark mb-3" style="max-width: 100%;">
   <div class="card-header">
