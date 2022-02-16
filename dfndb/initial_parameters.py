@@ -3,7 +3,7 @@
 These functions are run as part of a migration and pre-populate the database with
 some default quantities and units.
 """
-from django.contrib.auth import get_user_model
+from guardian.utils import get_anonymous_user
 
 from .models import Parameter, QuantityUnit
 
@@ -41,7 +41,7 @@ def populate_parameters(apps, schema_editor):
         apps (_type_): Not used.
         schema_editor (_type_): Not used.
     """
-    User = get_user_model()
+    user = get_anonymous_user()
 
     for quantity in PARAMETERS:
         quant = quantity.copy()
@@ -49,5 +49,5 @@ def populate_parameters(apps, schema_editor):
             quantityName__exact=quantity["unit"][0],
             unitSymbol__exact=quantity["unit"][1],
         )
-        quant["user_owner"] = User.get_anonymous()
+        quant["user_owner"] = user
         Parameter.objects.create(**quant)
