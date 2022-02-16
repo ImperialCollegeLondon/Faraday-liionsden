@@ -8,6 +8,7 @@ from ..initial_units import populate_not_si_quantities, populate_si_quantities
 class Migration(migrations.Migration):
 
     dependencies = [
+        ("management", "0002_initial_data"),
         ("dfndb", "0005_alter_method_description"),
     ]
 
