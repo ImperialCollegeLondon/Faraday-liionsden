@@ -1,11 +1,12 @@
-import django_tables2 as tables
+import django_tables2 as tables2
 from django.contrib import messages
+from django.core.exceptions import ImproperlyConfigured
 from django.db import transaction
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
-from django_tables2.views import SingleTableMixin
+from django_tables2.views import MultiTableMixin, SingleTableMixin
 from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
@@ -312,35 +313,50 @@ class ParserTableView(SingleTableMixin, ExportMixin, PermissionListMixin, Filter
     permission_required = "battDB.view_parser"
 
 
-class ExperimentView(PermissionRequiredMixin, SingleTableMixin, DetailView):
+class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
     model = Experiment
     template_name = "experiment.html"
     permission_required = "battDB.view_experiment"
     table_class = ExperimentDataTable
 
-    def get_table(self, **kwargs):
-        data_file = self.object.data_files.all()[0]
-        table_class = self.get_table_class()
-        table = table_class(
-            data=self.get_table_data(),
-            extra_columns=[(i, tables.Column()) for i in data_file.ts_headers],
-            **kwargs
-        )
-        return tables.config.RequestConfig(
-            self.request, paginate=self.get_table_pagination(table)
-        ).configure(table)
+    def get_tables(self):
+        """
+        Overriding to include all columns dynamically..
+        """
+        data = self.get_tables_data()
+        data_files = self.object.data_files.all()
 
-    def get_table_data(self):
-        data_file = self.object.data_files.all()[0]
-        initial_data = data_file.ts_data[:20]
-        data_headers = data_file.ts_headers
-        data_preview = []
-        for i in initial_data:
-            data_preview.append(
-                {header: value for (header, value) in zip(data_headers, i)}
+        tables = []
+        for data_set, data_file in zip(data, data_files):
+            tables.append(
+                self.table_class(
+                    data_set,
+                    extra_columns=[(i, tables2.Column()) for i in data_file.ts_headers],
+                )
             )
-        # raise UserWarning(data_preview)
-        return data_preview
+
+        return tables
+
+    def get_tables_data(self):
+        """
+        Overriding to get top 20 rows of data displayed
+        """
+        data_files = self.object.data_files.all()
+        data_previews = []
+        for data_file in data_files:
+            initial_data = data_file.ts_data[:20]
+            data_headers = data_file.ts_headers
+            data_preview = []
+            for i in initial_data:
+                data_preview.append(
+                    {
+                        header: round(value, 2)
+                        for (header, value) in zip(data_headers, i)
+                    }
+                )
+
+            data_previews.append(data_preview)
+        return data_previews
 
 
 class DeviceSpecificationView(PermissionRequiredMixin, DetailView):
