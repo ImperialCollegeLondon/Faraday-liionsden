@@ -100,12 +100,6 @@ def populate_si_quantities(apps, schema_editor):
         apps (_type_): Not used.
         schema_editor (_type_): Not used.
     """
-    # Permissions have to be created before applying them
-    for app_config in apps.get_app_configs():
-        app_config.models_module = True
-        create_permissions(app_config, verbosity=0)
-        app_config.models_module = None
-
     for quantity in SI_QUANTITY_UNITS:
         QuantityUnit.objects.create(**quantity)
 
