@@ -11,6 +11,7 @@ class NewDataView(FormView):
 
     success_message = "New data added successfully."
     failure_message = "Cannot add data. Invalid information."
+    success_url = None
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
@@ -28,7 +29,11 @@ class NewDataView(FormView):
                 obj.status = "private"
             obj.save()
             messages.success(request, self.success_message)
-            return redirect(self.success_url)
+            # Redirect to object detail view or stay on form if "add another"
+            if "another" in request.POST:
+                return redirect(request.path_info)
+            else:
+                return redirect(self.success_url) if self.success_url else redirect(obj)
         messages.error(request, self.failure_message)
         return render(request, self.template_name, {"form": form})
 
@@ -41,6 +46,7 @@ class NewDataViewInline(FormView):
 
     success_message = "New data added successfully."
     failure_message = "Cannot add data. Invalid information."
+    success_url = None
     inline_key = None  # Key for which an inline form is needed
     formset = None  # Formset specifying the fields in the inline form
 
@@ -78,9 +84,12 @@ class NewDataViewInline(FormView):
             if parameters.is_valid():
                 parameters.instance = self.object
                 parameters.save()
-
             messages.success(request, self.success_message)
-            return redirect(self.success_url)
+            # Redirect to object detail view or stay on form if "add another"
+            if "another" in request.POST:
+                return redirect(request.path_info)
+            else:
+                return redirect(self.success_url) if self.success_url else redirect(obj)
         messages.error(request, self.failure_message)
         return render(request, self.template_name, context)
 
@@ -93,9 +102,7 @@ class UpdateDataView(UpdateView):
         self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        # form.instance.user_owner is correct !!
         if form.is_valid():
-            # self.object.user_owner is correct !!
             # Do other stuff before saving here
             if form.is_public():
                 self.object.status = "public"
@@ -103,7 +110,15 @@ class UpdateDataView(UpdateView):
                 self.object.status = "private"
             self.object.save()
             messages.success(request, self.success_message)
-            return redirect(self.get_success_url())
+            # Redirect to object detail view or stay on form if "add another"
+            if "another" in request.POST:
+                return redirect(request.path_info)
+            else:
+                return (
+                    redirect(self.success_url)
+                    if self.success_url
+                    else redirect(self.object)
+                )
         messages.error(request, self.failure_message)
         return render(request, self.template_name, {"form": form})
 
@@ -140,11 +155,8 @@ class UpdateDataInlineView(UpdateView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         context = self.get_context_data()
-        # form.instance.user_owner is correct !!
-        # self.object.user_owner is correct !!
         parameters = context[self.inline_key]
         if form.is_valid():
-            # self.object.user_owner is None !!
             # Save experiment incluing setting user owner and status
             with transaction.atomic():
                 if form.is_public():
@@ -157,7 +169,15 @@ class UpdateDataInlineView(UpdateView):
                 parameters.instance = self.object
                 parameters.save()
             messages.success(request, self.success_message)
-            return redirect(self.success_url)
+            # Redirect to object detail view or stay on form if "add another"
+            if "another" in request.POST:
+                return redirect(request.path_info)
+            else:
+                return (
+                    redirect(self.success_url)
+                    if self.success_url
+                    else redirect(self.object)
+                )
         messages.error(request, self.failure_message)
         return render(request, self.template_name, context)
 

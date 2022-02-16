@@ -6,6 +6,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 
 import common.models as cm
@@ -57,7 +58,7 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         related_name="used_in_modules",
         limit_choices_to={"config_type": "module"},
         verbose_name="Configuration",
-        help_text="Configuration of sub-devices if the device type is a module or pack.",
+        help_text="Configuration of subdevices if the device type is a module or pack.",
     )
 
     spec_file = models.FileField(
@@ -372,6 +373,9 @@ class Experiment(cm.BaseModel):
     def files_(self):
         return self.data_files.count()
 
+    def viewable_files_(self):
+        return self.data_files.filter(~Q(status="deleted")).count()
+
     def cycles_(self):
         # TODO: Count total number of cycles
         return "?"
@@ -504,7 +508,7 @@ class ExperimentDataFile(cm.BaseModel):
                 ]
             )
             file_format = self.raw_data_file.use_parser.file_format
-            parsed_file = parse_data_file(filepath, file_format, 0, columns=cols)
+            parsed_file = parse_data_file(filepath, file_format, columns=cols)
 
             self.attributes["parsed_metadata"] = parsed_file["metadata"]
             self.attributes["file_columns"] = parsed_file["file_columns"]

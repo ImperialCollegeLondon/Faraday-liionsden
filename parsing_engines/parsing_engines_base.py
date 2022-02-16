@@ -3,11 +3,13 @@ from __future__ import annotations
 import abc
 import functools
 from pathlib import Path
-from typing import Dict, Generator, List, Optional, Tuple, Type, Union
+from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Type, Union
 from warnings import warn
 
+import pandas as pd
 import pandas.errors
 from django.core.exceptions import ValidationError
+from pandas.core.dtypes.common import is_numeric_dtype
 
 KNOWN_PARSING_ENGINES: Dict[str, Type[ParsingEngineBase]] = {}
 """Registry of the known parsing engines."""
@@ -18,6 +20,8 @@ class ParsingEngineBase(abc.ABC):
     name: str = ""
     description: str = ""
     valid: List[Tuple[str, str]] = []
+    mandatory_columns: Set[str] = set()
+    column_name_mapping: Dict[str, str] = dict()
 
     def __init_subclass__(cls: Type[ParsingEngineBase]):
         if len(cls.name) == 0:
@@ -27,40 +31,136 @@ class ParsingEngineBase(abc.ABC):
             raise ValueError(f"A parsing engine named '{cls.name}' already exists.")
         KNOWN_PARSING_ENGINES[cls.name] = cls
 
-    def __init__(self, file_path: Union[Path, str]):
+    @classmethod
+    @abc.abstractmethod
+    def factory(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
+        """Factory method for creating a parsing engine.
+
+        Args:
+            file_path (Union[Path, str]): Path to the file to load.
+        """
+        pass
+
+    def __init__(
+        self,
+        file_path: Union[Path, str],
+        skip_rows: int,
+        data: pd.DataFrame,
+        file_metadata: Dict[str, Any],
+    ):
         self.file_path = Path(file_path)
+        self.skip_rows = skip_rows
+        self.data = data
+        self.file_metadata = file_metadata
 
-    @abc.abstractmethod
-    def get_metadata(self) -> Dict:
-        pass
+        self._drop_unnamed_columns()
+        self._standardise_columns()
+        self._create_rec_no()
 
-    @abc.abstractmethod
+    def _create_rec_no(self) -> None:
+        """Adds Rec# to the dataset if it was not already present."""
+        if "Rec#" not in self.data.columns:
+            self.data["Rec#"] = range(len(self.data))
+
+    def _drop_unnamed_columns(self) -> None:
+        """Drops columns of the internal parser dataframe that have no name."""
+        cols = [c for c in self.data.columns if c != "^Unnamed"]
+        self.data = self.data.loc[:, cols]
+
+    def _standardise_columns(self) -> None:
+        """Standardise column names using a mapping of standard names."""
+        self.data = self.data.rename(columns=self.column_name_mapping)
+
     def get_column_info(self) -> Dict:
-        pass
+        """Gathers some metadata for each column.
 
-    @abc.abstractmethod
+        In particular, it gathers if it is a numeric column and if it has data.
+
+        Returns:
+            A nested dictionary with the above information for each column, proved as
+            keys 'is_numeric' and 'has_data.
+        """ ""
+        return {
+            k: {
+                "is_numeric": is_numeric_dtype(self.data[k].dtype),
+                "has_data": not self.data[k].isnull().values.all(),
+            }
+            for k in self.data.columns
+        }
+
+    def get_metadata(self) -> Dict[str, Any]:
+        """Puts together the metadata for the file
+
+        Raises:
+            EmptyFileError: If the file is found to be empty.
+
+        Returns:
+            Dict[str, Any]: A dictionary with the metadata
+        """
+        metadata: Dict[str, Any] = {
+            "dataset_name": self.file_path.stem,
+            "dataset_size": self.file_path.stat().st_size,
+            "num_rows": len(self.data),
+            "data_start": self.skip_rows,
+            "first_sample_no": self.skip_rows + 1,
+            "file_metadata": self.file_metadata,
+            "machine_type": self.name,
+            "warnings": [],
+        }
+
+        if not self.mandatory_columns.issubset(self.data.columns):
+            metadata["warnings"].append(
+                "Not all mandatory columns are present in the raw datafile"
+            )
+
+        return metadata
+
     def get_data_generator_for_columns(
-        self, columns: List, first_data_row: int = 0, col_mapping: Optional[Dict] = None
+        self, columns: List, col_mapping: Optional[Dict] = None
     ) -> Generator[list, None, None]:
-        pass
+        """Provides the data filtered by the requested columns and a column mapping.
+
+        Args:
+            columns (List): Columns of data to provide
+            col_mapping (Optional[Dict], optional): Dictionary to map the required
+                column names to the Maccor file column names. Defaults to None.
+
+        Raises:
+            KeyError if the required columns, after applying the mapping, do not exist
+                in the data.
+
+        Returns:
+            Generator[Dict, None, None]: A generator that produces each row of the data
+                as a list.
+        """
+        cols = (
+            [col_mapping.get(c, c) for c in columns]
+            if col_mapping is not None
+            else columns
+        )
+
+        for row in self.data[cols].itertuples():
+            yield list(row)[1:]
 
 
 class DummyParsingEngine(ParsingEngineBase):
 
     name = "Dummy"
     description = "Dummy parsing engine that does nothing"
-    valid: List[Tuple[str, str]] = []
 
-    def get_metadata(self) -> Dict:
-        return {"num_rows": 0}
+    @classmethod
+    def factory(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
+        """Factory method for creating a parsing engine.
 
-    def get_column_info(self) -> Dict:
-        return {}
-
-    def get_data_generator_for_columns(
-        self, columns: List, first_data_row: int = 0, col_mapping: Optional[Dict] = None
-    ) -> Generator[list, None, None]:
-        return iter([])  # noqa
+        Args:
+            file_path (Union[Path, str]): Path to the file to load.
+        """
+        return cls(
+            file_path=file_path,
+            skip_rows=0,
+            data=pd.DataFrame([]),
+            file_metadata={"num_rows": 0},
+        )
 
 
 def get_parsing_engine(file_format: str) -> Type[ParsingEngineBase]:
@@ -117,7 +217,6 @@ def mime_and_extension() -> List[Tuple[str, str]]:
 def parse_data_file(
     file_path: str,
     file_format: str,
-    first_data_row: int = 0,
     columns=("time/s", "Ecell/V", "I/mA"),
     col_mapping: Optional[Dict[str, str]] = None,
 ) -> Dict:
@@ -127,7 +226,6 @@ def parse_data_file(
         file_path: Path to the file to parse.
         file_format: String indicating the format of the file. Should match one of the
             known parsers.
-        first_data_row: First row that contains data.
         columns: Columns that will be retrieved, if possible.
         col_mapping: Mapping of column names to match the standard 'columns' above.
 
@@ -138,12 +236,12 @@ def parse_data_file(
         A dictionary containing the following keys: 'metadata', 'file_columns',
         'parsed_columns', 'missing_columns', 'total_rows', 'range_config' and 'data'.
     """
-    engine = get_parsing_engine(file_format)(file_path)
+    engine = get_parsing_engine(file_format).factory(file_path)
 
     try:
         metadata = engine.get_metadata()
         cols = engine.get_column_info()
-    except (pandas.errors.ParserError, ValueError) as e:
+    except (pandas.errors.ParserError, ValueError, KeyError) as e:
         raise ValidationError(
             message={"raw_data_file": "File parsing failed: " + str(e)}
         )
@@ -153,9 +251,7 @@ def parse_data_file(
     missing_columns = [c for c in columns if c not in file_columns]
     total_rows = metadata.get("num_rows", 0)
     range_config = {"all": {"start": 1, "end": total_rows, "action": "all"}}
-    data = engine.get_data_generator_for_columns(
-        parsed_columns, first_data_row, col_mapping
-    )
+    data = engine.get_data_generator_for_columns(parsed_columns, col_mapping)
 
     return {
         "metadata": metadata,

@@ -7,14 +7,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0006_auto_20211115_1357'),
-        ('management', '0002_initial_data'),
+        ("common", "0006_auto_20211115_1357"),
+        ("management", "0002_initial_data"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='institution',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='common.org'),
+            model_name="user",
+            name="institution",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="common.org",
+            ),
         ),
     ]
