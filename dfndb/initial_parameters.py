@@ -50,4 +50,4 @@ def populate_parameters(apps, schema_editor):
             unitSymbol__exact=quantity["unit"][1],
         )
         quant["user_owner"] = User.objects.get(username="AnonymousUser")
-        Parameter.objects.create(**quantity)
+        Parameter.objects.create(**quant)
