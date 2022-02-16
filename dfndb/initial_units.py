@@ -46,7 +46,7 @@ SI_QUANTITY_UNITS = [
     dict(
         quantityName="Charge",
         quantitySymbol="Q",
-        unitName="Culombs",
+        unitName="Coulombs",
         unitSymbol="C",
         is_SI_unit=True,
     ),
@@ -60,7 +60,7 @@ SI_QUANTITY_UNITS = [
     dict(
         quantityName="Mass",
         quantitySymbol="m",
-        unitName="kilogram",
+        unitName="Kilogram",
         unitSymbol="kg",
         is_SI_unit=True,
     ),
