@@ -98,6 +98,7 @@
         {% endfor %}
       </tbody>
     </table>
+    {% render_table table %}
     {% if "change_experiment" in object_perms %}
     <br>
     <a href="/battDB/exps/add_data/{{ object.pk }}" class="btn btn-primary" , role="button"> Add more experimental data

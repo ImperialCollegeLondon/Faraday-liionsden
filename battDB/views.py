@@ -1,3 +1,4 @@
+import django_tables2 as tables
 from django.contrib import messages
 from django.db import transaction
 from django.shortcuts import redirect, render
@@ -61,6 +62,7 @@ from .tables import (
     BatchTable,
     DeviceSpecificationTable,
     EquipmentTable,
+    ExperimentDataTable,
     ExperimentTable,
     ParserTable,
 )
@@ -310,10 +312,35 @@ class ParserTableView(SingleTableMixin, ExportMixin, PermissionListMixin, Filter
     permission_required = "battDB.view_parser"
 
 
-class ExperimentView(PermissionRequiredMixin, DetailView):
+class ExperimentView(PermissionRequiredMixin, SingleTableMixin, DetailView):
     model = Experiment
     template_name = "experiment.html"
     permission_required = "battDB.view_experiment"
+    table_class = ExperimentDataTable
+
+    def get_table(self, **kwargs):
+        data_file = self.object.data_files.all()[0]
+        table_class = self.get_table_class()
+        table = table_class(
+            data=self.get_table_data(),
+            extra_columns=[(i, tables.Column()) for i in data_file.ts_headers],
+            **kwargs
+        )
+        return tables.config.RequestConfig(
+            self.request, paginate=self.get_table_pagination(table)
+        ).configure(table)
+
+    def get_table_data(self):
+        data_file = self.object.data_files.all()[0]
+        initial_data = data_file.ts_data[:20]
+        data_headers = data_file.ts_headers
+        data_preview = []
+        for i in initial_data:
+            data_preview.append(
+                {header: value for (header, value) in zip(data_headers, i)}
+            )
+        # raise UserWarning(data_preview)
+        return data_preview
 
 
 class DeviceSpecificationView(PermissionRequiredMixin, DetailView):
