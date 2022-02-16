@@ -1,12 +1,13 @@
+from types import SimpleNamespace as SName
 from unittest import TestCase
 from unittest.mock import patch
 
 
-class TestParserBase(TestCase):
+class TestParsingEngineBase(TestCase):
     def test_abstract_methods(self):
         from parsing_engines.parsing_engines_base import ParsingEngineBase
 
-        expected = {"get_metadata", "get_data_generator_for_columns", "get_column_info"}
+        expected = {"factory"}
         self.assertEqual(ParsingEngineBase.__abstractmethods__, expected)
 
     def test_register_subclass(self):
@@ -42,23 +43,137 @@ class TestParserBase(TestCase):
             "A ParsingEngineBase subclass cannot have an empty attribute 'name'.",
         )
 
+    def test_create_rec_no(self):
+        import pandas as pd
 
-class TestDummyParser(TestCase):
-    def setUp(self) -> None:
-        from parsing_engines.parsing_engines_base import DummyParsingEngine
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
 
-        self.parser = DummyParsingEngine("")
+        engine = SName(data=pd.DataFrame())
+        self.assertNotIn("Rec#", engine.data.columns)
+        ParsingEngineBase._create_rec_no(engine)
+        self.assertIn("Rec#", engine.data.columns)
 
-    def test_get_metadata(self):
-        metadata = self.parser.get_metadata()
-        self.assertEqual(metadata, {"num_rows": 0})
+    def test_drop_unnamed_columns(self):
+        import pandas as pd
+
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
+
+        engine = SName(data=pd.DataFrame({"^Unnamed": [1, 2, 3], "Voltage": [4, 5, 6]}))
+        self.assertIn("^Unnamed", engine.data.columns)
+        ParsingEngineBase._drop_unnamed_columns(engine)
+        self.assertNotIn("^Unnamed", engine.data.columns)
+
+    def test_standardise_columns(self):
+        import pandas as pd
+
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
+
+        engine = SName(
+            data=pd.DataFrame({"Voltage": [4, 5, 6]}),
+            column_name_mapping={"Voltage": "Volt / V"},
+        )
+        self.assertNotIn("Volt / V", engine.data.columns)
+        ParsingEngineBase._standardise_columns(engine)
+        self.assertIn("Volt / V", engine.data.columns)
 
     def test_get_column_info(self):
-        cols = self.parser.get_column_info()
-        self.assertEqual(cols, {})
+        import pandas as pd
+
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
+
+        engine = SName(
+            data=pd.DataFrame({"Voltage": [4, 5, 6], "Trash": [None, None, None]}),
+            column_name_mapping={"Voltage": "Volt / V"},
+        )
+        expected = {
+            "Voltage": {
+                "is_numeric": True,
+                "has_data": True,
+            },
+            "Trash": {
+                "is_numeric": False,
+                "has_data": False,
+            },
+        }
+        actual = ParsingEngineBase.get_column_info(engine)
+        self.assertEqual(actual, expected)
+
+    def test_get_metadata(self):
+        from pathlib import Path
+
+        import pandas as pd
+
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
+
+        filename = Path(__file__)
+        engine = SName(
+            data=pd.DataFrame({"Voltage": [4, 5, 6], "Trash": [None, None, None]}),
+            skip_rows=0,
+            file_path=filename,
+            file_metadata={"temperature": 42},
+            name="test",
+            mandatory_columns={"Voltage", "Current"},
+        )
+        expected = {
+            "dataset_name": filename.stem,
+            "dataset_size": filename.stat().st_size,
+            "num_rows": 3,
+            "data_start": 0,
+            "first_sample_no": 1,
+            "file_metadata": {"temperature": 42},
+            "machine_type": "test",
+        }
+        actual = ParsingEngineBase.get_metadata(engine)
+        for i in expected:
+            self.assertEqual(actual[i], expected[i])
+
+        self.assertTrue(len(actual["warnings"]) > 0)
+        self.assertIn("mandatory columns", actual["warnings"][0])
 
     def test_get_data_generator_for_columns(self):
-        self.assertEqual(list(self.parser.get_data_generator_for_columns([])), [])
+        import pandas as pd
+
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
+
+        engine = SName(
+            data=pd.DataFrame(
+                {
+                    "Voltage": [4, 5, 6],
+                    "I / A": [1, 2, 3],
+                    "Trash": [None, None, None],
+                }
+            ),
+        )
+        column_name_mapping = {"Volt / V": "Voltage"}
+        actual = ParsingEngineBase.get_data_generator_for_columns(
+            engine, columns=["Volt / V", "I / A"], col_mapping=column_name_mapping
+        )
+        for i, row in enumerate(actual):
+            self.assertEqual(row, list(engine.data.loc[i, ["Voltage", "I / A"]].values))
+
+
+class TestDummyParsingEngine(TestCase):
+    @patch(
+        "parsing_engines.parsing_engines_base.DummyParsingEngine._drop_unnamed_columns"
+    )
+    @patch(
+        "parsing_engines.parsing_engines_base.DummyParsingEngine._standardise_columns"
+    )
+    @patch("parsing_engines.parsing_engines_base.DummyParsingEngine._create_rec_no")
+    def test_factory(self, mock_create, mock_standard, mock_drop):
+        from pathlib import Path
+
+        from parsing_engines.parsing_engines_base import DummyParsingEngine
+
+        parser = DummyParsingEngine.factory("")
+        mock_drop.assert_called_once()
+        mock_standard.assert_called_once()
+        mock_create.assert_called_once()
+        self.assertEqual(len(parser.data), 0)
+        self.assertEqual(parser.name, "Dummy")
+        self.assertEqual(parser.skip_rows, 0)
+        self.assertEqual(parser.file_path, Path(""))
+        self.assertEqual(parser.file_metadata, {"num_rows": 0})
 
 
 class TestFunctions(TestCase):
@@ -111,6 +226,10 @@ class TestParseDataFile(TestCase):
             metadata = {"num_rows": 150}
             data = [(1, 1), (1, 2)]
 
+            @classmethod
+            def factory(cls, file_path):
+                return cls(file_path)
+
             def __init__(self, file_path):
                 self.file_path = file_path
 
@@ -132,7 +251,7 @@ class TestParseDataFile(TestCase):
 
         from parsing_engines.parsing_engines_base import parse_data_file
 
-        actual = parse_data_file("some_file.txt", "some format", 0)
+        actual = parse_data_file("some_file.txt", "some format")
         rows = self.mock_parser.metadata["num_rows"]
         self.assertEqual(actual["metadata"], self.mock_parser.metadata)
         self.assertEqual(actual["data"], self.mock_parser.data)

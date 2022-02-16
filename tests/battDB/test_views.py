@@ -52,6 +52,7 @@ class CreateDeviceSpecificationTest(TestCase):
         abstract_device = baker.make_recipe(
             "tests.battDB.device_specification", name="Abstract Device", abstract=True
         )
+
         # Create new device spec.
         response = self.client.post(
             reverse("battDB:New Device"),
@@ -64,7 +65,7 @@ class CreateDeviceSpecificationTest(TestCase):
         )
         device = bdb.DeviceSpecification.objects.get(name="Actual device")
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "/battDB/devices/{}/".format(device.id))
+        self.assertEqual(response.url, f"/battDB/devices/{device.id}/")
         self.assertFalse(device.abstract)
         self.assertEqual(device.user_owner.username, "test_contributor")
         self.assertEqual(device.status, "private")
@@ -81,7 +82,7 @@ class CreateDeviceSpecificationTest(TestCase):
             },
         )
         self.assertEqual(update_response.status_code, 302)
-        self.assertEqual(update_response.url, "/battDB/devices/{}/".format(device.id))
+        self.assertEqual(update_response.url, f"/battDB/devices/{device.id}/")
 
         device.refresh_from_db()
         self.assertEqual(device.status, "public")
@@ -95,7 +96,7 @@ class CreateDeviceSpecificationTest(TestCase):
         self.assertEqual(delete_response.status_code, 302)
         self.assertEqual(
             delete_response.url,
-            "/accounts/login/?next=/battDB/devices/delete/{}/".format(device.id),
+            f"/accounts/login/?next=/battDB/devices/delete/{device.id}/",
         )
         # Set status manually to private and check delete mechanism
         device.status = "private"
@@ -143,7 +144,7 @@ class CreateEquipmentTest(TestCase):
         )
         equipment = bdb.Equipment.objects.get(name="A cycler")
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "/battDB/equipment/{}/".format(equipment.id))
+        self.assertEqual(response.url, f"/battDB/equipment/{equipment.id}/")
         self.assertEqual(equipment.user_owner.username, "test_contributor")
         self.assertEqual(equipment.status, "private")
         self.assertEqual(equipment.serialNo, "abc-123")
@@ -158,9 +159,7 @@ class CreateEquipmentTest(TestCase):
             },
         )
         self.assertEqual(update_response.status_code, 302)
-        self.assertEqual(
-            update_response.url, "/battDB/equipment/{}/".format(equipment.id)
-        )
+        self.assertEqual(update_response.url, f"/battDB/equipment/{equipment.id}/")
 
         equipment.refresh_from_db()
         self.assertEqual(equipment.name, "A different cycler")
@@ -213,7 +212,7 @@ class CreateBatchTest(TestCase):
         )
         batch = bdb.Batch.objects.get(serialNo="abc-123")
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "/battDB/batches/{}/".format(batch.id))
+        self.assertEqual(response.url, f"/battDB/batches/{batch.id}/")
         self.assertEqual(batch.user_owner.username, "test_contributor")
         self.assertEqual(batch.status, "private")
         self.assertEqual(batch.serialNo, "abc-123")
@@ -230,7 +229,7 @@ class CreateBatchTest(TestCase):
             },
         )
         self.assertEqual(update_response.status_code, 302)
-        self.assertEqual(update_response.url, "/battDB/batches/{}/".format(batch.id))
+        self.assertEqual(update_response.url, f"/battDB/batches/{batch.id}/")
 
         batch.refresh_from_db()
         self.assertEqual(batch.serialNo, "abc-123456")
@@ -279,7 +278,7 @@ class ExperimentViewTest(TestCase):
         )
         self.assertEqual(
             response.url,
-            "/accounts/login/?next=/battDB/exps/{}/".format(self.experiment.id),
+            f"/accounts/login/?next=/battDB/exps/{self.experiment.id}/",
         )
 
         # login
@@ -331,7 +330,7 @@ class DeviceSpecificationViewTest(TestCase):
         )
         self.assertEqual(
             response.url,
-            "/accounts/login/?next=/battDB/devices/{}/".format(self.device.id),
+            f"/accounts/login/?next=/battDB/devices/{self.device.id}/",
         )
 
         # login
@@ -385,7 +384,7 @@ class EquipmentViewTest(TestCase):
         )
         self.assertEqual(
             response.url,
-            "/accounts/login/?next=/battDB/equipment/{}/".format(self.equipment.id),
+            f"/accounts/login/?next=/battDB/equipment/{self.equipment.id}/",
         )
 
         # login
@@ -439,7 +438,7 @@ class BatchViewTest(TestCase):
         )
         self.assertEqual(
             response.url,
-            "/accounts/login/?next=/battDB/batches/{}/".format(self.batch.id),
+            f"/accounts/login/?next=/battDB/batches/{self.batch.id}/",
         )
 
         # login
