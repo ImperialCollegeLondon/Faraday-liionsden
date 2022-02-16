@@ -58,9 +58,7 @@ class CreateDeviceSpecificationTest(TestCase):
         )
         abstract_device = bdb.DeviceSpecification.objects.get(name="Abstract device")
         self.assertEqual(abstract_response.status_code, 302)
-        self.assertEqual(
-            abstract_response.url, "/battDB/devices/{}/".format(abstract_device.id)
-        )
+        self.assertEqual(abstract_response.url, f"/battDB/devices/{abstract_device.id}/")
         self.assertTrue(abstract_device.abstract)
         self.assertEqual(abstract_device.status, "private")
 
