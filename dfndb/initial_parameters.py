@@ -5,8 +5,6 @@ some default quantities and units.
 """
 from guardian.utils import get_anonymous_user
 
-from .models import Parameter, QuantityUnit
-
 PARAMETERS = [
     dict(name="Time", status="Public", symbol="t", unit=("Time", "s")),
     dict(name="Voltage", status="Public", symbol="V", unit=("Voltage", "V")),
@@ -38,9 +36,13 @@ def populate_parameters(apps, schema_editor):
     """Adds parameters (aka sygnal types) to the DB
 
     Args:
-        apps (_type_): Not used.
+        apps (_type_): app registry with the current status of the apps in the migration
+            process.
         schema_editor (_type_): Not used.
     """
+    QuantityUnit = apps.get_model("dfndb", "QuantityUnit")
+    Parameter = apps.get_model("dfndb", "Parameter")
+
     user = get_anonymous_user()
 
     for quantity in PARAMETERS:
