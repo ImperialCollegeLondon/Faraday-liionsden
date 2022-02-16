@@ -14,8 +14,9 @@ class TestBiologicCSVnTSVParser(TestCase):
     def test_factory(
         self, mock_head, mock_data, mock_size, mock_create, mock_standard, mock_drop
     ):
-        from parsing_engines import BiologicParsingEngine as BP
         import pandas as pd
+
+        from parsing_engines import BiologicParsingEngine as BP
 
         mock_data.return_value = pd.DataFrame()
         mock_size.return_value = 0

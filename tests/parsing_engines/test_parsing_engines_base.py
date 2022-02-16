@@ -1,6 +1,6 @@
+from types import SimpleNamespace as SName
 from unittest import TestCase
 from unittest.mock import patch
-from types import SimpleNamespace as SName
 
 
 class TestParsingEngineBase(TestCase):
@@ -44,8 +44,9 @@ class TestParsingEngineBase(TestCase):
         )
 
     def test_create_rec_no(self):
-        from parsing_engines.parsing_engines_base import ParsingEngineBase
         import pandas as pd
+
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
 
         engine = SName(data=pd.DataFrame())
         self.assertNotIn("Rec#", engine.data.columns)
@@ -53,8 +54,9 @@ class TestParsingEngineBase(TestCase):
         self.assertIn("Rec#", engine.data.columns)
 
     def test_drop_unnamed_columns(self):
-        from parsing_engines.parsing_engines_base import ParsingEngineBase
         import pandas as pd
+
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
 
         engine = SName(data=pd.DataFrame({"^Unnamed": [1, 2, 3], "Voltage": [4, 5, 6]}))
         self.assertIn("^Unnamed", engine.data.columns)
@@ -62,8 +64,9 @@ class TestParsingEngineBase(TestCase):
         self.assertNotIn("^Unnamed", engine.data.columns)
 
     def test_standardise_columns(self):
-        from parsing_engines.parsing_engines_base import ParsingEngineBase
         import pandas as pd
+
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
 
         engine = SName(
             data=pd.DataFrame({"Voltage": [4, 5, 6]}),
@@ -74,8 +77,9 @@ class TestParsingEngineBase(TestCase):
         self.assertIn("Volt / V", engine.data.columns)
 
     def test_get_column_info(self):
-        from parsing_engines.parsing_engines_base import ParsingEngineBase
         import pandas as pd
+
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
 
         engine = SName(
             data=pd.DataFrame({"Voltage": [4, 5, 6], "Trash": [None, None, None]}),
@@ -95,9 +99,11 @@ class TestParsingEngineBase(TestCase):
         self.assertEqual(actual, expected)
 
     def test_get_metadata(self):
-        from parsing_engines.parsing_engines_base import ParsingEngineBase
-        import pandas as pd
         from pathlib import Path
+
+        import pandas as pd
+
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
 
         filename = Path(__file__)
         engine = SName(
@@ -125,8 +131,9 @@ class TestParsingEngineBase(TestCase):
         self.assertIn("mandatory columns", actual["warnings"][0])
 
     def test_get_data_generator_for_columns(self):
-        from parsing_engines.parsing_engines_base import ParsingEngineBase
         import pandas as pd
+
+        from parsing_engines.parsing_engines_base import ParsingEngineBase
 
         engine = SName(
             data=pd.DataFrame(
@@ -155,6 +162,7 @@ class TestDummyParsingEngine(TestCase):
     @patch("parsing_engines.parsing_engines_base.DummyParsingEngine._create_rec_no")
     def test_factory(self, mock_create, mock_standard, mock_drop):
         from pathlib import Path
+
         from parsing_engines.parsing_engines_base import DummyParsingEngine
 
         parser = DummyParsingEngine.factory("")

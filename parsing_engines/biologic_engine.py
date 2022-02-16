@@ -1,13 +1,13 @@
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union, Set
+from typing import Any, Dict, List, Set, Tuple, Union
 
 import pandas as pd
 import yaml
 
 from .battery_exceptions import UnsupportedFileTypeError
-from .parsing_engines_base import ParsingEngineBase
 from .mappings import COLUMN_NAME_MAPPING
+from .parsing_engines_base import ParsingEngineBase
 
 
 class BiologicParsingEngine(ParsingEngineBase):

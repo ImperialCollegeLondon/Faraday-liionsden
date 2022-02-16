@@ -2,7 +2,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Text
 from unittest import TestCase
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 
 class TestMaccorXLSParser(TestCase):
@@ -25,12 +25,13 @@ class TestMaccorXLSParser(TestCase):
         mock_standard,
         mock_drop,
     ):
+        import pandas as pd
+
         from parsing_engines import MaccorParsingEngine as MP
         from parsing_engines.battery_exceptions import (
-            UnsupportedFileTypeError,
             EmptyFileError,
+            UnsupportedFileTypeError,
         )
-        import pandas as pd
 
         sheet = SimpleNamespace(ncols=4, nrows=2)
         datemode = 1
@@ -113,7 +114,7 @@ class TestMaccorFunctions(TestCase):
     def test_get_header_size(self):
         import xlrd
 
-        from parsing_engines.maccor_engine import get_header_size, MaccorParsingEngine
+        from parsing_engines.maccor_engine import MaccorParsingEngine, get_header_size
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         sheet = workbook.sheet_by_index(0)
@@ -132,8 +133,8 @@ class TestMaccorFunctions(TestCase):
         import xlrd
 
         from parsing_engines.maccor_engine import (
-            get_header_size,
             MaccorParsingEngine,
+            get_header_size,
             load_maccor_data,
         )
 
@@ -149,9 +150,9 @@ class TestMaccorFunctions(TestCase):
         import xlrd
 
         from parsing_engines.maccor_engine import (
-            get_header_size,
             MaccorParsingEngine,
             get_file_header,
+            get_header_size,
         )
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
