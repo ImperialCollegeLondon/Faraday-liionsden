@@ -51,7 +51,7 @@ SI_QUANTITY_UNITS = [
     dict(
         quantityName="Length",
         quantitySymbol="L",
-        unitName="Metre",
+        unitName="Metres",
         unitSymbol="m",
         is_SI_unit=True,
     ),
