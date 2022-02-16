@@ -4,7 +4,7 @@ from unittest import TestCase
 from unittest.mock import patch
 
 
-class TestBiologicCSVnTSVParser(TestCase):
+class TestBiologicParsingEngine(TestCase):
     @patch("parsing_engines.BiologicParsingEngine._drop_unnamed_columns")
     @patch("parsing_engines.BiologicParsingEngine._standardise_columns")
     @patch("parsing_engines.BiologicParsingEngine._create_rec_no")
