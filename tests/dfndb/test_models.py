@@ -138,20 +138,13 @@ class TestMethod(TestCase):
 class TestQuantityUnit(TestCase):
     def setUp(self):
         self.expected = dict(
-            quantityName="Charge",
-            quantitySymbol="Q",
-            unitName="Coulombs",
-            unitSymbol="C",
+            quantityName="Depth",
+            quantitySymbol="D",
+            unitName="Light years",
+            unitSymbol="LY",
             is_SI_unit=True,
         )
-        self.model = baker.make_recipe(
-            "tests.dfndb.quantity_unit",
-            quantityName="Charge",
-            quantitySymbol="Q",
-            unitName="Coulombs",
-            unitSymbol="C",
-            is_SI_unit=True,
-        )
+        self.model = baker.make_recipe("tests.dfndb.quantity_unit", **self.expected)
 
     def test_quantity_unit_creation(self):
         for k, v in self.expected.items():
@@ -170,23 +163,11 @@ class TestQuantityUnit(TestCase):
         )
 
     def test_unique_together(self):
-        baker.make_recipe(
-            "tests.dfndb.quantity_unit",
-            quantityName="Charge",
-            quantitySymbol="Q",
-            unitName="Coulombs",
-            unitSymbol="e",
-            is_SI_unit=True,
-        )
+        expected = self.expected.copy()
+        expected["unitSymbol"] = "ly"
+        baker.make_recipe("tests.dfndb.quantity_unit", **expected)
         with self.assertRaises(IntegrityError):
-            baker.make_recipe(
-                "tests.dfndb.quantity_unit",
-                quantityName="Charge",
-                quantitySymbol="Q",
-                unitName="Coulombs",
-                unitSymbol="C",
-                is_SI_unit=True,
-            )
+            baker.make_recipe("tests.dfndb.quantity_unit", **self.expected)
 
 
 class TestParameter(TestCase):
