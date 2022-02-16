@@ -9,7 +9,8 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("dfndb", "0006_initial_units"),
-        ("management", "0003_user_institution")
+        ("management", "0003_user_institution"),
+        ("sessions", "0001_initial"),
     ]
 
     operations = [migrations.RunPython(populate_parameters)]
