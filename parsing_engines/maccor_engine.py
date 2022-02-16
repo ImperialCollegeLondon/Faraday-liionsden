@@ -1,190 +1,227 @@
-import logging
-import os
-from typing import Dict, Generator, Iterable, List, Tuple
+from pathlib import Path
+from typing import (
+    Any,
+    Dict,
+    Iterable,
+    List,
+    Optional,
+    Sequence,
+    Set,
+    Text,
+    Tuple,
+    Union,
+)
 
+import openpyxl
+import pandas as pd
 import xlrd
-from xlrd.sheet import Cell
+from openpyxl.worksheet.worksheet import Worksheet
+from xlrd.sheet import Cell, Sheet
 
-from .battery_exceptions import EmptyFileError
+from .battery_exceptions import EmptyFileError, UnsupportedFileTypeError
 from .parsing_engines_base import ParsingEngineBase
 
 
-class MaccorXLSParser(ParsingEngineBase):
-    """
-    ParserBase for Maccor excel raw data
-    Based on maccor_functions by Luke Pitt
-    """
+class MaccorParsingEngine(ParsingEngineBase):
 
     name = "maccor"
     description = "Maccor XLS/XLSX"
     valid: List[Tuple[str, str]] = [
         ("application/vnd.ms-excel", ".xls"),
         ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"),
-        ("text/plain", ".txt"),
     ]
+    mandatory_columns: Set[str] = {"Cyc#", "Step"}
 
-    def __init__(self, file_path: str) -> None:
-        """Initialises the XLS parser for Maccor"""
-        super().__init__(file_path)
-        self.workbook = xlrd.open_workbook(file_path, on_demand=True)
-        # Rec# columns in a typical Maccor file, set in get_metadata, used in get_data
-        self.rec_col = -1
+    @classmethod
+    def factory(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
+        """Factory method for creating a parsing engine.
 
-    @staticmethod
-    def clean_value(value: str) -> str:
-        """Trims values"""
-        return value.replace("''", "'").strip().rstrip("\0").strip()
-
-    def _get_metadata_value(self, key: str, value: Cell) -> str:
-        """A wrapper for metadata value parsing. Handles special cases."""
-        if "Date" in key:
-            return xlrd.xldate.xldate_as_datetime(value.value, self.workbook.datemode)
-        elif "Procedure" in key:
-            return self.clean_value(value.value) + "\t" + self.clean_value(value.value)
+        Args:
+            file_path (Union[Path, str]): Path to the file to load.
+        """
+        ext = Path(file_path).suffix.lower()
+        if ext == ".xls":
+            sheet, datemode = factory_xls(file_path)
+        elif ext == ".xlsx":
+            sheet, datemode = factory_xlsx(file_path)
         else:
-            return value.value
+            raise UnsupportedFileTypeError(
+                f"Unknown file extension for Maccor parsing engine '{ext}'."
+            )
 
-    def _identify_columns(self, header_row: int) -> (Dict, Dict):
-        """Parses the file to determine column headers as well as which columns have data"""
-        sheet = self.workbook.sheet_by_index(0)
-        headers = [x.value for x in sheet.row_slice(header_row)]
-        column_has_data = [False for _ in range(sheet.ncols)]
-
-        column_is_numeric, numeric_columns = [], []
-        val_row = sheet.row_slice(header_row + 1)
-        for i in range(sheet.ncols):
-            column_is_numeric.insert(i, isinstance(val_row[i].value, float))
-            if column_is_numeric[i]:
-                numeric_columns.append(i)
-            else:
-                column_has_data.insert(i, True)
-
-        first_rec = 1
-        try:
-            self.rec_col = headers.index("Rec#")
-            first_rec = sheet.cell_value(header_row + 1, self.rec_col)
-        except ValueError:
-            pass
-
-        last_rec, total_rows = self._check_columns_for_data(
-            column_has_data, headers, numeric_columns, header_row + 1
-        )
-
-        return (
-            {
-                "num_rows": total_rows,
-                "first_sample_no": first_rec,
-                "last_sample_no": last_rec,
-            },
-            {
-                headers[i]: {
-                    "has_data": column_has_data[i],
-                    "is_numeric": column_is_numeric[i],
-                }
-                for i in range(len(headers))
-            },
-        )
-
-    def _check_columns_for_data(
-        self, column_has_data, headers, numeric_columns, data_start
-    ):
-        """Scans the entire file for datapoints in each column"""
-        total_rows, last_rec = 0, 0
-        for sheet_id in range(self.workbook.nsheets):
-            logging.info("Loading sheet for metadata parsing %d", sheet_id)
-            sheet = self.workbook.sheet_by_index(sheet_id)
-            total_rows += sheet.nrows - 2
-            for col in numeric_columns[:]:
-                try:
-                    unique_vals = set(
-                        [float(x) for x in sheet.col_values(col, data_start)]
-                    )
-                except (ValueError, IndexError) as e:
-                    unique_vals = set()
-
-                unique_vals.discard(0)
-                if len(unique_vals) > 0:
-                    column_has_data[col] = True
-                    numeric_columns.remove(col)
-                    logging.info("Found data in col %d", col)
-
-            if sheet.nrows > 2:
-                try:
-                    last_rec = sheet.cell_value(2, headers.index("Rec#"))
-                except ValueError:
-                    last_rec = total_rows
-
-            logging.info("Unloading sheet %d", sheet_id)
-            self.workbook.unload_sheet(sheet_id)
-        return last_rec, total_rows
-
-    @staticmethod
-    def _is_metadata_row(row: Iterable) -> bool:
-        return not any(x in ["Rec#", "Cyc#", "Step"] for x in [y.value for y in row])
-
-    def get_metadata(self) -> (Dict, Dict):
-        sheet = self.workbook.sheet_by_index(0)
         if sheet.ncols < 1 or sheet.nrows < 2:
             raise EmptyFileError()
 
-        metadata = {}
+        skip_rows = get_header_size(sheet, cls.mandatory_columns)
+        data = load_maccor_data(file_path, skip_rows)
+        file_metadata = get_file_header(sheet, skip_rows, datemode)
+        return cls(file_path, skip_rows, data, file_metadata)
 
-        metadata_end = 0
-        for row in sheet.get_rows():
-            metadata_end += 1
-            if self._is_metadata_row(row):
-                for key, value in zip(row[::2], row[1::2]):  # Pairwise iteration
-                    if not key:
-                        continue
-                    key = key.value.replace("''", "'").strip().rstrip(":")
-                    metadata[key] = self._get_metadata_value(key, value)
-            else:
-                break
 
-        metadata["Dataset_Name"] = os.path.basename(self.file_path)
-        metadata["data_start"] = metadata_end
-        metadata["misc_file_data"] = {"excel format metadata": (dict(metadata), None)}
-        metadata["Machine Type"] = "Maccor"
-        metadata["dataset_size"] = os.path.getsize(self.file_path)
-        aggregates, column_info = self._identify_columns(metadata_end - 1)
-        metadata.update(aggregates)
+def factory_xls(
+    file_path: Union[Path, str]
+) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
+    """Factory method for retrieving information specific for Maccor XLS files.
 
-        return metadata, column_info
+    Args:
+        file_path (Union[Path, str]): Path to the file to load.
 
-    def get_data_generator_for_columns(
-        self, columns: List, first_data_row: int, col_mapping: Dict = None
-    ) -> Generator[Dict, None, None]:
-        """
-        Creates a generator for accessing all data in a maccor file row by row for the desired
-         columns. Can rename columns if a custom mapping is passed.
-        """
-        sheet = self.workbook.sheet_by_index(0)
-        col_names = sheet.row_slice(first_data_row - 1)
-        columns_of_interest = [
-            i for i in range(sheet.ncols) if col_names[i].value in columns
-        ]
-        if col_mapping is not None:
-            col_names = [col_mapping[x] if x in col_mapping else x for x in col_names]
+    Returns:
+        A tuple with a sheet object and the datemode of the workbook.
+    """
+    book = xlrd.open_workbook(file_path, on_demand=True)
+    return book.sheet_by_index(0), book.datemode
 
-        for sheet_id in range(self.workbook.nsheets):
-            logging.info("Loading sheet for data parsing %d", sheet_id)
-            sheet = self.workbook.sheet_by_index(sheet_id)
-            for i in range(first_data_row, sheet.nrows):
-                row = sheet.row(i)
-                yield {
-                    col_names[col].value: (
-                        row[col].value
-                        if self.rec_col != col
-                        else self._sanitise_rec_val(row[col].value)
-                    )
-                    for col in columns_of_interest
-                }
-            logging.info("Unloading sheet %d", sheet_id)
-            self.workbook.unload_sheet(sheet_id)
 
-    @staticmethod
-    def _sanitise_rec_val(value) -> float:
-        if isinstance(value, str):
-            return float(value.replace(",", ""))
-        else:
-            return value
+def factory_xlsx(
+    file_path: Union[Path, str]
+) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
+    """Factory method for retrieving information specific for Maccor XLSX files.
+
+    Args:
+        file_path (Union[Path, str]): Path to the file to load.
+
+    Returns:
+        A tuple with a sheet object and the datemode of the workbook.
+    """
+    book = openpyxl.load_workbook(file_path, read_only=True)
+    return book.active, None
+
+
+def get_file_header(
+    sheet: Union[Sheet, Worksheet], skip_rows: int, datemode: Optional[int]
+) -> Dict[str, Any]:
+    """Extracts the header from the Maccor file.
+
+    The header is spread across columns, so these need to be scan for the key/value
+    pairs to extract.
+
+    Args:
+        sheet (Union[Sheet, Worksheet]): The Excel sheet to scan.
+        skip_rows (int): Number of rows containing the header.
+        datemode (Optional[int]): The encoding of dates in the excel file.
+
+    Returns:
+        Dict[str, Any]: A dictionary with the header information.
+    """
+    header: Dict[str, Any] = {}
+    for i, row in enumerate(sheet):
+        if i == skip_rows:
+            break
+
+        current = 0
+        while current < len(row):
+            key, value, current = get_metadata_value(current, row, datemode)
+            if key == "":
+                continue
+            header[key] = value
+
+    return header
+
+
+def get_header_size(sheet: Union[Sheet, Worksheet], columns: Set) -> int:
+    """Reads the file and determines the size of the header.
+
+    Args:
+        sheet (Union[Sheet, Worksheet]): The Excel sheet to scan.
+        columns (Set): Iterable with the elements to check that would identify
+            this as NOT a metadata row.
+
+    Returns:
+        int: The size of the header.
+    """
+    for i, row in enumerate(sheet):
+        if not is_metadata_row(row, columns):
+            return i
+    return 0
+
+
+def load_maccor_data(file_path: Union[Path, str], skip_rows: int) -> pd.DataFrame:
+    """Loads the data as a Pandas data frame.
+
+    Args:
+        file_path (Union[Path, str]): File to load the data from.
+        skip_rows (int): Location of the header, assumed equal to the number of rows to
+            skip.
+
+    Returns:
+        pd.DataFrame: A pandas dataframe with all the data.
+    """
+    data = pd.read_excel(file_path, sheet_name=None, header=skip_rows, index_col=None)
+
+    if isinstance(data, dict):
+        data = pd.concat(data.values(), ignore_index=True)
+
+    return data
+
+
+def clean_value(value: str) -> str:
+    """Cleans up the string and trims special characters.
+
+    Args:
+        value (str): The string to clean
+
+    Returns:
+        str: The string cleaned.
+    """
+    return value.replace("''", "'").strip().rstrip("\0").strip()
+
+
+def is_metadata_row(row: Iterable, withnesses: Iterable) -> bool:
+    """Checks if a row is a metadata row.
+
+    Args:
+        row (Iterable): Iterable with the row data to check
+        withnesses (Iterable): Iterable with the elements to check that would identify
+            this as NOT a metadata row.
+
+    Returns:
+        bool: True if it is identified as a metadata row
+    """
+    row_values = [y.value if hasattr(y, "value") else y for y in row]
+    return not any(x in withnesses for x in row_values)
+
+
+def get_metadata_value(
+    idx: int, row: Sequence[Cell], datemode: Optional[int]
+) -> Tuple[str, str, int]:
+    """A wrapper for metadata value parsing, handling special cases.
+
+    Args:
+        idx (int): Index of the cell with the next key to check
+        row (Sequence[Cell]): Row of cells
+        datemode (int): The datemode the cell containing dates are using.
+
+    Raises:
+        ValueError: If the index of the next cell is not bigger than the current
+            one.
+
+    Returns:
+        Tuple[str, str, int]: A tuple with the processed key, value and the next
+        index to check.
+    """
+    key = row[idx]
+    if not key:
+        key = ""
+    elif isinstance(key.value, Text):
+        key = key.value.replace("''", "'").strip().rstrip(":")
+    else:
+        key = key.value
+
+    if hasattr(key, "__iter__") and "Date" in key:
+        value = (
+            xlrd.xldate.xldate_as_datetime(row[idx + 1].value, datemode)
+            if datemode is not None
+            else row[idx + 1].value
+        )
+        new_idx = idx + 2
+    elif hasattr(key, "__iter__") and "Procedure" in key:
+        value = clean_value(row[idx + 1].value) + ", " + clean_value(row[idx + 2].value)
+        new_idx = idx + 3
+    else:
+        value = row[idx + 1].value if idx + 1 < len(row) else ""
+        new_idx = idx + 2
+
+    if new_idx <= idx:
+        raise ValueError("Non-increasing index number when processing metadata cells.")
+    return key, value, new_idx

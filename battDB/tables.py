@@ -1,10 +1,18 @@
 import django_tables2 as tables
 
-from .models import Batch, DeviceSpecification, Equipment, Experiment, ExperimentDevice
+from .models import (
+    Batch,
+    DeviceSpecification,
+    Equipment,
+    Experiment,
+    ExperimentDevice,
+    Parser,
+)
 
 
 class ExperimentTable(tables.Table):
     id = tables.Column(linkify=True)
+    num_files = tables.Column(accessor="viewable_files_", verbose_name="# Data files")
 
     class Meta:
         model = Experiment
@@ -83,3 +91,21 @@ class BatchDevicesTable(tables.Table):
             "id",
             "batch",
         )
+
+
+class ParserTable(tables.Table):
+    name = tables.Column(linkify=True)
+    num_cols = tables.Column(
+        accessor="get_number_parameters", verbose_name="# Columns parsed"
+    )
+
+    class Meta:
+        model = Parser
+        template_name = "django_tables2/bootstrap4.html"
+        fields = (
+            "name",
+            "notes",
+            "num_cols",
+            "created_on",
+        )
+        row_attrs = {"status": lambda record: record.status}

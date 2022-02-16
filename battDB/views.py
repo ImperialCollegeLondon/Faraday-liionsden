@@ -26,6 +26,7 @@ from .filters import (
     DeviceSpecificationFilter,
     EquipmentFilter,
     ExperimentFilter,
+    ParserFilter,
 )
 from .forms import (
     DeviceParameterFormSet,
@@ -45,6 +46,7 @@ from .models import (
     Equipment,
     Experiment,
     ExperimentDataFile,
+    Parser,
     UploadedFile,
 )
 from .serializers import (
@@ -60,6 +62,7 @@ from .tables import (
     DeviceSpecificationTable,
     EquipmentTable,
     ExperimentTable,
+    ParserTable,
 )
 
 
@@ -72,7 +75,6 @@ class NewDeviceView(PermissionRequiredMixin, NewDataViewInline):
     permission_required = "battDB.add_devicespecification"
     template_name = "create_edit_generic.html"
     form_class = NewDeviceForm
-    success_url = "/battDB/new_device/"
     success_message = "New device specification created successfully."
     failure_message = "Could not save new device. Invalid information."
     inline_key = "parameters"
@@ -84,7 +86,6 @@ class NewExperimentView(PermissionRequiredMixin, NewDataViewInline):
     model = Experiment
     template_name = "create_edit_generic.html"
     form_class = NewExperimentForm
-    success_url = "/battDB/new_experiment"
     success_message = "New experiment created successfully."
     failure_message = "Could not save new experiment. Invalid information."
     inline_key = "devices"
@@ -95,7 +96,6 @@ class NewEquipmentView(PermissionRequiredMixin, NewDataView):
     permission_required = "battDB.add_equipment"
     template_name = "create_edit_generic.html"
     form_class = NewEquipmentForm
-    success_url = "/battDB/new_equipment/"
     success_message = "New equipment created successfully."
     failure_message = "Could not save new equipment. Invalid information."
 
@@ -104,7 +104,6 @@ class NewBatchView(PermissionRequiredMixin, NewDataView):
     permission_required = "battDB.add_batch"
     template_name = "create_edit_generic.html"
     form_class = NewBatchForm
-    success_url = "/battDB/new_batch/"
     success_message = "New batch created successfully."
     failure_message = "Could not save new batch. Invalid information."
 
@@ -148,6 +147,8 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                 # Handle uploaded files in formsets slightly differently to usual
                 parameters[0].instance.user_owner = obj.user_owner
                 parameters[0].instance.status = obj.status
+                if parameters[0].instance.use_parser:
+                    parameters[0].instance.parse = True
                 parameters.save()
                 form.instance.full_clean()
 
@@ -161,7 +162,6 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
     permission_required = "dfndb.add_method"
     template_name = "create_protocol.html"
     form_class = NewProtocolForm
-    success_url = "/battDB/new_protocol/"
     success_message = "New protocol created successfully."
     failure_message = "Could not save new protocol. Invalid information."
 
@@ -171,7 +171,6 @@ class UpdateDeviceView(PermissionRequiredMixin, UpdateDataInlineView):
     permission_required = "battDB.change_devicespecification"
     template_name = "create_edit_generic.html"
     form_class = NewDeviceForm
-    success_url = "/battDB/devices/"
     success_message = "Device specification updated successfully."
     failure_message = "Could not update Device specification. Invalid information."
     inline_key = "parameters"
@@ -183,7 +182,6 @@ class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
     permission_required = "battDB.change_experiment"
     template_name = "create_edit_generic.html"
     form_class = NewExperimentForm
-    success_url = "/battDB/exps/"
     success_message = "Experiment updated successfully."
     failure_message = "Could not update experiment. Invalid information."
     inline_key = "devices"
@@ -195,7 +193,6 @@ class UpdateEquipmentView(PermissionRequiredMixin, UpdateDataView):
     permission_required = "battDB.change_equipment"
     template_name = "create_edit_generic.html"
     form_class = NewEquipmentForm
-    success_url = "/battDB/equipment/"
     success_message = "Equipment updated successfully."
     failure_message = "Could not update Equipment. Invalid information."
 
@@ -205,7 +202,6 @@ class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
     permission_required = "battDB.change_batch"
     template_name = "create_edit_generic.html"
     form_class = NewBatchForm
-    success_url = "/battDB/batches/"
     success_message = "Batch updated successfully."
     failure_message = "Could not update batch. Invalid information."
 
@@ -248,9 +244,18 @@ class DeleteBatchView(PermissionRequiredMixin, MarkAsDeletedView):
 class DeleteDataFileView(PermissionRequiredMixin, MarkAsDeletedView):
     model = ExperimentDataFile
     permission_required = "battDB.change_experimentdatafile"
-    success_url = "/battDB/exps/"
     template_name = "delete_generic.html"
     success_message = "Data file deleted successfully."
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.status = "deleted"
+        self.object.save()
+        messages.success(request, self.success_message)
+        return redirect(self.object.experiment)
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
 
 
 #################### DETAIL, LIST, TABLE VIEWS #########################
@@ -296,6 +301,15 @@ class EquipmentTableView(
     permission_required = "battDB.view_equipment"
 
 
+class ParserTableView(SingleTableMixin, ExportMixin, PermissionListMixin, FilterView):
+    model = Parser
+    table_class = ParserTable
+    template_name = "parser_table.html"
+    filterset_class = ParserFilter
+    export_formats = ["csv", "json"]
+    permission_required = "battDB.view_parser"
+
+
 class ExperimentView(PermissionRequiredMixin, DetailView):
     model = Experiment
     template_name = "experiment.html"
@@ -318,6 +332,12 @@ class EquipmentView(PermissionRequiredMixin, DetailView):
     model = Equipment
     template_name = "equipment.html"
     permission_required = "battDB.view_equipment"
+
+
+class ParserView(PermissionRequiredMixin, DetailView):
+    model = Parser
+    template_name = "parser.html"
+    permission_required = "battDB.view_parser"
 
 
 ### API VIEWS ###

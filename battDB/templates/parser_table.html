@@ -6,8 +6,9 @@
 {% block content %}
 
 <div class="container py-2">
-    <h1> Equipment </h1>
-    Search for cyclers and other equipment using the form below:
+    <h1> Parsers </h1>
+    Search for parsers below. Click on a parser for more information about which columns it handles from the raw data
+    files.
 </div>
 
 <div class="container py-2">
@@ -15,21 +16,7 @@
     <form action="" method="get" class="form form-inline" bound_css_class=''>
         <div class="row align-items-end">
             <div class="col-3">
-                {% bootstrap_field filter.form.id layout='vertical' bound_css_class='' %}
-            </div>
-            <div class="col-3">
                 {% bootstrap_field filter.form.name layout='vertical' bound_css_class='' %}
-            </div>
-            <div class="col-3">
-                {% bootstrap_field filter.form.institution layout='vertical' bound_css_class='' %}
-            </div>
-            <div class="col-3">
-                {% bootstrap_field filter.form.user_owner layout='vertical' bound_css_class='' %}
-            </div>
-        </div>
-        <div class="row align-items-end">
-            <div class="col-3">
-                {% bootstrap_field filter.form.serialNo layout='vertical' bound_css_class='' %}
             </div>
             <div class="col-3">
                 {% bootstrap_field filter.form.status layout='vertical' bound_css_class='' %}
@@ -51,11 +38,6 @@
     {% for format in view.export_formats %}
     <a href="{% export_url format %}" class="btn btn-primary" , role="button"> download {{ format }}</a>
     {% endfor %}
-    {% if perms.battDB.can_add_equipment %}
-    <a href="{% url 'battDB:New Equipment' %}" class="btn btn-success bi bi-plus" , role="button" style="float: right;">
-        Add
-        another</a>
-    {% endif %}
 </div>
 
 {% if not user.is_authenticated %}

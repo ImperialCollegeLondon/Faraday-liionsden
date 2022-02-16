@@ -1,0 +1,101 @@
+<!-- equipment.html -->
+{% extends 'header.html' %}
+{% load tag_allfields %}
+{% load render_table from django_tables2 %}
+{% load export_url from django_tables2 %}
+{% load bootstrap5 %}
+{% load mptt_tags %}
+{% load guardian_tags %}
+
+{% block content %}
+
+<div class="container py-4">
+  <table width="100%">
+    <tr>
+      <td style="text-align:left">
+        <h4> </h4>
+      </td>
+      <td style="text-align:center">
+        <h4> {{ object.name }} </h4>
+      </td>
+      <td style="text-align:right">
+        <h4> </h4>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div class="card border-dark mb-3" style="max-width: 100%;">
+  <div class="card-header">
+    <h5>Parsed columns</h5>
+  </div>
+  <div class="card-body">
+    Note: Column headers must exactly match headers in the raw data file.
+    <br>
+    <br>
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">Column header</th>
+          <th scope="col">Parameter</th>
+          <th scope="col">Units</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for col in object.columns.all %}
+        <tr>
+          <td>{{ col.col_name }}</td>
+          <td>{{ col.parameter.name }}</td>
+          <td>{{ col.parameter.unit.unitName }} ({{ col.parameter.unit.unitSymbol }}) </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card border-dark mb-3" style="max-width: 100%;">
+  <div class="card-header">
+    <h5>Description</h5>
+  </div>
+  <div class="card-body">
+    {{ object.notes }}
+  </div>
+</div>
+
+<div class="card border-dark mb-3" style="max-width: 100%;">
+  <div class="card-header">
+    <h5>Metadata</h5>
+  </div>
+  <div class="card-body">
+    <table width="50%">
+      <tr>
+        <td><b>Owner:</b></td>
+        <td>{{ object.user_owner }} </td>
+      </tr>
+      <tr>
+        <td><b>Created:</b></td>
+        <td>{{ object.created_on }} </td>
+      </tr>
+      <tr>
+        <td><b>Modified:</b></td>
+        <td>{{ object.modified_on }} </td>
+      </tr>
+      <tr>
+        <td><b>ID:</b></td>
+        <td>{{ object.id }} </td>
+      </tr>
+      <tr>
+        <td><b>Status:</b></td>
+        <td>{{ object.status }} </td>
+      </tr>
+      <tr>
+        <td><b>Attributes:</b></td>
+        <td>{{ object.attributes }} </td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+{% endblock %}

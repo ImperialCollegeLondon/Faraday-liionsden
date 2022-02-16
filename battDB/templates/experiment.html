@@ -73,15 +73,28 @@
           <th scope="col">Parsed columns</th>
           <th scope="col">All columns</th>
           <th scope="col">Raw data</th>
+          {% get_obj_perms request.user for object as "object_perms" %}
+          {% if "change_experiment" in object_perms %}
+          <th scope="col">Delete?</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
-
         {% for data_file in object.data_files.all %}
-        <td>{{ data_file.name }}</td>
-        <td>{{ data_file.ts_headers }}</td>
-        <td>{{ data_file.file_columns }}</td>
-        <td><a href="{{ data_file.raw_data_file.file.url }}" class="btn btn-primary" , role="button"> Download </a></td>
+        {% get_obj_perms request.user for data_file as "df_perms" %}
+        {% if "view_experimentdatafile" in df_perms %}
+        <tr>
+          <td>{{ data_file.name }}</td>
+          <td>{{ data_file.ts_headers }}</td>
+          <td>{{ data_file.file_columns }}</td>
+          <td><a href="{{ data_file.raw_data_file.file.url }}" class="btn btn-primary" , role="button"> Download </a>
+          </td>
+          {% if "change_experimentdatafile" in df_perms %}
+          <td><a href="/battDB/data_files/delete/{{data_file.pk}}" class="btn btn-danger" , role="button"> Delete </a>
+          </td>
+          {% endif %}
+        </tr>
+        {% endif %}
         {% endfor %}
       </tbody>
     </table>
