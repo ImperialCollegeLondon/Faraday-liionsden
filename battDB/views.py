@@ -75,7 +75,6 @@ class NewDeviceView(PermissionRequiredMixin, NewDataViewInline):
     permission_required = "battDB.add_devicespecification"
     template_name = "create_edit_generic.html"
     form_class = NewDeviceForm
-    success_url = "/battDB/new_device/"
     success_message = "New device specification created successfully."
     failure_message = "Could not save new device. Invalid information."
     inline_key = "parameters"
@@ -87,7 +86,6 @@ class NewExperimentView(PermissionRequiredMixin, NewDataViewInline):
     model = Experiment
     template_name = "create_edit_generic.html"
     form_class = NewExperimentForm
-    success_url = "/battDB/new_experiment"
     success_message = "New experiment created successfully."
     failure_message = "Could not save new experiment. Invalid information."
     inline_key = "devices"
@@ -98,7 +96,6 @@ class NewEquipmentView(PermissionRequiredMixin, NewDataView):
     permission_required = "battDB.add_equipment"
     template_name = "create_edit_generic.html"
     form_class = NewEquipmentForm
-    success_url = "/battDB/new_equipment/"
     success_message = "New equipment created successfully."
     failure_message = "Could not save new equipment. Invalid information."
 
@@ -107,7 +104,6 @@ class NewBatchView(PermissionRequiredMixin, NewDataView):
     permission_required = "battDB.add_batch"
     template_name = "create_edit_generic.html"
     form_class = NewBatchForm
-    success_url = "/battDB/new_batch/"
     success_message = "New batch created successfully."
     failure_message = "Could not save new batch. Invalid information."
 
@@ -166,7 +162,6 @@ class NewProtocolView(PermissionRequiredMixin, NewDataView):
     permission_required = "dfndb.add_method"
     template_name = "create_protocol.html"
     form_class = NewProtocolForm
-    success_url = "/battDB/new_protocol/"
     success_message = "New protocol created successfully."
     failure_message = "Could not save new protocol. Invalid information."
 
@@ -176,7 +171,6 @@ class UpdateDeviceView(PermissionRequiredMixin, UpdateDataInlineView):
     permission_required = "battDB.change_devicespecification"
     template_name = "create_edit_generic.html"
     form_class = NewDeviceForm
-    success_url = "/battDB/devices/"
     success_message = "Device specification updated successfully."
     failure_message = "Could not update Device specification. Invalid information."
     inline_key = "parameters"
@@ -188,7 +182,6 @@ class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
     permission_required = "battDB.change_experiment"
     template_name = "create_edit_generic.html"
     form_class = NewExperimentForm
-    success_url = "/battDB/exps/"
     success_message = "Experiment updated successfully."
     failure_message = "Could not update experiment. Invalid information."
     inline_key = "devices"
@@ -200,7 +193,6 @@ class UpdateEquipmentView(PermissionRequiredMixin, UpdateDataView):
     permission_required = "battDB.change_equipment"
     template_name = "create_edit_generic.html"
     form_class = NewEquipmentForm
-    success_url = "/battDB/equipment/"
     success_message = "Equipment updated successfully."
     failure_message = "Could not update Equipment. Invalid information."
 
@@ -210,7 +202,6 @@ class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
     permission_required = "battDB.change_batch"
     template_name = "create_edit_generic.html"
     form_class = NewBatchForm
-    success_url = "/battDB/batches/"
     success_message = "Batch updated successfully."
     failure_message = "Could not update batch. Invalid information."
 
@@ -253,9 +244,18 @@ class DeleteBatchView(PermissionRequiredMixin, MarkAsDeletedView):
 class DeleteDataFileView(PermissionRequiredMixin, MarkAsDeletedView):
     model = ExperimentDataFile
     permission_required = "battDB.change_experimentdatafile"
-    success_url = "/battDB/exps/"
     template_name = "delete_generic.html"
     success_message = "Data file deleted successfully."
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.status = "deleted"
+        self.object.save()
+        messages.success(request, self.success_message)
+        return redirect(self.object.experiment)
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
 
 
 #################### DETAIL, LIST, TABLE VIEWS #########################

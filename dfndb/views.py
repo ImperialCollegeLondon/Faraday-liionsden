@@ -26,7 +26,7 @@ class NewCompoundView(PermissionRequiredMixin, NewDataView):
     permission_required = "dfndb.add_compound"
     template_name = "create_edit_generic.html"
     form_class = NewCompoundForm
-    success_url = "/dfndb/new_compound/"
+    success_url = "/dfndb/compounds/"
     success_message = "New compound created successfully."
     failure_message = "Could not save new compound. Invalid information."
 
@@ -35,7 +35,6 @@ class NewMaterialView(PermissionRequiredMixin, NewDataViewInline):
     permission_required = "dfndb.add_material"
     template_name = "create_edit_generic.html"
     form_class = NewMaterialForm
-    success_url = "/dfndb/new_material/"
     success_message = "New material created successfully."
     failure_message = "Could not save new material. Invalid information."
     inline_key = "composition"
