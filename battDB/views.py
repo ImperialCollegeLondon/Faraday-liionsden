@@ -328,34 +328,44 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
 
         tables = []
         for data_set, data_file in zip(data, data_files):
-            tables.append(
-                self.table_class(
-                    data_set,
-                    extra_columns=[(i, tables2.Column()) for i in data_file.ts_headers],
+            if data_set:
+                tables.append(
+                    self.table_class(
+                        data_set,
+                        extra_columns=[
+                            (i, tables2.Column()) for i in data_file.ts_headers
+                        ],
+                    )
                 )
-            )
+            else:
+                tables.append(self.table_class(data=[{"None": "None"}]))
 
         return tables
 
-    def get_tables_data(self):
+    def get_tables_data(self, n_rows: int = 20, decimal_places: int = 2):
         """
-        Overriding to get top 20 rows of data displayed.
+        Overriding to get top n rows of data displayed.
+        Values are displayed to a chosen number of decimal_places for easy viewing.
         """
         data_files = self.object.data_files.all()
         data_previews = []
         for data_file in data_files:
-            initial_data = data_file.ts_data[:20]
-            data_headers = data_file.ts_headers
-            data_preview = []
-            for i in initial_data:
-                data_preview.append(
-                    {
-                        header: round(value, 2)
-                        for (header, value) in zip(data_headers, i)
-                    }
-                )
+            if data_file.raw_data_file.parse:
+                initial_data = data_file.ts_data[:n_rows]
+                data_headers = data_file.ts_headers
+                data_preview = []
+                for i in initial_data:
+                    data_preview.append(
+                        {
+                            header: round(value, decimal_places)
+                            for (header, value) in zip(data_headers, i)
+                        }
+                    )
 
-            data_previews.append(data_preview)
+                data_previews.append(data_preview)
+
+            else:
+                data_previews.append(None)
         return data_previews
 
 
