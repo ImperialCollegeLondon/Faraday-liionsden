@@ -69,6 +69,13 @@ SI_QUANTITY_UNITS = [
         unitSymbol="1",
         is_SI_unit=True,
     ),
+    dict(
+        quantityName="Energy",
+        quantitySymbol="E",
+        unitName="Joules",
+        unitSymbol="J",
+        is_SI_unit=True,
+    ),
 ]
 
 NOT_SI_QUANTITY_UNITS = [
@@ -87,6 +94,22 @@ NOT_SI_QUANTITY_UNITS = [
         unitSymbol="mA·h",
         is_SI_unit=False,
         related_scale=3.6,
+    ),
+    dict(
+        quantityName="Charge",
+        quantitySymbol="Q",
+        unitName="amps hour",
+        unitSymbol="A·h",
+        is_SI_unit=False,
+        related_scale=3600,
+    ),
+    dict(
+        quantityName="Energy",
+        quantitySymbol="E",
+        unitName="Watts hour",
+        unitSymbol="W·h",
+        is_SI_unit=False,
+        related_scale=3600,
     ),
 ]
 
