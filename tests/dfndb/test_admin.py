@@ -10,7 +10,7 @@ class TestComponentCompositionInline(TestCase):
     def setUp(self):
         self.site = AdminSite()
 
-    def test_material_composition_inline(self):
+    def test_component_composition_inline(self):
         from dfndb.admin import ComponentCompositionInline
         from dfndb.models import CompositionPart
 
@@ -38,7 +38,7 @@ class TestComponentAdmin(TestCase):
     def setUp(self):
         self.site = AdminSite()
 
-    def test_material_admin(self):
+    def test_component_admin(self):
         from common.admin import BaseAdmin
         from dfndb.admin import ComponentAdmin
         from dfndb.models import Component

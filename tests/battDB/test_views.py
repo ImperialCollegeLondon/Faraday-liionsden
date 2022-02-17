@@ -37,7 +37,7 @@ class CreateDeviceSpecificationTest(TestCase):
         )
         self.assertContains(
             response,
-            '<select name="deviceparameter_set-0-material" class="select form-select" id="id_deviceparameter_set-0-material">',
+            '<select name="deviceparameter_set-0-component" class="select form-select" id="id_deviceparameter_set-0-component">',
         )
 
     def test_create_update_delete_devices(self):

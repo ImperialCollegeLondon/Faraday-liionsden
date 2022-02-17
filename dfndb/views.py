@@ -32,19 +32,19 @@ class NewCompoundView(PermissionRequiredMixin, NewDataView):
 
 
 class NewComponentView(PermissionRequiredMixin, NewDataViewInline):
-    permission_required = "dfndb.add_material"
+    permission_required = "dfndb.add_component"
     template_name = "create_edit_generic.html"
     form_class = NewComponentForm
-    success_message = "New material created successfully."
-    failure_message = "Could not save new material. Invalid information."
+    success_message = "New component created successfully."
+    failure_message = "Could not save new component. Invalid information."
     inline_key = "composition"
     formset = CompositionPartFormSet
 
 
 class DeleteComponentView(PermissionRequiredMixin, MarkAsDeletedView):
     model = Component
-    permission_required = "dfndb.change_material"
-    success_url = "/dfndb/materials/"
+    permission_required = "dfndb.change_component"
+    success_url = "/dfndb/components/"
     template_name = "delete_generic.html"
     success_message = "Component deleted successfully."
 
@@ -64,26 +64,26 @@ class ComponentTableView(
 ):
     model = Component
     table_class = ComponentTable
-    template_name = "materials_table.html"
+    template_name = "components_table.html"
     filterset_class = ComponentFilter
     export_formats = ["csv", "json"]
-    permission_required = "dfndb.view_material"
+    permission_required = "dfndb.view_component"
 
 
 class ComponentView(PermissionRequiredMixin, DetailView):
     model = Component
-    template_name = "material.html"
-    permission_required = "dfndb.view_material"
+    template_name = "component.html"
+    permission_required = "dfndb.view_component"
 
 
 class UpdateComponentView(PermissionRequiredMixin, UpdateDataInlineView):
     model = Component
-    permission_required = "dfndb.change_material"
+    permission_required = "dfndb.change_component"
     template_name = "create_edit_generic.html"
     form_class = NewComponentForm
-    success_url = "/dfndb/materials/"
+    success_url = "/dfndb/components/"
     sucess_message = "Component updated successfully."
-    failure_message = "Could not update material. Invalid information."
+    failure_message = "Could not update component. Invalid information."
     inline_key = "composition"
     formset = CompositionPartFormSet
 

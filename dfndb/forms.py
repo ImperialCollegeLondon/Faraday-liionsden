@@ -45,7 +45,7 @@ class NewCompoundForm(DataCreateForm):
 
 class NewComponentForm(DataCreateForm):
     """
-    Create a new material.
+    Create a new component.
     """
 
     class Meta:
@@ -65,7 +65,7 @@ class NewComponentForm(DataCreateForm):
                     "Composition",
                     Div(
                         HTML(
-                            "Optionally specify the amount of each compound in this material. Amounts are relative and unitless."
+                            "Optionally specify the amount of each compound in this component. Amounts are relative and unitless."
                         )
                     ),
                     Formset("composition"),
@@ -84,7 +84,7 @@ class NewComponentForm(DataCreateForm):
 
 class CompositionPartForm(ModelForm):
     """
-    For adding compounds to materials.
+    For adding compounds to components.
     """
 
     class meta:

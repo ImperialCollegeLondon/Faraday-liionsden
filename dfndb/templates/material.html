@@ -95,10 +95,10 @@
   </div>
 
   {% get_obj_perms request.user for object as "object_perms" %}
-  {% if "change_material" in object_perms %}
+  {% if "change_component" in object_perms %}
 </div>
-<a href="/dfndb/materials/edit/{{ object.pk }}" class="btn btn-warning" , role="button"> Edit entry</a>
-<a href="/dfndb/materials/delete/{{ object.pk }}" class="btn btn-danger" , role="button"> Delete entry</a>
+<a href="/dfndb/components/edit/{{ object.pk }}" class="btn btn-warning" , role="button"> Edit entry</a>
+<a href="/dfndb/components/delete/{{ object.pk }}" class="btn btn-danger" , role="button"> Delete entry</a>
 </div>
 {% endif %}
 

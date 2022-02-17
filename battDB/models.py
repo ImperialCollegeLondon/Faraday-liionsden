@@ -87,7 +87,7 @@ class DeviceParameter(cm.HasName):
 
     spec = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE)
     parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
-    material = models.ForeignKey(
+    component = models.ForeignKey(
         dfn.Component, on_delete=models.CASCADE, blank=True, null=True
     )
     value = models.JSONField(blank=True, null=True)
@@ -105,7 +105,7 @@ class DeviceParameter(cm.HasName):
         return str(self.parameter)
 
     class Meta:
-        unique_together = [("spec", "parameter", "material"), ("spec", "name")]
+        unique_together = [("spec", "parameter", "component"), ("spec", "name")]
 
 
 class Batch(cm.BaseModelNoName, cm.HasMPTT):

@@ -18,10 +18,10 @@ compound = Recipe(Compound)
 
 parameter = Recipe(Parameter, user_owner=foreign_key(user))
 
-material = Recipe(Component, user_owner=foreign_key(user))
+component = Recipe(Component, user_owner=foreign_key(user))
 
 composition_part = Recipe(
-    CompositionPart, material=foreign_key(material), compound=foreign_key(compound)
+    CompositionPart, component=foreign_key(component), compound=foreign_key(compound)
 )
 
 method = Recipe(Method, user_owner=foreign_key(user))
