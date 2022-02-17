@@ -345,9 +345,7 @@ class DeviceSpecificationViewTest(TestCase):
         response = self.client.get(
             reverse("battDB:Device", kwargs={"pk": self.device.id})
         )
-        self.assertContains(
-            response, '<td style="text-align:center" ><h4> test cell </h4></td>'
-        )
+        self.assertContains(response, "<h4> test cell </h4>")
 
 
 class EquipmentViewTest(TestCase):
