@@ -6,7 +6,7 @@
 {% block content %}
 
 <div class="container py-2">
-    <h1> Materials </h1>
+    <h1> Components </h1>
     Search for existing materials in the database below:
 </div>
 
@@ -44,7 +44,7 @@
     <a href="{% export_url format %}" class="btn btn-primary" , role="button"> download {{ format }}</a>
     {% endfor %}
     {% if perms.dfndb.can_add_material %}
-    <a href="{% url 'dfndb:New Material' %}" class="btn btn-success bi bi-plus" , role="button" style="float: right;">
+    <a href="{% url 'dfndb:New Component' %}" class="btn btn-success bi bi-plus" , role="button" style="float: right;">
         Add
         another</a>
     {% endif %}

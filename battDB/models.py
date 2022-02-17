@@ -88,7 +88,7 @@ class DeviceParameter(cm.HasName):
     spec = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE)
     parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
     material = models.ForeignKey(
-        dfn.Material, on_delete=models.CASCADE, blank=True, null=True
+        dfn.Component, on_delete=models.CASCADE, blank=True, null=True
     )
     value = models.JSONField(blank=True, null=True)
     inherit_to_children = models.BooleanField(default=False)

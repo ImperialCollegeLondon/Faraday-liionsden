@@ -31,7 +31,7 @@ class Compound(models.Model):
         )
 
 
-class Material(cm.BaseModel):
+class Component(cm.BaseModel):
     """A material used as part of an electrochemical cell specification, e.g. NMC622.
 
     Make use of the 'notes' field for additional explanation
@@ -58,7 +58,7 @@ class Material(cm.BaseModel):
         return self.name or ""
 
     def get_absolute_url(self):
-        return reverse("dfndb:Material", kwargs={"pk": self.pk})
+        return reverse("dfndb:Component", kwargs={"pk": self.pk})
 
 
 class CompositionPart(models.Model):
@@ -67,7 +67,7 @@ class CompositionPart(models.Model):
     compound = models.ForeignKey(
         Compound, on_delete=models.CASCADE, related_name="components"
     )
-    material = models.ForeignKey(Material, on_delete=models.CASCADE)
+    material = models.ForeignKey(Component, on_delete=models.CASCADE)
     amount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(100)])
 
     def get_percentage(self):
@@ -204,7 +204,7 @@ class DataParameter(models.Model):
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
     type = models.PositiveSmallIntegerField(choices=PARAM_TYPE, default=PARAM_TYPE_NONE)
     material = models.ForeignKey(
-        Material, on_delete=models.CASCADE, blank=True, null=True
+        Component, on_delete=models.CASCADE, blank=True, null=True
     )
     value = models.JSONField(blank=True, null=True)
 

@@ -8,7 +8,7 @@ from model_bakery import baker
 request = MagicMock()
 
 
-class TestMaterialCompositionInline(TestCase):
+class TestComponentCompositionInline(TestCase):
     def setUp(self):
         self.site = AdminSite()
 

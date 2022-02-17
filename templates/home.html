@@ -57,11 +57,11 @@
                 {% endif %}
             </tr>
             <tr>
-                <td><a href="{% url 'dfndb:Materials' %}">Material</a></td>
+                <td><a href="{% url 'dfndb:Components' %}">Component</a></td>
                 <td>Cell components - cathode, anode, electrolytes, separators. Details their composition in terms of
                     percentage make up of compounds.</td>
                 {% if perms.dfndb.can_add_material %}
-                <td><a href="{% url 'dfndb:New Material' %}" class="btn btn-success bi bi-plus" , role="button"></a>
+                <td><a href="{% url 'dfndb:New Component' %}" class="btn btn-success bi bi-plus" , role="button"></a>
                 </td>
                 {% endif %}
             </tr>

@@ -29,7 +29,7 @@ class TestCompound(TestCase):
             )
 
 
-class TestMaterial(TestCase):
+class TestComponent(TestCase):
     def setUp(self):
         comp = baker.make_recipe(
             "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2"
@@ -76,10 +76,10 @@ class TestCompositionPart(TestCase):
         baker.make_recipe("tests.dfndb.composition_part", material=mat, amount=2)
 
     def test_composition_part_creation(self):
-        from dfndb.models import Compound, Material
+        from dfndb.models import Component, Compound
 
         comp = Compound.objects.get(name="Carbon Dioxide")
-        mat = Material.objects.get()
+        mat = Component.objects.get()
         self.assertEqual(self.model.compound, comp)
         self.assertEqual(self.model.material, mat)
         self.assertEqual(self.model.amount, self.amount[comp.formula])
