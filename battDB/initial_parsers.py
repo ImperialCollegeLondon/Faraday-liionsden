@@ -35,7 +35,7 @@ def populate_parsers(apps, schema_editor):
             name=name, file_format=file_format, user_owner=user, status="Public"
         )
 
-        engine = get_parsing_engine(file_format)
+        engine = get_parsing_engine(name)
 
         for i, (col_name, param_info) in enumerate(engine.mandatory_columns.items()):
             unit = QuantityUnit.objects.get(

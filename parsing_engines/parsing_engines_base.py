@@ -179,7 +179,12 @@ def get_parsing_engine(file_format: str) -> Type[ParsingEngineBase]:
     """
     parser = KNOWN_PARSING_ENGINES.get(file_format, None)
     if parser is None:
-        warn(f"No parser available for file format {file_format}!", RuntimeWarning)
+        available = list(KNOWN_PARSING_ENGINES.keys())
+        warn(
+            f"No parser available for file format {file_format}!"
+            f"Available parsers are: {available}",
+            RuntimeWarning,
+        )
         parser = DummyParsingEngine
     return parser
 
