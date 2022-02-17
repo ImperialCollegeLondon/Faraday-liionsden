@@ -20,7 +20,7 @@ class ParsingEngineBase(abc.ABC):
     name: str = ""
     description: str = ""
     valid: List[Tuple[str, str]] = []
-    mandatory_columns: Dict[str, Tuple[str, str]] = {}
+    mandatory_columns: Dict[str, Dict[str, Union[str, Tuple[str, str]]]] = {}
     column_name_mapping: Dict[str, str] = dict()
 
     def __init_subclass__(cls: Type[ParsingEngineBase]):

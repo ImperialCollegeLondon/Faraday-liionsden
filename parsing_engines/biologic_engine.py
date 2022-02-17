@@ -21,7 +21,16 @@ class BiologicParsingEngine(ParsingEngineBase):
         ("text/plain", ".tsv"),
         ("text/plain", ".txt"),
     ]
-    mandatory_columns: Set[str] = {"Time", "Rec#", "Ns"}
+    mandatory_columns: Dict[str, Dict[str, Union[str, Tuple[str, str]]]] = {
+        "time/s": dict(symbol="t", unit=("Time", "s")),
+        "Ecell/V": dict(symbol="V", unit=("Voltage", "V")),
+        "I/mA": dict(symbol="I", unit=("Current", "mA")),
+        "(Q-Qo)/mA.h": dict(symbol="Q-Q_0", unit=("Charge", "mA·h")),
+        "Temperature/ｰC": dict(symbol="T", unit=("Temperature", "C")),
+        "Q discharge/mA.h": dict(symbol="Q discharge", unit=("Charge", "mA·h")),
+        "Ns changes": dict(symbol="Ns changes", unit=("Unitless", "1")),
+        "cycle number": dict(symbol="Cyl", unit=("Unitless", "1")),
+    }
     column_name_mapping = COLUMN_NAME_MAPPING
 
     # Assumed to be this encoding, but it might be different...
