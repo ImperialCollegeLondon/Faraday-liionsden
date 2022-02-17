@@ -30,7 +30,17 @@ class MaccorParsingEngine(ParsingEngineBase):
         ("application/vnd.ms-excel", ".xls"),
         ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"),
     ]
-    mandatory_columns: Set[str] = {"Cyc#", "Step"}
+    mandatory_columns: Dict[str, Dict[str, Union[str, Tuple[str, str]]]] = {
+        "Rec#": dict(symbol="Rec", unit=("Unitless", "1")),
+        "Cyc#": dict(symbol="Cyl", unit=("Unitless", "1")),
+        "Step": dict(symbol="Ns changes", unit=("Unitless", "1")),
+        "TestTime": dict(symbol="t", unit=("Time", "s")),
+        "StepTime": dict(symbol="ts", unit=("Time", "s")),
+        "Amp-hr": dict(symbol="Q-Q_0", unit=("Charge", "A·h")),
+        "Amps": dict(symbol="I", unit=("Current", "A")),
+        "Volts": dict(symbol="V", unit=("Voltage", "V")),
+        "Temp1": dict(symbol="T", unit=("Temperature", "C")),
+    }
 
     @classmethod
     def factory(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
