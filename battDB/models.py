@@ -611,6 +611,13 @@ class ExperimentDevice(models.Model):
 
 
 class DataColumn(models.Model):
+    """A way of adding columns to datafiles
+
+    TODO: This is not implemented properly yet (see below) so is not made available
+    in any view or in the admin site.
+
+    """
+
     data_file = models.ForeignKey(ExperimentDataFile, on_delete=models.CASCADE)
     column_name = models.CharField(max_length=40, default="Ns")
 
@@ -686,8 +693,12 @@ class DataRange(
 
     Each data file contains numerous ranges e.g. charge & discharge cycles. Their data
     might overlap. <br>
+    Currently this model is used in ExperimentDataFile.create_ranges but creating just one
+    range for the whole file according to parer_engines_base.parse_data_file
+    range_config, which is fixed.
     TODO: Write (or find) code to segment data into ranges. <br>
-    TODO: Convert this into a JSON Schema within ExperimentData - see Git issue #23 <br>
+    TODO: Convert this into a JSON Schema within ExperimentData. <br>
+    TODO: Re-implement inlineform in admin for this model.
     """
 
     dataFile = models.ForeignKey(
