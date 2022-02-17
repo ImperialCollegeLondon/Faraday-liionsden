@@ -33,7 +33,7 @@ PARAMETERS = [
 
 
 def populate_parameters(apps, schema_editor):
-    """Adds parameters (aka sygnal types) to the DB
+    """Adds parameters (aka signal types) to the DB
 
     Args:
         apps (_type_): app registry with the current status of the apps in the migration
