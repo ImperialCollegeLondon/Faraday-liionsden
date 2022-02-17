@@ -99,6 +99,11 @@ def populate_si_quantities(apps, schema_editor):
         schema_editor (_type_): Not used.
     """
     for quantity in SI_QUANTITY_UNITS:
+        if QuantityUnit.objects.filter(
+            **{f"{k}__exact": v for k, v in quantity}
+        ).exists():
+            continue
+
         QuantityUnit.objects.create(**quantity)
 
 
@@ -113,4 +118,9 @@ def populate_not_si_quantities(apps, schema_editor):
         related_unit = QuantityUnit.objects.get(
             quantityName__exact=quantity["quantityName"], is_SI_unit__exact=True
         )
+        if QuantityUnit.objects.filter(
+            **{f"{k}__exact": v for k, v in quantity}, related_unit=related_unit
+        ).exists():
+            continue
+
         QuantityUnit.objects.create(**quantity, related_unit=related_unit)
