@@ -147,6 +147,10 @@ admin.site.register(
 
 
 class DeviceDataInline(common.admin.TabularInline):
+    """
+    TODO: This is not used until the DataColumn model is properly implemented.
+    """
+
     model = DataColumn
     extra = 0
 
@@ -198,7 +202,7 @@ class DataAdmin(BaseAdmin):
 
     inlines = [
         DataFileInline,
-        DeviceDataInline,
+        # DeviceDataInline,  # TODO: Removed until DeviceColumn properly implemented
         DataRangeInline,
     ]
     list_display = [

@@ -287,7 +287,7 @@ class TestDataAdmin(TestCase):
             self.ma.get_inlines(request, obj),
             [
                 DataFileInline,
-                DeviceDataInline,
+                # DeviceDataInline, TODO: skipping until DeviceColumn properly implemented
                 DataRangeInline,
             ],
         )
