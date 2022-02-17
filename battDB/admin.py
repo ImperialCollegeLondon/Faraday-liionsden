@@ -163,6 +163,10 @@ class DataFileInline(admin.StackedInline):
 
 
 class DataRangeInline(common.admin.TabularInline):
+    """
+    TODO: This is not used until the DataRange model is properly implemented.
+    """
+
     model = DataRange
     extra = 0
     exclude = ["attributes"]
@@ -203,7 +207,7 @@ class DataAdmin(BaseAdmin):
     inlines = [
         DataFileInline,
         # DeviceDataInline,  # TODO: Removed until DeviceColumn properly implemented
-        DataRangeInline,
+        # DataRangeInline, # TODO: Removed until DataRange properly implemented
     ]
     list_display = [
         "__str__",
