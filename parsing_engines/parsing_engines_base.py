@@ -54,7 +54,6 @@ class ParsingEngineBase(abc.ABC):
         self.file_metadata = file_metadata
 
         self._drop_unnamed_columns()
-        self._standardise_columns()
         self._create_rec_no()
 
     def _create_rec_no(self) -> None:
@@ -64,12 +63,8 @@ class ParsingEngineBase(abc.ABC):
 
     def _drop_unnamed_columns(self) -> None:
         """Drops columns of the internal parser dataframe that have no name."""
-        cols = [c for c in self.data.columns if c != "^Unnamed"]
+        cols = [c for c in self.data.columns if "Unnamed" not in c]
         self.data = self.data.loc[:, cols]
-
-    def _standardise_columns(self) -> None:
-        """Standardise column names using a mapping of standard names."""
-        self.data = self.data.rename(columns=self.column_name_mapping)
 
     def get_column_info(self) -> Dict:
         """Gathers some metadata for each column.
@@ -133,11 +128,11 @@ class ParsingEngineBase(abc.ABC):
             Generator[Dict, None, None]: A generator that produces each row of the data
                 as a list.
         """
-        cols = (
-            [col_mapping.get(c, c) for c in columns]
-            if col_mapping is not None
-            else columns
+        col_mapping = (
+            col_mapping if col_mapping is not None else self.column_name_mapping
         )
+
+        cols = [col_mapping.get(c, c) for c in columns] if col_mapping else columns
 
         for row in self.data[cols].itertuples():
             yield list(row)[1:]
@@ -229,8 +224,8 @@ def parse_data_file(
 
     Args:
         file_path: Path to the file to parse.
-        file_format: String indicating the format of the file. Should match one of the
-            known parsers.
+        file_format: String indicating the format of the file. Should match the name of
+        one of the parsers.
         columns: Columns that will be retrieved, if possible.
         col_mapping: Mapping of column names to match the standard 'columns' above.
 

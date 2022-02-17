@@ -13,7 +13,7 @@ from .parsing_engines_base import ParsingEngineBase
 class BiologicParsingEngine(ParsingEngineBase):
     """ParserBase for the csv and tsv output of the BioLogic cycler."""
 
-    name = "biologic"
+    name = "Biologic"
     description = "Biologic CSV/TSV/MPT"
     valid: List[Tuple[str, str]] = [
         ("text/plain", ".csv"),
@@ -80,7 +80,7 @@ def get_header_size(file_path: Union[Path, str], encoding: str) -> int:
         Header size as an int
     """
     with open(file_path, encoding=encoding) as datafile:
-        if next(datafile) == "BT-Lab ASCII FILE\n":
+        if "ASCII FILE" in next(datafile):
             return int(re.findall(r"[0-9]+", next(datafile))[0]) - 1
         return 0
 
@@ -114,8 +114,8 @@ def load_biologic_data(
     except pd.errors.ParserError:
         try:
             data = pd.read_csv(file_path, delimiter="\t", **kwargs)
-        except pd.errors.ParserError:
-            raise UnsupportedFileTypeError()
+        except pd.errors.ParserError as err:
+            raise UnsupportedFileTypeError(err)
 
     if len(data.columns) == 1:
         data = pd.read_csv(file_path, delimiter="\t", **kwargs)

@@ -24,7 +24,7 @@ from .parsing_engines_base import ParsingEngineBase
 
 class MaccorParsingEngine(ParsingEngineBase):
 
-    name = "maccor"
+    name = "Maccor"
     description = "Maccor XLS/XLSX"
     valid: List[Tuple[str, str]] = [
         ("application/vnd.ms-excel", ".xls"),

@@ -36,7 +36,11 @@ def populate_parsers(apps, schema_editor):
 
         print(f"Creating parser for '{name}' engine.")
         parser = Parser.objects.create(
-            name=name, file_format=file_format, user_owner=user, status="Public"
+            name=name,
+            file_format=file_format,
+            notes=file_format,
+            user_owner=user,
+            status="Public",
         )
 
         engine = get_parsing_engine(name)
