@@ -69,7 +69,9 @@ def populate_parameters(apps, schema_editor):
         )
         quant["user_owner"] = user
 
-        if Parameter.objects.filter(**{f"{k}__exact": v for k, v in quant}).exists():
+        if Parameter.objects.filter(
+            **{f"{k}__exact": v for k, v in quant.items()}
+        ).exists():
             continue
 
         Parameter.objects.create(**quant)

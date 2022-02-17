@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("battDB", "0018_alter_devicespecification_config"),
-        ("dfndb", "0007_initial_parameters"),
+        ("dfndb", "0009_add_new_parameters"),
     ]
 
     operations = [migrations.RunPython(populate_parsers)]

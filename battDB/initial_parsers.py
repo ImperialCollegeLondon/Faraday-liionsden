@@ -3,6 +3,9 @@
 These functions are run as part of a migration and pre-populate the database with
 some default parsers.
 """
+from logging import getLogger
+
+logger = getLogger()
 
 
 def populate_parsers(apps, schema_editor):
@@ -31,6 +34,7 @@ def populate_parsers(apps, schema_editor):
         ).exists():
             continue
 
+        print(f"Creating parser for '{name}' engine.")
         parser = Parser.objects.create(
             name=name, file_format=file_format, user_owner=user, status="Public"
         )
@@ -38,14 +42,17 @@ def populate_parsers(apps, schema_editor):
         engine = get_parsing_engine(name)
 
         for i, (col_name, param_info) in enumerate(engine.mandatory_columns.items()):
+
             unit = QuantityUnit.objects.get(
                 quantityName__exact=param_info["unit"][0],
                 unitSymbol__exact=param_info["unit"][1],
             )
+
             param = Parameter.objects.get(
                 symbol__exact=param_info["symbol"],
                 unit__exact=unit,
             )
+
             SignalType.objects.create(
                 parameter=param, col_name=col_name, order=i + 1, parser=parser
             )
