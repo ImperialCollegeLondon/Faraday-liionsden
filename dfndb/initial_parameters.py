@@ -40,10 +40,13 @@ def populate_parameters(apps, schema_editor):
             process.
         schema_editor (_type_): Not used.
     """
+    from liionsden.settings import settings
+
     QuantityUnit = apps.get_model("dfndb", "QuantityUnit")
     Parameter = apps.get_model("dfndb", "Parameter")
+    User = apps.get_model(settings.AUTH_USER_MODEL)
 
-    user = get_anonymous_user()
+    user = User.objects.get_or_create(username="AnonymousUser")[0]
 
     for quantity in PARAMETERS:
         quant = quantity.copy()
