@@ -1,10 +1,8 @@
-"""Functions to populate the databse with an initial set of quantity units.
+"""Functions to populate the databse with an initial set of parameters.
 
 These functions are run as part of a migration and pre-populate the database with
-some default quantities and units.
+some default parameters.
 """
-from guardian.utils import get_anonymous_user
-
 PARAMETERS = [
     dict(name="Time", status="Public", symbol="t", unit=("Time", "s")),
     dict(name="Voltage", status="Public", symbol="V", unit=("Voltage", "V")),
