@@ -3,7 +3,7 @@ from __future__ import annotations
 import abc
 import functools
 from pathlib import Path
-from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Type, Union
+from typing import Any, Dict, Generator, List, Optional, Tuple, Type, Union
 from warnings import warn
 
 import pandas as pd
@@ -20,7 +20,7 @@ class ParsingEngineBase(abc.ABC):
     name: str = ""
     description: str = ""
     valid: List[Tuple[str, str]] = []
-    mandatory_columns: Set[str] = set()
+    mandatory_columns: Dict[str, Tuple[str, str]] = {}
     column_name_mapping: Dict[str, str] = dict()
 
     def __init_subclass__(cls: Type[ParsingEngineBase]):
@@ -108,7 +108,7 @@ class ParsingEngineBase(abc.ABC):
             "warnings": [],
         }
 
-        if not self.mandatory_columns.issubset(self.data.columns):
+        if not set(self.mandatory_columns.keys()).issubset(self.data.columns):
             metadata["warnings"].append(
                 "Not all mandatory columns are present in the raw datafile"
             )
