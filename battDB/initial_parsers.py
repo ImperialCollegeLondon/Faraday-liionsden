@@ -5,7 +5,7 @@ some default parsers.
 """
 
 
-def populate_parameters(apps, schema_editor):
+def populate_parsers(apps, schema_editor):
     """Adds parsers to the DB
 
     Args:
@@ -26,6 +26,11 @@ def populate_parameters(apps, schema_editor):
     engines = [engine for engine in available_parsing_engines()]
 
     for name, file_format in engines:
+        if Parser.objects.filter(
+            name__exact=name, file_format__exact=file_format, user_owner__exact=user
+        ).exists():
+            continue
+
         parser = Parser.objects.create(
             name=name, file_format=file_format, user_owner=user, status="Public"
         )
