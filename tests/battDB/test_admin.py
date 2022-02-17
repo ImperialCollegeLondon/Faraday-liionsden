@@ -287,8 +287,8 @@ class TestDataAdmin(TestCase):
             self.ma.get_inlines(request, obj),
             [
                 DataFileInline,
-                # DeviceDataInline, TODO: skipping until DeviceColumn properly implemented
-                DataRangeInline,
+                # DeviceDataInline, TODO: skipping until DataColumn properly implemented
+                # DataRangeInline, TODO: skipping until DataRange properly implemented
             ],
         )
         self.assertIn("experiment", self.ma.get_list_filter(request))
