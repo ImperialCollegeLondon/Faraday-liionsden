@@ -1,14 +1,14 @@
 from django.urls import path
 
 from .views import (
+    ComponentTableView,
+    ComponentView,
     CompoundTableView,
-    DeleteMaterialView,
-    MaterialTableView,
-    MaterialView,
+    DeleteComponentView,
+    NewComponentView,
     NewCompoundView,
-    NewMaterialView,
+    UpdateComponentView,
     UpdateCompoundView,
-    UpdateMaterialView,
 )
 
 app_name = "dfndb"
@@ -19,15 +19,17 @@ urlpatterns = [
     path(
         "compounds/edit/<int:pk>/", UpdateCompoundView.as_view(), name="Update Compound"
     ),
-    path("materials/", MaterialTableView.as_view(), name="Materials"),
-    path("materials/<int:pk>/", MaterialView.as_view(), name="Material"),
-    path("new_material/", NewMaterialView.as_view(), name="New Material"),
+    path("components/", ComponentTableView.as_view(), name="Components"),
+    path("components/<int:pk>/", ComponentView.as_view(), name="Component"),
+    path("new_component/", NewComponentView.as_view(), name="New Component"),
     path(
-        "materials/edit/<int:pk>/", UpdateMaterialView.as_view(), name="Update Material"
+        "components/edit/<int:pk>/",
+        UpdateComponentView.as_view(),
+        name="Update Component",
     ),
     path(
-        "materials/delete/<int:pk>/",
-        DeleteMaterialView.as_view(),
-        name="Delete Material",
+        "components/delete/<int:pk>/",
+        DeleteComponentView.as_view(),
+        name="Delete Component",
     ),
 ]

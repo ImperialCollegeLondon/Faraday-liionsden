@@ -1,6 +1,6 @@
 import django_tables2 as tables
 
-from .models import Compound, Material
+from .models import Component, Compound
 
 
 class CompoundTable(tables.Table):
@@ -12,11 +12,11 @@ class CompoundTable(tables.Table):
         fields = ("id", "name", "formula", "mass")
 
 
-class MaterialTable(tables.Table):
+class ComponentTable(tables.Table):
     id = tables.Column(linkify=True)
 
     class Meta:
-        model = Material
+        model = Component
         template_name = "django_tables2/bootstrap4.html"
         fields = ("id", "name", "composition", "type")
 

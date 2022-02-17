@@ -6,7 +6,7 @@ from common.admin import BaseAdmin
 from . import models as cmodels
 
 
-class MaterialCompositionInline(admin.TabularInline):
+class ComponentCompositionInline(admin.TabularInline):
     model = cmodels.CompositionPart
     readonly_fields = ["percentage"]
     extra = 0
@@ -17,10 +17,10 @@ class DataParameterInline(admin.TabularInline):
     extra = 1
 
 
-class MaterialAdmin(BaseAdmin):
+class ComponentAdmin(BaseAdmin):
     list_display = BaseAdmin.list_display + ["type", "polymer"]
     list_filter = BaseAdmin.list_filter + ["type"]
-    inlines = (MaterialCompositionInline,)
+    inlines = (ComponentCompositionInline,)
 
 
 class MethodAdmin(BaseAdmin, DynamicArrayMixin):
@@ -43,7 +43,7 @@ class CompoundAdmin(admin.ModelAdmin):
 
 admin.site.register(cmodels.QuantityUnit, UnitAdmin)
 admin.site.register(cmodels.Data, DataAdmin)
-admin.site.register(cmodels.Material, MaterialAdmin)
+admin.site.register(cmodels.Component, ComponentAdmin)
 admin.site.register(cmodels.Parameter, BaseAdmin)
 admin.site.register(cmodels.Method, MethodAdmin)
 admin.site.register(cmodels.Compound, CompoundAdmin)

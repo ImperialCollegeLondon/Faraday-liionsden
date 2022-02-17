@@ -37,7 +37,7 @@ class CreateDeviceSpecificationTest(TestCase):
         )
         self.assertContains(
             response,
-            '<select name="deviceparameter_set-0-material" class="select form-select" id="id_deviceparameter_set-0-material">',
+            '<select name="deviceparameter_set-0-component" class="select form-select" id="id_deviceparameter_set-0-component">',
         )
 
     def test_create_update_delete_devices(self):
@@ -345,9 +345,7 @@ class DeviceSpecificationViewTest(TestCase):
         response = self.client.get(
             reverse("battDB:Device", kwargs={"pk": self.device.id})
         )
-        self.assertContains(
-            response, '<td style="text-align:center" ><h4> test cell </h4></td>'
-        )
+        self.assertContains(response, "<h4> test cell </h4>")
 
 
 class EquipmentViewTest(TestCase):
