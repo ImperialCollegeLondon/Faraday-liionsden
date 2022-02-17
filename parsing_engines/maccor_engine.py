@@ -37,6 +37,7 @@ class MaccorParsingEngine(ParsingEngineBase):
         "TestTime": dict(symbol="t", unit=("Time", "s")),
         "StepTime": dict(symbol="ts", unit=("Time", "s")),
         "Amp-hr": dict(symbol="Q-Q_0", unit=("Charge", "A·h")),
+        "Watt-hr": dict(symbol="E", unit=("Energy", "W·h")),
         "Amps": dict(symbol="I", unit=("Current", "A")),
         "Volts": dict(symbol="V", unit=("Voltage", "V")),
         "Temp1": dict(symbol="T", unit=("Temperature", "C")),
