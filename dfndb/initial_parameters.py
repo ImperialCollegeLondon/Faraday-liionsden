@@ -53,4 +53,8 @@ def populate_parameters(apps, schema_editor):
             unitSymbol__exact=quantity["unit"][1],
         )
         quant["user_owner"] = user
+
+        if Parameter.objects.filter(**{f"{k}__exact": v for k, v in quant}).exists():
+            continue
+
         Parameter.objects.create(**quant)
