@@ -6,7 +6,6 @@ from unittest.mock import patch
 
 class TestBiologicParsingEngine(TestCase):
     @patch("parsing_engines.BiologicParsingEngine._drop_unnamed_columns")
-    @patch("parsing_engines.BiologicParsingEngine._standardise_columns")
     @patch("parsing_engines.BiologicParsingEngine._create_rec_no")
     @patch("parsing_engines.biologic_engine.get_header_size")
     @patch("parsing_engines.biologic_engine.load_biologic_data")

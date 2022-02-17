@@ -63,19 +63,6 @@ class TestParsingEngineBase(TestCase):
         ParsingEngineBase._drop_unnamed_columns(engine)
         self.assertNotIn("^Unnamed", engine.data.columns)
 
-    def test_standardise_columns(self):
-        import pandas as pd
-
-        from parsing_engines.parsing_engines_base import ParsingEngineBase
-
-        engine = SName(
-            data=pd.DataFrame({"Voltage": [4, 5, 6]}),
-            column_name_mapping={"Voltage": "Volt / V"},
-        )
-        self.assertNotIn("Volt / V", engine.data.columns)
-        ParsingEngineBase._standardise_columns(engine)
-        self.assertIn("Volt / V", engine.data.columns)
-
     def test_get_column_info(self):
         import pandas as pd
 
@@ -112,7 +99,7 @@ class TestParsingEngineBase(TestCase):
             file_path=filename,
             file_metadata={"temperature": 42},
             name="test",
-            mandatory_columns={"Voltage", "Current"},
+            mandatory_columns={"Voltage": "V", "Current": "I"},
         )
         expected = {
             "dataset_name": filename.stem,
@@ -155,9 +142,6 @@ class TestParsingEngineBase(TestCase):
 class TestDummyParsingEngine(TestCase):
     @patch(
         "parsing_engines.parsing_engines_base.DummyParsingEngine._drop_unnamed_columns"
-    )
-    @patch(
-        "parsing_engines.parsing_engines_base.DummyParsingEngine._standardise_columns"
     )
     @patch("parsing_engines.parsing_engines_base.DummyParsingEngine._create_rec_no")
     def test_factory(self, mock_create, mock_standard, mock_drop):
