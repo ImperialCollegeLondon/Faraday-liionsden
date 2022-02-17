@@ -3,8 +3,6 @@
 These functions are run as part of a migration and pre-populate the database with
 some default quantities and units.
 """
-from django.contrib.auth.management import create_permissions
-
 from .models import QuantityUnit
 
 SI_QUANTITY_UNITS = [
