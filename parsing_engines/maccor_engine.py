@@ -222,7 +222,7 @@ def get_metadata_value(
 
     if hasattr(key, "__iter__") and "Date" in key:
         value = (
-            xlrd.xldate.xldate_as_datetime(row[idx + 1].value, datemode)
+            str(xlrd.xldate.xldate_as_datetime(row[idx + 1].value, datemode))
             if datemode is not None
             else row[idx + 1].value
         )
