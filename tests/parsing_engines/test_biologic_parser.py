@@ -92,12 +92,9 @@ class TestHeaderToYaml(TestCase):
             header = list(
                 filter(
                     len,
-                    (f.readline().strip("\n") for _ in range(self.parser.skip_rows)),
+                    (f.readline().rstrip() for _ in range(self.parser.skip_rows)),
                 )
             )
         meta = header_to_yaml(header)
 
         self.assertLess(len(meta), len(header))
-        yaml_replacements.pop("\t")
-        for v in yaml_replacements.values():
-            self.assertIn(v.split(":")[0].strip(), meta)
