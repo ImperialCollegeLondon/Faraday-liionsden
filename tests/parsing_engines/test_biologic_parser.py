@@ -10,9 +10,7 @@ class TestBiologicParsingEngine(TestCase):
     @patch("parsing_engines.biologic_engine.get_header_size")
     @patch("parsing_engines.biologic_engine.load_biologic_data")
     @patch("parsing_engines.biologic_engine.get_file_header")
-    def test_factory(
-        self, mock_head, mock_data, mock_size, mock_create, mock_standard, mock_drop
-    ):
+    def test_factory(self, mock_head, mock_data, mock_size, mock_create, mock_drop):
         import pandas as pd
 
         from parsing_engines import BiologicParsingEngine as BP
@@ -25,13 +23,12 @@ class TestBiologicParsingEngine(TestCase):
 
         parser = BP.factory(file_path=file_path)
         mock_drop.assert_called_once()
-        mock_standard.assert_called_once()
         mock_create.assert_called_once()
         mock_size.assert_called_once_with(file_path, BP.encoding)
         mock_data.assert_called_once_with(file_path, 0, BP.encoding)
         mock_head.assert_called_once_with(file_path, 0, BP.encoding)
         self.assertEqual(len(parser.data), 0)
-        self.assertEqual(parser.name, "biologic")
+        self.assertEqual(parser.name, "Biologic")
         self.assertEqual(parser.skip_rows, 0)
         self.assertEqual(parser.file_path, file_path)
         self.assertEqual(parser.file_metadata, {"answer": 42})

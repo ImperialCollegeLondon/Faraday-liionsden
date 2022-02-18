@@ -21,7 +21,6 @@ class TestMaccorXLSParser(TestCase):
         mock_data,
         mock_size,
         mock_create,
-        mock_standard,
         mock_drop,
     ):
         import pandas as pd
@@ -48,13 +47,12 @@ class TestMaccorXLSParser(TestCase):
         mock_xls.assert_called_once()
         mock_xlsx.assert_not_called()
         mock_drop.assert_called_once()
-        mock_standard.assert_called_once()
         mock_create.assert_called_once()
         mock_size.assert_called_once_with(sheet, MP.mandatory_columns)
         mock_data.assert_called_once_with(file_path, skip_rows)
         mock_head.assert_called_once_with(sheet, skip_rows, datemode)
         self.assertEqual(len(parser.data), 0)
-        self.assertEqual(parser.name, "maccor")
+        self.assertEqual(parser.name, "Maccor")
         self.assertEqual(parser.skip_rows, skip_rows)
         self.assertEqual(parser.file_path, file_path)
         self.assertEqual(parser.file_metadata, {"answer": 42})

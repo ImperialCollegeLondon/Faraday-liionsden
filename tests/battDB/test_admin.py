@@ -364,10 +364,9 @@ class TestParserAdmin(TestCase):
         from battDB.admin import ParserAdmin, ParserSignalInline
         from battDB.models import Parser
 
-        baker.make_recipe("tests.battDB.parser")
         ma = ParserAdmin(Parser, self.site)
         self.assertEqual(ma.model, Parser)
         self.assertEqual(
-            ma.get_inlines(request, Parser.objects.get()), [ParserSignalInline]
+            ma.get_inlines(request, Parser.objects.all().first()), [ParserSignalInline]
         )
         self.assertTrue(ma.save_as)

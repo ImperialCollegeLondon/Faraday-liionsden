@@ -144,14 +144,13 @@ class TestDummyParsingEngine(TestCase):
         "parsing_engines.parsing_engines_base.DummyParsingEngine._drop_unnamed_columns"
     )
     @patch("parsing_engines.parsing_engines_base.DummyParsingEngine._create_rec_no")
-    def test_factory(self, mock_create, mock_standard, mock_drop):
+    def test_factory(self, mock_create, mock_drop):
         from pathlib import Path
 
         from parsing_engines.parsing_engines_base import DummyParsingEngine
 
         parser = DummyParsingEngine.factory("")
         mock_drop.assert_called_once()
-        mock_standard.assert_called_once()
         mock_create.assert_called_once()
         self.assertEqual(len(parser.data), 0)
         self.assertEqual(parser.name, "Dummy")
