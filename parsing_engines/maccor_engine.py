@@ -28,6 +28,7 @@ class MaccorParsingEngine(ParsingEngineBase):
     description = "Maccor XLS/XLSX"
     valid: List[Tuple[str, str]] = [
         ("application/vnd.ms-excel", ".xls"),
+        ("application/CDFV2", ".xls"),
         ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"),
     ]
     mandatory_columns: Dict[str, Dict[str, Union[str, Tuple[str, str]]]] = {
@@ -63,7 +64,7 @@ class MaccorParsingEngine(ParsingEngineBase):
         if sheet.ncols < 1 or sheet.nrows < 2:
             raise EmptyFileError()
 
-        skip_rows = get_header_size(sheet, cls.mandatory_columns)
+        skip_rows = get_header_size(sheet, set(cls.mandatory_columns.keys()))
         data = load_maccor_data(file_path, skip_rows)
         file_metadata = get_file_header(sheet, skip_rows, datemode)
         return cls(file_path, skip_rows, data, file_metadata)
