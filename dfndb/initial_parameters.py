@@ -1,19 +1,25 @@
-"""Functions to populate the databse with an initial set of quantity units.
+"""Functions to populate the databse with an initial set of parameters.
 
 These functions are run as part of a migration and pre-populate the database with
-some default quantities and units.
+some default parameters.
 """
-from guardian.utils import get_anonymous_user
-
 PARAMETERS = [
     dict(name="Time", status="Public", symbol="t", unit=("Time", "s")),
+    dict(name="Step time", status="Public", symbol="ts", unit=("Time", "s")),
     dict(name="Voltage", status="Public", symbol="V", unit=("Voltage", "V")),
     dict(name="Current", status="Public", symbol="I", unit=("Current", "mA")),
+    dict(name="Current", status="Public", symbol="I", unit=("Current", "A")),
     dict(
         name="Net charge passed",
         status="Public",
         symbol="Q-Q_0",
         unit=("Charge", "mA·h"),
+    ),
+    dict(
+        name="Net charge passed",
+        status="Public",
+        symbol="Q-Q_0",
+        unit=("Charge", "A·h"),
     ),
     dict(name="Temperature", status="Public", symbol="T", unit=("Temperature", "C")),
     dict(
@@ -23,12 +29,19 @@ PARAMETERS = [
         unit=("Charge", "mA·h"),
     ),
     dict(
+        name="Net energy passed",
+        status="Public",
+        symbol="E",
+        unit=("Energy", "W·h"),
+    ),
+    dict(
         name="New section changes",
         status="Public",
         symbol="Ns changes",
         unit=("Unitless", "1"),
     ),
     dict(name="Cycle number", status="Public", symbol="Cyl", unit=("Unitless", "1")),
+    dict(name="Record number", status="Public", symbol="Rec", unit=("Unitless", "1")),
 ]
 
 
@@ -55,4 +68,10 @@ def populate_parameters(apps, schema_editor):
             unitSymbol__exact=quantity["unit"][1],
         )
         quant["user_owner"] = user
+
+        if Parameter.objects.filter(
+            **{f"{k}__exact": v for k, v in quant.items()}
+        ).exists():
+            continue
+
         Parameter.objects.create(**quant)

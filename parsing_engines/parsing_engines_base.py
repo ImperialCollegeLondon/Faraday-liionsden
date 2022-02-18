@@ -3,7 +3,7 @@ from __future__ import annotations
 import abc
 import functools
 from pathlib import Path
-from typing import Any, Dict, Generator, List, Optional, Set, Tuple, Type, Union
+from typing import Any, Dict, Generator, List, Optional, Tuple, Type, Union
 from warnings import warn
 
 import pandas as pd
@@ -20,7 +20,7 @@ class ParsingEngineBase(abc.ABC):
     name: str = ""
     description: str = ""
     valid: List[Tuple[str, str]] = []
-    mandatory_columns: Set[str] = set()
+    mandatory_columns: Dict[str, Dict[str, Union[str, Tuple[str, str]]]] = {}
     column_name_mapping: Dict[str, str] = dict()
 
     def __init_subclass__(cls: Type[ParsingEngineBase]):
@@ -54,7 +54,6 @@ class ParsingEngineBase(abc.ABC):
         self.file_metadata = file_metadata
 
         self._drop_unnamed_columns()
-        self._standardise_columns()
         self._create_rec_no()
 
     def _create_rec_no(self) -> None:
@@ -64,12 +63,8 @@ class ParsingEngineBase(abc.ABC):
 
     def _drop_unnamed_columns(self) -> None:
         """Drops columns of the internal parser dataframe that have no name."""
-        cols = [c for c in self.data.columns if c != "^Unnamed"]
+        cols = [c for c in self.data.columns if "Unnamed" not in c]
         self.data = self.data.loc[:, cols]
-
-    def _standardise_columns(self) -> None:
-        """Standardise column names using a mapping of standard names."""
-        self.data = self.data.rename(columns=self.column_name_mapping)
 
     def get_column_info(self) -> Dict:
         """Gathers some metadata for each column.
@@ -108,7 +103,7 @@ class ParsingEngineBase(abc.ABC):
             "warnings": [],
         }
 
-        if not self.mandatory_columns.issubset(self.data.columns):
+        if not set(self.mandatory_columns.keys()).issubset(self.data.columns):
             metadata["warnings"].append(
                 "Not all mandatory columns are present in the raw datafile"
             )
@@ -133,11 +128,11 @@ class ParsingEngineBase(abc.ABC):
             Generator[Dict, None, None]: A generator that produces each row of the data
                 as a list.
         """
-        cols = (
-            [col_mapping.get(c, c) for c in columns]
-            if col_mapping is not None
-            else columns
+        col_mapping = (
+            col_mapping if col_mapping is not None else self.column_name_mapping
         )
+
+        cols = [col_mapping.get(c, c) for c in columns] if col_mapping else columns
 
         for row in self.data[cols].itertuples():
             yield list(row)[1:]
@@ -179,7 +174,12 @@ def get_parsing_engine(file_format: str) -> Type[ParsingEngineBase]:
     """
     parser = KNOWN_PARSING_ENGINES.get(file_format, None)
     if parser is None:
-        warn(f"No parser available for file format {file_format}!", RuntimeWarning)
+        available = list(KNOWN_PARSING_ENGINES.keys())
+        warn(
+            f"No parser available for file format {file_format}!"
+            f"Available parsers are: {available}",
+            RuntimeWarning,
+        )
         parser = DummyParsingEngine
     return parser
 
@@ -224,8 +224,8 @@ def parse_data_file(
 
     Args:
         file_path: Path to the file to parse.
-        file_format: String indicating the format of the file. Should match one of the
-            known parsers.
+        file_format: String indicating the format of the file. Should match the name of
+        one of the parsers.
         columns: Columns that will be retrieved, if possible.
         col_mapping: Mapping of column names to match the standard 'columns' above.
 

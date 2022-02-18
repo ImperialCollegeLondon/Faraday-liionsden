@@ -69,6 +69,13 @@ SI_QUANTITY_UNITS = [
         unitSymbol="1",
         is_SI_unit=True,
     ),
+    dict(
+        quantityName="Energy",
+        quantitySymbol="E",
+        unitName="Joules",
+        unitSymbol="J",
+        is_SI_unit=True,
+    ),
 ]
 
 NOT_SI_QUANTITY_UNITS = [
@@ -88,6 +95,22 @@ NOT_SI_QUANTITY_UNITS = [
         is_SI_unit=False,
         related_scale=3.6,
     ),
+    dict(
+        quantityName="Charge",
+        quantitySymbol="Q",
+        unitName="amps hour",
+        unitSymbol="A·h",
+        is_SI_unit=False,
+        related_scale=3600,
+    ),
+    dict(
+        quantityName="Energy",
+        quantitySymbol="E",
+        unitName="Watts hour",
+        unitSymbol="W·h",
+        is_SI_unit=False,
+        related_scale=3600,
+    ),
 ]
 
 
@@ -99,6 +122,11 @@ def populate_si_quantities(apps, schema_editor):
         schema_editor (_type_): Not used.
     """
     for quantity in SI_QUANTITY_UNITS:
+        if QuantityUnit.objects.filter(
+            **{f"{k}__exact": v for k, v in quantity.items()}
+        ).exists():
+            continue
+
         QuantityUnit.objects.create(**quantity)
 
 
@@ -113,4 +141,9 @@ def populate_not_si_quantities(apps, schema_editor):
         related_unit = QuantityUnit.objects.get(
             quantityName__exact=quantity["quantityName"], is_SI_unit__exact=True
         )
+        if QuantityUnit.objects.filter(
+            **{f"{k}__exact": v for k, v in quantity.items()}, related_unit=related_unit
+        ).exists():
+            continue
+
         QuantityUnit.objects.create(**quantity, related_unit=related_unit)
