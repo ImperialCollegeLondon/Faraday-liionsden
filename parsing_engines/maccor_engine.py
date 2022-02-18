@@ -42,7 +42,7 @@ class MaccorParsingEngine(ParsingEngineBase):
         "Watt-hr": dict(symbol="E", unit=("Energy", "W·h")),
         "Amps": dict(symbol="I", unit=("Current", "A")),
         "Volts": dict(symbol="V", unit=("Voltage", "V")),
-        "Temp1": dict(symbol="T", unit=("Temperature", "C")),
+        "Temp 1": dict(symbol="T", unit=("Temperature", "C")),
     }
 
     @classmethod
