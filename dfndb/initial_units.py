@@ -76,6 +76,20 @@ SI_QUANTITY_UNITS = [
         unitSymbol="J",
         is_SI_unit=True,
     ),
+    dict(
+        quantityName="Area",
+        quantitySymbol="A",
+        unitName="Metres squared",
+        unitSymbol="m^2",
+        is_SI_unit=True,
+    ),
+    dict(
+        quantityName="Areal capacity",
+        quantitySymbol="Q_A",
+        unitName="Coulombs per meters squared",
+        unitSymbol="C·m^{-2}",
+        is_SI_unit=True,
+    ),
 ]
 
 NOT_SI_QUANTITY_UNITS = [
@@ -110,6 +124,30 @@ NOT_SI_QUANTITY_UNITS = [
         unitSymbol="W·h",
         is_SI_unit=False,
         related_scale=3600,
+    ),
+    dict(
+        quantityName="Length",
+        quantitySymbol="L",
+        unitName="centimetres",
+        unitSymbol="cm",
+        is_SI_unit=False,
+        related_scale=0.01,
+    ),
+    dict(
+        quantityName="Area",
+        quantitySymbol="A",
+        unitName="centimetres squared",
+        unitSymbol="cm^2",
+        is_SI_unit=False,
+        related_scale=0.0001,
+    ),
+    dict(
+        quantityName="Areal capacity",
+        quantitySymbol="Q_A",
+        unitName="milliamps hour per centimetres squared",
+        unitSymbol="mA·h·cm^{-2}",
+        is_SI_unit=False,
+        related_scale=36000,
     ),
 ]
 
