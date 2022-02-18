@@ -30,6 +30,7 @@ class MaccorParsingEngine(ParsingEngineBase):
         ("application/vnd.ms-excel", ".xls"),
         ("application/CDFV2", ".xls"),
         ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"),
+        ("application/zip", ".xlsx"),
     ]
     mandatory_columns: Dict[str, Dict[str, Union[str, Tuple[str, str]]]] = {
         "Rec#": dict(symbol="Rec", unit=("Unitless", "1")),
@@ -54,15 +55,16 @@ class MaccorParsingEngine(ParsingEngineBase):
         ext = Path(file_path).suffix.lower()
         if ext == ".xls":
             sheet, datemode = factory_xls(file_path)
+            if sheet.ncols < 1 or sheet.nrows < 2:
+                raise EmptyFileError()
         elif ext == ".xlsx":
             sheet, datemode = factory_xlsx(file_path)
+            if sheet.max_column < 1 or sheet.max_row < 2:
+                raise EmptyFileError()
         else:
             raise UnsupportedFileTypeError(
                 f"Unknown file extension for Maccor parsing engine '{ext}'."
             )
-
-        if sheet.ncols < 1 or sheet.nrows < 2:
-            raise EmptyFileError()
 
         skip_rows = get_header_size(sheet, set(cls.mandatory_columns.keys()))
         data = load_maccor_data(file_path, skip_rows)
@@ -221,8 +223,8 @@ def get_metadata_value(
         key = key.value
 
     if hasattr(key, "__iter__") and "Date" in key:
-        value = (
-            str(xlrd.xldate.xldate_as_datetime(row[idx + 1].value, datemode))
+        value = str(
+            xlrd.xldate.xldate_as_datetime(row[idx + 1].value, datemode)
             if datemode is not None
             else row[idx + 1].value
         )
