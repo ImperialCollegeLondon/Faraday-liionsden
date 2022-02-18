@@ -109,3 +109,8 @@ class ParserTable(tables.Table):
             "created_on",
         )
         row_attrs = {"status": lambda record: record.status}
+
+
+class ExperimentDataTable(tables.Table):
+    class Meta:
+        template_name = "django_tables2/bootstrap4.html"
