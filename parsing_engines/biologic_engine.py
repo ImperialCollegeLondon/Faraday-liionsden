@@ -65,7 +65,7 @@ def get_file_header(
         empty lines.
     """
     with open(file_path, encoding=encoding) as f:
-        header = list(filter(len, (f.readline().strip("\n") for _ in range(skip_rows))))
+        header = list(filter(len, (f.readline().rstrip() for _ in range(skip_rows))))
     return header_to_yaml(header)
 
 
@@ -128,13 +128,13 @@ def load_biologic_data(
 
 yaml_replacements = {
     "\t": "    ",  # tabs form lists. in YAML, tab indents are not valid
-    "BT-Lab ASCII FILE": "FileType : BT-Lab ASCII FILE",
     "Modulo Bat": "Mode: Modulo Bat",
-    "BT-Lab for windows": "BT-Lab for windows : ",
+    "for windows": "for windows : ",
     "Internet server": "Internet server : ",
     "Command interpretor": "Command interpretor : ",
     "for DX =": "DX/DQ : for DX =",
     "Record": "Record : ",
+    "CE vs. WE compliance": "CE vs. WE compliance :",
 }
 
 
@@ -159,7 +159,8 @@ def header_to_yaml(header: List[str]) -> Dict:
     # 1) Apply replacements
     regex = re.compile("(%s)" % "|".join(map(re.escape, yaml_replacements.keys())))
     rep_header = [
-        regex.sub(lambda mo: yaml_replacements[mo.group()], h) for h in header
+        regex.sub(lambda mo: yaml_replacements.get(mo.group(), f"{h}"), h)
+        for h in header
     ]
 
     # 2) Find parseable data before the table-like region
@@ -167,6 +168,10 @@ def header_to_yaml(header: List[str]) -> Dict:
     for line in rep_header:
         if line.startswith("Ns"):
             break
+
+        if "ASCII FILE" in line:
+            line = "FileType : " + line
+
         parseable_lines.append(line)
 
     # 3) Parse the header using YAML
