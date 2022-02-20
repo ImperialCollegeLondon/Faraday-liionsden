@@ -13,7 +13,7 @@ from .parsing_engines_base import ParsingEngineBase
 class BiologicParsingEngine(ParsingEngineBase):
     """ParserBase for the csv and tsv output of the BioLogic cycler."""
 
-    name = "biologic"
+    name = "Biologic"
     description = "Biologic CSV/TSV/MPT"
     valid: List[Tuple[str, str]] = [
         ("text/plain", ".csv"),
@@ -21,7 +21,16 @@ class BiologicParsingEngine(ParsingEngineBase):
         ("text/plain", ".tsv"),
         ("text/plain", ".txt"),
     ]
-    mandatory_columns: Set[str] = {"Time", "Rec#", "Ns"}
+    mandatory_columns: Dict[str, Dict[str, Union[str, Tuple[str, str]]]] = {
+        "time/s": dict(symbol="t", unit=("Time", "s")),
+        "Ecell/V": dict(symbol="V", unit=("Voltage", "V")),
+        "I/mA": dict(symbol="I", unit=("Current", "mA")),
+        "(Q-Qo)/mA.h": dict(symbol="Q-Q_0", unit=("Charge", "mA·h")),
+        "Temperature/ｰC": dict(symbol="T", unit=("Temperature", "C")),
+        "Q discharge/mA.h": dict(symbol="Q discharge", unit=("Charge", "mA·h")),
+        "Ns changes": dict(symbol="Ns changes", unit=("Unitless", "1")),
+        "cycle number": dict(symbol="Cyl", unit=("Unitless", "1")),
+    }
     column_name_mapping = COLUMN_NAME_MAPPING
 
     # Assumed to be this encoding, but it might be different...
@@ -56,7 +65,7 @@ def get_file_header(
         empty lines.
     """
     with open(file_path, encoding=encoding) as f:
-        header = list(filter(len, (f.readline().strip("\n") for _ in range(skip_rows))))
+        header = list(filter(len, (f.readline().rstrip() for _ in range(skip_rows))))
     return header_to_yaml(header)
 
 
@@ -71,7 +80,7 @@ def get_header_size(file_path: Union[Path, str], encoding: str) -> int:
         Header size as an int
     """
     with open(file_path, encoding=encoding) as datafile:
-        if next(datafile) == "BT-Lab ASCII FILE\n":
+        if "ASCII FILE" in next(datafile):
             return int(re.findall(r"[0-9]+", next(datafile))[0]) - 1
         return 0
 
@@ -105,8 +114,8 @@ def load_biologic_data(
     except pd.errors.ParserError:
         try:
             data = pd.read_csv(file_path, delimiter="\t", **kwargs)
-        except pd.errors.ParserError:
-            raise UnsupportedFileTypeError()
+        except pd.errors.ParserError as err:
+            raise UnsupportedFileTypeError(err)
 
     if len(data.columns) == 1:
         data = pd.read_csv(file_path, delimiter="\t", **kwargs)
@@ -119,13 +128,13 @@ def load_biologic_data(
 
 yaml_replacements = {
     "\t": "    ",  # tabs form lists. in YAML, tab indents are not valid
-    "BT-Lab ASCII FILE": "FileType : BT-Lab ASCII FILE",
     "Modulo Bat": "Mode: Modulo Bat",
-    "BT-Lab for windows": "BT-Lab for windows : ",
+    "for windows": "for windows : ",
     "Internet server": "Internet server : ",
     "Command interpretor": "Command interpretor : ",
     "for DX =": "DX/DQ : for DX =",
     "Record": "Record : ",
+    "CE vs. WE compliance": "CE vs. WE compliance :",
 }
 
 
@@ -150,7 +159,8 @@ def header_to_yaml(header: List[str]) -> Dict:
     # 1) Apply replacements
     regex = re.compile("(%s)" % "|".join(map(re.escape, yaml_replacements.keys())))
     rep_header = [
-        regex.sub(lambda mo: yaml_replacements[mo.group()], h) for h in header
+        regex.sub(lambda mo: yaml_replacements.get(mo.group(), f"{h}"), h)
+        for h in header
     ]
 
     # 2) Find parseable data before the table-like region
@@ -158,6 +168,10 @@ def header_to_yaml(header: List[str]) -> Dict:
     for line in rep_header:
         if line.startswith("Ns"):
             break
+
+        if "ASCII FILE" in line:
+            line = "FileType : " + line
+
         parseable_lines.append(line)
 
     # 3) Parse the header using YAML

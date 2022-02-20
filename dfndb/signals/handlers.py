@@ -9,7 +9,7 @@ import dfndb.models as dfn
 @receiver(post_save, sender=dfn.Parameter)
 @receiver(post_save, sender=dfn.Data)
 @receiver(post_save, sender=dfn.Method)
-@receiver(post_save, sender=dfn.Material)
+@receiver(post_save, sender=dfn.Component)
 @receiver(post_save, sender=dfn.DataParameter)
 @receiver(post_save, sender=dfn.CompositionPart)
 def set_permissions(sender, instance, **kwargs):

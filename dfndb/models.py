@@ -31,8 +31,8 @@ class Compound(models.Model):
         )
 
 
-class Material(cm.BaseModel):
-    """A material used as part of an electrochemical cell specification, e.g. NMC622.
+class Component(cm.BaseModel):
+    """A component used as part of an electrochemical cell specification, e.g. NMC622.
 
     Make use of the 'notes' field for additional explanation
     """
@@ -51,27 +51,27 @@ class Material(cm.BaseModel):
     type = models.PositiveSmallIntegerField(choices=MATERIAL_TYPE_CHOICES)
     polymer = models.PositiveIntegerField(
         default=0,
-        help_text="If this material is a polymer, enter degree of polymerization",
+        help_text="If this component is a polymer, enter degree of polymerization",
     )
 
     def __str__(self):
         return self.name or ""
 
     def get_absolute_url(self):
-        return reverse("dfndb:Material", kwargs={"pk": self.pk})
+        return reverse("dfndb:Component", kwargs={"pk": self.pk})
 
 
 class CompositionPart(models.Model):
-    """Compound amounts for use in materials."""
+    """Compound amounts for use in components."""
 
     compound = models.ForeignKey(
         Compound, on_delete=models.CASCADE, related_name="components"
     )
-    material = models.ForeignKey(Material, on_delete=models.CASCADE)
+    component = models.ForeignKey(Component, on_delete=models.CASCADE)
     amount = models.PositiveSmallIntegerField(validators=[MaxValueValidator(100)])
 
     def get_percentage(self):
-        total = CompositionPart.objects.filter(material=self.material).aggregate(
+        total = CompositionPart.objects.filter(component=self.component).aggregate(
             Sum("amount")
         )["amount__sum"]
         return np.round((float(self.amount or 0) * 100 / total), decimals=2)
@@ -81,17 +81,17 @@ class CompositionPart(models.Model):
 
     @property
     def user_owner(self):
-        return self.material.user_owner
+        return self.component.user_owner
 
     @property
     def status(self):
-        return self.material.status
+        return self.component.status
 
     def __str__(self):
         return "%s%d" % (self.compound.formula, self.amount)
 
     class Meta:
-        unique_together = ("compound", "amount", "material")
+        unique_together = ("compound", "amount", "component")
 
 
 class Method(cm.BaseModel):
@@ -203,8 +203,8 @@ class DataParameter(models.Model):
     data = models.ForeignKey(Data, on_delete=models.CASCADE)
     parameter = models.ForeignKey(Parameter, on_delete=models.CASCADE)
     type = models.PositiveSmallIntegerField(choices=PARAM_TYPE, default=PARAM_TYPE_NONE)
-    material = models.ForeignKey(
-        Material, on_delete=models.CASCADE, blank=True, null=True
+    component = models.ForeignKey(
+        Component, on_delete=models.CASCADE, blank=True, null=True
     )
     value = models.JSONField(blank=True, null=True)
 
@@ -220,4 +220,4 @@ class DataParameter(models.Model):
         return str(self.parameter)
 
     class Meta:
-        unique_together = ("data", "parameter", "material")
+        unique_together = ("data", "parameter", "component")

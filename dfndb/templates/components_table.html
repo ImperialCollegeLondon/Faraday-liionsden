@@ -6,8 +6,8 @@
 {% block content %}
 
 <div class="container py-2">
-    <h1> Materials </h1>
-    Search for existing materials in the database below:
+    <h1> Components </h1>
+    Search for existing components in the database below:
 </div>
 
 <div class="container py-2">
@@ -43,8 +43,8 @@
     {% for format in view.export_formats %}
     <a href="{% export_url format %}" class="btn btn-primary" , role="button"> download {{ format }}</a>
     {% endfor %}
-    {% if perms.dfndb.can_add_material %}
-    <a href="{% url 'dfndb:New Material' %}" class="btn btn-success bi bi-plus" , role="button" style="float: right;">
+    {% if perms.dfndb.can_add_component %}
+    <a href="{% url 'dfndb:New Component' %}" class="btn btn-success bi bi-plus" , role="button" style="float: right;">
         Add
         another</a>
     {% endif %}

@@ -1,10 +1,12 @@
+import django_tables2 as tables2
 from django.contrib import messages
+from django.core.exceptions import ImproperlyConfigured
 from django.db import transaction
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
-from django_tables2.views import SingleTableMixin
+from django_tables2.views import MultiTableMixin, SingleTableMixin
 from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
@@ -61,6 +63,7 @@ from .tables import (
     BatchTable,
     DeviceSpecificationTable,
     EquipmentTable,
+    ExperimentDataTable,
     ExperimentTable,
     ParserTable,
 )
@@ -310,10 +313,60 @@ class ParserTableView(SingleTableMixin, ExportMixin, PermissionListMixin, Filter
     permission_required = "battDB.view_parser"
 
 
-class ExperimentView(PermissionRequiredMixin, DetailView):
+class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
     model = Experiment
     template_name = "experiment.html"
     permission_required = "battDB.view_experiment"
+    table_class = ExperimentDataTable
+
+    def get_tables(self):
+        """
+        Overriding to include all columns dynamically.
+        """
+        data = self.get_tables_data()
+        data_files = self.object.data_files.all()
+
+        tables = []
+        for data_set, data_file in zip(data, data_files):
+            if data_set:
+                tables.append(
+                    self.table_class(
+                        data_set,
+                        extra_columns=[
+                            (i, tables2.Column()) for i in data_file.ts_headers
+                        ],
+                    )
+                )
+            else:
+                tables.append(self.table_class(data=[{"None": "None"}]))
+
+        return tables
+
+    def get_tables_data(self, n_rows: int = 20, decimal_places: int = 2):
+        """
+        Overriding to get top n rows of data displayed.
+        Values are displayed to a chosen number of decimal_places for easy viewing.
+        """
+        data_files = self.object.data_files.all()
+        data_previews = []
+        for data_file in data_files:
+            if data_file.raw_data_file.parse:
+                initial_data = data_file.ts_data[:n_rows]
+                data_headers = data_file.ts_headers
+                data_preview = []
+                for i in initial_data:
+                    data_preview.append(
+                        {
+                            header: round(value, decimal_places)
+                            for (header, value) in zip(data_headers, i)
+                        }
+                    )
+
+                data_previews.append(data_preview)
+
+            else:
+                data_previews.append(None)
+        return data_previews
 
 
 class DeviceSpecificationView(PermissionRequiredMixin, DetailView):

@@ -13,84 +13,116 @@
 
   <table width="100%">
     <tr>
-      <td style="text-align:center" ><h4> {{ object.name }} </h4></td>
+      <td style="text-align:center">
+        <h4> {{ object.name }} </h4>
+      </td>
     </tr>
-    </table>
+  </table>
 </div>
 
 <div class="card border-dark mb-3" style="max-width: 100%;">
-  <div class="card-header"><h5>Device details</h5></div>
+  <div class="card-header">
+    <h5>Device details</h5>
+  </div>
   <div class="card-body">
-    <b>Type</b> 
+    <b>Type</b>
     <br>
     {{object.device_type}}
     <br><br>
-    
+
     <table class="table">
-      <thead class= "thead-light">
+      <thead class="thead-light">
         <tr>
           <th scope="col"> Parameter</th>
           <th scope="col">Value</th>
           <th scope="col">unit</th>
-          <th scope="col"> Material</th>
+          <th scope="col"> Component</th>
         </tr>
       </thead>
       <tbody>
-      {% for dp in object.deviceparameter_set.all %}
+        {% for dp in object.deviceparameter_set.all %}
         <tr>
           <td>{{ dp.parameter.name }}</td>
           <td>{{ dp.value }}</td>
           <td>{{ dp.parameter.unit.unitSymbol }}</td>
-          <td>{{ dp.material }}</td>
+          <td>{{ dp.component }}</td>
         </tr>
-      {% endfor %}
-    </tbody>
+        {% endfor %}
+      </tbody>
     </table>
     <br>
     <b>Related devices</b>
     <br>
-        {% drilldown_tree_for_node object as drilldown %}
-        {% for node,structure in drilldown|tree_info %}
-        {% if structure.new_level %}<ul style="padding-left: 20px"><li>{% else %}</li><li>{% endif %}
-            {% if object.name == node.name %}
-                <a href="{{ node.get_absolute_url }}"><b>{{ node.name }}</b></a>
-            {% else %}
-                <a href="{{ node.get_absolute_url }}">{{ node.name }}</a>    
-            {% endif %}
-        {% for level in structure.closed_levels %}</li></ul>{% endfor %}
-        {% endfor %}
-    </li></ul>
+    {% drilldown_tree_for_node object as drilldown %}
+    {% for node,structure in drilldown|tree_info %}
+    {% if structure.new_level %}<ul style="padding-left: 20px">
+      <li>{% else %}</li>
+      <li>{% endif %}
+        {% if object.name == node.name %}
+        <a href="{{ node.get_absolute_url }}"><b>{{ node.name }}</b></a>
+        {% else %}
+        <a href="{{ node.get_absolute_url }}">{{ node.name }}</a>
+        {% endif %}
+        {% for level in structure.closed_levels %}
+      </li>
+    </ul>{% endfor %}
+    {% endfor %}
+    </li>
+    </ul>
 
     {% if object.spec_file %}
-      <b>Technical documentation</b>
-      <br>
-      <a href="{{ object.spec_file.url }}" class="btn btn-primary", role="button"> Download specification (pdf)</a>
+    <b>Technical documentation</b>
+    <br>
+    <a href="{{ object.spec_file.url }}" class="btn btn-primary" , role="button"> Download specification (pdf)</a>
     {% endif %}
   </div>
 </div>
 
 <div class="card border-dark mb-3" style="max-width: 100%;">
-  <div class="card-header"><h5>Metadata</h5></div>
+  <div class="card-header">
+    <h5>Metadata</h5>
+  </div>
   <div class="card-body">
     <table width="50%">
-      <tr><td><b>Owner:</b></td><td>{{ object.user_owner }} </td></tr>
-      <tr><td><b>Created:</b></td><td>{{ object.created_on }} </td></tr>
-      <tr><td><b>Modified:</b></td><td>{{ object.modified_on }} </td></tr>
-      <tr><td><b>ID:</b></td><td>{{ object.id }} </td></tr>
-      <tr><td><b>Status:</b></td><td>{{ object.status }} </td></tr>
-      <tr><td><b>Notes:</b></td><td>{{ object.notes }} </td></tr>
-      <tr><td><b>Attributes:</b></td><td>{{ object.attributes }} </td></tr>
+      <tr>
+        <td><b>Owner:</b></td>
+        <td>{{ object.user_owner }} </td>
+      </tr>
+      <tr>
+        <td><b>Created:</b></td>
+        <td>{{ object.created_on }} </td>
+      </tr>
+      <tr>
+        <td><b>Modified:</b></td>
+        <td>{{ object.modified_on }} </td>
+      </tr>
+      <tr>
+        <td><b>ID:</b></td>
+        <td>{{ object.id }} </td>
+      </tr>
+      <tr>
+        <td><b>Status:</b></td>
+        <td>{{ object.status }} </td>
+      </tr>
+      <tr>
+        <td><b>Notes:</b></td>
+        <td>{{ object.notes }} </td>
+      </tr>
+      <tr>
+        <td><b>Attributes:</b></td>
+        <td>{{ object.attributes }} </td>
+      </tr>
     </table>
   </div>
 
   {% get_obj_perms request.user for object as "object_perms" %}
   {% if "change_devicespecification" in object_perms %}
-    </div>
-      <a href="/battDB/devices/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
-      <a href="/battDB/devices/delete/{{ object.pk }}" class="btn btn-danger", role="button"> Delete entry</a>
-    </div>
-    
-  {% endif %}
+</div>
+<a href="/battDB/devices/edit/{{ object.pk }}" class="btn btn-warning" , role="button"> Edit entry</a>
+<a href="/battDB/devices/delete/{{ object.pk }}" class="btn btn-danger" , role="button"> Delete entry</a>
+</div>
+
+{% endif %}
 </div>
 
 

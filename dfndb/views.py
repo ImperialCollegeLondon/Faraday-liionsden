@@ -14,11 +14,11 @@ from common.views import (
     UpdateDataView,
 )
 
-from .filters import CompoundFilter, MaterialFilter
-from .forms import CompositionPartFormSet, NewCompoundForm, NewMaterialForm
-from .models import Compound, Data, Material, Parameter
+from .filters import ComponentFilter, CompoundFilter
+from .forms import CompositionPartFormSet, NewComponentForm, NewCompoundForm
+from .models import Component, Compound, Data, Parameter
 from .serializers import ParameterSerializer
-from .tables import CompoundTable, MaterialTable
+from .tables import ComponentTable, CompoundTable
 
 
 ######################## CREATE, ADD, DELETE VIEWS #########################
@@ -31,22 +31,22 @@ class NewCompoundView(PermissionRequiredMixin, NewDataView):
     failure_message = "Could not save new compound. Invalid information."
 
 
-class NewMaterialView(PermissionRequiredMixin, NewDataViewInline):
-    permission_required = "dfndb.add_material"
+class NewComponentView(PermissionRequiredMixin, NewDataViewInline):
+    permission_required = "dfndb.add_component"
     template_name = "create_edit_generic.html"
-    form_class = NewMaterialForm
-    success_message = "New material created successfully."
-    failure_message = "Could not save new material. Invalid information."
+    form_class = NewComponentForm
+    success_message = "New component created successfully."
+    failure_message = "Could not save new component. Invalid information."
     inline_key = "composition"
     formset = CompositionPartFormSet
 
 
-class DeleteMaterialView(PermissionRequiredMixin, MarkAsDeletedView):
-    model = Material
-    permission_required = "dfndb.change_material"
-    success_url = "/dfndb/materials/"
+class DeleteComponentView(PermissionRequiredMixin, MarkAsDeletedView):
+    model = Component
+    permission_required = "dfndb.change_component"
+    success_url = "/dfndb/components/"
     template_name = "delete_generic.html"
-    success_message = "Material deleted successfully."
+    success_message = "Component deleted successfully."
 
 
 #################### DETAIL, LIST, TABLE VIEWS #########################
@@ -59,29 +59,31 @@ class CompoundTableView(SingleTableMixin, ExportMixin, PermissionListMixin, Filt
     permission_required = "dfndb.view_compound"
 
 
-class MaterialTableView(SingleTableMixin, ExportMixin, PermissionListMixin, FilterView):
-    model = Material
-    table_class = MaterialTable
-    template_name = "materials_table.html"
-    filterset_class = MaterialFilter
+class ComponentTableView(
+    SingleTableMixin, ExportMixin, PermissionListMixin, FilterView
+):
+    model = Component
+    table_class = ComponentTable
+    template_name = "components_table.html"
+    filterset_class = ComponentFilter
     export_formats = ["csv", "json"]
-    permission_required = "dfndb.view_material"
+    permission_required = "dfndb.view_component"
 
 
-class MaterialView(PermissionRequiredMixin, DetailView):
-    model = Material
-    template_name = "material.html"
-    permission_required = "dfndb.view_material"
+class ComponentView(PermissionRequiredMixin, DetailView):
+    model = Component
+    template_name = "component.html"
+    permission_required = "dfndb.view_component"
 
 
-class UpdateMaterialView(PermissionRequiredMixin, UpdateDataInlineView):
-    model = Material
-    permission_required = "dfndb.change_material"
+class UpdateComponentView(PermissionRequiredMixin, UpdateDataInlineView):
+    model = Component
+    permission_required = "dfndb.change_component"
     template_name = "create_edit_generic.html"
-    form_class = NewMaterialForm
-    success_url = "/dfndb/materials/"
-    sucess_message = "Material updated successfully."
-    failure_message = "Could not update material. Invalid information."
+    form_class = NewComponentForm
+    success_url = "/dfndb/components/"
+    sucess_message = "Component updated successfully."
+    failure_message = "Could not update component. Invalid information."
     inline_key = "composition"
     formset = CompositionPartFormSet
 

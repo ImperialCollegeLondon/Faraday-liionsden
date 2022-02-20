@@ -29,26 +29,29 @@ class TestCompound(TestCase):
             )
 
 
-class TestMaterial(TestCase):
+class TestComponent(TestCase):
     def setUp(self):
         comp = baker.make_recipe(
             "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2"
         )
         comp2 = baker.make_recipe("tests.dfndb.compound", name="Sulphur", formula="S")
         self.model = baker.make_recipe(
-            "tests.dfndb.material", name="Contaminant", type=1, polymer=0
+            "tests.dfndb.component", name="Contaminant", type=1, polymer=0
         )
         baker.make_recipe(
-            "tests.dfndb.composition_part", compound=comp, material=self.model, amount=3
+            "tests.dfndb.composition_part",
+            compound=comp,
+            component=self.model,
+            amount=3,
         )
         baker.make_recipe(
             "tests.dfndb.composition_part",
             compound=comp2,
-            material=self.model,
+            component=self.model,
             amount=2,
         )
 
-    def test_material_creation(self):
+    def test_component_creation(self):
         from dfndb.models import Compound
 
         name = "Carbon Dioxide"
@@ -69,19 +72,19 @@ class TestCompositionPart(TestCase):
         comp = baker.make_recipe(
             "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2"
         )
-        mat = baker.make_recipe("tests.dfndb.material")
+        mat = baker.make_recipe("tests.dfndb.component")
         self.model = baker.make_recipe(
-            "tests.dfndb.composition_part", compound=comp, material=mat, amount=3
+            "tests.dfndb.composition_part", compound=comp, component=mat, amount=3
         )
-        baker.make_recipe("tests.dfndb.composition_part", material=mat, amount=2)
+        baker.make_recipe("tests.dfndb.composition_part", component=mat, amount=2)
 
     def test_composition_part_creation(self):
-        from dfndb.models import Compound, Material
+        from dfndb.models import Component, Compound
 
         comp = Compound.objects.get(name="Carbon Dioxide")
-        mat = Material.objects.get()
+        mat = Component.objects.get()
         self.assertEqual(self.model.compound, comp)
-        self.assertEqual(self.model.material, mat)
+        self.assertEqual(self.model.component, mat)
         self.assertEqual(self.model.amount, self.amount[comp.formula])
 
     def test_percentage(self):
@@ -103,7 +106,7 @@ class TestCompositionPart(TestCase):
         baker.make_recipe(
             "tests.dfndb.composition_part",
             compound=self.model.compound,
-            material=self.model.material,
+            component=self.model.component,
             amount=self.model.amount * 2,
         )
 
@@ -111,7 +114,7 @@ class TestCompositionPart(TestCase):
             baker.make_recipe(
                 "tests.dfndb.composition_part",
                 compound=self.model.compound,
-                material=self.model.material,
+                component=self.model.component,
                 amount=self.model.amount,
             )
 
@@ -138,20 +141,13 @@ class TestMethod(TestCase):
 class TestQuantityUnit(TestCase):
     def setUp(self):
         self.expected = dict(
-            quantityName="Charge",
-            quantitySymbol="Q",
-            unitName="Coulombs",
-            unitSymbol="C",
+            quantityName="Depth",
+            quantitySymbol="D",
+            unitName="Light years",
+            unitSymbol="LY",
             is_SI_unit=True,
         )
-        self.model = baker.make_recipe(
-            "tests.dfndb.quantity_unit",
-            quantityName="Charge",
-            quantitySymbol="Q",
-            unitName="Coulombs",
-            unitSymbol="C",
-            is_SI_unit=True,
-        )
+        self.model = baker.make_recipe("tests.dfndb.quantity_unit", **self.expected)
 
     def test_quantity_unit_creation(self):
         for k, v in self.expected.items():
@@ -170,23 +166,11 @@ class TestQuantityUnit(TestCase):
         )
 
     def test_unique_together(self):
-        baker.make_recipe(
-            "tests.dfndb.quantity_unit",
-            quantityName="Charge",
-            quantitySymbol="Q",
-            unitName="Coulombs",
-            unitSymbol="e",
-            is_SI_unit=True,
-        )
+        expected = self.expected.copy()
+        expected["unitSymbol"] = "ly"
+        baker.make_recipe("tests.dfndb.quantity_unit", **expected)
         with self.assertRaises(IntegrityError):
-            baker.make_recipe(
-                "tests.dfndb.quantity_unit",
-                quantityName="Charge",
-                quantitySymbol="Q",
-                unitName="Coulombs",
-                unitSymbol="C",
-                is_SI_unit=True,
-            )
+            baker.make_recipe("tests.dfndb.quantity_unit", **self.expected)
 
 
 class TestParameter(TestCase):
@@ -248,14 +232,14 @@ class TestDataParameter(TestCase):
         model = DataParameter
 
         self.param = baker.make_recipe("tests.dfndb.parameter")
-        self.mat = baker.make_recipe("tests.dfndb.material")
+        self.mat = baker.make_recipe("tests.dfndb.component")
         self.data = baker.make_recipe("tests.dfndb.data")
         self.model = baker.make_recipe(
             "tests.dfndb.data_parameter",
             data=self.data,
             parameter=self.param,
             type=model.PARAM_TYPE_NONE,
-            material=self.mat,
+            component=self.mat,
             value={},
         )
 
@@ -266,7 +250,7 @@ class TestDataParameter(TestCase):
 
         self.assertEqual(self.model.data, self.data)
         self.assertEqual(self.model.parameter, self.param)
-        self.assertEqual(self.model.material, self.mat)
+        self.assertEqual(self.model.component, self.mat)
         self.assertEqual(self.model.value, {})
         self.assertIn(self.model.type, list(zip(*model.PARAM_TYPE))[0])
 

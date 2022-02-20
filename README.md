@@ -16,7 +16,7 @@ The database currently stores recorded cycler data along with metadata about:
 - **Experiments:** protocol, equipment used, configuration... 
 - **Devices:** batch number, specification, chemical composition...
 
-A simplified version of the main `battDB` app is shown below. This does not include models in the `common` and `dfndb` app, which deal with data relating to users, organisations, materials, parameters, methods.
+A simplified version of the main `battDB` app is shown below. This does not include models in the `common` and `dfndb` app, which deal with data relating to users, organisations, components, parameters, methods.
 
 ![](graph.png)
 

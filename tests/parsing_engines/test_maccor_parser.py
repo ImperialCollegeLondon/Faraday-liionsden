@@ -7,7 +7,6 @@ from unittest.mock import MagicMock, patch
 
 class TestMaccorXLSParser(TestCase):
     @patch("parsing_engines.MaccorParsingEngine._drop_unnamed_columns")
-    @patch("parsing_engines.MaccorParsingEngine._standardise_columns")
     @patch("parsing_engines.MaccorParsingEngine._create_rec_no")
     @patch("parsing_engines.maccor_engine.get_header_size")
     @patch("parsing_engines.maccor_engine.load_maccor_data")
@@ -22,7 +21,6 @@ class TestMaccorXLSParser(TestCase):
         mock_data,
         mock_size,
         mock_create,
-        mock_standard,
         mock_drop,
     ):
         import pandas as pd
@@ -33,7 +31,7 @@ class TestMaccorXLSParser(TestCase):
             UnsupportedFileTypeError,
         )
 
-        sheet = SimpleNamespace(ncols=4, nrows=2)
+        sheet = SimpleNamespace(ncols=4, nrows=2, max_column=4, max_row=2)
         datemode = 1
         skip_rows = 4
         mock_xls.return_value = sheet, datemode
@@ -49,19 +47,18 @@ class TestMaccorXLSParser(TestCase):
         mock_xls.assert_called_once()
         mock_xlsx.assert_not_called()
         mock_drop.assert_called_once()
-        mock_standard.assert_called_once()
         mock_create.assert_called_once()
-        mock_size.assert_called_once_with(sheet, MP.mandatory_columns)
+        mock_size.assert_called_once_with(sheet, set(MP.mandatory_columns.keys()))
         mock_data.assert_called_once_with(file_path, skip_rows)
         mock_head.assert_called_once_with(sheet, skip_rows, datemode)
         self.assertEqual(len(parser.data), 0)
-        self.assertEqual(parser.name, "maccor")
+        self.assertEqual(parser.name, "Maccor")
         self.assertEqual(parser.skip_rows, skip_rows)
         self.assertEqual(parser.file_path, file_path)
         self.assertEqual(parser.file_metadata, {"answer": 42})
 
         # XLSX file
-        file_path = Path("maccor_example.xlsx")
+        file_path = Path("maccor_example_new.xlsx")
         mock_xls.reset_mock()
         mock_xlsx.reset_mock()
 
@@ -70,7 +67,7 @@ class TestMaccorXLSParser(TestCase):
         mock_xls.assert_not_called()
 
         # Empty file
-        sheet = SimpleNamespace(ncols=0, nrows=1)
+        sheet = SimpleNamespace(max_column=0, max_row=1)
         mock_xlsx.return_value = sheet, datemode
         self.assertRaises(EmptyFileError, MP.factory, file_path)
 
@@ -208,5 +205,5 @@ class TestMaccorFunctions(TestCase):
             SimpleNamespace(value="Date:"),
             SimpleNamespace(value=raw_date),
         ]
-        expected = "Date", xlrd.xldate.xldate_as_datetime(raw_date, 0), 2
+        expected = "Date", str(xlrd.xldate.xldate_as_datetime(raw_date, 0)), 2
         self.assertEqual(get_metadata_value(0, row, 0), expected)

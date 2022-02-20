@@ -1,6 +1,6 @@
 from common.filters import BaseFilter
 
-from .models import Compound, Material
+from .models import Component, Compound
 
 
 class CompoundFilter(BaseFilter):
@@ -9,7 +9,7 @@ class CompoundFilter(BaseFilter):
         fields = ["id", "name", "formula"]
 
 
-class MaterialFilter(BaseFilter):
+class ComponentFilter(BaseFilter):
     class Meta(BaseFilter.Meta):
-        model = Material
+        model = Component
         fields = ["id", "name", "type", "status"]

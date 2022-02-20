@@ -87,8 +87,8 @@ class DeviceParameter(cm.HasName):
 
     spec = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE)
     parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
-    material = models.ForeignKey(
-        dfn.Material, on_delete=models.CASCADE, blank=True, null=True
+    component = models.ForeignKey(
+        dfn.Component, on_delete=models.CASCADE, blank=True, null=True
     )
     value = models.JSONField(blank=True, null=True)
     inherit_to_children = models.BooleanField(default=False)
@@ -105,7 +105,7 @@ class DeviceParameter(cm.HasName):
         return str(self.parameter)
 
     class Meta:
-        unique_together = [("spec", "parameter", "material"), ("spec", "name")]
+        unique_together = [("spec", "parameter", "component"), ("spec", "name")]
 
 
 class Batch(cm.BaseModelNoName, cm.HasMPTT):
@@ -507,7 +507,7 @@ class ExperimentDataFile(cm.BaseModel):
                     self.raw_data_file.file.name,
                 ]
             )
-            file_format = self.raw_data_file.use_parser.file_format
+            file_format = self.raw_data_file.use_parser.name
             parsed_file = parse_data_file(filepath, file_format, columns=cols)
 
             self.attributes["parsed_metadata"] = parsed_file["metadata"]
@@ -611,6 +611,13 @@ class ExperimentDevice(models.Model):
 
 
 class DataColumn(models.Model):
+    """A way of adding columns to datafiles
+
+    TODO: This is not implemented properly yet (see below) so is not made available
+    in any view or in the admin site.
+
+    """
+
     data_file = models.ForeignKey(ExperimentDataFile, on_delete=models.CASCADE)
     column_name = models.CharField(max_length=40, default="Ns")
 
@@ -686,8 +693,12 @@ class DataRange(
 
     Each data file contains numerous ranges e.g. charge & discharge cycles. Their data
     might overlap. <br>
+    Currently this model is used in ExperimentDataFile.create_ranges but creating just one
+    range for the whole file according to parer_engines_base.parse_data_file
+    range_config, which is fixed.
     TODO: Write (or find) code to segment data into ranges. <br>
-    TODO: Convert this into a JSON Schema within ExperimentData - see Git issue #23 <br>
+    TODO: Convert this into a JSON Schema within ExperimentData. <br>
+    TODO: Re-implement inlineform in admin for this model.
     """
 
     dataFile = models.ForeignKey(

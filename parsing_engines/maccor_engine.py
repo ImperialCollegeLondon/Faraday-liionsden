@@ -24,13 +24,26 @@ from .parsing_engines_base import ParsingEngineBase
 
 class MaccorParsingEngine(ParsingEngineBase):
 
-    name = "maccor"
+    name = "Maccor"
     description = "Maccor XLS/XLSX"
     valid: List[Tuple[str, str]] = [
         ("application/vnd.ms-excel", ".xls"),
+        ("application/CDFV2", ".xls"),
         ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"),
+        ("application/zip", ".xlsx"),
     ]
-    mandatory_columns: Set[str] = {"Cyc#", "Step"}
+    mandatory_columns: Dict[str, Dict[str, Union[str, Tuple[str, str]]]] = {
+        "Rec#": dict(symbol="Rec", unit=("Unitless", "1")),
+        "Cyc#": dict(symbol="Cyl", unit=("Unitless", "1")),
+        "Step": dict(symbol="Ns changes", unit=("Unitless", "1")),
+        "TestTime": dict(symbol="t", unit=("Time", "s")),
+        "StepTime": dict(symbol="ts", unit=("Time", "s")),
+        "Amp-hr": dict(symbol="Q-Q_0", unit=("Charge", "A·h")),
+        "Watt-hr": dict(symbol="E", unit=("Energy", "W·h")),
+        "Amps": dict(symbol="I", unit=("Current", "A")),
+        "Volts": dict(symbol="V", unit=("Voltage", "V")),
+        "Temp 1": dict(symbol="T", unit=("Temperature", "C")),
+    }
 
     @classmethod
     def factory(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
@@ -42,17 +55,18 @@ class MaccorParsingEngine(ParsingEngineBase):
         ext = Path(file_path).suffix.lower()
         if ext == ".xls":
             sheet, datemode = factory_xls(file_path)
+            if sheet.ncols < 1 or sheet.nrows < 2:
+                raise EmptyFileError()
         elif ext == ".xlsx":
             sheet, datemode = factory_xlsx(file_path)
+            if sheet.max_column < 1 or sheet.max_row < 2:
+                raise EmptyFileError()
         else:
             raise UnsupportedFileTypeError(
                 f"Unknown file extension for Maccor parsing engine '{ext}'."
             )
 
-        if sheet.ncols < 1 or sheet.nrows < 2:
-            raise EmptyFileError()
-
-        skip_rows = get_header_size(sheet, cls.mandatory_columns)
+        skip_rows = get_header_size(sheet, set(cls.mandatory_columns.keys()))
         data = load_maccor_data(file_path, skip_rows)
         file_metadata = get_file_header(sheet, skip_rows, datemode)
         return cls(file_path, skip_rows, data, file_metadata)
@@ -209,7 +223,7 @@ def get_metadata_value(
         key = key.value
 
     if hasattr(key, "__iter__") and "Date" in key:
-        value = (
+        value = str(
             xlrd.xldate.xldate_as_datetime(row[idx + 1].value, datemode)
             if datemode is not None
             else row[idx + 1].value
