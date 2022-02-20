@@ -42,6 +42,50 @@ PARAMETERS = [
     ),
     dict(name="Cycle number", status="Public", symbol="Cyl", unit=("Unitless", "1")),
     dict(name="Record number", status="Public", symbol="Rec", unit=("Unitless", "1")),
+    dict(
+        name="Cell nominal capacity",
+        status="Public",
+        symbol="Q",
+        unit=("Charge", "A·h"),
+    ),
+    dict(name="Form factor", status="Public", symbol="", unit=("Unitless", "1")),
+    dict(name="Anode size", status="Public", symbol="A_{anode}", unit=("Area", "cm^2")),
+    dict(
+        name="Cathode size",
+        status="Public",
+        symbol="A_{cathode}",
+        unit=("Area", "cm^2"),
+    ),
+    dict(
+        name="Anode loading",
+        status="Public",
+        symbol="Q_{anode}",
+        unit=("Areal capacity", "mA·h·cm^{-2}"),
+    ),
+    dict(
+        name="Cathode loading",
+        status="Public",
+        symbol="Q_{cathode}",
+        unit=("Areal capacity", "mA·h·cm^{-2}"),
+    ),
+    dict(
+        name="Number of layers",
+        status="Public",
+        symbol="n_{layers}",
+        unit=("Unitless", "1"),
+    ),
+    dict(
+        name="Electrode coating",
+        status="Public",
+        symbol="coating",
+        unit=("Unitless", "1"),
+    ),
+    dict(
+        name="Electrolyte component",
+        status="Public",
+        symbol="eletrolyte",
+        unit=("Unitless", "1"),
+    ),
 ]
 
 
