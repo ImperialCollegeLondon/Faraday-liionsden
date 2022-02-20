@@ -48,7 +48,7 @@ PARAMETERS = [
         symbol="Q",
         unit=("Charge", "A·h"),
     ),
-    dict(name="Form factor", status="Public", symbol="", unit=("Unitless", "1")),
+    dict(name="Form factor", status="Public", symbol="f_f", unit=("Unitless", "1")),
     dict(name="Anode size", status="Public", symbol="A_{anode}", unit=("Area", "cm^2")),
     dict(
         name="Cathode size",
