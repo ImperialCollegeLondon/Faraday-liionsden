@@ -1,6 +1,5 @@
 import django_tables2 as tables2
 from django.contrib import messages
-from django.core.exceptions import ImproperlyConfigured
 from django.db import transaction
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView
@@ -350,7 +349,7 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
         data_files = self.object.data_files.all()
         data_previews = []
         for data_file in data_files:
-            if data_file.raw_data_file.parse:
+            if data_file.file_exists() and data_file.raw_data_file.parse:
                 initial_data = data_file.ts_data[:n_rows]
                 data_headers = data_file.ts_headers
                 data_preview = []
