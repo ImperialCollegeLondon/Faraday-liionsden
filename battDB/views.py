@@ -246,7 +246,7 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
                 form.instance.full_clean()
 
             messages.success(request, self.success_message)
-            return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
+            return redirect("/battDB/exps/{}".format(self.object.experiment.id))
         messages.error(request, self.failure_message)
         return render(request, self.template_name, context)
 
