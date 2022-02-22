@@ -144,7 +144,6 @@ class UpdateDataInlineView(UpdateView):
             data[self.inline_key] = self.formset(
                 self.request.POST, instance=self.object
             )
-            # data['object'].user_owner is correct !!
         else:
             data[self.inline_key] = self.formset(instance=self.object)
 

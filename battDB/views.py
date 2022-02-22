@@ -208,7 +208,47 @@ class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
     failure_message = "Could not update batch. Invalid information."
 
 
-# TODO: UpdateDataFileView
+class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
+    model = ExperimentDataFile
+    permission_required = "battDB.change_experimentdatafile"
+    template_name = "create_edit_generic.html"
+    form_class = NewExperimentDataFileForm
+    success_message = "Data file updated successfully."
+    failure_message = "Could not update data file. Invalid information."
+    inline_key = "raw_data_file"
+    formset = UploadDataFileFormset
+
+    def post(self, request, *args, **kwargs):
+        """
+        Unique post method for data files to handle a) setting user_owner and
+        status of uploaded file and b) parsing pk of associated experiment.
+        """
+        self.object = self.get_object()
+        form = self.form_class(request.POST, request.FILES)
+        context = self.get_context_data()
+        parameters = context[self.inline_key]
+        if form.is_valid():
+            # Save instance incluing setting user owner and status
+            with transaction.atomic():
+                if form.is_public():
+                    self.object.status = "public"
+                else:
+                    self.object.status = "private"
+                self.object.save()
+            # Save individual parameters from inline form
+            if parameters.is_valid():
+                parameters.instance = self.object
+                # Handle uploaded files in formsets slightly differently to usual
+                parameters[0].instance.status = self.object.status
+                if parameters[0].instance.use_parser:
+                    parameters[0].instance.parse = True
+                parameters.save()
+                form.instance.full_clean()
+
+            messages.success(request, self.success_message)
+            return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
+        messages.error(request, self.failure_message)
+        return render(request, self.template_name, context)
 
 
 class DeleteDeviceView(PermissionRequiredMixin, MarkAsDeletedView):
