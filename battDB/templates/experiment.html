@@ -129,6 +129,7 @@
     <a href="{{ data_file.raw_data_file.file.url }}" class="btn btn-primary" , role="button"> Download raw data file</a>
     {% if "change_experimentdatafile" in df_perms %}
     <a href="/battDB/data_files/delete/{{data_file.pk}}" class="btn btn-danger" , role="button"> Delete </a>
+    <a href="/battDB/exps/update_data/{{data_file.pk}}" class="btn btn-warning" , role="button"> Edit </a>
     {% endif %}
   </div>
 </div>
