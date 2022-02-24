@@ -12,7 +12,8 @@ class Compound(models.Model):
     """Chemical Compound or Element, e.g. Lithium, Graphite."""
 
     name = models.CharField(
-        max_length=100, help_text="Full name for the element or compound"
+        max_length=100,
+        help_text="Full name for the element or compound",
     )
     formula = models.CharField(max_length=20, help_text="Chemical formula")
     mass = models.FloatField(
