@@ -454,3 +454,125 @@ class BatchViewTest(TestCase):
         self.assertContains(
             response, '<td style="text-align:center" ><h4> test-batch </h4></td>'
         )
+
+
+class DataUploadViewTest(TestCase):
+    def setUp(self):
+        self.user = baker.make_recipe(
+            "tests.management.user",
+            username="test_contributor",
+        )
+        self.user.is_active = True
+        self.user.set_password("contributorpass")
+        self.user.save()
+        group = Group.objects.get(name="Contributor")
+        group.user_set.add(self.user)
+
+        self.experiment = baker.make_recipe(
+            "tests.battDB.experiment",
+            name="test experiment",
+            status="public",
+            user_owner=self.user,
+        )
+        self.biologic_parser = bdb.Parser.objects.get(name="Biologic")
+        self.maccor_parser = bdb.Parser.objects.get(name="Maccor")
+
+    def test_upload_view_biologic_data(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        # Check access to view the file upload page
+        data_upload_get_response = self.client.get(
+            reverse("battDB:New File", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(data_upload_get_response, "Upload the raw data file here.")
+
+        # Check file upload response
+        with open(
+            os.path.join(
+                settings.BASE_DIR,
+                "tests/parsing_engines/biologic_example.csv",
+            ),
+            "r",
+        ) as input_file:
+            post_response = self.client.post(
+                reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                {
+                    "name": "Device 1",
+                    "raw_data_file-TOTAL_FORMS": 1,
+                    "raw_data_file-INITIAL_FORMS": 0,
+                    "raw_data_file-0-file": input_file,
+                    "raw_data_file-0-use_parser": self.biologic_parser.id,
+                },
+            )
+        # Check redirect to correct page
+        self.assertEqual(post_response.url, f"/battDB/exps/{self.experiment.id}")
+
+        # Check ExperimentDataFile has been created and parsed
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 1")
+        self.assertTrue(edf.file_exists())
+        self.assertEqual(len(edf.parsed_columns()), 7)
+
+        # Check Experiment Detail view contains experimental data
+        get_response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(get_response, "Ecell/V")
+        self.assertContains(get_response, "Ns changes")
+        self.assertContains(get_response, "19.0")
+        self.assertContains(get_response, "Download raw data file")
+
+    def test_upload_view_maccor_data(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        # Check file upload response
+        with open(
+            os.path.join(
+                settings.BASE_DIR, "tests/parsing_engines/maccor_example_new.xlsx"
+            ),
+            "rb",
+        ) as input_file:
+            post_response = self.client.post(
+                reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                {
+                    "name": "Device 2",
+                    "raw_data_file-TOTAL_FORMS": 1,
+                    "raw_data_file-INITIAL_FORMS": 0,
+                    "raw_data_file-0-file": input_file,
+                    "raw_data_file-0-use_parser": self.maccor_parser.id,
+                },
+            )
+        # Check redirect to correct page
+        self.assertEqual(post_response.url, f"/battDB/exps/{self.experiment.id}")
+
+        # Check ExperimentDataFile has been created and parsed
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 2")
+        self.assertTrue(edf.file_exists())
+        self.assertEqual(len(edf.parsed_columns()), 10)
+
+        # Check Experiment Detail view contains experimental data
+        get_response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(get_response, "TestTime")
+        self.assertContains(get_response, "StepTime")
+        self.assertContains(get_response, "3.93")
