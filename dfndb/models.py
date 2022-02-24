@@ -51,7 +51,7 @@ class Component(cm.BaseModel):
     type = models.PositiveSmallIntegerField(choices=MATERIAL_TYPE_CHOICES)
     polymer = models.PositiveIntegerField(
         default=0,
-        help_text="If this component is a polymer, enter degree of polymerization",
+        help_text="Degree of polymerisation if this component is a polymer, otherwise 0",
     )
 
     def __str__(self):
