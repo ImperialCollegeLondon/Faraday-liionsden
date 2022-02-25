@@ -568,9 +568,9 @@ class ExperimentDevice(models.Model):
     )
     device_position = models.CharField(
         max_length=20,
-        default="cell_1",
+        default="cell_01",
         help_text="Device Position ID in Experiment Config - e.g. Cell_A1 for the "
-        "first cell of a series-parallel pack (leave as cell_1 for single cell experiments)",
+        "first cell of a series-parallel pack (leave as cell_01 for single cell experiments)",
     )
     data_file = models.ForeignKey(
         ExperimentDataFile, null=True, blank=True, on_delete=models.SET_NULL
