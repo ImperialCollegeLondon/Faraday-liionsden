@@ -23,6 +23,7 @@ from .views import (
     ParserTableView,
     ParserView,
     UpdateBatchView,
+    UpdateDataFileView,
     UpdateDeviceView,
     UpdateEquipmentView,
     UpdateExperimentView,
@@ -59,6 +60,9 @@ urlpatterns = [
         name="Update Equipment",
     ),
     path("batches/edit/<int:pk>/", UpdateBatchView.as_view(), name="Update Batch"),
+    path(
+        "exps/update_data/<int:pk>/", UpdateDataFileView.as_view(), name="Update File"
+    ),
     path("devices/delete/<int:pk>/", DeleteDeviceView.as_view(), name="Delete Device"),
     path(
         "exps/delete/<int:pk>/",

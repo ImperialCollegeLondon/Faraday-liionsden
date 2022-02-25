@@ -47,7 +47,7 @@ class NewDeviceForm(DataCreateForm):
         ]
         help_texts = {
             "device_type": "Is  this a cell or a module?",
-            "parent": "Select parent if this cell is part of a particular module.",
+            "parent": "Leave blank unless this cell is a part of a particular module or pack",
         }
 
     def __init__(self, *args, **kwargs):
@@ -66,9 +66,7 @@ class NewDeviceForm(DataCreateForm):
                 Fieldset(
                     "Define parameters",
                     Div(
-                        HTML(
-                            "Specify any device parameters below such as cathode thickness."
-                        ),
+                        HTML("Specify device parameters below."),
                         css_class="container pb-4",
                     ),
                     Formset("parameters"),
@@ -109,9 +107,9 @@ DeviceParameterFormSet = inlineformset_factory(
     extra=1,
     can_delete=True,
     help_texts={
-        "parameter": "e.g. Form factor, cathode thickness...",
+        "parameter": "e.g. Form factor, cathode size, number of layers...",
         "value": None,
-        "component": "If this parameter pertains to a specific component, otherwise leave blank.",
+        "component": "If this parameter pertains to a specific component, otherwise leave blank",
     },
     widgets={"value": forms.TextInput()},
 )
@@ -124,9 +122,19 @@ class NewExperimentForm(DataCreateForm):
 
     class Meta:
         model = Experiment
-        fields = ["name", "date", "config", "notes"]
+        fields = [
+            "name",
+            "date",
+            "config",
+            "temperature",
+            "c_rate",
+            "exp_type",
+            "thermal",
+            "notes",
+        ]
         help_texts = {
-            "config": "All devices must be of the same config, e.g. Single cell."
+            "date": "When this experiment started",
+            "config": "All devices must be of the same config, e.g. Single cell",
         }
 
     def __init__(self, *args, **kwargs):
@@ -135,10 +143,22 @@ class NewExperimentForm(DataCreateForm):
         self.helper.layout = Layout(
             Div(HTML("<h1> New Experiment </h1>")),
             Div(
-                Column("name", css_class="col-6"),
-                Column("date", css_class="col-6"),
-                Column("config", css_class="col-6"),
-                Fieldset("Add devices", Formset("devices"), required=False),
+                Column("name", css_class="col-3"),
+                Column("date", css_class="col-3"),
+                Column("config", css_class="col-3"),
+                Column("temperature", css_class="col-3"),
+                Column("exp_type", css_class="col-3"),
+                Column("c_rate", css_class="col-3"),
+                Column("thermal", css_class="col-3"),
+                Fieldset(
+                    "Add devices",
+                    Div(
+                        HTML("Add the device(s) used in this experiment."),
+                        css_class="container pb-4",
+                    ),
+                    Formset("devices"),
+                    required=False,
+                ),
                 Field("notes"),
                 HTML("<br>"),
                 Field("make_public"),
@@ -169,10 +189,7 @@ ExperimentDeviceFormSet = inlineformset_factory(
     fields=["batch", "batch_sequence", "device_position"],
     extra=1,
     can_delete=True,
-    help_texts={
-        "batch_sequence": None,
-        "device_position": None,
-    },
+    help_texts={"batch": "The batch this device came from"},
 )
 
 

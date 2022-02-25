@@ -31,6 +31,13 @@ class NewCompoundForm(DataCreateForm):
         self.helper.layout = Layout(
             Div(
                 Div(HTML("<h1> Compound </h1>")),
+                Div(
+                    HTML(
+                        """Note: compounds should be specified in their discharged state, 
+                        if relevant, and are always public (visible to all users)."""
+                    ),
+                    css_class="container py-2",
+                ),
                 Column("name", css_class="col-4"),
                 Column("formula", css_class="col-4"),
                 Column("mass", css_class="col-4"),

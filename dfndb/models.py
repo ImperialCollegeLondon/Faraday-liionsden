@@ -12,7 +12,8 @@ class Compound(models.Model):
     """Chemical Compound or Element, e.g. Lithium, Graphite."""
 
     name = models.CharField(
-        max_length=100, help_text="Full name for the element or compound"
+        max_length=100,
+        help_text="Full name for the element or compound",
     )
     formula = models.CharField(max_length=20, help_text="Chemical formula")
     mass = models.FloatField(
@@ -51,7 +52,7 @@ class Component(cm.BaseModel):
     type = models.PositiveSmallIntegerField(choices=MATERIAL_TYPE_CHOICES)
     polymer = models.PositiveIntegerField(
         default=0,
-        help_text="If this component is a polymer, enter degree of polymerization",
+        help_text="Degree of polymerisation if this component is a polymer, otherwise 0",
     )
 
     def __str__(self):

@@ -42,6 +42,20 @@
             <div class="col-3">
                 {% bootstrap_field filter.form.status layout='vertical' bound_css_class='' %}
             </div>
+            <div class="col-3">
+                {% bootstrap_field filter.form.exp_type layout='vertical' bound_css_class='' %}
+            </div>
+        </div>
+        <div class="row align-items-end">
+            <div class="col-3">
+                {% bootstrap_field filter.form.thermal layout='vertical' bound_css_class='' %}
+            </div>
+            <div class="col-3">
+                {% bootstrap_field filter.form.c_rate layout='vertical' bound_css_class='' %}
+            </div>
+            <div class="col-3">
+                {% bootstrap_field filter.form.temperature layout='vertical' bound_css_class='' %}
+            </div>
         </div>
         {% bootstrap_button 'search' %}
     </form>

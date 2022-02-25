@@ -58,7 +58,7 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         related_name="used_in_modules",
         limit_choices_to={"config_type": "module"},
         verbose_name="Configuration",
-        help_text="Configuration of subdevices if the device type is a module or pack.",
+        help_text="Leave blank unless this is a new module or pack with a certain configuration",
     )
 
     spec_file = models.FileField(
@@ -67,7 +67,7 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         blank=True,
         validators=(validate_pdf_file,),
         verbose_name="Specification sheet",
-        help_text="PDF version of spec. sheet for this type of device.",
+        help_text="PDF version of spec. sheet for this type of device",
     )
 
     def clean(self):
@@ -117,7 +117,7 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
         blank=False,
         on_delete=models.SET_NULL,
         limit_choices_to={"abstract": False},
-        help_text="Batch Specification",
+        help_text="Type of device in this batch",
     )
     manufacturer = models.ForeignKey(
         cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True
@@ -353,6 +353,23 @@ class Experiment(cm.BaseModel):
     TODO: This is incomplete. What is this meant to do?
     """
 
+    TYPE_CHOICES = (
+        ("constant", "Constant current"),
+        ("gitt", "GITT"),
+        ("hpcc", "HPCC"),
+        ("drivecycle", "Drivecycle"),
+        ("other", "Other"),
+    )
+
+    THERMAL_CHOICES = (
+        ("none", "None"),
+        ("chamber", "Thermal chamber"),
+        ("base", "Base cooled"),
+        ("surface", "Surface cooled"),
+        ("tab", "Tab cooled"),
+        ("other", "Other"),
+    )
+
     date = models.DateField(default=datetime.now)
 
     config = models.ForeignKey(
@@ -365,6 +382,37 @@ class Experiment(cm.BaseModel):
         help_text="All devices in the same experiment must be of the same "
         "configuration, i.e. an experiment must use all single cells, "
         "or all 2s2p modules, not a mixture of both.",
+    )
+
+    temperature = models.FloatField(
+        blank=True,
+        null=True,
+        help_text="Experiment temperature in degrees Celcius.",
+    )
+
+    c_rate = models.FloatField(
+        blank=True,
+        null=True,
+        help_text="C-rate for this experiment.",
+        verbose_name="C-rate",
+    )
+
+    exp_type = models.CharField(
+        verbose_name="Experiment type",
+        max_length=50,
+        choices=TYPE_CHOICES,
+        default="constant",
+        help_text="Type of experiment carried out. If 'other', "
+        "experiment type should be specified in the notes section.",
+    )
+
+    thermal = models.CharField(
+        verbose_name="Thermal management",
+        max_length=50,
+        choices=THERMAL_CHOICES,
+        default="none",
+        help_text="Thermal management technique used in this experiment. "
+        " If 'other', technique should be specified in the notes section.",
     )
 
     def devices_(self):
@@ -568,9 +616,9 @@ class ExperimentDevice(models.Model):
     )
     device_position = models.CharField(
         max_length=20,
-        default="cell_xx",
+        default="cell_01",
         help_text="Device Position ID in Experiment Config - e.g. Cell_A1 for the "
-        "first cell of a series-parallel pack",
+        "first cell of a series-parallel pack (leave as cell_01 for single cell experiments)",
     )
     data_file = models.ForeignKey(
         ExperimentDataFile, null=True, blank=True, on_delete=models.SET_NULL
