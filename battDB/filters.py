@@ -13,7 +13,17 @@ class ExperimentFilter(BaseFilter):
 
     class Meta(BaseFilter.Meta):
         model = Experiment
-        fields = ["id", "name", "status", "user_owner", "user_owner__institution"]
+        fields = [
+            "id",
+            "name",
+            "status",
+            "user_owner",
+            "user_owner__institution",
+            "exp_type",
+            "temperature",
+            "c_rate",
+            "thermal",
+        ]
 
     # Modify init slightly to add custom label(s)
     def __init__(self, *args, **kwargs):

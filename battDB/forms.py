@@ -122,7 +122,16 @@ class NewExperimentForm(DataCreateForm):
 
     class Meta:
         model = Experiment
-        fields = ["name", "date", "config", "notes"]
+        fields = [
+            "name",
+            "date",
+            "config",
+            "temperature",
+            "c_rate",
+            "exp_type",
+            "thermal",
+            "notes",
+        ]
         help_texts = {
             "date": "When this experiment started",
             "config": "All devices must be of the same config, e.g. Single cell",
@@ -134,9 +143,13 @@ class NewExperimentForm(DataCreateForm):
         self.helper.layout = Layout(
             Div(HTML("<h1> New Experiment </h1>")),
             Div(
-                Column("name", css_class="col-6"),
-                Column("date", css_class="col-6"),
-                Column("config", css_class="col-6"),
+                Column("name", css_class="col-3"),
+                Column("date", css_class="col-3"),
+                Column("config", css_class="col-3"),
+                Column("temperature", css_class="col-3"),
+                Column("exp_type", css_class="col-3"),
+                Column("c_rate", css_class="col-3"),
+                Column("thermal", css_class="col-3"),
                 Fieldset(
                     "Add devices",
                     Div(

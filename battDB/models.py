@@ -353,6 +353,23 @@ class Experiment(cm.BaseModel):
     TODO: This is incomplete. What is this meant to do?
     """
 
+    TYPE_CHOICES = (
+        ("constant", "Constant current"),
+        ("gitt", "GITT"),
+        ("hpcc", "HPCC"),
+        ("drivecycle", "Drivecycle"),
+        ("other", "Other"),
+    )
+
+    THERMAL_CHOICES = (
+        ("none", "None"),
+        ("chamber", "Thermal chamber"),
+        ("base", "Base cooled"),
+        ("surface", "Surface cooled"),
+        ("tab", "Tab cooled"),
+        ("other", "Other"),
+    )
+
     date = models.DateField(default=datetime.now)
 
     config = models.ForeignKey(
@@ -365,6 +382,37 @@ class Experiment(cm.BaseModel):
         help_text="All devices in the same experiment must be of the same "
         "configuration, i.e. an experiment must use all single cells, "
         "or all 2s2p modules, not a mixture of both.",
+    )
+
+    temperature = models.FloatField(
+        blank=True,
+        null=True,
+        help_text="Experiment temperature in degrees Celcius.",
+    )
+
+    c_rate = models.FloatField(
+        blank=True,
+        null=True,
+        help_text="C-rate for this experiment.",
+        verbose_name="C-rate",
+    )
+
+    exp_type = models.CharField(
+        verbose_name="Experiment type",
+        max_length=50,
+        choices=TYPE_CHOICES,
+        default="constant",
+        help_text="Type of experiment carried out. If 'other', "
+        "experiment type should be specified in the notes section.",
+    )
+
+    thermal = models.CharField(
+        verbose_name="Thermal management",
+        max_length=50,
+        choices=THERMAL_CHOICES,
+        default="none",
+        help_text="Thermal management technique used in this experiment. "
+        " If 'other', technique should be specified in the notes section.",
     )
 
     def devices_(self):
