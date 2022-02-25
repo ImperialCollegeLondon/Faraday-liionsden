@@ -106,6 +106,14 @@
           <td><b>Size:</b></td>
           <td>{{ data_file.raw_data_file.size }}</td>
         </tr>
+        <tr>
+          <td><b>Status:</b></td>
+          {% if data_file.status == "deleted" %}
+          <td><b>DELETED - not visible to general users.</b></td>
+          {% else %}
+          <td>{{ data_file.status }}</td>
+          {% endif %}
+        </tr>
         {% if data_file.notes %}
         <tr>
           <td><b>Notes:</b></td>
@@ -121,6 +129,7 @@
     <a href="{{ data_file.raw_data_file.file.url }}" class="btn btn-primary" , role="button"> Download raw data file</a>
     {% if "change_experimentdatafile" in df_perms %}
     <a href="/battDB/data_files/delete/{{data_file.pk}}" class="btn btn-danger" , role="button"> Delete </a>
+    <a href="/battDB/exps/update_data/{{data_file.pk}}" class="btn btn-warning" , role="button"> Edit </a>
     {% endif %}
   </div>
 </div>
