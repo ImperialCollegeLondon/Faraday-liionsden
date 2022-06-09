@@ -1,9 +1,10 @@
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Set, Tuple, Union
+from typing import Any, Dict, List, Tuple, Union
 
 import pandas as pd
 import yaml
+from yaml.scanner import ScannerError
 
 from .battery_exceptions import UnsupportedFileTypeError
 from .mappings import COLUMN_NAME_MAPPING
@@ -66,7 +67,11 @@ def get_file_header(
     """
     with open(file_path, encoding=encoding) as f:
         header = list(filter(len, (f.readline().rstrip() for _ in range(skip_rows))))
-    return header_to_yaml(header)
+    try:
+        header = header_to_yaml(header)
+    except ScannerError:
+        pass
+    return header
 
 
 def get_header_size(file_path: Union[Path, str], encoding: str) -> int:
