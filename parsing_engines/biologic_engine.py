@@ -1,4 +1,5 @@
 import re
+from logging import getLogger
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
@@ -70,7 +71,9 @@ def get_file_header(
     try:
         header = header_to_yaml(header)
     except ScannerError:
-        pass
+        getLogger().warning(
+            f"File header for {file_path} could not be parsed as YAML format!"
+        )
     return header
 
 
