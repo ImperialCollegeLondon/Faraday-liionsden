@@ -4,7 +4,7 @@
 
 Liionsden is a platform for storing data about lithium-ion batteries and their performance. It automatically parses data from the output files of battery cycler machines and stores this information in a database, associating it with specific experiments and devices. Metadata is stored about specific experiments, batches of devices and individual devices. 
 
-The development server is running [here](https://liionsden.rcs.ic.ac.uk/exps) (internal to Imperial College). 
+The development server is running [here](https://liionsden.rcs.ic.ac.uk/) (internal to Imperial College). 
 
 It will be possible to browse the database, as well as add to it, via a web-app and programatically via an API.
 
