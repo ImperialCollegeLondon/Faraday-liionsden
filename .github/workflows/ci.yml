@@ -23,7 +23,6 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: postgres
-          AZURE_STORAGE_ACCOUNT_KEY: ${{ secrets.AZURE_STORAGE_ACOUNT_KEY }}
         ports:
           - 5432:5432
         # needed because the postgres container does not provide a healthcheck
@@ -42,6 +41,8 @@ jobs:
     - name: Run migrations
       run: python manage.py migrate
     - name: Run tests
+      env:
+        AZURE_STORAGE_ACCOUNT_KEY: '${{ secrets.AZURE_STORAGE_ACOUNT_KEY }}'
       run: python manage.py test
 
   publish:
