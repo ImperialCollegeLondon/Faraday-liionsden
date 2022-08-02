@@ -119,16 +119,12 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-
-STATIC_URL = "/static/"
-
 # App-specific overrides
 
 INSTALLED_APPS += [
     "rest_framework",
     "rest_framework.authtoken",
+    "storages",
     "django_extensions",
     "mptt",
     "battDB.apps.BattdbConfig",
@@ -143,9 +139,6 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
     ),
 }
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "data/media")
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 DEFAULT_FROM_EMAIL = "noreply@imperial.ac.uk"
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 LOGGING = {
@@ -171,3 +164,19 @@ AUTH_USER_MODEL = "management.User"
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+# File storage
+DEFAULT_FILE_STORAGE = "management.custom_azure.AzureMediaStorage"
+STATICFILES_STORAGE = "management.custom_azure.AzureStaticStorage"
+
+STATIC_LOCATION = "static"
+MEDIA_LOCATION = "media"
+
+AZURE_ACCOUNT_NAME = "liionsdenmedia"
+AZURE_CUSTOM_DOMAIN = f"{AZURE_ACCOUNT_NAME}.blob.core.windows.net"
+STATIC_URL = f"https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/"
+MEDIA_URL = f"https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
+
+# Probably don't need when using Azure for storage of files?
+# MEDIA_ROOT = os.path.join(BASE_DIR, "data/media")
+# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
