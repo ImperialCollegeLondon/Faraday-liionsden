@@ -58,8 +58,7 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         related_name="used_in_modules",
         limit_choices_to={"config_type": "module"},
         verbose_name="Configuration",
-        help_text="Leave blank unless this is a new module or pack with a certain\
-             configuration",
+        help_text="Leave blank unless this is a new module or pack with a certain configuration",  # noqa: E501
     )
 
     spec_file = models.FileField(
@@ -614,8 +613,7 @@ class ExperimentDevice(models.Model):
         max_length=20,
         default="cell_01",
         help_text="Device Position ID in Experiment Config - e.g. Cell_A1 for the "
-        "first cell of a series-parallel pack (leave as cell_01 for single cell\
-            experiments)",
+        "first cell of a series-parallel pack (leave as cell_01 for single cell experiments)",  # noqa E501
     )
     data_file = models.ForeignKey(
         ExperimentDataFile, null=True, blank=True, on_delete=models.SET_NULL
