@@ -58,7 +58,8 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
         related_name="used_in_modules",
         limit_choices_to={"config_type": "module"},
         verbose_name="Configuration",
-        help_text="Leave blank unless this is a new module or pack with a certain configuration",
+        help_text="Leave blank unless this is a new module or pack with a certain\
+             configuration",
     )
 
     spec_file = models.FileField(
@@ -549,14 +550,9 @@ class ExperimentDataFile(cm.BaseModel):
                 c.col_name
                 for c in self.raw_data_file.use_parser.columns.all().order_by("order")
             ]
-            filepath = "/".join(
-                [
-                    self.raw_data_file.file.storage.location,
-                    self.raw_data_file.file.name,
-                ]
-            )
+            file_name = self.raw_data_file.file.name  # this will be unique
             file_format = self.raw_data_file.use_parser.name
-            parsed_file = parse_data_file(filepath, file_format, columns=cols)
+            parsed_file = parse_data_file(file_name, file_format, columns=cols)
 
             self.attributes["parsed_metadata"] = parsed_file["metadata"]
             self.attributes["file_columns"] = parsed_file["file_columns"]
@@ -618,7 +614,8 @@ class ExperimentDevice(models.Model):
         max_length=20,
         default="cell_01",
         help_text="Device Position ID in Experiment Config - e.g. Cell_A1 for the "
-        "first cell of a series-parallel pack (leave as cell_01 for single cell experiments)",
+        "first cell of a series-parallel pack (leave as cell_01 for single cell\
+            experiments)",
     )
     data_file = models.ForeignKey(
         ExperimentDataFile, null=True, blank=True, on_delete=models.SET_NULL
@@ -741,8 +738,8 @@ class DataRange(
 
     Each data file contains numerous ranges e.g. charge & discharge cycles. Their data
     might overlap. <br>
-    Currently this model is used in ExperimentDataFile.create_ranges but creating just one
-    range for the whole file according to parer_engines_base.parse_data_file
+    Currently this model is used in ExperimentDataFile.create_ranges but creating just
+    one range for the whole file according to parer_engines_base.parse_data_file
     range_config, which is fixed.
     TODO: Write (or find) code to segment data into ranges. <br>
     TODO: Convert this into a JSON Schema within ExperimentData. <br>
