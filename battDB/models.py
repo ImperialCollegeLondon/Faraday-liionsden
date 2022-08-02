@@ -551,7 +551,7 @@ class ExperimentDataFile(cm.BaseModel):
             ]
             filepath = "/".join(
                 [
-                    self.raw_data_file.file.storage.base_location,
+                    self.raw_data_file.file.storage.location,
                     self.raw_data_file.file.name,
                 ]
             )
