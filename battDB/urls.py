@@ -10,6 +10,7 @@ from .views import (
     DeleteExperimentView,
     DeviceSpecificationTableView,
     DeviceSpecificationView,
+    DownloadRawDataFileView,
     EquipmentTableView,
     EquipmentView,
     ExperimentTableView,
@@ -79,6 +80,11 @@ urlpatterns = [
         "data_files/delete/<int:pk>/",
         DeleteDataFileView.as_view(),
         name="Delete Data File",
+    ),
+    path(
+        "data_files/download/<int:pk>/",
+        DownloadRawDataFileView.as_view(),
+        name="Download File",
     ),
 ]
 
