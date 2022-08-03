@@ -166,17 +166,13 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 # File storage
+# Azure blob storage for media files
 DEFAULT_FILE_STORAGE = "management.custom_azure.AzureMediaStorage"
-STATICFILES_STORAGE = "management.custom_azure.AzureStaticStorage"
-
-STATIC_LOCATION = "static"
 MEDIA_LOCATION = "media"
-
 AZURE_ACCOUNT_NAME = "liionsdenmedia"
 AZURE_CUSTOM_DOMAIN = f"{AZURE_ACCOUNT_NAME}.blob.core.windows.net"
-STATIC_URL = f"https://{AZURE_CUSTOM_DOMAIN}/{STATIC_LOCATION}/"
 MEDIA_URL = f"https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
 
-# Probably don't need when using Azure for storage of files?
-# MEDIA_ROOT = os.path.join(BASE_DIR, "data/media")
-# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+# Standard local storage for static files
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = "/static/"

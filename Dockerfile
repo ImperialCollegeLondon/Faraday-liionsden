@@ -20,7 +20,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /usr/src/app
 WORKDIR /usr/src/app
 RUN mkdir log
-#RUN python manage.py collectstatic --no-input
+RUN python manage.py collectstatic --no-input
 
 # 8000 for the web and 2222 for ssh
 EXPOSE 8000 2222
