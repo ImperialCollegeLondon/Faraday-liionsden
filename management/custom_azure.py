@@ -15,13 +15,6 @@ class AzureMediaStorage(AzureStorage):
     expiration_secs = None
 
 
-class AzureStaticStorage(AzureStorage):
-    account_name = "liionsdenmedia"
-    account_key = os.getenv("AZURE_STORAGE_ACCOUNT_KEY")
-    azure_container = "static"
-    expiration_secs = None
-
-
 def generate_sas_token(blob_name):
     """
     Generates a SAS token for the Azure storage account.
