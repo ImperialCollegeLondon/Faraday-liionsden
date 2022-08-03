@@ -243,7 +243,9 @@ def parse_data_file(
     """
 
     # Download file to local temp dir
-    file_path = download_blob(blob_name=file_name, sas_token=generate_sas_token())
+    file_path = download_blob(
+        blob_name=file_name, sas_token=generate_sas_token(blob_name=file_name)
+    )
     engine = get_parsing_engine(file_format).factory(file_path)
 
     try:

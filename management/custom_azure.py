@@ -2,7 +2,7 @@ import os
 from datetime import datetime, timedelta
 
 from azure.core.exceptions import ResourceNotFoundError
-from azure.storage.blob import BlobServiceClient, generate_container_sas
+from azure.storage.blob import BlobServiceClient, generate_blob_sas
 from storages.backends.azure_storage import AzureStorage
 
 from liionsden.settings import settings
@@ -22,7 +22,7 @@ class AzureStaticStorage(AzureStorage):
     expiration_secs = None
 
 
-def generate_sas_token():
+def generate_sas_token(blob_name):
     """
     Generates a SAS token for the Azure storage account.
     Permissions are read only and expiry 1 hour for now.
@@ -30,10 +30,11 @@ def generate_sas_token():
     try:
         account_key = os.getenv("AZURE_STORAGE_ACCOUNT_KEY")
         azure_container = settings.MEDIA_LOCATION
-        sas_token = generate_container_sas(
+        sas_token = generate_blob_sas(
             account_name=settings.AZURE_ACCOUNT_NAME,
             account_key=account_key,
             container_name=azure_container,
+            blob_name=blob_name,
             expiry=datetime.utcnow() + timedelta(hours=1),
             permission="r",
         )
