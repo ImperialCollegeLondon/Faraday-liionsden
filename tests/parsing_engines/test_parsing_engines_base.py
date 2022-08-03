@@ -227,7 +227,7 @@ class TestParseDataFile(TestCase):
 
         self.mock_parser = MockParser
 
-    @skip("Fix after moving to blob storage for media files")
+    @skip("Fix after updating parsers to use file objects not paths")
     @patch("parsing_engines.parsing_engines_base.get_parsing_engine")
     def test_parse_data_file(self, mock_parser):
 

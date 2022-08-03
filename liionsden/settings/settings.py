@@ -176,4 +176,4 @@ MEDIA_URL = f"https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
 # Standard local storage for static files
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
-AZURE_URL_EXPIRATION_SECS = 60 * 60 * 1  # 1 hour
+AZURE_URL_EXPIRATION_SECS = 60 * 60 * 24 * 365  # 1 year
