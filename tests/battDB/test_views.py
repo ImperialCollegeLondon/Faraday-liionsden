@@ -529,7 +529,6 @@ class DataUploadViewTest(TestCase):
         self.assertContains(get_response, "Ecell/V")
         self.assertContains(get_response, "Ns changes")
         self.assertContains(get_response, "19.0")
-        self.assertContains(get_response, "Download raw data file")
 
     def test_upload_view_maccor_data(self):
         import os
