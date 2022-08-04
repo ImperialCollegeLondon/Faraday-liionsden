@@ -530,6 +530,17 @@ class DataUploadViewTest(TestCase):
         self.assertContains(get_response, "Ns changes")
         self.assertContains(get_response, "19.0")
 
+        # Finally, check the raw data file can be downloaded
+        download_response = self.client.get(
+            reverse("battDB:Download File", kwargs={"pk": edf.id})
+        )
+        self.assertEqual(download_response.status_code, 302)
+        self.assertTrue(
+            download_response.url.startswith(
+                "https://liionsdenmedia.blob.core.windows.net/media/uploaded_files/biologic_example"
+            ),
+        )
+
     def test_upload_view_maccor_data(self):
         import os
 
@@ -575,3 +586,14 @@ class DataUploadViewTest(TestCase):
         self.assertContains(get_response, "TestTime")
         self.assertContains(get_response, "StepTime")
         self.assertContains(get_response, "3.93")
+
+        # Finally, check the raw data file can be downloaded
+        download_response = self.client.get(
+            reverse("battDB:Download File", kwargs={"pk": edf.id})
+        )
+        self.assertEqual(download_response.status_code, 302)
+        self.assertTrue(
+            download_response.url.startswith(
+                "https://liionsdenmedia.blob.core.windows.net/media/uploaded_files/maccor_example_new"
+            ),
+        )
