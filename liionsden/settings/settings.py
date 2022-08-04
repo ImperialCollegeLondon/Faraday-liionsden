@@ -172,8 +172,8 @@ MEDIA_LOCATION = "media"
 AZURE_ACCOUNT_NAME = "liionsdenmedia"
 AZURE_CUSTOM_DOMAIN = f"{AZURE_ACCOUNT_NAME}.blob.core.windows.net"
 MEDIA_URL = f"https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
+AZURE_URL_EXPIRATION_SECS = 60 * 60 * 24 * 365  # 1 year
 
 # Standard local storage for static files
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
-AZURE_URL_EXPIRATION_SECS = 60 * 60 * 24 * 365  # 1 year
