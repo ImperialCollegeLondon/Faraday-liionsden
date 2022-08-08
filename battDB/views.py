@@ -439,7 +439,7 @@ class DownloadRawDataFileView(PermissionRequiredMixin, DetailView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        blob_name = self.object.raw_data_file.file.file.name
+        blob_name = self.object.raw_data_file.file.name
         blob_url = self.object.raw_data_file.file.url
         sas_token = generate_sas_token(blob_name)
         return redirect(f"{blob_url}?{sas_token}")
