@@ -1,11 +1,14 @@
 import os
 from datetime import datetime, timedelta
+from logging import getLogger
 
 from azure.core.exceptions import ResourceNotFoundError
 from azure.storage.blob import BlobServiceClient, generate_blob_sas
 from storages.backends.azure_storage import AzureStorage
 
 from liionsden.settings import settings
+
+logger = getLogger()
 
 
 class AzureMediaStorage(AzureStorage):
@@ -33,7 +36,7 @@ def generate_sas_token(blob_name):
         )
         return sas_token
     except ResourceNotFoundError:
-        # TODO log something
+        logger.error(f"Could not find blob {blob_name} in container {azure_container}")
         return None
 
 
