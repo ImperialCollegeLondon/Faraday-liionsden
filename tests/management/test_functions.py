@@ -4,10 +4,8 @@ from unittest import skipIf
 from django.conf import settings
 from django.test import TestCase, override_settings
 from model_bakery import baker
-from storages.backends import azure_storage
 
-TEST_AZURE_CONTAINER = "testmedia"
-TEST_MEDIA_URL = f"https://{settings.AZURE_CUSTOM_DOMAIN}/{TEST_AZURE_CONTAINER}/"
+from tests.fixtures import TEST_AZURE_CONTAINER, TEST_MEDIA_URL
 
 
 class TestSasToken(TestCase):

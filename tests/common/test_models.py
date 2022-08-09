@@ -1,19 +1,19 @@
 import time
 from unittest import skip
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 from model_bakery import baker
 
-from tests.fixtures import AbstractModelMixinTestCase
+from tests.fixtures import (
+    TEST_AZURE_CONTAINER,
+    TEST_MEDIA_URL,
+    AbstractModelMixinTestCase,
+)
 
 User = get_user_model()
-
-TEST_AZURE_CONTAINER = "testmedia"
-TEST_MEDIA_URL = f"https://{settings.AZURE_CUSTOM_DOMAIN}/{TEST_AZURE_CONTAINER}/"
 
 
 class TestHasName(AbstractModelMixinTestCase):

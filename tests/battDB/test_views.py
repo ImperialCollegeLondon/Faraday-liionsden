@@ -1,9 +1,10 @@
 from django.contrib.auth.models import Group
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from model_bakery import baker
 
 import battDB.models as bdb
+from tests.fixtures import TEST_AZURE_CONTAINER, TEST_MEDIA_URL
 
 
 class CreateDeviceSpecificationTest(TestCase):
@@ -456,6 +457,11 @@ class BatchViewTest(TestCase):
         )
 
 
+@override_settings(
+    AZURE_CONTAINER=TEST_AZURE_CONTAINER,
+    MEDIA_URL=TEST_MEDIA_URL,
+    DEFAULT_FILE_STORAGE="storages.backends.azure_storage.AzureStorage",
+)
 class DataUploadViewTest(TestCase):
     def setUp(self):
         self.user = baker.make_recipe(
@@ -531,13 +537,14 @@ class DataUploadViewTest(TestCase):
         self.assertContains(get_response, "19.0")
 
         # Finally, check the raw data file can be downloaded
+        # Note: this will currently fail if azure storage isn't used
         download_response = self.client.get(
             reverse("battDB:Download File", kwargs={"pk": edf.id})
         )
         self.assertEqual(download_response.status_code, 302)
         self.assertTrue(
             download_response.url.startswith(
-                "https://liionsdenmedia.blob.core.windows.net/media/uploaded_files/biologic_example"
+                "https://liionsdenmedia.blob.core.windows.net/testmedia/uploaded_files/biologic_example"
             ),
         )
 
@@ -594,6 +601,16 @@ class DataUploadViewTest(TestCase):
         self.assertEqual(download_response.status_code, 302)
         self.assertTrue(
             download_response.url.startswith(
-                "https://liionsdenmedia.blob.core.windows.net/media/uploaded_files/maccor_example_new"
+                "https://liionsdenmedia.blob.core.windows.net/testmedia/uploaded_files/maccor_example_new"
             ),
         )
+
+
+def tearDownModule():
+    """
+    delete all the blobs in the testmedia container.
+    """
+    from management.custom_azure import delete_blobs, list_blobs
+
+    blobs = list_blobs(TEST_AZURE_CONTAINER)
+    delete_blobs(blobs, TEST_AZURE_CONTAINER)
