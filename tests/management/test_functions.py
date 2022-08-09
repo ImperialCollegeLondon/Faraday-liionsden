@@ -80,7 +80,7 @@ class TestDownloadBlob(TestCase):
 
 def tearDownModule():
     """
-    Remove the temporary directory folder at teh end of the tests and
+    Remove the temporary directory folder at the end of the tests and
     delete all the blobs in the testmedia container.
     """
     from management.custom_azure import delete_blobs, list_blobs
