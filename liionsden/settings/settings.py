@@ -167,11 +167,12 @@ LOGOUT_REDIRECT_URL = "/"
 
 # File storage
 # Azure blob storage for media files
-DEFAULT_FILE_STORAGE = "management.custom_azure.AzureMediaStorage"
-MEDIA_LOCATION = "media"
+DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
+AZURE_CONTAINER = "media"
 AZURE_ACCOUNT_NAME = "liionsdenmedia"
+AZURE_ACCOUNT_KEY = os.getenv("AZURE_STORAGE_ACCOUNT_KEY")
 AZURE_CUSTOM_DOMAIN = f"{AZURE_ACCOUNT_NAME}.blob.core.windows.net"
-MEDIA_URL = f"https://{AZURE_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
+MEDIA_URL = f"https://{AZURE_CUSTOM_DOMAIN}/{AZURE_CONTAINER}/"
 AZURE_URL_EXPIRATION_SECS = 60 * 60 * 24 * 365  # 1 year
 
 # Standard local storage for static files
