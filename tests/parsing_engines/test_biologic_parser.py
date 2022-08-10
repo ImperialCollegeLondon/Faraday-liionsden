@@ -12,6 +12,7 @@ class TestBiologicParsingEngine(TestCase):
     @patch("parsing_engines.biologic_engine.get_file_header")
     def test_factory(self, mock_head, mock_data, mock_size, mock_create, mock_drop):
         import pandas as pd
+        from django.core.files.base import File
 
         from parsing_engines import BiologicParsingEngine as BP
 
@@ -19,18 +20,20 @@ class TestBiologicParsingEngine(TestCase):
         mock_size.return_value = 0
         mock_head.return_value = {"answer": 42}
 
-        file_path = Path("biologic_example.csv")
+        file_path = Path(__file__).parent / "biologic_example.csv"
+        with open(file_path, "rb") as f:
+            file_obj = File(f)
 
-        parser = BP.factory(file_path=file_path)
+        parser = BP.factory(file_obj)
         mock_drop.assert_called_once()
         mock_create.assert_called_once()
-        mock_size.assert_called_once_with(file_path, BP.encoding)
-        mock_data.assert_called_once_with(file_path, 0, BP.encoding)
-        mock_head.assert_called_once_with(file_path, 0, BP.encoding)
+        mock_size.assert_called_once_with(file_obj, BP.encoding)
+        mock_data.assert_called_once_with(file_obj, 0, BP.encoding)
+        mock_head.assert_called_once_with(file_obj, 0, BP.encoding)
         self.assertEqual(len(parser.data), 0)
         self.assertEqual(parser.name, "Biologic")
         self.assertEqual(parser.skip_rows, 0)
-        self.assertEqual(parser.file_path, file_path)
+        self.assertEqual(parser.file_obj, file_obj)
         self.assertEqual(parser.file_metadata, {"answer": 42})
 
 
