@@ -1,6 +1,6 @@
 import re
+from io import StringIO
 from logging import getLogger
-from pathlib import Path
 from typing import Any, Dict, List, Tuple, Union
 
 import pandas as pd
@@ -58,7 +58,7 @@ def get_file_header(
     """Extracts the header from the Biologic file.
 
     Args:
-        file_path (Union[Path, str]): File to load the data from.
+        file_obj (FileField): File to load the data from.
         skip_rows (int): Location of the header, assumed equal to the number of rows to
             skip.
         encoding (str): Encoding of the file.
@@ -68,6 +68,7 @@ def get_file_header(
         empty lines.
     """
     with file_obj.open("r") as f:
+        # TODO: check if this needs to be decoded to list of strings
         header = list(filter(len, (f.readline().rstrip() for _ in range(skip_rows))))
     try:
         header = header_to_yaml(header)
@@ -96,7 +97,7 @@ def get_header_size(file_obj: FileField, encoding: str) -> int:
 
 
 def load_biologic_data(
-    file_path: Union[Path, str], skip_rows: int, encoding: str
+    file_obj: FileField, skip_rows: int, encoding: str
 ) -> pd.DataFrame:
     """Loads the data as a Pandas data frame.
 
@@ -105,7 +106,7 @@ def load_biologic_data(
     using tabs. If there is still only 1 column, an erro is raised.
 
     Args:
-        file_path (Union[Path, str]): File to load the data from.
+        file_obj (FileField): File to load the data from.
         skip_rows (int): Location of the header, assumed equal to the number of rows to
             skip.
         encoding (str): Encoding of the file.
@@ -118,20 +119,21 @@ def load_biologic_data(
         pd.DataFrame: A pandas dataframe with all the data.
     """
     kwargs = dict(engine="python", skiprows=skip_rows, encoding=encoding)
-
-    try:
-        data = pd.read_csv(file_path, delimiter=",", **kwargs)
-    except pd.errors.ParserError:
+    with file_obj.open("r") as f:
+        file_str = f.read().decode(encoding)
         try:
-            data = pd.read_csv(file_path, delimiter="\t", **kwargs)
-        except pd.errors.ParserError as err:
-            raise UnsupportedFileTypeError(err)
+            data = pd.read_csv(StringIO(file_str), delimiter=",", **kwargs)
+        except pd.errors.ParserError:
+            try:
+                data = pd.read_csv(file_str, delimiter="\t", **kwargs)
+            except pd.errors.ParserError as err:
+                raise UnsupportedFileTypeError(err)
 
-    if len(data.columns) == 1:
-        data = pd.read_csv(file_path, delimiter="\t", **kwargs)
+        if len(data.columns) == 1:
+            data = pd.read_csv(StringIO(file_str), delimiter="\t", **kwargs)
 
-    if len(data.columns) == 1:
-        raise UnsupportedFileTypeError()
+        if len(data.columns) == 1:
+            raise UnsupportedFileTypeError()
 
     return data
 
