@@ -68,8 +68,8 @@ def get_file_header(
         empty lines.
     """
     with file_obj.open("r") as f:
-        # TODO: check if this needs to be decoded to list of strings
         header = list(filter(len, (f.readline().rstrip() for _ in range(skip_rows))))
+        header = [i.decode(encoding) for i in header]
     try:
         header = header_to_yaml(header)
     except ScannerError:
