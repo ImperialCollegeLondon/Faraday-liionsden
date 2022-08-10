@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Tuple, Union
 
 import pandas as pd
 import yaml
+from django.forms import FileField
 from yaml.scanner import ScannerError
 
 from .battery_exceptions import UnsupportedFileTypeError
@@ -39,21 +40,21 @@ class BiologicParsingEngine(ParsingEngineBase):
     encoding = "iso-8859-1"
 
     @classmethod
-    def factory(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
+    def factory(cls, file_obj: FileField) -> ParsingEngineBase:
         """Factory method for creating a parsing engine.
 
         Args:
-            file_path (Union[Path, str]): Path to the file to load.
+            file_obj (FileField): File to parse.
         """
-        skip_rows = get_header_size(file_path, cls.encoding)
-        data = load_biologic_data(file_path, skip_rows, cls.encoding)
-        file_metadata = get_file_header(file_path, skip_rows, cls.encoding)
-        return cls(file_path, skip_rows, data, file_metadata)
+        skip_rows = get_header_size(file_obj, cls.encoding)
+        data = load_biologic_data(file_obj, skip_rows, cls.encoding)
+        file_metadata = get_file_header(file_obj, skip_rows, cls.encoding)
+        return cls(file_obj, skip_rows, data, file_metadata)
 
 
 def get_file_header(
-    file_path: Union[Path, str], skip_rows: int, encoding: str
-) -> Dict[str, Any]:
+    file_obj: FileField, skip_rows: int, encoding: str
+) -> Union[Dict[str, Any], List[Any]]:
     """Extracts the header from the Biologic file.
 
     Args:
@@ -66,30 +67,31 @@ def get_file_header(
         A list of rows for the header, without the termination characters and
         empty lines.
     """
-    with open(file_path, encoding=encoding) as f:
+    with file_obj.open("r") as f:
         header = list(filter(len, (f.readline().rstrip() for _ in range(skip_rows))))
     try:
         header = header_to_yaml(header)
     except ScannerError:
         getLogger().warning(
-            f"File header for {file_path} could not be parsed as YAML format!"
+            f"File header for {file_obj.name} could not be parsed as YAML format!"
         )
     return header
 
 
-def get_header_size(file_path: Union[Path, str], encoding: str) -> int:
+def get_header_size(file_obj: FileField, encoding: str) -> int:
     """Reads the file and determines the size of the header.
 
     Args:
-        file_path (Union[Path, str]): File to load the data from.
+        file_obj (FileField): File to load the data from.
         encoding (str): Encoding of the file.
 
     Returns:
         Header size as an int
     """
-    with open(file_path, encoding=encoding) as datafile:
-        if "ASCII FILE" in next(datafile):
-            return int(re.findall(r"[0-9]+", next(datafile))[0]) - 1
+    with file_obj.open("r") as f:
+        lines = iter([i.decode(encoding) for i in f.readlines()])
+        if "ASCII FILE" in next(lines):
+            return int(re.findall(r"[0-9]+", next(lines))[0]) - 1
         return 0
 
 
