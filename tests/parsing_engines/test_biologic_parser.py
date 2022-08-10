@@ -38,17 +38,25 @@ class TestBiologicFunctions(TestCase):
     file_path = Path(__file__).parent / "biologic_example.csv"
 
     def setUp(self) -> None:
+        from django.core.files.base import File
+        from model_bakery import baker
+
         from parsing_engines import BiologicParsingEngine as BP
 
-        self.parser = SimpleNamespace(file_path=self.file_path, encoding=BP.encoding)
+        uploaded_file = baker.make_recipe("tests.battDB.uploaded_file")
+        with open(self.file_path, "rb") as f:
+            uploaded_file.file.save("biologic_example.csv", File(f))
+
+        self.parser = SimpleNamespace(file_obj=uploaded_file.file, encoding=BP.encoding)
 
     def test_get_header_size(self):
         from parsing_engines.biologic_engine import get_header_size
 
-        actual = get_header_size(self.parser.file_path, encoding="iso-8859-1")
+        actual = get_header_size(self.parser.file_obj, encoding="iso-8859-1")
 
-        with open(self.file_path, encoding="iso-8859-1") as f:
-            for line in f:
+        with self.parser.file_obj.open("rb") as f:
+            lines = iter([i.decode("iso-8859-1") for i in f.readlines()])
+            for line in lines:
                 if "Nb header lines" in line:
                     expected = int(line.strip().split(" ")[-1]) - 1
                     break
@@ -58,10 +66,10 @@ class TestBiologicFunctions(TestCase):
     def test_load_data(self):
         from parsing_engines.biologic_engine import get_header_size, load_biologic_data
 
-        skip_rows = get_header_size(self.parser.file_path, encoding="iso-8859-1")
+        skip_rows = get_header_size(self.parser.file_obj, encoding="iso-8859-1")
 
         actual = load_biologic_data(
-            self.parser.file_path, skip_rows, encoding="iso-8859-1"
+            self.parser.file_obj, skip_rows, encoding="iso-8859-1"
         )
         self.assertGreater(len(actual.columns), 1)
         self.assertGreater(len(actual), 100)
@@ -69,11 +77,9 @@ class TestBiologicFunctions(TestCase):
     def test_get_file_header(self):
         from parsing_engines.biologic_engine import get_file_header, get_header_size
 
-        skip_rows = get_header_size(self.parser.file_path, encoding="iso-8859-1")
+        skip_rows = get_header_size(self.parser.file_obj, encoding="iso-8859-1")
 
-        header = get_file_header(
-            self.parser.file_path, skip_rows, encoding="iso-8859-1"
-        )
+        header = get_file_header(self.parser.file_obj, skip_rows, encoding="iso-8859-1")
         self.assertGreaterEqual(len(header), 1)
 
 
