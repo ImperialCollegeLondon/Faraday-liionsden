@@ -81,20 +81,27 @@ class TestHeaderToYaml(TestCase):
     file_path = Path(__file__).parent / "biologic_example.csv"
 
     def setUp(self) -> None:
+        from django.core.files.base import File
+        from model_bakery import baker
+
         from parsing_engines import BiologicParsingEngine as BP
 
-        self.parser = BP.factory(self.file_path)
+        self.uploaded_file = baker.make_recipe("tests.battDB.uploaded_file")
+        with open(self.file_path, "rb") as f:
+            self.uploaded_file.file.save("biologic_example.csv", File(f))
+
+        self.parser = BP.factory(self.uploaded_file.file)
 
     def test_header_to_yaml(self):
-        from parsing_engines.biologic_engine import header_to_yaml, yaml_replacements
+        from parsing_engines.biologic_engine import header_to_yaml
 
-        with open(self.parser.file_path, encoding=self.parser.encoding) as f:
+        with self.uploaded_file.file.open("r") as f:
             header = list(
                 filter(
                     len,
                     (f.readline().rstrip() for _ in range(self.parser.skip_rows)),
                 )
             )
+            header = [i.decode("iso-8859-1") for i in header]
         meta = header_to_yaml(header)
-
         self.assertLess(len(meta), len(header))
