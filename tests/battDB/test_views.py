@@ -6,6 +6,8 @@ from model_bakery import baker
 import battDB.models as bdb
 from tests.fixtures import TEST_AZURE_CONTAINER, TEST_MEDIA_URL
 
+# flake8: noqa: E501
+
 
 class CreateDeviceSpecificationTest(TestCase):
     def setUp(self):
@@ -462,6 +464,8 @@ class BatchViewTest(TestCase):
     MEDIA_URL=TEST_MEDIA_URL,
     DEFAULT_FILE_STORAGE="storages.backends.azure_storage.AzureStorage",
 )
+# Note: It is necessary to override DEFAULT_FILE_STORAGE again for the other overrides
+# to fully take effect.
 class DataUploadViewTest(TestCase):
     def setUp(self):
         self.user = baker.make_recipe(
