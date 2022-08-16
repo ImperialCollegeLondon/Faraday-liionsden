@@ -1,9 +1,19 @@
 from pathlib import Path
 from types import SimpleNamespace
-from unittest import TestCase
 from unittest.mock import patch
 
+from django.test import TestCase, override_settings
 
+from tests.fixtures import TEST_AZURE_CONTAINER, TEST_MEDIA_URL
+
+
+@override_settings(
+    AZURE_CONTAINER=TEST_AZURE_CONTAINER,
+    MEDIA_URL=TEST_MEDIA_URL,
+    DEFAULT_FILE_STORAGE="storages.backends.azure_storage.AzureStorage",
+)
+# Note: It is necessary to override DEFAULT_FILE_STORAGE again for the other overrides
+# to fully take effect.
 class TestBiologicParsingEngine(TestCase):
     @patch("parsing_engines.BiologicParsingEngine._drop_unnamed_columns")
     @patch("parsing_engines.BiologicParsingEngine._create_rec_no")
@@ -37,6 +47,11 @@ class TestBiologicParsingEngine(TestCase):
         self.assertEqual(parser.file_metadata, {"answer": 42})
 
 
+@override_settings(
+    AZURE_CONTAINER=TEST_AZURE_CONTAINER,
+    MEDIA_URL=TEST_MEDIA_URL,
+    DEFAULT_FILE_STORAGE="storages.backends.azure_storage.AzureStorage",
+)
 class TestBiologicFunctions(TestCase):
     file_path = Path(__file__).parent / "biologic_example.csv"
 
@@ -86,6 +101,11 @@ class TestBiologicFunctions(TestCase):
         self.assertGreaterEqual(len(header), 1)
 
 
+@override_settings(
+    AZURE_CONTAINER=TEST_AZURE_CONTAINER,
+    MEDIA_URL=TEST_MEDIA_URL,
+    DEFAULT_FILE_STORAGE="storages.backends.azure_storage.AzureStorage",
+)
 class TestHeaderToYaml(TestCase):
     file_path = Path(__file__).parent / "biologic_example.csv"
 
@@ -114,3 +134,13 @@ class TestHeaderToYaml(TestCase):
             header = [i.decode("iso-8859-1") for i in header]
         meta = header_to_yaml(header)
         self.assertLess(len(meta), len(header))
+
+
+def tearDownModule():
+    """
+    delete all the blobs in the testmedia container.
+    """
+    from management.custom_azure import delete_blobs, list_blobs
+
+    blobs = list_blobs(TEST_AZURE_CONTAINER)
+    delete_blobs(blobs, TEST_AZURE_CONTAINER)
