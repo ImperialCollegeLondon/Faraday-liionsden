@@ -89,18 +89,17 @@ def factory_xls(file_obj: FileField) -> Tuple[Union[Sheet, Worksheet], Optional[
     return book.sheet_by_index(0), book.datemode
 
 
-def factory_xlsx(
-    file_path: Union[Path, str]
-) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
+def factory_xlsx(file_obj: FileField) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
     """Factory method for retrieving information specific for Maccor XLSX files.
 
     Args:
-        file_path (Union[Path, str]): Path to the file to load.
+        file_obj (FileField): File to load.
 
     Returns:
         A tuple with a sheet object and the datemode of the workbook.
     """
-    book = openpyxl.load_workbook(file_path, read_only=True)
+    book = openpyxl.load_workbook(file_obj, read_only=True)
+    file_obj.close()
     return book.active, None
 
 
