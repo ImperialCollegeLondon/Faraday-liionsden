@@ -4,6 +4,8 @@ from typing import Text
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
+from django.core.files.base import File
+
 
 class TestMaccorXLSParser(TestCase):
     @patch("parsing_engines.MaccorParsingEngine._drop_unnamed_columns")
@@ -24,7 +26,6 @@ class TestMaccorXLSParser(TestCase):
         mock_drop,
     ):
         import pandas as pd
-        from django.core.files.base import File
 
         from parsing_engines import MaccorParsingEngine as MP
         from parsing_engines.battery_exceptions import (
@@ -83,6 +84,7 @@ class TestMaccorXLSParser(TestCase):
 
 
 class TestMaccorFunctions(TestCase):
+
     file_path = Path(__file__).parent / "maccor_example.xls"
 
     @patch("xlrd.open_workbook")
@@ -96,10 +98,11 @@ class TestMaccorFunctions(TestCase):
         )
         mock_open.return_value = book
 
-        sheet, datemode = factory_xls(self.file_path)
-        mock_open.assert_called_with(self.file_path, on_demand=True)
-        self.assertEqual(sheet, sheet)
-        self.assertEqual(datemode, datemode)
+        with open(self.file_path, "rb") as f:
+            file_obj = File(f)
+            sheet, datemode = factory_xls(file_obj)
+            self.assertEqual(sheet, sheet)
+            self.assertEqual(datemode, datemode)
 
     @patch("openpyxl.load_workbook")
     def test_factory_xlsx(self, mock_open):
@@ -109,10 +112,11 @@ class TestMaccorFunctions(TestCase):
         book = SimpleNamespace(active=sheet)
         mock_open.return_value = book
 
-        sheet, datemode = factory_xlsx(self.file_path)
-        mock_open.assert_called_with(self.file_path, read_only=True)
-        self.assertEqual(sheet, sheet)
-        self.assertEqual(datemode, None)
+        with open(self.file_path, "rb") as f:
+            file_obj = File(f)
+            sheet, datemode = factory_xlsx(file_obj)
+            self.assertEqual(sheet, sheet)
+            self.assertEqual(datemode, None)
 
     def test_get_header_size(self):
         import xlrd
@@ -145,9 +149,11 @@ class TestMaccorFunctions(TestCase):
         sheet = workbook.sheet_by_index(0)
         skip_rows = get_header_size(sheet, MaccorParsingEngine.mandatory_columns)
 
-        actual = load_maccor_data(self.file_path, skip_rows)
-        self.assertGreater(len(actual.columns), 1)
-        self.assertGreater(len(actual), 30)
+        with open(self.file_path, "rb") as f:
+            file_obj = File(f)
+            actual = load_maccor_data(file_obj, skip_rows)
+            self.assertGreater(len(actual.columns), 1)
+            self.assertGreater(len(actual), 30)
 
     def test_get_file_header(self):
         import xlrd
