@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import abc
 import functools
+import os
 from pathlib import Path
 from typing import Any, Dict, Generator, List, Optional, Tuple, Type, Union
 from warnings import warn
@@ -10,6 +11,8 @@ import pandas as pd
 import pandas.errors
 from django.core.exceptions import ValidationError
 from pandas.core.dtypes.common import is_numeric_dtype
+
+from management.custom_azure import download_blob, generate_sas_token
 
 KNOWN_PARSING_ENGINES: Dict[str, Type[ParsingEngineBase]] = {}
 """Registry of the known parsing engines."""
@@ -215,15 +218,17 @@ def mime_and_extension() -> List[Tuple[str, str]]:
 
 
 def parse_data_file(
-    file_path: str,
+    file_name: str,
     file_format: str,
     columns=("time/s", "Ecell/V", "I/mA"),
     col_mapping: Optional[Dict[str, str]] = None,
 ) -> Dict:
-    """Parse a file according to the chosen format
+    """Parse a file according to the chosen format. The file is first retrieved from
+    blob storage and copied to a local temporary file. After parsing, the temporary
+    file is deleted.
 
     Args:
-        file_path: Path to the file to parse.
+        file_name: Name of the file to parse.
         file_format: String indicating the format of the file. Should match the name of
         one of the parsers.
         columns: Columns that will be retrieved, if possible.
@@ -236,6 +241,11 @@ def parse_data_file(
         A dictionary containing the following keys: 'metadata', 'file_columns',
         'parsed_columns', 'missing_columns', 'total_rows', 'range_config' and 'data'.
     """
+
+    # Download file to local temp dir
+    file_path = download_blob(
+        blob_name=file_name, sas_token=generate_sas_token(blob_name=file_name)
+    )
     engine = get_parsing_engine(file_format).factory(file_path)
 
     try:
@@ -253,6 +263,8 @@ def parse_data_file(
     range_config = {"all": {"start": 1, "end": total_rows, "action": "all"}}
     data = engine.get_data_generator_for_columns(parsed_columns, col_mapping)
 
+    # Delete temporary file
+    os.remove(file_path)
     return {
         "metadata": metadata,
         "file_columns": file_columns,

@@ -21,6 +21,7 @@ from common.views import (
     UpdateDataInlineView,
     UpdateDataView,
 )
+from management.custom_azure import generate_sas_token
 
 from .filters import (
     BatchFilter,
@@ -430,6 +431,18 @@ class ParserView(PermissionRequiredMixin, DetailView):
     model = Parser
     template_name = "parser.html"
     permission_required = "battDB.view_parser"
+
+
+class DownloadRawDataFileView(PermissionRequiredMixin, DetailView):
+    model = ExperimentDataFile
+    permission_required = "battDB.view_experimentdatafile"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        blob_name = self.object.raw_data_file.file.name
+        blob_url = self.object.raw_data_file.file.url
+        sas_token = generate_sas_token(blob_name)
+        return redirect(f"{blob_url}?{sas_token}")
 
 
 ### API VIEWS ###

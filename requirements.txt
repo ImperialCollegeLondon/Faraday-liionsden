@@ -24,3 +24,4 @@ crispy-bootstrap5
 django-filter
 tablib
 openpyxl
+django-storages[azure]
