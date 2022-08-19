@@ -151,19 +151,19 @@ def get_header_size(sheet: Union[Sheet, Worksheet], columns: Set) -> int:
     return 0
 
 
-def load_maccor_data(file_path: Union[Path, str], skip_rows: int) -> pd.DataFrame:
+def load_maccor_data(file_obj: FileField, skip_rows: int) -> pd.DataFrame:
     """Loads the data as a Pandas data frame.
 
     Args:
-        file_path (Union[Path, str]): File to load the data from.
+        file_obj (FileField): File to load.
         skip_rows (int): Location of the header, assumed equal to the number of rows to
             skip.
 
     Returns:
         pd.DataFrame: A pandas dataframe with all the data.
     """
-    data = pd.read_excel(file_path, sheet_name=None, header=skip_rows, index_col=None)
-
+    data = pd.read_excel(file_obj, sheet_name=None, header=skip_rows, index_col=None)
+    file_obj.close()
     if isinstance(data, dict):
         data = pd.concat(data.values(), ignore_index=True)
 
