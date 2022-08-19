@@ -11,3 +11,4 @@ data/db/*
 !requirements.txt
 !scripts
 !management
+!.env

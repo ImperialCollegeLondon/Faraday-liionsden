@@ -1,15 +1,19 @@
 import time
 from unittest import skip
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from model_bakery import baker
 
 from tests.fixtures import AbstractModelMixinTestCase
 
 User = get_user_model()
+
+TEST_AZURE_CONTAINER = "testmedia"
+TEST_MEDIA_URL = f"https://{settings.AZURE_CUSTOM_DOMAIN}/{TEST_AZURE_CONTAINER}/"
 
 
 class TestHasName(AbstractModelMixinTestCase):
@@ -313,6 +317,13 @@ class TestReference(TestCase):
         self.assertFalse(self.model.has_pdf())
 
 
+@override_settings(
+    AZURE_CONTAINER=TEST_AZURE_CONTAINER,
+    MEDIA_URL=TEST_MEDIA_URL,
+    DEFAULT_FILE_STORAGE="storages.backends.azure_storage.AzureStorage",
+)
+# Note: It is necessary to override DEFAULT_FILE_STORAGE again for the other overrides
+# to fully take effect.
 class TestHashedFile(AbstractModelMixinTestCase):
     from common.models import HashedFile
 
@@ -349,3 +360,13 @@ class TestHashedFile(AbstractModelMixinTestCase):
     def test_size(self):
         obj = self.model.objects.get()
         self.assertEqual(obj.size(), "%dB" % self.data.size)
+
+
+def tearDownModule():
+    """
+    delete all the blobs in the testmedia container.
+    """
+    from management.custom_azure import delete_blobs, list_blobs
+
+    blobs = list_blobs(TEST_AZURE_CONTAINER)
+    delete_blobs(blobs, TEST_AZURE_CONTAINER)

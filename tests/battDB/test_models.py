@@ -1,4 +1,4 @@
-from unittest import expectedFailure, skip
+from unittest import skip
 from unittest.mock import MagicMock
 
 from django.core.exceptions import ValidationError
