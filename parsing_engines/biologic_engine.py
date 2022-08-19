@@ -118,22 +118,23 @@ def load_biologic_data(
     Returns:
         pd.DataFrame: A pandas dataframe with all the data.
     """
-    kwargs = dict(engine="python", skiprows=skip_rows, encoding=encoding)
-    with file_obj.open("r") as f:
-        file_str = f.read().decode(encoding)
+    kwargs = dict(skiprows=skip_rows, encoding=encoding)
+    try:
+        data = pd.read_csv(file_obj, delimiter=",", **kwargs)
+        file_obj.close()
+    except pd.errors.ParserError:
         try:
-            data = pd.read_csv(StringIO(file_str), delimiter=",", **kwargs)
-        except pd.errors.ParserError:
-            try:
-                data = pd.read_csv(file_str, delimiter="\t", **kwargs)
-            except pd.errors.ParserError as err:
-                raise UnsupportedFileTypeError(err)
+            data = pd.read_csv(file_obj, delimiter="\t", **kwargs)
+            file_obj.close()
+        except pd.errors.ParserError as err:
+            raise UnsupportedFileTypeError(err)
 
-        if len(data.columns) == 1:
-            data = pd.read_csv(StringIO(file_str), delimiter="\t", **kwargs)
+    if len(data.columns) == 1:
+        data = pd.read_csv(file_obj, delimiter="\t", **kwargs)
+        file_obj.close()
 
-        if len(data.columns) == 1:
-            raise UnsupportedFileTypeError()
+    if len(data.columns) == 1:
+        raise UnsupportedFileTypeError()
 
     return data
 
