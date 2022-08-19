@@ -24,6 +24,7 @@ class TestMaccorXLSParser(TestCase):
         mock_drop,
     ):
         import pandas as pd
+        from django.core.files.base import File
 
         from parsing_engines import MaccorParsingEngine as MP
         from parsing_engines.battery_exceptions import (
@@ -41,39 +42,44 @@ class TestMaccorXLSParser(TestCase):
         mock_head.return_value = {"answer": 42}
 
         # XLS file
-        file_path = Path("maccor_example.xls")
+        file_path = Path(__file__).parent / "maccor_example.xls"
+        with open(file_path, "rb") as f:
+            file_obj = File(f)
 
-        parser = MP.factory(file_path=file_path)
+        parser = MP.factory(file_obj=file_obj)
         mock_xls.assert_called_once()
         mock_xlsx.assert_not_called()
         mock_drop.assert_called_once()
         mock_create.assert_called_once()
         mock_size.assert_called_once_with(sheet, set(MP.mandatory_columns.keys()))
-        mock_data.assert_called_once_with(file_path, skip_rows)
+        mock_data.assert_called_once_with(file_obj, skip_rows)
         mock_head.assert_called_once_with(sheet, skip_rows, datemode)
         self.assertEqual(len(parser.data), 0)
         self.assertEqual(parser.name, "Maccor")
         self.assertEqual(parser.skip_rows, skip_rows)
-        self.assertEqual(parser.file_path, file_path)
+        self.assertEqual(parser.file_obj, file_obj)
         self.assertEqual(parser.file_metadata, {"answer": 42})
 
         # XLSX file
-        file_path = Path("maccor_example_new.xlsx")
+        file_path = Path(__file__).parent / "maccor_example_new.xlsx"
+        with open(file_path, "rb") as f:
+            file_obj = File(f)
+
         mock_xls.reset_mock()
         mock_xlsx.reset_mock()
 
-        MP.factory(file_path=file_path)
+        MP.factory(file_obj=file_obj)
         mock_xlsx.assert_called_once()
         mock_xls.assert_not_called()
 
         # Empty file
         sheet = SimpleNamespace(max_column=0, max_row=1)
         mock_xlsx.return_value = sheet, datemode
-        self.assertRaises(EmptyFileError, MP.factory, file_path)
+        self.assertRaises(EmptyFileError, MP.factory, file_obj)
 
         # Unsupported file
-        file_path = Path("maccor_example.csv")
-        self.assertRaises(UnsupportedFileTypeError, MP.factory, file_path)
+        file_obj = File(b"", name="unsupported.file")
+        self.assertRaises(UnsupportedFileTypeError, MP.factory, file_obj)
 
 
 class TestMaccorFunctions(TestCase):
