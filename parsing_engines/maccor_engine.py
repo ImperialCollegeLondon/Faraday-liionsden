@@ -1,3 +1,4 @@
+import os
 from typing import (
     Any,
     Dict,
@@ -52,7 +53,7 @@ class MaccorParsingEngine(ParsingEngineBase):
         Args:
             file_obj (FileField): File to parse.
         """
-        ext = "." + file_obj.name.split(".")[-1]
+        ext = os.path.splitext(file_obj.name)[1]
         if ext == ".xls":
             sheet, datemode = factory_xls(file_obj)
             if sheet.ncols < 1 or sheet.nrows < 2:
