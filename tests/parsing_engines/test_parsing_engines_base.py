@@ -148,17 +148,17 @@ class TestDummyParsingEngine(TestCase):
     )
     @patch("parsing_engines.parsing_engines_base.DummyParsingEngine._create_rec_no")
     def test_factory(self, mock_create, mock_drop):
-        from pathlib import Path
+        from django.core.files.base import File
 
         from parsing_engines.parsing_engines_base import DummyParsingEngine
 
-        parser = DummyParsingEngine.factory("")
+        parser = DummyParsingEngine.factory(File(b""))
         mock_drop.assert_called_once()
         mock_create.assert_called_once()
         self.assertEqual(len(parser.data), 0)
         self.assertEqual(parser.name, "Dummy")
         self.assertEqual(parser.skip_rows, 0)
-        self.assertEqual(parser.file_obj, "")
+        self.assertEqual(type(parser.file_obj), File)
         self.assertEqual(parser.file_metadata, {"num_rows": 0})
 
 
