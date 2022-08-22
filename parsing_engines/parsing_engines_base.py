@@ -10,8 +10,6 @@ import pandas.errors
 from django.core.exceptions import ValidationError
 from pandas.core.dtypes.common import is_numeric_dtype
 
-from management.custom_azure import download_blob, generate_sas_token
-
 KNOWN_PARSING_ENGINES: Dict[str, Type[ParsingEngineBase]] = {}
 """Registry of the known parsing engines."""
 
