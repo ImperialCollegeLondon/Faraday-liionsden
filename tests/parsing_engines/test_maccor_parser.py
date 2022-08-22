@@ -44,10 +44,9 @@ class TestMaccorXLSParser(TestCase):
 
         # XLS file
         file_path = Path(__file__).parent / "maccor_example.xls"
-        with open(file_path, "rb") as f:
-            file_obj = File(f)
+        with open(file_path, "rb") as file_obj:
+            parser = MP.factory(file_obj=file_obj)
 
-        parser = MP.factory(file_obj=file_obj)
         mock_xls.assert_called_once()
         mock_xlsx.assert_not_called()
         mock_drop.assert_called_once()
@@ -63,13 +62,12 @@ class TestMaccorXLSParser(TestCase):
 
         # XLSX file
         file_path = Path(__file__).parent / "maccor_example_new.xlsx"
-        with open(file_path, "rb") as f:
-            file_obj = File(f)
-
         mock_xls.reset_mock()
         mock_xlsx.reset_mock()
 
-        MP.factory(file_obj=file_obj)
+        with open(file_path, "rb") as file_obj:
+            MP.factory(file_obj=file_obj)
+
         mock_xlsx.assert_called_once()
         mock_xls.assert_not_called()
 
@@ -98,8 +96,7 @@ class TestMaccorFunctions(TestCase):
         )
         mock_open.return_value = book
 
-        with open(self.file_path, "rb") as f:
-            file_obj = File(f)
+        with open(self.file_path, "rb") as file_obj:
             sheet, datemode = factory_xls(file_obj)
             self.assertEqual(sheet, sheet)
             self.assertEqual(datemode, datemode)
@@ -112,8 +109,7 @@ class TestMaccorFunctions(TestCase):
         book = SimpleNamespace(active=sheet)
         mock_open.return_value = book
 
-        with open(self.file_path, "rb") as f:
-            file_obj = File(f)
+        with open(self.file_path, "rb") as file_obj:
             sheet, datemode = factory_xlsx(file_obj)
             self.assertEqual(sheet, sheet)
             self.assertEqual(datemode, None)
@@ -149,8 +145,7 @@ class TestMaccorFunctions(TestCase):
         sheet = workbook.sheet_by_index(0)
         skip_rows = get_header_size(sheet, MaccorParsingEngine.mandatory_columns)
 
-        with open(self.file_path, "rb") as f:
-            file_obj = File(f)
+        with open(self.file_path, "rb") as file_obj:
             actual = load_maccor_data(file_obj, skip_rows)
             self.assertGreater(len(actual.columns), 1)
             self.assertGreater(len(actual), 30)
