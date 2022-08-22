@@ -1,10 +1,9 @@
 import re
 from logging import getLogger
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, TextIO, Tuple, Union
 
 import pandas as pd
 import yaml
-from django.forms import FileField
 from yaml.scanner import ScannerError
 
 from .battery_exceptions import UnsupportedFileTypeError
@@ -39,11 +38,11 @@ class BiologicParsingEngine(ParsingEngineBase):
     encoding = "iso-8859-1"
 
     @classmethod
-    def factory(cls, file_obj: FileField) -> ParsingEngineBase:
+    def factory(cls, file_obj: TextIO) -> ParsingEngineBase:
         """Factory method for creating a parsing engine.
 
         Args:
-            file_obj (FileField): File to parse.
+            file_obj (TextIO): File to parse.
         """
         skip_rows = get_header_size(file_obj, cls.encoding)
         data = load_biologic_data(file_obj, skip_rows, cls.encoding)
@@ -52,12 +51,12 @@ class BiologicParsingEngine(ParsingEngineBase):
 
 
 def get_file_header(
-    file_obj: FileField, skip_rows: int, encoding: str
+    file_obj: TextIO, skip_rows: int, encoding: str
 ) -> Union[Dict[str, Any], List[Any]]:
     """Extracts the header from the Biologic file.
 
     Args:
-        file_obj (FileField): File to load the data from.
+        file_obj (TextIO): File to load the data from.
         skip_rows (int): Location of the header, assumed equal to the number of rows to
             skip.
         encoding (str): Encoding of the file.
@@ -78,11 +77,11 @@ def get_file_header(
     return header
 
 
-def get_header_size(file_obj: FileField, encoding: str) -> int:
+def get_header_size(file_obj: TextIO, encoding: str) -> int:
     """Reads the file and determines the size of the header.
 
     Args:
-        file_obj (FileField): File to load the data from.
+        file_obj (TextIO): File to load the data from.
         encoding (str): Encoding of the file.
 
     Returns:
@@ -95,9 +94,7 @@ def get_header_size(file_obj: FileField, encoding: str) -> int:
         return 0
 
 
-def load_biologic_data(
-    file_obj: FileField, skip_rows: int, encoding: str
-) -> pd.DataFrame:
+def load_biologic_data(file_obj: TextIO, skip_rows: int, encoding: str) -> pd.DataFrame:
     """Loads the data as a Pandas data frame.
 
     Can work with files that have a header or that do not have one. It is assumed
@@ -105,7 +102,7 @@ def load_biologic_data(
     using tabs. If there is still only 1 column, an erro is raised.
 
     Args:
-        file_obj (FileField): File to load the data from.
+        file_obj (TextIO): File to load the data from.
         skip_rows (int): Location of the header, assumed equal to the number of rows to
             skip.
         encoding (str): Encoding of the file.

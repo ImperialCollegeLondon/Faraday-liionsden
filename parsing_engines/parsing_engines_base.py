@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import abc
 import functools
-from typing import Any, Dict, Generator, List, Optional, Tuple, Type, Union
+from typing import Any, Dict, Generator, List, Optional, TextIO, Tuple, Type, Union
 from warnings import warn
 
 import pandas as pd
 import pandas.errors
 from django.core.exceptions import ValidationError
-from django.forms import FileField
 from pandas.core.dtypes.common import is_numeric_dtype
 
 from management.custom_azure import download_blob, generate_sas_token
@@ -35,17 +34,17 @@ class ParsingEngineBase(abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def factory(cls, file_obj: FileField) -> ParsingEngineBase:
+    def factory(cls, file_obj: TextIO) -> ParsingEngineBase:
         """Factory method for creating a parsing engine.
 
         Args:
-            file_obj (FileField): File to parse.
+            file_obj (TextIO): File to parse.
         """
         pass
 
     def __init__(
         self,
-        file_obj: FileField,
+        file_obj: TextIO,
         skip_rows: int,
         data: pd.DataFrame,
         file_metadata: Dict[str, Any],
@@ -146,11 +145,11 @@ class DummyParsingEngine(ParsingEngineBase):
     description = "Dummy parsing engine that does nothing"
 
     @classmethod
-    def factory(cls, file_obj: FileField) -> ParsingEngineBase:
+    def factory(cls, file_obj: TextIO) -> ParsingEngineBase:
         """Factory method for creating a parsing engine.
 
         Args:
-            file_obj (FileField): File to parse.
+            file_obj (TextIO): File to parse.
         """
         return cls(
             file_obj=file_obj,
@@ -217,7 +216,7 @@ def mime_and_extension() -> List[Tuple[str, str]]:
 
 
 def parse_data_file(
-    file_obj: FileField,
+    file_obj: TextIO,
     file_format: str,
     columns=("time/s", "Ecell/V", "I/mA"),
     col_mapping: Optional[Dict[str, str]] = None,

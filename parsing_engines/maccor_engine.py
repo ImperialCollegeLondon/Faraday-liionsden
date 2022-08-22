@@ -8,6 +8,7 @@ from typing import (
     Sequence,
     Set,
     Text,
+    TextIO,
     Tuple,
     Union,
 )
@@ -15,7 +16,6 @@ from typing import (
 import openpyxl
 import pandas as pd
 import xlrd
-from django.forms import FileField
 from openpyxl.worksheet.worksheet import Worksheet
 from xlrd.sheet import Cell, Sheet
 
@@ -47,11 +47,11 @@ class MaccorParsingEngine(ParsingEngineBase):
     }
 
     @classmethod
-    def factory(cls, file_obj: FileField) -> ParsingEngineBase:
+    def factory(cls, file_obj: TextIO) -> ParsingEngineBase:
         """Factory method for creating a parsing engine.
 
         Args:
-            file_obj (FileField): File to parse.
+            file_obj (TextIO): File to parse.
         """
         ext = os.path.splitext(file_obj.name)[1]
         if ext == ".xls":
@@ -73,11 +73,11 @@ class MaccorParsingEngine(ParsingEngineBase):
         return cls(file_obj, skip_rows, data, file_metadata)
 
 
-def factory_xls(file_obj: FileField) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
+def factory_xls(file_obj: TextIO) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
     """Factory method for retrieving information specific for Maccor XLS files.
 
     Args:
-        file_obj (FileField): File to load.
+        file_obj (TextIO): File to load.
 
     Returns:
         A tuple with a sheet object and the datemode of the workbook.
@@ -87,11 +87,11 @@ def factory_xls(file_obj: FileField) -> Tuple[Union[Sheet, Worksheet], Optional[
     return book.sheet_by_index(0), book.datemode
 
 
-def factory_xlsx(file_obj: FileField) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
+def factory_xlsx(file_obj: TextIO) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
     """Factory method for retrieving information specific for Maccor XLSX files.
 
     Args:
-        file_obj (FileField): File to load.
+        file_obj (TextIO): File to load.
 
     Returns:
         A tuple with a sheet object and the datemode of the workbook.
@@ -149,11 +149,11 @@ def get_header_size(sheet: Union[Sheet, Worksheet], columns: Set) -> int:
     return 0
 
 
-def load_maccor_data(file_obj: FileField, skip_rows: int) -> pd.DataFrame:
+def load_maccor_data(file_obj: TextIO, skip_rows: int) -> pd.DataFrame:
     """Loads the data as a Pandas data frame.
 
     Args:
-        file_obj (FileField): File to load.
+        file_obj (TextIO): File to load.
         skip_rows (int): Location of the header, assumed equal to the number of rows to
             skip.
 
