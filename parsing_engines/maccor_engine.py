@@ -82,9 +82,8 @@ def factory_xls(file_obj: FileField) -> Tuple[Union[Sheet, Worksheet], Optional[
     Returns:
         A tuple with a sheet object and the datemode of the workbook.
     """
-
+    file_obj.seek(0)
     book = xlrd.open_workbook(file_contents=file_obj.read(), on_demand=True)
-    file_obj.close()
     return book.sheet_by_index(0), book.datemode
 
 
@@ -97,8 +96,8 @@ def factory_xlsx(file_obj: FileField) -> Tuple[Union[Sheet, Worksheet], Optional
     Returns:
         A tuple with a sheet object and the datemode of the workbook.
     """
+    file_obj.seek(0)
     book = openpyxl.load_workbook(file_obj, read_only=True)
-    file_obj.close()
     return book.active, None
 
 
@@ -161,8 +160,8 @@ def load_maccor_data(file_obj: FileField, skip_rows: int) -> pd.DataFrame:
     Returns:
         pd.DataFrame: A pandas dataframe with all the data.
     """
+    file_obj.seek(0)
     data = pd.read_excel(file_obj, sheet_name=None, header=skip_rows, index_col=None)
-    file_obj.close()
     if isinstance(data, dict):
         data = pd.concat(data.values(), ignore_index=True)
 

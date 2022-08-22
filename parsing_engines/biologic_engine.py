@@ -119,18 +119,18 @@ def load_biologic_data(
     """
     kwargs = dict(skiprows=skip_rows, encoding=encoding)
     try:
+        file_obj.seek(0)
         data = pd.read_csv(file_obj, delimiter=",", **kwargs)
-        file_obj.close()
     except pd.errors.ParserError:
         try:
+            file_obj.seek(0)
             data = pd.read_csv(file_obj, delimiter="\t", **kwargs)
-            file_obj.close()
         except pd.errors.ParserError as err:
             raise UnsupportedFileTypeError(err)
 
     if len(data.columns) == 1:
+        file_obj.seek(0)
         data = pd.read_csv(file_obj, delimiter="\t", **kwargs)
-        file_obj.close()
 
     if len(data.columns) == 1:
         raise UnsupportedFileTypeError()
