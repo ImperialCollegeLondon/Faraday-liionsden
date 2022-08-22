@@ -4,14 +4,12 @@ from unittest import skip
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase, override_settings
+from django.test import TestCase
 from model_bakery import baker
+from override_storage import override_storage
+from override_storage.storage import LocMemStorage
 
-from tests.fixtures import (
-    TEST_AZURE_CONTAINER,
-    TEST_MEDIA_URL,
-    AbstractModelMixinTestCase,
-)
+from tests.fixtures import TEST_AZURE_CONTAINER, AbstractModelMixinTestCase
 
 User = get_user_model()
 
@@ -317,13 +315,7 @@ class TestReference(TestCase):
         self.assertFalse(self.model.has_pdf())
 
 
-@override_settings(
-    AZURE_CONTAINER=TEST_AZURE_CONTAINER,
-    MEDIA_URL=TEST_MEDIA_URL,
-    DEFAULT_FILE_STORAGE="storages.backends.azure_storage.AzureStorage",
-)
-# Note: It is necessary to override DEFAULT_FILE_STORAGE again for the other overrides
-# to fully take effect.
+@override_storage(storage=LocMemStorage())
 class TestHashedFile(AbstractModelMixinTestCase):
     from common.models import HashedFile
 
