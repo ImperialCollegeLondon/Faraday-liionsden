@@ -616,19 +616,3 @@ def tearDownModule():
 
     blobs = list_blobs(TEST_AZURE_CONTAINER)
     delete_blobs(blobs, TEST_AZURE_CONTAINER)
-
-
-class TestStorage(TestCase):
-    @override_storage(storage=LocMemStorage)
-    def test_file_found(self):
-        import os
-
-        from liionsden.settings import settings
-
-        # Check file upload response
-        filepath = os.path.join(
-            settings.BASE_DIR, "tests/parsing_engines/biologic_example.csv"
-        )
-        self.assertTrue(os.path.isfile(filepath))
-        with open(filepath, "r") as input_file:
-            print(input_file.readline())
