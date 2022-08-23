@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import magic
@@ -19,7 +20,7 @@ def validate_data_file(file) -> None:
     Raises:
         ValidationError if validation is not passed.
     """
-    extension = "." + file.name.split(".")[-1]
+    extension = os.path.splitext(file.name)[1]
     file_mime_type = magic.from_buffer(file.read(1024), mime=True)
     if (file_mime_type, extension) not in mime_and_extension():
         raise ValidationError(

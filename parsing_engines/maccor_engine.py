@@ -1,4 +1,4 @@
-from pathlib import Path
+import os
 from typing import (
     Any,
     Dict,
@@ -8,6 +8,7 @@ from typing import (
     Sequence,
     Set,
     Text,
+    TextIO,
     Tuple,
     Union,
 )
@@ -46,19 +47,19 @@ class MaccorParsingEngine(ParsingEngineBase):
     }
 
     @classmethod
-    def factory(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
+    def factory(cls, file_obj: TextIO) -> ParsingEngineBase:
         """Factory method for creating a parsing engine.
 
         Args:
-            file_path (Union[Path, str]): Path to the file to load.
+            file_obj (TextIO): File to parse.
         """
-        ext = Path(file_path).suffix.lower()
+        ext = os.path.splitext(file_obj.name)[1]
         if ext == ".xls":
-            sheet, datemode = factory_xls(file_path)
+            sheet, datemode = factory_xls(file_obj)
             if sheet.ncols < 1 or sheet.nrows < 2:
                 raise EmptyFileError()
         elif ext == ".xlsx":
-            sheet, datemode = factory_xlsx(file_path)
+            sheet, datemode = factory_xlsx(file_obj)
             if sheet.max_column < 1 or sheet.max_row < 2:
                 raise EmptyFileError()
         else:
@@ -67,38 +68,36 @@ class MaccorParsingEngine(ParsingEngineBase):
             )
 
         skip_rows = get_header_size(sheet, set(cls.mandatory_columns.keys()))
-        data = load_maccor_data(file_path, skip_rows)
+        data = load_maccor_data(file_obj, skip_rows)
         file_metadata = get_file_header(sheet, skip_rows, datemode)
-        return cls(file_path, skip_rows, data, file_metadata)
+        return cls(file_obj, skip_rows, data, file_metadata)
 
 
-def factory_xls(
-    file_path: Union[Path, str]
-) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
+def factory_xls(file_obj: TextIO) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
     """Factory method for retrieving information specific for Maccor XLS files.
 
     Args:
-        file_path (Union[Path, str]): Path to the file to load.
+        file_obj (TextIO): File to load.
 
     Returns:
         A tuple with a sheet object and the datemode of the workbook.
     """
-    book = xlrd.open_workbook(file_path, on_demand=True)
+    file_obj.seek(0)
+    book = xlrd.open_workbook(file_contents=file_obj.read(), on_demand=True)
     return book.sheet_by_index(0), book.datemode
 
 
-def factory_xlsx(
-    file_path: Union[Path, str]
-) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
+def factory_xlsx(file_obj: TextIO) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
     """Factory method for retrieving information specific for Maccor XLSX files.
 
     Args:
-        file_path (Union[Path, str]): Path to the file to load.
+        file_obj (TextIO): File to load.
 
     Returns:
         A tuple with a sheet object and the datemode of the workbook.
     """
-    book = openpyxl.load_workbook(file_path, read_only=True)
+    file_obj.seek(0)
+    book = openpyxl.load_workbook(file_obj, read_only=True)
     return book.active, None
 
 
@@ -150,19 +149,19 @@ def get_header_size(sheet: Union[Sheet, Worksheet], columns: Set) -> int:
     return 0
 
 
-def load_maccor_data(file_path: Union[Path, str], skip_rows: int) -> pd.DataFrame:
+def load_maccor_data(file_obj: TextIO, skip_rows: int) -> pd.DataFrame:
     """Loads the data as a Pandas data frame.
 
     Args:
-        file_path (Union[Path, str]): File to load the data from.
+        file_obj (TextIO): File to load.
         skip_rows (int): Location of the header, assumed equal to the number of rows to
             skip.
 
     Returns:
         pd.DataFrame: A pandas dataframe with all the data.
     """
-    data = pd.read_excel(file_path, sheet_name=None, header=skip_rows, index_col=None)
-
+    file_obj.seek(0)
+    data = pd.read_excel(file_obj, sheet_name=None, header=skip_rows, index_col=None)
     if isinstance(data, dict):
         data = pd.concat(data.values(), ignore_index=True)
 

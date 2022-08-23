@@ -1,7 +1,6 @@
 import re
 from logging import getLogger
-from pathlib import Path
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, TextIO, Tuple, Union
 
 import pandas as pd
 import yaml
@@ -39,25 +38,25 @@ class BiologicParsingEngine(ParsingEngineBase):
     encoding = "iso-8859-1"
 
     @classmethod
-    def factory(cls, file_path: Union[Path, str]) -> ParsingEngineBase:
+    def factory(cls, file_obj: TextIO) -> ParsingEngineBase:
         """Factory method for creating a parsing engine.
 
         Args:
-            file_path (Union[Path, str]): Path to the file to load.
+            file_obj (TextIO): File to parse.
         """
-        skip_rows = get_header_size(file_path, cls.encoding)
-        data = load_biologic_data(file_path, skip_rows, cls.encoding)
-        file_metadata = get_file_header(file_path, skip_rows, cls.encoding)
-        return cls(file_path, skip_rows, data, file_metadata)
+        skip_rows = get_header_size(file_obj, cls.encoding)
+        data = load_biologic_data(file_obj, skip_rows, cls.encoding)
+        file_metadata = get_file_header(file_obj, skip_rows, cls.encoding)
+        return cls(file_obj, skip_rows, data, file_metadata)
 
 
 def get_file_header(
-    file_path: Union[Path, str], skip_rows: int, encoding: str
-) -> Dict[str, Any]:
+    file_obj: TextIO, skip_rows: int, encoding: str
+) -> Union[Dict[str, Any], List[Any]]:
     """Extracts the header from the Biologic file.
 
     Args:
-        file_path (Union[Path, str]): File to load the data from.
+        file_obj (TextIO): File to load the data from.
         skip_rows (int): Location of the header, assumed equal to the number of rows to
             skip.
         encoding (str): Encoding of the file.
@@ -66,36 +65,39 @@ def get_file_header(
         A list of rows for the header, without the termination characters and
         empty lines.
     """
-    with open(file_path, encoding=encoding) as f:
+    with file_obj.open("r") as f:
         header = list(filter(len, (f.readline().rstrip() for _ in range(skip_rows))))
+        if type(header[0]) == bytes:
+            header = [i.decode(encoding) for i in header]
     try:
         header = header_to_yaml(header)
     except ScannerError:
         getLogger().warning(
-            f"File header for {file_path} could not be parsed as YAML format!"
+            f"File header for {file_obj.name} could not be parsed as YAML format!"
         )
     return header
 
 
-def get_header_size(file_path: Union[Path, str], encoding: str) -> int:
+def get_header_size(file_obj: TextIO, encoding: str) -> int:
     """Reads the file and determines the size of the header.
 
     Args:
-        file_path (Union[Path, str]): File to load the data from.
+        file_obj (TextIO): File to load the data from.
         encoding (str): Encoding of the file.
 
     Returns:
         Header size as an int
     """
-    with open(file_path, encoding=encoding) as datafile:
-        if "ASCII FILE" in next(datafile):
-            return int(re.findall(r"[0-9]+", next(datafile))[0]) - 1
+    file_obj.seek(0)
+    with file_obj.open("r") as f:
+        lines = iter([i.decode(encoding) for i in f.readlines()])
+        if "ASCII FILE" in next(lines):
+            return int(re.findall(r"[0-9]+", next(lines))[0]) - 1
+        file_obj.seek(0)
         return 0
 
 
-def load_biologic_data(
-    file_path: Union[Path, str], skip_rows: int, encoding: str
-) -> pd.DataFrame:
+def load_biologic_data(file_obj: TextIO, skip_rows: int, encoding: str) -> pd.DataFrame:
     """Loads the data as a Pandas data frame.
 
     Can work with files that have a header or that do not have one. It is assumed
@@ -103,7 +105,7 @@ def load_biologic_data(
     using tabs. If there is still only 1 column, an erro is raised.
 
     Args:
-        file_path (Union[Path, str]): File to load the data from.
+        file_obj (TextIO): File to load the data from.
         skip_rows (int): Location of the header, assumed equal to the number of rows to
             skip.
         encoding (str): Encoding of the file.
@@ -115,18 +117,21 @@ def load_biologic_data(
     Returns:
         pd.DataFrame: A pandas dataframe with all the data.
     """
-    kwargs = dict(engine="python", skiprows=skip_rows, encoding=encoding)
-
+    kwargs = dict(skiprows=skip_rows, encoding=encoding)
+    file_obj.open("r")
     try:
-        data = pd.read_csv(file_path, delimiter=",", **kwargs)
+        file_obj.seek(0)
+        data = pd.read_csv(file_obj, delimiter=",", **kwargs)
     except pd.errors.ParserError:
         try:
-            data = pd.read_csv(file_path, delimiter="\t", **kwargs)
+            file_obj.seek(0)
+            data = pd.read_csv(file_obj, delimiter="\t", **kwargs)
         except pd.errors.ParserError as err:
             raise UnsupportedFileTypeError(err)
 
     if len(data.columns) == 1:
-        data = pd.read_csv(file_path, delimiter="\t", **kwargs)
+        file_obj.seek(0)
+        data = pd.read_csv(file_obj, delimiter="\t", **kwargs)
 
     if len(data.columns) == 1:
         raise UnsupportedFileTypeError()

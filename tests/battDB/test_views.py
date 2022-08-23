@@ -1,9 +1,16 @@
+import tempfile
+
 from django.contrib.auth.models import Group
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from model_bakery import baker
+from override_storage import override_storage
+from override_storage.storage import LocMemStorage
 
 import battDB.models as bdb
+from tests.fixtures import TEST_AZURE_CONTAINER, TEST_MEDIA_URL
+
+# flake8: noqa: E501
 
 
 class CreateDeviceSpecificationTest(TestCase):
@@ -456,6 +463,12 @@ class BatchViewTest(TestCase):
         )
 
 
+# The LocMemStorage of override_storage is too transient for the tests to work
+# here so we use @override settings and FileSystemStorage.
+@override_settings(
+    MEDIA_ROOT=tempfile.mkdtemp(),
+    DEFAULT_FILE_STORAGE="django.core.files.storage.FileSystemStorage",
+)
 class DataUploadViewTest(TestCase):
     def setUp(self):
         self.user = baker.make_recipe(
@@ -497,13 +510,11 @@ class DataUploadViewTest(TestCase):
         self.assertContains(data_upload_get_response, "Upload the raw data file here.")
 
         # Check file upload response
-        with open(
-            os.path.join(
-                settings.BASE_DIR,
-                "tests/parsing_engines/biologic_example.csv",
-            ),
-            "r",
-        ) as input_file:
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/biologic_example.csv",
+        )
+        with open(file_path) as input_file:
             post_response = self.client.post(
                 reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
                 {
@@ -531,6 +542,7 @@ class DataUploadViewTest(TestCase):
         self.assertContains(get_response, "19.0")
 
         # Finally, check the raw data file can be downloaded
+        # Note: this will currently fail if azure storage isn't used
         download_response = self.client.get(
             reverse("battDB:Download File", kwargs={"pk": edf.id})
         )
@@ -555,12 +567,11 @@ class DataUploadViewTest(TestCase):
         self.assertEqual(login_response.url, "/")
 
         # Check file upload response
-        with open(
-            os.path.join(
-                settings.BASE_DIR, "tests/parsing_engines/maccor_example_new.xlsx"
-            ),
-            "rb",
-        ) as input_file:
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/maccor_example_new.xlsx",
+        )
+        with open(file_path, "rb") as input_file:
             post_response = self.client.post(
                 reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
                 {
