@@ -1,3 +1,5 @@
+import tempfile
+
 from django.contrib.auth.models import Group
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -464,6 +466,7 @@ class BatchViewTest(TestCase):
 # The LocMemStorage of override_storage is too transient for the tests to work
 # here so we use @override settings and FileSystemStorage.
 @override_settings(
+    MEDIA_ROOT=tempfile.mkdtemp(),
     DEFAULT_FILE_STORAGE="django.core.files.storage.FileSystemStorage",
 )
 class DataUploadViewTest(TestCase):
@@ -564,12 +567,11 @@ class DataUploadViewTest(TestCase):
         self.assertEqual(login_response.url, "/")
 
         # Check file upload response
-        with open(
-            os.path.join(
-                settings.BASE_DIR, "tests/parsing_engines/maccor_example_new.xlsx"
-            ),
-            "rb",
-        ) as input_file:
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/maccor_example_new.xlsx",
+        )
+        with open(file_path, "rb") as input_file:
             post_response = self.client.post(
                 reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
                 {
@@ -603,16 +605,6 @@ class DataUploadViewTest(TestCase):
         self.assertEqual(download_response.status_code, 302)
         self.assertTrue(
             download_response.url.startswith(
-                "https://liionsdenmedia.blob.core.windows.net/testmedia/uploaded_files/maccor_example_new"
+                "https://liionsdenmedia.blob.core.windows.net/media/uploaded_files/maccor_example_new"
             ),
         )
-
-
-def tearDownModule():
-    """
-    delete all the blobs in the testmedia container.
-    """
-    from management.custom_azure import delete_blobs, list_blobs
-
-    blobs = list_blobs(TEST_AZURE_CONTAINER)
-    delete_blobs(blobs, TEST_AZURE_CONTAINER)
