@@ -4,6 +4,8 @@ from typing import Text
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
+from django.core.files.base import File
+
 
 class TestMaccorXLSParser(TestCase):
     @patch("parsing_engines.MaccorParsingEngine._drop_unnamed_columns")
@@ -41,42 +43,46 @@ class TestMaccorXLSParser(TestCase):
         mock_head.return_value = {"answer": 42}
 
         # XLS file
-        file_path = Path("maccor_example.xls")
+        file_path = Path(__file__).parent / "maccor_example.xls"
+        with open(file_path, "rb") as file_obj:
+            parser = MP.factory(file_obj=file_obj)
 
-        parser = MP.factory(file_path=file_path)
         mock_xls.assert_called_once()
         mock_xlsx.assert_not_called()
         mock_drop.assert_called_once()
         mock_create.assert_called_once()
         mock_size.assert_called_once_with(sheet, set(MP.mandatory_columns.keys()))
-        mock_data.assert_called_once_with(file_path, skip_rows)
+        mock_data.assert_called_once_with(file_obj, skip_rows)
         mock_head.assert_called_once_with(sheet, skip_rows, datemode)
         self.assertEqual(len(parser.data), 0)
         self.assertEqual(parser.name, "Maccor")
         self.assertEqual(parser.skip_rows, skip_rows)
-        self.assertEqual(parser.file_path, file_path)
+        self.assertEqual(parser.file_obj, file_obj)
         self.assertEqual(parser.file_metadata, {"answer": 42})
 
         # XLSX file
-        file_path = Path("maccor_example_new.xlsx")
+        file_path = Path(__file__).parent / "maccor_example_new.xlsx"
         mock_xls.reset_mock()
         mock_xlsx.reset_mock()
 
-        MP.factory(file_path=file_path)
+        with open(file_path, "rb") as file_obj:
+            MP.factory(file_obj=file_obj)
+
         mock_xlsx.assert_called_once()
         mock_xls.assert_not_called()
 
         # Empty file
         sheet = SimpleNamespace(max_column=0, max_row=1)
         mock_xlsx.return_value = sheet, datemode
-        self.assertRaises(EmptyFileError, MP.factory, file_path)
+        self.assertRaises(EmptyFileError, MP.factory, file_obj)
 
         # Unsupported file
-        file_path = Path("maccor_example.csv")
-        self.assertRaises(UnsupportedFileTypeError, MP.factory, file_path)
+        file_obj = File(b"", name="unsupported.file")
+        self.assertRaises(UnsupportedFileTypeError, MP.factory, file_obj)
 
 
 class TestMaccorFunctions(TestCase):
+
     file_path = Path(__file__).parent / "maccor_example.xls"
 
     @patch("xlrd.open_workbook")
@@ -90,10 +96,10 @@ class TestMaccorFunctions(TestCase):
         )
         mock_open.return_value = book
 
-        sheet, datemode = factory_xls(self.file_path)
-        mock_open.assert_called_with(self.file_path, on_demand=True)
-        self.assertEqual(sheet, sheet)
-        self.assertEqual(datemode, datemode)
+        with open(self.file_path, "rb") as file_obj:
+            sheet, datemode = factory_xls(file_obj)
+            self.assertEqual(sheet, sheet)
+            self.assertEqual(datemode, datemode)
 
     @patch("openpyxl.load_workbook")
     def test_factory_xlsx(self, mock_open):
@@ -103,10 +109,10 @@ class TestMaccorFunctions(TestCase):
         book = SimpleNamespace(active=sheet)
         mock_open.return_value = book
 
-        sheet, datemode = factory_xlsx(self.file_path)
-        mock_open.assert_called_with(self.file_path, read_only=True)
-        self.assertEqual(sheet, sheet)
-        self.assertEqual(datemode, None)
+        with open(self.file_path, "rb") as file_obj:
+            sheet, datemode = factory_xlsx(file_obj)
+            self.assertEqual(sheet, sheet)
+            self.assertEqual(datemode, None)
 
     def test_get_header_size(self):
         import xlrd
@@ -139,9 +145,10 @@ class TestMaccorFunctions(TestCase):
         sheet = workbook.sheet_by_index(0)
         skip_rows = get_header_size(sheet, MaccorParsingEngine.mandatory_columns)
 
-        actual = load_maccor_data(self.file_path, skip_rows)
-        self.assertGreater(len(actual.columns), 1)
-        self.assertGreater(len(actual), 30)
+        with open(self.file_path, "rb") as file_obj:
+            actual = load_maccor_data(file_obj, skip_rows)
+            self.assertGreater(len(actual.columns), 1)
+            self.assertGreater(len(actual), 30)
 
     def test_get_file_header(self):
         import xlrd

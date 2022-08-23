@@ -89,20 +89,23 @@ class TestParsingEngineBase(TestCase):
         from pathlib import Path
 
         import pandas as pd
+        from django.core.files.base import File
 
         from parsing_engines.parsing_engines_base import ParsingEngineBase
 
         filename = Path(__file__)
+        with open(filename, "rb") as f:
+            file_obj = File(f)
         engine = SName(
             data=pd.DataFrame({"Voltage": [4, 5, 6], "Trash": [None, None, None]}),
             skip_rows=0,
-            file_path=filename,
+            file_obj=file_obj,
             file_metadata={"temperature": 42},
             name="test",
             mandatory_columns={"Voltage": "V", "Current": "I"},
         )
         expected = {
-            "dataset_name": filename.stem,
+            "dataset_name": str(filename),
             "dataset_size": filename.stat().st_size,
             "num_rows": 3,
             "data_start": 0,
@@ -145,17 +148,17 @@ class TestDummyParsingEngine(TestCase):
     )
     @patch("parsing_engines.parsing_engines_base.DummyParsingEngine._create_rec_no")
     def test_factory(self, mock_create, mock_drop):
-        from pathlib import Path
+        from django.core.files.base import File
 
         from parsing_engines.parsing_engines_base import DummyParsingEngine
 
-        parser = DummyParsingEngine.factory("")
+        parser = DummyParsingEngine.factory(File(b""))
         mock_drop.assert_called_once()
         mock_create.assert_called_once()
         self.assertEqual(len(parser.data), 0)
         self.assertEqual(parser.name, "Dummy")
         self.assertEqual(parser.skip_rows, 0)
-        self.assertEqual(parser.file_path, Path(""))
+        self.assertEqual(type(parser.file_obj), File)
         self.assertEqual(parser.file_metadata, {"num_rows": 0})
 
 
