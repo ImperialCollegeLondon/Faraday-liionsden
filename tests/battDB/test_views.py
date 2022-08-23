@@ -2,6 +2,8 @@ from django.contrib.auth.models import Group
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from model_bakery import baker
+from override_storage import override_storage
+from override_storage.storage import LocMemStorage
 
 import battDB.models as bdb
 from tests.fixtures import TEST_AZURE_CONTAINER, TEST_MEDIA_URL
@@ -459,13 +461,11 @@ class BatchViewTest(TestCase):
         )
 
 
+# The LocMemStorage of override_storage is too transient for the tests to work
+# here so we use @override settings and FileSystemStorage.
 @override_settings(
-    AZURE_CONTAINER=TEST_AZURE_CONTAINER,
-    MEDIA_URL=TEST_MEDIA_URL,
-    DEFAULT_FILE_STORAGE="storages.backends.azure_storage.AzureStorage",
+    DEFAULT_FILE_STORAGE="django.core.files.storage.FileSystemStorage",
 )
-# Note: It is necessary to override DEFAULT_FILE_STORAGE again for the other overrides
-# to fully take effect.
 class DataUploadViewTest(TestCase):
     def setUp(self):
         self.user = baker.make_recipe(
@@ -507,13 +507,11 @@ class DataUploadViewTest(TestCase):
         self.assertContains(data_upload_get_response, "Upload the raw data file here.")
 
         # Check file upload response
-        with open(
-            os.path.join(
-                settings.BASE_DIR,
-                "tests/parsing_engines/biologic_example.csv",
-            ),
-            "r",
-        ) as input_file:
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/biologic_example.csv",
+        )
+        with open(file_path) as input_file:
             post_response = self.client.post(
                 reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
                 {
@@ -548,7 +546,7 @@ class DataUploadViewTest(TestCase):
         self.assertEqual(download_response.status_code, 302)
         self.assertTrue(
             download_response.url.startswith(
-                "https://liionsdenmedia.blob.core.windows.net/testmedia/uploaded_files/biologic_example"
+                "https://liionsdenmedia.blob.core.windows.net/media/uploaded_files/biologic_example"
             ),
         )
 
@@ -618,3 +616,19 @@ def tearDownModule():
 
     blobs = list_blobs(TEST_AZURE_CONTAINER)
     delete_blobs(blobs, TEST_AZURE_CONTAINER)
+
+
+class TestStorage(TestCase):
+    @override_storage(storage=LocMemStorage)
+    def test_file_found(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Check file upload response
+        filepath = os.path.join(
+            settings.BASE_DIR, "tests/parsing_engines/biologic_example.csv"
+        )
+        self.assertTrue(os.path.isfile(filepath))
+        with open(filepath, "r") as input_file:
+            print(input_file.readline())
