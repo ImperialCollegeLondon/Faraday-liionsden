@@ -67,7 +67,8 @@ def get_file_header(
     """
     with file_obj.open("r") as f:
         header = list(filter(len, (f.readline().rstrip() for _ in range(skip_rows))))
-        header = [i.decode(encoding) for i in header]
+        if type(header[0]) == bytes:
+            header = [i.decode(encoding) for i in header]
     try:
         header = header_to_yaml(header)
     except ScannerError:
@@ -87,10 +88,12 @@ def get_header_size(file_obj: TextIO, encoding: str) -> int:
     Returns:
         Header size as an int
     """
+    file_obj.seek(0)
     with file_obj.open("r") as f:
         lines = iter([i.decode(encoding) for i in f.readlines()])
         if "ASCII FILE" in next(lines):
             return int(re.findall(r"[0-9]+", next(lines))[0]) - 1
+        file_obj.seek(0)
         return 0
 
 
@@ -115,6 +118,7 @@ def load_biologic_data(file_obj: TextIO, skip_rows: int, encoding: str) -> pd.Da
         pd.DataFrame: A pandas dataframe with all the data.
     """
     kwargs = dict(skiprows=skip_rows, encoding=encoding)
+    file_obj.open("r")
     try:
         file_obj.seek(0)
         data = pd.read_csv(file_obj, delimiter=",", **kwargs)
