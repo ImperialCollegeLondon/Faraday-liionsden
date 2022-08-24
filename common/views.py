@@ -145,7 +145,7 @@ class UpdateDataInlineView(UpdateView):
         data = super(UpdateDataInlineView, self).get_context_data(**kwargs)
         if self.request.POST:
             for key, formset in self.inline_formsets.items():
-                data[key] = self.formset(self.request.POST, instance=self.object)
+                data[key] = formset(self.request.POST, instance=self.object)
         else:
             for key, formset in self.inline_formsets.items():
                 data[key] = formset(instance=self.object)

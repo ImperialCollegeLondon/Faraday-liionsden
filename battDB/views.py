@@ -204,8 +204,7 @@ class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
     form_class = NewExperimentForm
     success_message = "Experiment updated successfully."
     failure_message = "Could not update experiment. Invalid information."
-    inline_key = "devices"
-    formset = ExperimentDeviceFormSet
+    inline_formsets = {"devices": ExperimentDeviceFormSet}
 
 
 class UpdateEquipmentView(PermissionRequiredMixin, UpdateDataView):
@@ -235,6 +234,7 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
     failure_message = "Could not update data file. Invalid information."
     inline_key = "raw_data_file"
     formset = UploadDataFileFormset
+    inline_formsets = {"raw_data_file": UploadDataFileFormset}
 
     def post(self, request, *args, **kwargs):
         """
