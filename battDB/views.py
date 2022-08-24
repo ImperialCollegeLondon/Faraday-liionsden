@@ -154,6 +154,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                 parameters[0].instance.status = obj.status
                 if parameters[0].instance.use_parser:
                     parameters[0].instance.parse = True
+                # If the data file is already uploaded, catch error and delete EDF obj.
                 try:
                     parameters.save()
                     form.instance.full_clean()
