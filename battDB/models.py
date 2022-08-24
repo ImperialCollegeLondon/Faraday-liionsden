@@ -23,6 +23,7 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
     """
 
     parameters = models.ManyToManyField(dfn.Parameter, through="DeviceParameter")
+    components = models.ManyToManyField(dfn.Component, through="DeviceComponent")
     abstract = models.BooleanField(
         default=False,
         verbose_name="Abstract Specification",
