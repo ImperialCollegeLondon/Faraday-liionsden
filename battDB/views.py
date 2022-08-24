@@ -1,6 +1,6 @@
 import django_tables2 as tables2
 from django.contrib import messages
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView
 from django_filters.views import FilterView
@@ -67,6 +67,8 @@ from .tables import (
     ExperimentTable,
     ParserTable,
 )
+
+# flake8: noqa E266
 
 
 def index(request):
@@ -152,8 +154,17 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                 parameters[0].instance.status = obj.status
                 if parameters[0].instance.use_parser:
                     parameters[0].instance.parse = True
-                parameters.save()
-                form.instance.full_clean()
+                # If the data file is already uploaded, catch error and delete EDF obj.
+                try:
+                    parameters.save()
+                    form.instance.full_clean()
+                except IntegrityError:
+                    messages.error(
+                        request,
+                        "Could not save data file - has it already been uploaded?",
+                    )
+                    self.object.delete()
+                    return render(request, self.template_name, context)
 
             messages.success(request, self.success_message)
             return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
