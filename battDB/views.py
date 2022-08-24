@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.db import IntegrityError, transaction
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView
+from django.views.generic.edit import FormView
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
 from django_tables2.views import MultiTableMixin, SingleTableMixin
@@ -31,6 +32,7 @@ from .filters import (
     ParserFilter,
 )
 from .forms import (
+    DeviceComponentFormSet,
     DeviceParameterFormSet,
     ExperimentDeviceFormSet,
     NewBatchForm,
@@ -76,14 +78,65 @@ def index(request):
 
 
 ######################## CREATE, ADD, DELETE VIEWS #########################
-class NewDeviceView(PermissionRequiredMixin, NewDataViewInline):
+class NewDeviceView(PermissionRequiredMixin, FormView):
     permission_required = "battDB.add_devicespecification"
     template_name = "create_edit_generic.html"
     form_class = NewDeviceForm
     success_message = "New device specification created successfully."
     failure_message = "Could not save new device. Invalid information."
-    inline_key = "parameters"
-    formset = DeviceParameterFormSet
+    parameter_formset = DeviceParameterFormSet
+    component_formset = DeviceComponentFormSet
+
+    def get_context_data(self, **kwargs):
+        """
+        Helper function to get correct context to pass to render() in get()
+        and post().
+        """
+        data = super(NewDeviceView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data["parameters"] = self.parameter_formset(
+                self.request.POST, self.request.FILES
+            )
+            data["components"] = self.component_formset(
+                self.request.POST, self.request.FILES
+            )
+        else:
+            data["parameters"] = self.parameter_formset()
+            data["components"] = self.component_formset()
+        return data
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        context = self.get_context_data()
+        parameters = context["parameters"]
+        components = context["components"]
+        if form.is_valid():
+            # Save instance incluing setting user owner and status
+            with transaction.atomic():
+                obj = form.save(commit=False)
+                obj.user_owner = request.user
+                if form.is_public():
+                    obj.status = "public"
+                else:
+                    obj.status = "private"
+                self.object = form.save()
+            # Save individual parameters from inline forms
+            for inline_form in [parameters, components]:
+                if inline_form.is_valid():
+                    inline_form.instance = self.object
+                    inline_form.save()
+            messages.success(request, self.success_message)
+            # Redirect to object detail view or stay on form if "add another"
+            if "another" in request.POST:
+                return redirect(request.path_info)
+            else:
+                return redirect(self.success_url) if self.success_url else redirect(obj)
+        messages.error(request, form.errors)
+        return render(request, self.template_name, context)
 
 
 class NewExperimentView(PermissionRequiredMixin, NewDataViewInline):
@@ -168,7 +221,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
 
             messages.success(request, self.success_message)
             return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
-        messages.error(request, self.failure_message)
+        messages.error(request, request.error)
         return render(request, self.template_name, context)
 
 

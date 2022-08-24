@@ -15,6 +15,7 @@ from django.forms.models import inlineformset_factory
 
 from battDB.models import (
     Batch,
+    DeviceComponent,
     DeviceParameter,
     DeviceSpecification,
     Equipment,
@@ -44,6 +45,7 @@ class NewDeviceForm(DataCreateForm):
             "spec_file",
             "notes",
             "parameters",
+            "components",
         ]
         help_texts = {
             "device_type": "Is  this a cell or a module?",
@@ -53,6 +55,7 @@ class NewDeviceForm(DataCreateForm):
     def __init__(self, *args, **kwargs):
         super(NewDeviceForm, self).__init__(*args, **kwargs)
         self.fields["parameters"].required = False
+        self.fields["components"].required = False
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(HTML("<h1> New Device </h1>")),
@@ -70,6 +73,15 @@ class NewDeviceForm(DataCreateForm):
                         css_class="container pb-4",
                     ),
                     Formset("parameters"),
+                ),
+                HTML("<hr>"),
+                Fieldset(
+                    "Add components",
+                    Div(
+                        HTML("Specify device components below."),
+                        css_class="container pb-4",
+                    ),
+                    Formset("components"),
                 ),
                 HTML("<hr>"),
                 Field("notes"),
@@ -110,6 +122,31 @@ DeviceParameterFormSet = inlineformset_factory(
         "value": None,
     },
     widgets={"value": forms.TextInput()},
+)
+
+
+class DeviceComponentForm(ModelForm):
+    """
+    For adding components to devices inline.
+    """
+
+    class meta:
+        model = DeviceComponent
+        exclude = ()
+
+
+DeviceComponentFormSet = inlineformset_factory(
+    DeviceSpecification,
+    DeviceComponent,
+    form=DeviceComponentForm,
+    fields=[
+        "component",
+    ],
+    extra=1,
+    can_delete=True,
+    help_texts={
+        "component": "e.g. Anode, cathode, Electrolyte...",
+    },
 )
 
 
