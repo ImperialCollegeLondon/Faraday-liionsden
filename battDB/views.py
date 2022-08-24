@@ -122,6 +122,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
     form_class = NewExperimentDataFileForm
     success_message = "New data_file added successfully."
     failure_message = "Could not add new data file. Invalid information."
+    inline_formsets = {"raw_data_file": UploadDataFileFormset}
     inline_key = "raw_data_file"
     formset = UploadDataFileFormset
 
@@ -190,8 +191,10 @@ class UpdateDeviceView(PermissionRequiredMixin, UpdateDataInlineView):
     form_class = NewDeviceForm
     success_message = "Device specification updated successfully."
     failure_message = "Could not update Device specification. Invalid information."
-    inline_key = "parameters"
-    formset = DeviceParameterFormSet
+    inline_formsets = {
+        "parameters": DeviceParameterFormSet,
+        "components": DeviceComponentFormSet,
+    }
 
 
 class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
