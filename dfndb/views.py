@@ -20,6 +20,7 @@ from .models import Component, Compound, Data, Parameter
 from .serializers import ParameterSerializer
 from .tables import ComponentTable, CompoundTable
 
+# flake8: noqa E266
 
 ######################## CREATE, ADD, DELETE VIEWS #########################
 class NewCompoundView(PermissionRequiredMixin, NewDataView):
@@ -37,8 +38,7 @@ class NewComponentView(PermissionRequiredMixin, NewDataViewInline):
     form_class = NewComponentForm
     success_message = "New component created successfully."
     failure_message = "Could not save new component. Invalid information."
-    inline_key = "composition"
-    formset = CompositionPartFormSet
+    inline_formsets = {"composition": CompositionPartFormSet}
 
 
 class DeleteComponentView(PermissionRequiredMixin, MarkAsDeletedView):
@@ -84,8 +84,7 @@ class UpdateComponentView(PermissionRequiredMixin, UpdateDataInlineView):
     success_url = "/dfndb/components/"
     sucess_message = "Component updated successfully."
     failure_message = "Could not update component. Invalid information."
-    inline_key = "composition"
-    formset = CompositionPartFormSet
+    inline_formsets = {"composition": CompositionPartFormSet}
 
 
 class UpdateCompoundView(PermissionRequiredMixin, UpdateDataView):
