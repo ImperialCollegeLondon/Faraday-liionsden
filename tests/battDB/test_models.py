@@ -47,7 +47,6 @@ class TestDeviceParameter(TestCase):
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "spec"))
         self.assertTrue(hasattr(self.model, "parameter"))
-        self.assertTrue(hasattr(self.model, "component"))
         self.assertTrue(hasattr(self.model, "value"))
         self.assertTrue(hasattr(self.model, "inherit_to_children"))
 

@@ -18,7 +18,7 @@ from battDB.models import (
     UploadedFile,
 )
 from tests.common.baker_recipes import org
-from tests.dfndb.baker_recipes import component, parameter
+from tests.dfndb.baker_recipes import parameter
 from tests.management.baker_recipes import user
 
 device_specification = Recipe(DeviceSpecification, user_owner=foreign_key(user))
@@ -27,7 +27,6 @@ device_parameter = Recipe(
     DeviceParameter,
     spec=foreign_key(device_specification),
     parameter=foreign_key(parameter),
-    component=foreign_key(component),
 )
 
 device_config = Recipe(DeviceConfig, user_owner=foreign_key(user))

@@ -42,10 +42,6 @@ class CreateDeviceSpecificationTest(TestCase):
             response,
             '<input type="text" name="deviceparameter_set-0-value" value="null" class="textinput textInput form-control" id="id_deviceparameter_set-0-value">',
         )
-        self.assertContains(
-            response,
-            '<select name="deviceparameter_set-0-component" class="select form-select" id="id_deviceparameter_set-0-component">',
-        )
 
     def test_create_update_delete_devices(self):
         login_response = self.client.post(
