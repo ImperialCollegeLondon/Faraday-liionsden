@@ -47,8 +47,7 @@ class NewDataViewInline(FormView):
     success_message = "New data added successfully."
     failure_message = "Cannot add data. Invalid information."
     success_url = None
-    inline_key = None  # Key for which an inline form is needed
-    formset = None  # Formset specifying the fields in the inline form
+    inline_formsets = {}  # Dictionary of inline formsets to be added to context
 
     def get_context_data(self, **kwargs):
         """
@@ -57,9 +56,11 @@ class NewDataViewInline(FormView):
         """
         data = super(NewDataViewInline, self).get_context_data(**kwargs)
         if self.request.POST:
-            data[self.inline_key] = self.formset(self.request.POST, self.request.FILES)
+            for key, formset in self.inline_formsets.items():
+                data[key] = formset(self.request.POST, self.request.FILES)
         else:
-            data[self.inline_key] = self.formset()
+            for key, formset in self.inline_formsets.items():
+                data[key] = formset()
         return data
 
     def get(self, request, *args, **kwargs):
@@ -69,7 +70,6 @@ class NewDataViewInline(FormView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
         context = self.get_context_data()
-        parameters = context[self.inline_key]
         if form.is_valid():
             # Save instance incluing setting user owner and status
             with transaction.atomic():
@@ -81,9 +81,11 @@ class NewDataViewInline(FormView):
                     obj.status = "private"
                 self.object = form.save()
             # Save individual parameters from inline form
-            if parameters.is_valid():
-                parameters.instance = self.object
-                parameters.save()
+            for key in self.inline_formsets.keys():
+                formset = context[key]
+                if formset.is_valid():
+                    formset.instance = self.object
+                    formset.save()
             messages.success(request, self.success_message)
             # Redirect to object detail view or stay on form if "add another"
             if "another" in request.POST:
