@@ -102,14 +102,12 @@ DeviceParameterFormSet = inlineformset_factory(
     fields=[
         "parameter",
         "value",
-        "component",
     ],
     extra=1,
     can_delete=True,
     help_texts={
         "parameter": "e.g. Form factor, cathode size, number of layers...",
         "value": None,
-        "component": "If this parameter pertains to a specific component, otherwise leave blank",
     },
     widgets={"value": forms.TextInput()},
 )
