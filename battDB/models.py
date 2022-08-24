@@ -105,6 +105,28 @@ class DeviceParameter(cm.HasName):
         unique_together = [("spec", "parameter"), ("spec", "name")]
 
 
+class DeviceComponent(cm.HasName):
+    """Components of a device."""
+
+    spec = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE)
+    component = models.ForeignKey(dfn.Component, on_delete=models.CASCADE)
+    inherit_to_children = models.BooleanField(default=False)
+
+    @property
+    def user_owner(self):
+        return self.spec.user_owner
+
+    @property
+    def status(self):
+        return self.spec.status
+
+    def __str__(self):
+        return str(self.component)
+
+    class Meta:
+        unique_together = [("spec", "component"), ("spec", "name")]
+
+
 class Batch(cm.BaseModelNoName, cm.HasMPTT):
     """A physical batch of devices produced to a given specification."""
 
