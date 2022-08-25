@@ -123,8 +123,6 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
     success_message = "New data_file added successfully."
     failure_message = "Could not add new data file. Invalid information."
     inline_formsets = {"raw_data_file": UploadDataFileFormset}
-    inline_key = "raw_data_file"
-    formset = UploadDataFileFormset
 
     def get_permission_object(self, *args, **kwargs):
         # Only allowed by users who can change current Experiment
@@ -137,7 +135,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
         """
         form = self.form_class(request.POST, request.FILES)
         context = self.get_context_data()
-        parameters = context[self.inline_key]
+        formset = context["raw_data_file"]
         if form.is_valid():
             # Save instance incluing setting user owner and status
             with transaction.atomic():
@@ -151,16 +149,16 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                     obj.status = "private"
                 self.object = form.save()
             # Save individual parameters from inline form
-            if parameters.is_valid():
-                parameters.instance = self.object
+            if formset.is_valid():
+                formset.instance = self.object
                 # Handle uploaded files in formsets slightly differently to usual
-                parameters[0].instance.user_owner = obj.user_owner
-                parameters[0].instance.status = obj.status
-                if parameters[0].instance.use_parser:
-                    parameters[0].instance.parse = True
+                formset[0].instance.user_owner = obj.user_owner
+                formset[0].instance.status = obj.status
+                if formset[0].instance.use_parser:
+                    formset[0].instance.parse = True
                 # If the data file is already uploaded, catch error and delete EDF obj.
                 try:
-                    parameters.save()
+                    formset.save()
                     form.instance.full_clean()
                 except IntegrityError:
                     messages.error(
@@ -232,8 +230,6 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
     form_class = NewExperimentDataFileForm
     success_message = "Data file updated successfully."
     failure_message = "Could not update data file. Invalid information."
-    inline_key = "raw_data_file"
-    formset = UploadDataFileFormset
     inline_formsets = {"raw_data_file": UploadDataFileFormset}
 
     def post(self, request, *args, **kwargs):
@@ -244,7 +240,7 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
         self.object = self.get_object()
         form = self.form_class(request.POST, request.FILES)
         context = self.get_context_data()
-        parameters = context[self.inline_key]
+        formset = context["raw_data_file"]
         if form.is_valid():
             # Save instance incluing setting user owner and status
             with transaction.atomic():
@@ -254,13 +250,13 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
                     self.object.status = "private"
                 self.object.save()
             # Save individual parameters from inline form
-            if parameters.is_valid():
-                parameters.instance = self.object
+            if formset.is_valid():
+                formset.instance = self.object
                 # Handle uploaded files in formsets slightly differently to usual
-                parameters[0].instance.status = self.object.status
-                if parameters[0].instance.use_parser:
-                    parameters[0].instance.parse = True
-                parameters.save()
+                formset[0].instance.status = self.object.status
+                if formset[0].instance.use_parser:
+                    formset[0].instance.parse = True
+                formset.save()
                 form.instance.full_clean()
 
             messages.success(request, self.success_message)
