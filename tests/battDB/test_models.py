@@ -51,6 +51,16 @@ class TestDeviceParameter(TestCase):
         self.assertTrue(hasattr(self.model, "inherit_to_children"))
 
 
+class TestDeviceComponent(TestCase):
+    def setUp(self):
+        self.model = baker.make_recipe("tests.battDB.device_component")
+
+    def test_definition(self):
+        self.assertTrue(hasattr(self.model, "spec"))
+        self.assertTrue(hasattr(self.model, "component"))
+        self.assertTrue(hasattr(self.model, "inherit_to_children"))
+
+
 class TestBatch(TestCase):
     def setUp(self):
         self.model = baker.make_recipe("tests.battDB.batch")

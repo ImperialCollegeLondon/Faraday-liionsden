@@ -1,10 +1,11 @@
-from model_bakery.recipe import Recipe, foreign_key, related
+from model_bakery.recipe import Recipe, foreign_key
 
 from battDB.models import (
     Batch,
     DataColumn,
     DataRange,
     Device,
+    DeviceComponent,
     DeviceConfig,
     DeviceConfigNode,
     DeviceParameter,
@@ -18,7 +19,7 @@ from battDB.models import (
     UploadedFile,
 )
 from tests.common.baker_recipes import org
-from tests.dfndb.baker_recipes import parameter
+from tests.dfndb.baker_recipes import component, parameter
 from tests.management.baker_recipes import user
 
 device_specification = Recipe(DeviceSpecification, user_owner=foreign_key(user))
@@ -28,6 +29,13 @@ device_parameter = Recipe(
     spec=foreign_key(device_specification),
     parameter=foreign_key(parameter),
 )
+
+device_component = Recipe(
+    DeviceComponent,
+    spec=foreign_key(device_specification),
+    component=foreign_key(component),
+)
+
 
 device_config = Recipe(DeviceConfig, user_owner=foreign_key(user))
 
