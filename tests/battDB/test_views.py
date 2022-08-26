@@ -25,7 +25,7 @@ class CreateDeviceSpecificationTest(TestCase):
         group = Group.objects.get(name="Contributor")
         group.user_set.add(self.user)
 
-    def test_can_see_parameter_formset(self):
+    def test_can_see_formsets(self):
         login_response = self.client.post(
             "/accounts/login/",
             {"username": "test_contributor", "password": "contribpass"},
@@ -41,6 +41,10 @@ class CreateDeviceSpecificationTest(TestCase):
         self.assertContains(
             response,
             '<input type="text" name="deviceparameter_set-0-value" value="null" class="textinput textInput form-control" id="id_deviceparameter_set-0-value">',
+        )
+        self.assertContains(
+            response,
+            '<select name="devicecomponent_set-0-component" class="select form-select" id="id_devicecomponent_set-0-component">',
         )
 
     def test_create_update_delete_devices(self):
