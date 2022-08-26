@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.db import IntegrityError, transaction
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView
+from django.views.generic.edit import FormView
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
 from django_tables2.views import MultiTableMixin, SingleTableMixin
@@ -31,6 +32,7 @@ from .filters import (
     ParserFilter,
 )
 from .forms import (
+    DeviceComponentFormSet,
     DeviceParameterFormSet,
     ExperimentDeviceFormSet,
     NewBatchForm,
@@ -82,8 +84,10 @@ class NewDeviceView(PermissionRequiredMixin, NewDataViewInline):
     form_class = NewDeviceForm
     success_message = "New device specification created successfully."
     failure_message = "Could not save new device. Invalid information."
-    inline_key = "parameters"
-    formset = DeviceParameterFormSet
+    inline_formsets = {
+        "parameters": DeviceParameterFormSet,
+        "components": DeviceComponentFormSet,
+    }
 
 
 class NewExperimentView(PermissionRequiredMixin, NewDataViewInline):
@@ -93,8 +97,7 @@ class NewExperimentView(PermissionRequiredMixin, NewDataViewInline):
     form_class = NewExperimentForm
     success_message = "New experiment created successfully."
     failure_message = "Could not save new experiment. Invalid information."
-    inline_key = "devices"
-    formset = ExperimentDeviceFormSet
+    inline_formsets = {"devices": ExperimentDeviceFormSet}
 
 
 class NewEquipmentView(PermissionRequiredMixin, NewDataView):
@@ -119,8 +122,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
     form_class = NewExperimentDataFileForm
     success_message = "New data_file added successfully."
     failure_message = "Could not add new data file. Invalid information."
-    inline_key = "raw_data_file"
-    formset = UploadDataFileFormset
+    inline_formsets = {"raw_data_file": UploadDataFileFormset}
 
     def get_permission_object(self, *args, **kwargs):
         # Only allowed by users who can change current Experiment
@@ -133,7 +135,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
         """
         form = self.form_class(request.POST, request.FILES)
         context = self.get_context_data()
-        parameters = context[self.inline_key]
+        formset = context["raw_data_file"]
         if form.is_valid():
             # Save instance incluing setting user owner and status
             with transaction.atomic():
@@ -147,16 +149,16 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                     obj.status = "private"
                 self.object = form.save()
             # Save individual parameters from inline form
-            if parameters.is_valid():
-                parameters.instance = self.object
+            if formset.is_valid():
+                formset.instance = self.object
                 # Handle uploaded files in formsets slightly differently to usual
-                parameters[0].instance.user_owner = obj.user_owner
-                parameters[0].instance.status = obj.status
-                if parameters[0].instance.use_parser:
-                    parameters[0].instance.parse = True
+                formset[0].instance.user_owner = obj.user_owner
+                formset[0].instance.status = obj.status
+                if formset[0].instance.use_parser:
+                    formset[0].instance.parse = True
                 # If the data file is already uploaded, catch error and delete EDF obj.
                 try:
-                    parameters.save()
+                    formset.save()
                     form.instance.full_clean()
                 except IntegrityError:
                     messages.error(
@@ -168,7 +170,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
 
             messages.success(request, self.success_message)
             return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
-        messages.error(request, self.failure_message)
+        messages.error(request, request.error)
         return render(request, self.template_name, context)
 
 
@@ -187,8 +189,10 @@ class UpdateDeviceView(PermissionRequiredMixin, UpdateDataInlineView):
     form_class = NewDeviceForm
     success_message = "Device specification updated successfully."
     failure_message = "Could not update Device specification. Invalid information."
-    inline_key = "parameters"
-    formset = DeviceParameterFormSet
+    inline_formsets = {
+        "parameters": DeviceParameterFormSet,
+        "components": DeviceComponentFormSet,
+    }
 
 
 class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
@@ -198,8 +202,7 @@ class UpdateExperimentView(PermissionRequiredMixin, UpdateDataInlineView):
     form_class = NewExperimentForm
     success_message = "Experiment updated successfully."
     failure_message = "Could not update experiment. Invalid information."
-    inline_key = "devices"
-    formset = ExperimentDeviceFormSet
+    inline_formsets = {"devices": ExperimentDeviceFormSet}
 
 
 class UpdateEquipmentView(PermissionRequiredMixin, UpdateDataView):
@@ -227,8 +230,7 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
     form_class = NewExperimentDataFileForm
     success_message = "Data file updated successfully."
     failure_message = "Could not update data file. Invalid information."
-    inline_key = "raw_data_file"
-    formset = UploadDataFileFormset
+    inline_formsets = {"raw_data_file": UploadDataFileFormset}
 
     def post(self, request, *args, **kwargs):
         """
@@ -238,7 +240,7 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
         self.object = self.get_object()
         form = self.form_class(request.POST, request.FILES)
         context = self.get_context_data()
-        parameters = context[self.inline_key]
+        formset = context["raw_data_file"]
         if form.is_valid():
             # Save instance incluing setting user owner and status
             with transaction.atomic():
@@ -248,13 +250,13 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
                     self.object.status = "private"
                 self.object.save()
             # Save individual parameters from inline form
-            if parameters.is_valid():
-                parameters.instance = self.object
+            if formset.is_valid():
+                formset.instance = self.object
                 # Handle uploaded files in formsets slightly differently to usual
-                parameters[0].instance.status = self.object.status
-                if parameters[0].instance.use_parser:
-                    parameters[0].instance.parse = True
-                parameters.save()
+                formset[0].instance.status = self.object.status
+                if formset[0].instance.use_parser:
+                    formset[0].instance.parse = True
+                formset.save()
                 form.instance.full_clean()
 
             messages.success(request, self.success_message)

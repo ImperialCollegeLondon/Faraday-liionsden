@@ -1,10 +1,11 @@
-from model_bakery.recipe import Recipe, foreign_key, related
+from model_bakery.recipe import Recipe, foreign_key
 
 from battDB.models import (
     Batch,
     DataColumn,
     DataRange,
     Device,
+    DeviceComponent,
     DeviceConfig,
     DeviceConfigNode,
     DeviceParameter,
@@ -27,8 +28,14 @@ device_parameter = Recipe(
     DeviceParameter,
     spec=foreign_key(device_specification),
     parameter=foreign_key(parameter),
+)
+
+device_component = Recipe(
+    DeviceComponent,
+    spec=foreign_key(device_specification),
     component=foreign_key(component),
 )
+
 
 device_config = Recipe(DeviceConfig, user_owner=foreign_key(user))
 

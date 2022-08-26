@@ -23,6 +23,7 @@ class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
     """
 
     parameters = models.ManyToManyField(dfn.Parameter, through="DeviceParameter")
+    components = models.ManyToManyField(dfn.Component, through="DeviceComponent")
     abstract = models.BooleanField(
         default=False,
         verbose_name="Abstract Specification",
@@ -87,9 +88,6 @@ class DeviceParameter(cm.HasName):
 
     spec = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE)
     parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
-    component = models.ForeignKey(
-        dfn.Component, on_delete=models.CASCADE, blank=True, null=True
-    )
     value = models.JSONField(blank=True, null=True)
     inherit_to_children = models.BooleanField(default=False)
 
@@ -105,7 +103,29 @@ class DeviceParameter(cm.HasName):
         return str(self.parameter)
 
     class Meta:
-        unique_together = [("spec", "parameter", "component"), ("spec", "name")]
+        unique_together = [("spec", "parameter"), ("spec", "name")]
+
+
+class DeviceComponent(cm.HasName):
+    """Components of a device."""
+
+    spec = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE)
+    component = models.ForeignKey(dfn.Component, on_delete=models.CASCADE)
+    inherit_to_children = models.BooleanField(default=False)
+
+    @property
+    def user_owner(self):
+        return self.spec.user_owner
+
+    @property
+    def status(self):
+        return self.spec.status
+
+    def __str__(self):
+        return str(self.component)
+
+    class Meta:
+        unique_together = [("spec", "component"), ("spec", "name")]
 
 
 class Batch(cm.BaseModelNoName, cm.HasMPTT):

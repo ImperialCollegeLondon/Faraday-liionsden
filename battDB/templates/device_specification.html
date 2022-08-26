@@ -33,10 +33,26 @@
     <table class="table">
       <thead class="thead-light">
         <tr>
+          <th scope="col"> Component</th>
+          <th scope="col"> Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dc in object.devicecomponent_set.all %}
+        <tr>
+          <td><a href="{{ dc.component.get_absolute_url }}"><b>{{ dc.component.name }}</b></a></td>
+          <td>{{ dc.component.get_type_display }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
           <th scope="col"> Parameter</th>
           <th scope="col">Value</th>
           <th scope="col">unit</th>
-          <th scope="col"> Component</th>
         </tr>
       </thead>
       <tbody>
@@ -45,11 +61,11 @@
           <td>{{ dp.parameter.name }}</td>
           <td>{{ dp.value }}</td>
           <td>{{ dp.parameter.unit.unitSymbol }}</td>
-          <td>{{ dp.component }}</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+
     <br>
     <b>Related devices</b>
     <br>
