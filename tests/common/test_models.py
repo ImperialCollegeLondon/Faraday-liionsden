@@ -9,7 +9,7 @@ from model_bakery import baker
 from override_storage import override_storage
 from override_storage.storage import LocMemStorage
 
-from tests.fixtures import TEST_AZURE_CONTAINER, AbstractModelMixinTestCase
+from tests.fixtures import AbstractModelMixinTestCase
 
 User = get_user_model()
 
@@ -352,13 +352,3 @@ class TestHashedFile(AbstractModelMixinTestCase):
     def test_size(self):
         obj = self.model.objects.get()
         self.assertEqual(obj.size(), "%dB" % self.data.size)
-
-
-def tearDownModule():
-    """
-    delete all the blobs in the testmedia container.
-    """
-    from management.custom_azure import delete_blobs, list_blobs
-
-    blobs = list_blobs(TEST_AZURE_CONTAINER)
-    delete_blobs(blobs, TEST_AZURE_CONTAINER)
