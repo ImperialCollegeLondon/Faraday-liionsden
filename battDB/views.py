@@ -238,7 +238,11 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
         status of uploaded file and b) parsing pk of associated experiment.
         """
         self.object = self.get_object()
-        form = self.form_class(request.POST, request.FILES)
+        form = self.form_class(
+            request.POST,
+            request.FILES,
+            instance=self.object,
+        )
         context = self.get_context_data()
         formset = context["raw_data_file"]
         if form.is_valid():
