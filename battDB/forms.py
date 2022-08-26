@@ -49,7 +49,10 @@ class NewDeviceForm(DataCreateForm):
         ]
         help_texts = {
             "device_type": "Is  this a cell or a module?",
-            "parent": "Leave blank unless this cell is a part of a particular module or pack",
+            "parent": (
+                "Leave blank unless this cell is a part of "
+                "a particular module or pack"
+            ),
         }
 
     def __init__(self, *args, **kwargs):
@@ -315,28 +318,55 @@ class NewExperimentDataFileForm(DataCreateForm):
         ]
 
     def __init__(self, *args, **kwargs):
+        mode = "Update" if "instance" in kwargs.keys() else "New"
         super(NewExperimentDataFileForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.attrs = {"enctype": "multipart/form-data"}
+
+        if mode == "New":
+            fieldset = Fieldset(
+                "Upload file",
+                Div(
+                    HTML(
+                        (
+                            "Upload the raw data file here. Select 'parse' to process "
+                            "the data using your chosen parser."
+                        )
+                    ),
+                    HTML(
+                        (
+                            "<b>Find detailed information about the behaviour of "
+                            "each parser <a href='/battDB/parsers/'  target='_blank'>"
+                            "here</a></b>."
+                        )
+                    ),
+                    css_class="container pb-4",
+                ),
+                Formset("raw_data_file"),
+                required=False,
+            )
+        else:
+            fieldset = Fieldset(
+                "Upload file",
+                Div(
+                    HTML(
+                        (
+                            "Note: You cannot change the file that has already been "
+                            "uploaded, only its metadata . If you want to "
+                            "change the file, delete this entry and upload a new one."
+                        )
+                    ),
+                    css_class="container pb-4",
+                ),
+                required=False,
+            )
+
         self.helper.layout = Layout(
             Div(
-                Div(HTML("<h1> New data file </h1>")),
+                Div(HTML(f"<h1> {mode} file </h1>")),
                 Column("name", css_class="col-6"),
                 Column("machine", css_class="col-6"),
-                Fieldset(
-                    "Upload file",
-                    Div(
-                        HTML(
-                            "Upload the raw data file here. Select 'parse' to process the data using your chosen parser. "
-                        ),
-                        HTML(
-                            "<b>Find detailed information about the behaviour of each parser <a href='/battDB/parsers/'  target='_blank'>here</a></b>."
-                        ),
-                        css_class="container pb-4",
-                    ),
-                    Formset("raw_data_file"),
-                    required=False,
-                ),
+                fieldset,
                 Field("notes"),
                 HTML("<br>"),
                 Field("make_public"),
@@ -378,7 +408,8 @@ class NewProtocolForm(DataCreateForm):
     Create new experimental or manufacturing protocol.
     """
 
-    # TODO enable addition of extra array elements dynamically (widget currently doesn't work).
+    # TODO enable addition of extra array elements dynamically
+    # (widget currently doesn't work).
     class Meta:
         model = Method
         fields = [
