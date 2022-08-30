@@ -12,6 +12,7 @@ from crispy_forms.layout import (
 from django import forms
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
+from django.utils.safestring import mark_safe
 
 from battDB.models import (
     Batch,
@@ -279,6 +280,12 @@ class NewBatchForm(DataCreateForm):
             "serialNo",
             "notes",
         ]
+        help_texts = {
+            "specification": mark_safe(
+                'Type of device in this batch. <a href="/battDB/new_device/" '
+                'target="_blank">new device spec. &#10697;</a>.'
+            )
+        }
 
     def __init__(self, *args, **kwargs):
         super(NewBatchForm, self).__init__(*args, **kwargs)
