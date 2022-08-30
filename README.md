@@ -4,7 +4,7 @@
 
 Liionsden is a platform for storing data about lithium-ion batteries and their performance. It automatically parses data from the output files of battery cycler machines and stores this information in a database, associating it with specific experiments and devices. Metadata is stored about specific experiments, batches of devices and individual devices. 
 
-The development server is running [here](https://liionsden.rcs.ic.ac.uk/) (internal to Imperial College). 
+The development server is running [here](https://liionsden.rcs.ic.ac.uk/) (internal to Imperial College). <!-- markdown-link-check-disable-line -->
 
 It will be possible to browse the database, as well as add to it, via a web-app and programatically via an API.
 
@@ -44,7 +44,7 @@ Full instructions to follow once the platform is in production.
 
 ### TODOs 
 
-Generally development TODOs should be tracked in [issues](https://github.com/ImperialCollegeLondon/Faraday-liionsden/issues) and/or [project board](https://github.com/ImperialCollegeLondon/Faraday-liionsden/projects/1).
+Generally development TODOs should be tracked in [issues](https://github.com/ImperialCollegeLondon/Faraday-liionsden/issues) and/or [project board](https://github.com/ImperialCollegeLondon/Faraday-liionsden/projects/1). <!-- markdown-link-check-disable-line -->
 
 ### Resources
 * https://stackoverflow.com/questions/23779250/using-proxy-model-in-django-admin-to-customize-change-list-view
