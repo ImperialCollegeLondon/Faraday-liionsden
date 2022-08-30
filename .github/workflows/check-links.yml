@@ -13,4 +13,4 @@ jobs:
         with:
           use-quiet-mode: 'yes'
           use-verbose-mode: 'yes'
-          max-depth: 1
+          max-depth: 1 # Only check the md files in top dir until docs written
