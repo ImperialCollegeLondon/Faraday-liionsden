@@ -119,3 +119,29 @@ def populate_parameters(apps, schema_editor):
             continue
 
         Parameter.objects.create(**quant)
+
+
+def set_initial_experiment_parameters(apps, schema_editor):
+    """Set certain initial parameters to have parametery_type="experiment" as opposed
+    to "device" (the default)."""
+
+    Parameter = apps.get_model("dfndb", "Parameter")
+
+    experimental_parameters = [
+        "Time",
+        "Step time",
+        "Voltage",
+        "Current",
+        "Net charge passed",
+        "Temperature",
+        "Charge passed during discharge",
+        "Net energy passed",
+        "New section changes",
+        "Cycle number",
+        "Record number",
+    ]
+
+    for parameter in experimental_parameters:
+        Parameter.objects.filter(name__exact=parameter).update(
+            parameter_type="experiment"
+        )
