@@ -2,8 +2,6 @@ from django.db.utils import IntegrityError
 from django.test import TestCase
 from model_bakery import baker
 
-from dfndb.models import Data
-
 
 class TestCompound(TestCase):
     def setUp(self):
@@ -176,9 +174,18 @@ class TestQuantityUnit(TestCase):
 class TestParameter(TestCase):
     def setUp(self):
         self.unit = baker.make_recipe("tests.dfndb.quantity_unit")
-        self.expected = dict(name="Ionized donors", symbol="Nd-", unit=self.unit)
+        self.expected = dict(
+            name="Ionized donors",
+            symbol="Nd-",
+            unit=self.unit,
+            parameter_type="Experiment",
+        )
         self.model = baker.make_recipe(
-            "tests.dfndb.parameter", name="Ionized donors", symbol="Nd-", unit=self.unit
+            "tests.dfndb.parameter",
+            name="Ionized donors",
+            symbol="Nd-",
+            unit=self.unit,
+            parameter_type="Experiment",
         )
 
     def test_parameter_creation(self):
