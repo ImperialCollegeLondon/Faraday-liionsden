@@ -87,7 +87,11 @@ class DeviceParameter(cm.HasName):
     """Parameters on device."""
 
     spec = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE)
-    parameter = models.ForeignKey(dfn.Parameter, on_delete=models.CASCADE)
+    parameter = models.ForeignKey(
+        dfn.Parameter,
+        on_delete=models.CASCADE,
+        limit_choices_to={"parameter_type": "device"},
+    )
     value = models.JSONField(blank=True, null=True)
     inherit_to_children = models.BooleanField(default=False)
 
