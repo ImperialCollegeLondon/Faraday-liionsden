@@ -52,7 +52,9 @@ class Component(cm.BaseModel):
     type = models.PositiveSmallIntegerField(choices=MATERIAL_TYPE_CHOICES)
     polymer = models.PositiveIntegerField(
         default=0,
-        help_text="Degree of polymerisation if this component is a polymer, otherwise 0",
+        help_text=(
+            "Degree of polymerisation if this component is a polymer, otherwise 0"
+        ),
     )
 
     def __str__(self):
@@ -160,10 +162,23 @@ class Parameter(cm.BaseModel):
     metadata.
     """
 
+    TYPE_CHOICES = (
+        ("device", "Device"),
+        ("experiment", "Experiment"),
+    )
+
     symbol = models.CharField(
         max_length=40, help_text="Parameter symbol. Will be decoded as LaTeX"
     )
     unit = models.ForeignKey(QuantityUnit, on_delete=models.RESTRICT)
+    parameter_type = models.CharField(
+        max_length=40,
+        choices=TYPE_CHOICES,
+        default="device",
+        help_text=(
+            "Whether this parameter defines a device or is measured in an experiment"
+        ),
+    )
 
     class Meta:
         unique_together = ("symbol", "unit")

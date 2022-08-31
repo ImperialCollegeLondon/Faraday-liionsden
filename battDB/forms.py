@@ -12,9 +12,11 @@ from crispy_forms.layout import (
 from django import forms
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
+from django.utils.safestring import mark_safe
 
 from battDB.models import (
     Batch,
+    DeviceComponent,
     DeviceParameter,
     DeviceSpecification,
     Equipment,
@@ -44,15 +46,20 @@ class NewDeviceForm(DataCreateForm):
             "spec_file",
             "notes",
             "parameters",
+            "components",
         ]
         help_texts = {
             "device_type": "Is  this a cell or a module?",
-            "parent": "Leave blank unless this cell is a part of a particular module or pack",
+            "parent": (
+                "Leave blank unless this cell is a part of "
+                "a particular module or pack"
+            ),
         }
 
     def __init__(self, *args, **kwargs):
         super(NewDeviceForm, self).__init__(*args, **kwargs)
         self.fields["parameters"].required = False
+        self.fields["components"].required = False
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(HTML("<h1> New Device </h1>")),
@@ -65,11 +72,12 @@ class NewDeviceForm(DataCreateForm):
                 HTML("<hr>"),
                 Fieldset(
                     "Define parameters",
-                    Div(
-                        HTML("Specify device parameters below."),
-                        css_class="container pb-4",
-                    ),
                     Formset("parameters"),
+                ),
+                HTML("<hr>"),
+                Fieldset(
+                    "Add components",
+                    Formset("components"),
                 ),
                 HTML("<hr>"),
                 Field("notes"),
@@ -102,16 +110,41 @@ DeviceParameterFormSet = inlineformset_factory(
     fields=[
         "parameter",
         "value",
-        "component",
     ],
     extra=1,
     can_delete=True,
     help_texts={
         "parameter": "e.g. Form factor, cathode size, number of layers...",
         "value": None,
-        "component": "If this parameter pertains to a specific component, otherwise leave blank",
     },
     widgets={"value": forms.TextInput()},
+)
+
+
+class DeviceComponentForm(ModelForm):
+    """
+    For adding components to devices inline.
+    """
+
+    class meta:
+        model = DeviceComponent
+        exclude = ()
+
+
+DeviceComponentFormSet = inlineformset_factory(
+    DeviceSpecification,
+    DeviceComponent,
+    form=DeviceComponentForm,
+    fields=["component"],
+    extra=1,
+    can_delete=True,
+    help_texts={
+        "component": mark_safe(
+            "e.g. Anode, cathode, Electrolyte... "
+            '<a href="/dfndb/new_component/" target="_blank"> '
+            "new component &#10697;</a>"
+        )
+    },
 )
 
 
@@ -189,7 +222,13 @@ ExperimentDeviceFormSet = inlineformset_factory(
     fields=["batch", "batch_sequence", "device_position"],
     extra=1,
     can_delete=True,
-    help_texts={"batch": "The batch this device came from"},
+    help_texts={
+        "batch": mark_safe(
+            "The batch this device came from. "
+            '<a href="/battDB/new_batch/" target="_blank"> '
+            "new batch &#10697;</a>"
+        )
+    },
 )
 
 
@@ -241,6 +280,12 @@ class NewBatchForm(DataCreateForm):
             "serialNo",
             "notes",
         ]
+        help_texts = {
+            "specification": mark_safe(
+                'Type of device in this batch. <a href="/battDB/new_device/" '
+                'target="_blank">new device spec. &#10697;</a>.'
+            )
+        }
 
     def __init__(self, *args, **kwargs):
         super(NewBatchForm, self).__init__(*args, **kwargs)
@@ -278,30 +323,64 @@ class NewExperimentDataFileForm(DataCreateForm):
             "machine",
             "notes",
         ]
+        help_texts = {
+            "machine": mark_safe(
+                "The machine this data file was collected on. "
+                '<a href="/battDB/new_equipment/" target="_blank"> '
+                "new machine &#10697;</a>"
+            )
+        }
 
     def __init__(self, *args, **kwargs):
+        mode = "Update" if "instance" in kwargs.keys() else "New"
         super(NewExperimentDataFileForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.attrs = {"enctype": "multipart/form-data"}
+
+        if mode == "New":
+            fieldset = Fieldset(
+                "Upload file",
+                Div(
+                    HTML(
+                        (
+                            "Upload the raw data file here. Select 'parse' to process "
+                            "the data using your chosen parser."
+                        )
+                    ),
+                    HTML(
+                        (
+                            "<b>Find detailed information about the behaviour of "
+                            "each parser <a href='/battDB/parsers/'  target='_blank'>"
+                            "here</a></b>."
+                        )
+                    ),
+                    css_class="container pb-4",
+                ),
+                Formset("raw_data_file"),
+                required=False,
+            )
+        else:
+            fieldset = Fieldset(
+                "Upload file",
+                Div(
+                    HTML(
+                        (
+                            "Note: You cannot change the file that has already been "
+                            "uploaded, only its metadata. If you want to "
+                            "change the file, delete this entry and upload a new one."
+                        )
+                    ),
+                    css_class="container pb-4",
+                ),
+                required=False,
+            )
+
         self.helper.layout = Layout(
             Div(
-                Div(HTML("<h1> New data file </h1>")),
+                Div(HTML(f"<h1> {mode} file </h1>")),
                 Column("name", css_class="col-6"),
                 Column("machine", css_class="col-6"),
-                Fieldset(
-                    "Upload file",
-                    Div(
-                        HTML(
-                            "Upload the raw data file here. Select 'parse' to process the data using your chosen parser. "
-                        ),
-                        HTML(
-                            "<b>Find detailed information about the behaviour of each parser <a href='/battDB/parsers/'  target='_blank'>here</a></b>."
-                        ),
-                        css_class="container pb-4",
-                    ),
-                    Formset("raw_data_file"),
-                    required=False,
-                ),
+                fieldset,
                 Field("notes"),
                 HTML("<br>"),
                 Field("make_public"),
@@ -343,7 +422,8 @@ class NewProtocolForm(DataCreateForm):
     Create new experimental or manufacturing protocol.
     """
 
-    # TODO enable addition of extra array elements dynamically (widget currently doesn't work).
+    # TODO enable addition of extra array elements dynamically
+    # (widget currently doesn't work).
     class Meta:
         model = Method
         fields = [

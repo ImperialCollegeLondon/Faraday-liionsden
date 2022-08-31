@@ -1,5 +1,6 @@
 name: Check links in Markdown files
 on:
+  push:
   schedule:
     - cron: "0 0 * * 1" # midnight every Monday
 
@@ -12,3 +13,4 @@ jobs:
         with:
           use-quiet-mode: 'yes'
           use-verbose-mode: 'yes'
+          max-depth: 1 # Only check the md files in top dir until docs written

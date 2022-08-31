@@ -41,9 +41,14 @@ class CompoundAdmin(admin.ModelAdmin):
     list_display = ["__str__"]
 
 
+class ParameterAdmin(BaseAdmin):
+    list_display = BaseAdmin.list_display + ["parameter_type"]
+    list_filter = BaseAdmin.list_filter + ["parameter_type"]
+
+
 admin.site.register(cmodels.QuantityUnit, UnitAdmin)
 admin.site.register(cmodels.Data, DataAdmin)
 admin.site.register(cmodels.Component, ComponentAdmin)
-admin.site.register(cmodels.Parameter, BaseAdmin)
+admin.site.register(cmodels.Parameter, ParameterAdmin)
 admin.site.register(cmodels.Method, MethodAdmin)
 admin.site.register(cmodels.Compound, CompoundAdmin)

@@ -42,13 +42,13 @@ class NewDataViewInline(FormView):
     """
     Template for view for creating entries that includes an inline
     form for e.g. adding child objects, related objects etc.
+    inline_formsets should be of the form {"inline_formset_name": formset_class}.
     """
 
     success_message = "New data added successfully."
     failure_message = "Cannot add data. Invalid information."
     success_url = None
-    inline_key = None  # Key for which an inline form is needed
-    formset = None  # Formset specifying the fields in the inline form
+    inline_formsets = {}  # Dictionary of inline formsets to be added to context
 
     def get_context_data(self, **kwargs):
         """
@@ -57,9 +57,11 @@ class NewDataViewInline(FormView):
         """
         data = super(NewDataViewInline, self).get_context_data(**kwargs)
         if self.request.POST:
-            data[self.inline_key] = self.formset(self.request.POST, self.request.FILES)
+            for key, formset in self.inline_formsets.items():
+                data[key] = formset(self.request.POST, self.request.FILES)
         else:
-            data[self.inline_key] = self.formset()
+            for key, formset in self.inline_formsets.items():
+                data[key] = formset()
         return data
 
     def get(self, request, *args, **kwargs):
@@ -69,7 +71,6 @@ class NewDataViewInline(FormView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
         context = self.get_context_data()
-        parameters = context[self.inline_key]
         if form.is_valid():
             # Save instance incluing setting user owner and status
             with transaction.atomic():
@@ -80,10 +81,12 @@ class NewDataViewInline(FormView):
                 else:
                     obj.status = "private"
                 self.object = form.save()
-            # Save individual parameters from inline form
-            if parameters.is_valid():
-                parameters.instance = self.object
-                parameters.save()
+            # Save individual parameters from inline forms
+            for key in self.inline_formsets.keys():
+                formset = context[key]
+                if formset.is_valid():
+                    formset.instance = self.object
+                    formset.save()
             messages.success(request, self.success_message)
             # Redirect to object detail view or stay on form if "add another"
             if "another" in request.POST:
@@ -127,12 +130,12 @@ class UpdateDataInlineView(UpdateView):
     """
     Template for view for updating entries that includes an inline
     form for e.g. adding child objects, related objects etc.
+    inline_formsets should be of the form {"inline_formset_name": formset_class}.
     """
 
     success_message = "New data added successfully."
     failure_message = "Cannot add data. Invalid information."
-    inline_key = None  # Key for which an inline form is needed
-    formset = None  # Formset specifying the fields in the inline form
+    inline_formsets = {}
 
     def get_context_data(self, **kwargs):
         """
@@ -141,12 +144,11 @@ class UpdateDataInlineView(UpdateView):
         """
         data = super(UpdateDataInlineView, self).get_context_data(**kwargs)
         if self.request.POST:
-            data[self.inline_key] = self.formset(
-                self.request.POST, instance=self.object
-            )
+            for key, formset in self.inline_formsets.items():
+                data[key] = formset(self.request.POST, instance=self.object)
         else:
-            data[self.inline_key] = self.formset(instance=self.object)
-
+            for key, formset in self.inline_formsets.items():
+                data[key] = formset(instance=self.object)
         return data
 
     def post(self, request, *args, **kwargs):
@@ -154,7 +156,6 @@ class UpdateDataInlineView(UpdateView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         context = self.get_context_data()
-        parameters = context[self.inline_key]
         if form.is_valid():
             # Save experiment incluing setting user owner and status
             with transaction.atomic():
@@ -164,9 +165,11 @@ class UpdateDataInlineView(UpdateView):
                     self.object.status = "private"
                 self.object.save()
             # Save individual parameters from inline form
-            if parameters.is_valid():
-                parameters.instance = self.object
-                parameters.save()
+            for key in self.inline_formsets.keys():
+                formset = context[key]
+                if formset.is_valid():
+                    formset.instance = self.object
+                    formset.save()
             messages.success(request, self.success_message)
             # Redirect to object detail view or stay on form if "add another"
             if "another" in request.POST:
