@@ -12,6 +12,7 @@ from crispy_forms.layout import (
 from django import forms
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
+from django.utils.safestring import mark_safe
 
 from battDB.models import (
     Batch,
@@ -71,19 +72,11 @@ class NewDeviceForm(DataCreateForm):
                 HTML("<hr>"),
                 Fieldset(
                     "Define parameters",
-                    Div(
-                        HTML("Specify device parameters below."),
-                        css_class="container pb-4",
-                    ),
                     Formset("parameters"),
                 ),
                 HTML("<hr>"),
                 Fieldset(
                     "Add components",
-                    Div(
-                        HTML("Specify device components below."),
-                        css_class="container pb-4",
-                    ),
                     Formset("components"),
                 ),
                 HTML("<hr>"),
@@ -142,13 +135,15 @@ DeviceComponentFormSet = inlineformset_factory(
     DeviceSpecification,
     DeviceComponent,
     form=DeviceComponentForm,
-    fields=[
-        "component",
-    ],
+    fields=["component"],
     extra=1,
     can_delete=True,
     help_texts={
-        "component": "e.g. Anode, cathode, Electrolyte...",
+        "component": mark_safe(
+            "e.g. Anode, cathode, Electrolyte... "
+            '<a href="/dfndb/new_component/" target="_blank"> '
+            "new component &#10697;</a>"
+        )
     },
 )
 
@@ -227,7 +222,13 @@ ExperimentDeviceFormSet = inlineformset_factory(
     fields=["batch", "batch_sequence", "device_position"],
     extra=1,
     can_delete=True,
-    help_texts={"batch": "The batch this device came from"},
+    help_texts={
+        "batch": mark_safe(
+            "The batch this device came from. "
+            '<a href="/battDB/new_batch/" target="_blank"> '
+            "new batch &#10697;</a>"
+        )
+    },
 )
 
 
@@ -279,6 +280,12 @@ class NewBatchForm(DataCreateForm):
             "serialNo",
             "notes",
         ]
+        help_texts = {
+            "specification": mark_safe(
+                'Type of device in this batch. <a href="/battDB/new_device/" '
+                'target="_blank">new device spec. &#10697;</a>.'
+            )
+        }
 
     def __init__(self, *args, **kwargs):
         super(NewBatchForm, self).__init__(*args, **kwargs)
@@ -316,6 +323,13 @@ class NewExperimentDataFileForm(DataCreateForm):
             "machine",
             "notes",
         ]
+        help_texts = {
+            "machine": mark_safe(
+                "The machine this data file was collected on. "
+                '<a href="/battDB/new_equipment/" target="_blank"> '
+                "new machine &#10697;</a>"
+            )
+        }
 
     def __init__(self, *args, **kwargs):
         mode = "Update" if "instance" in kwargs.keys() else "New"
@@ -352,7 +366,7 @@ class NewExperimentDataFileForm(DataCreateForm):
                     HTML(
                         (
                             "Note: You cannot change the file that has already been "
-                            "uploaded, only its metadata . If you want to "
+                            "uploaded, only its metadata. If you want to "
                             "change the file, delete this entry and upload a new one."
                         )
                     ),
