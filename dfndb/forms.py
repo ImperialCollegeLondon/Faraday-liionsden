@@ -10,6 +10,7 @@ from crispy_forms.layout import (
     Submit,
 )
 from django.forms import ModelForm, inlineformset_factory
+from django.utils.safestring import mark_safe
 
 from battDB.custom_layout_object import Formset
 from common.forms import DataCreateForm
@@ -72,7 +73,8 @@ class NewComponentForm(DataCreateForm):
                     "Composition",
                     Div(
                         HTML(
-                            "Optionally specify the amount of each compound in this component. Amounts are relative and unitless."
+                            "Optionally specify the amount of each compound in this "
+                            "component. Amounts are relative and unitless."
                         )
                     ),
                     Formset("composition"),
@@ -106,5 +108,10 @@ CompositionPartFormSet = inlineformset_factory(
     fields=["compound", "amount"],
     extra=1,
     can_delete=True,
-    help_texts={"compound": None, "device_position": None},
+    help_texts={
+        "compound": mark_safe(
+            '<a href="/dfndb/new_compound/" target="_blank"> '
+            "new compound &#10697;</a>"
+        )
+    },
 )
