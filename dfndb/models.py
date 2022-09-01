@@ -33,10 +33,6 @@ class Compound(models.Model):
         if self.mass == 0:
             self.mass = Formula(self.formula).mass
 
-    def save(self, *args, **kwargs):
-        self.clean()
-        return super(Compound, self).save(*args, **kwargs)
-
     class Meta:
         unique_together = (
             "name",
