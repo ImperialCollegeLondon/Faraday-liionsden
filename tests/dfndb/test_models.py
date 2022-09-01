@@ -9,6 +9,7 @@ class TestCompound(TestCase):
         self.model = baker.make_recipe(
             "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2"
         )
+        self.model.clean()  # to calculate the mass from the formula
 
     def test_compound_creation(self):
         for k, v in self.expected.items():
@@ -30,7 +31,8 @@ class TestCompound(TestCase):
         from molmass import FormulaError
 
         with self.assertRaises(FormulaError):
-            baker.make_recipe("tests.dfndb.compound", formula="H2So4")
+            invalid_comp = baker.make_recipe("tests.dfndb.compound", formula="H2So4")
+            invalid_comp.clean()
 
 
 class TestComponent(TestCase):
