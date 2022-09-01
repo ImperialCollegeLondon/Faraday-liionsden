@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import Sum
 from django.urls import reverse
 from django_better_admin_arrayfield.models.fields import ArrayField
+from molmass import Formula
 
 import common.models as cm
 
@@ -13,7 +14,7 @@ class Compound(models.Model):
 
     name = models.CharField(
         max_length=100,
-        help_text="Full name for the element or compound",
+        help_text="Full name for the element or compound.",
     )
     formula = models.CharField(max_length=20, help_text="Chemical formula")
     mass = models.FloatField(
@@ -24,6 +25,13 @@ class Compound(models.Model):
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.formula)
+
+    def clean(self):
+        """
+        Use the formula to calculate the mass if not specified.
+        """
+        if self.mass == 0:
+            self.mass = Formula(self.formula).mass
 
     class Meta:
         unique_together = (

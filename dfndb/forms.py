@@ -25,6 +25,13 @@ class NewCompoundForm(DataCreateForm):
     class Meta:
         model = Compound
         fields = ["name", "formula", "mass"]
+        help_texts = {
+            "formula": "Chemical formula. This will be used to calculate the mass.",
+            "mass": (
+                "Only fill in if the formula should not be used to automatically "
+                " calculate the mass. Otherwise, leave as 0."
+            ),
+        }
 
     def __init__(self, *args, **kwargs):
         super(NewCompoundForm, self).__init__(*args, **kwargs)
@@ -34,8 +41,10 @@ class NewCompoundForm(DataCreateForm):
                 Div(HTML("<h1> Compound </h1>")),
                 Div(
                     HTML(
-                        """Note: compounds should be specified in their discharged state, 
-                        if relevant, and are always public (visible to all users)."""
+                        """
+                        Compounds should be specified in their discharged state
+                        (if relevant) and are always public (visible to all users).
+                        """
                     ),
                     css_class="container py-2",
                 ),
