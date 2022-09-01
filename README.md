@@ -37,6 +37,10 @@ Full instructions to follow once the platform is in production.
 
 ### Contribution guidelines
 
+We are following the [pip-tools](https://pypi.org/project/pip-tools/) `pip-compile`
+convetion to generate `requirements.txt` and `requirements-dev.txt` from
+`requirements.in` and `requirements-dev.in`, respectively.
+
 ### Related open-source software
 
 - [Galvanalyser](https://github.com/Battery-Intelligence-Lab/galvanalyser)
