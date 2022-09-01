@@ -44,6 +44,11 @@ class NewCompoundForm(DataCreateForm):
                         """
                         Compounds should be specified in their discharged state
                         (if relevant) and are always public (visible to all users).
+                        The mass is calculated automatically from the formula unless
+                        specified otherwise.
+                        <a href="https://www.sciencegateway.org/tools/fwcal.htm"
+                        target="_blank"> Click here for an external molecular weight
+                        calculator &#10697;</a>.
                         """
                     ),
                     css_class="container py-2",
