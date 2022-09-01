@@ -5,9 +5,9 @@ from model_bakery import baker
 
 class TestCompound(TestCase):
     def setUp(self):
-        self.expected = dict(name="Carbon Dioxide", formula="CO2", mass=44.01)
+        self.expected = dict(name="Carbon Dioxide", formula="CO2", mass=44.00955)
         self.model = baker.make_recipe(
-            "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2", mass=44.01
+            "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2"
         )
 
     def test_compound_creation(self):
@@ -25,6 +25,12 @@ class TestCompound(TestCase):
             baker.make_recipe(
                 "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2", mass=44.01
             )
+
+    def test_invalid_formula(self):
+        from molmass import FormulaError
+
+        with self.assertRaises(FormulaError):
+            baker.make_recipe("tests.dfndb.compound", formula="H2So4")
 
 
 class TestComponent(TestCase):
