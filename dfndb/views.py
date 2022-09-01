@@ -1,9 +1,12 @@
+from django.contrib import messages
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin
 from django_tables2.export.views import ExportMixin
 from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
+from molmass import FormulaError
 from rest_framework.generics import ListCreateAPIView
 
 from common.views import (
@@ -30,6 +33,36 @@ class NewCompoundView(PermissionRequiredMixin, NewDataView):
     success_url = "/dfndb/compounds/"
     success_message = "New compound created successfully."
     failure_message = "Could not save new compound. Invalid information."
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST, request.FILES)
+        try:
+            if form.is_valid():
+                obj = form.save(commit=False)
+                # Do other stuff before saving here
+                obj.user_owner = request.user
+                if form.is_public():
+                    obj.status = "public"
+                else:
+                    obj.status = "private"
+                obj.save()
+                messages.success(request, self.success_message)
+                # Redirect to object detail view or stay on form if "add another"
+                if "another" in request.POST:
+                    return redirect(request.path_info)
+                else:
+                    return (
+                        redirect(self.success_url)
+                        if self.success_url
+                        else redirect(obj)
+                    )
+            messages.error(request, self.failure_message)
+        except FormulaError as e:
+            messages.error(
+                request,
+                f"{e} - Formula is not valid. Please check your formula or enter the mass manually.",
+            )
+        return render(request, self.template_name, {"form": form})
 
 
 class NewComponentView(PermissionRequiredMixin, NewDataViewInline):
@@ -97,6 +130,36 @@ class UpdateCompoundView(PermissionRequiredMixin, UpdateDataView):
     failure_message = "Could not update compound. Invalid information."
     inline_key = "composition"
     formset = CompositionPartFormSet
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        try:
+            if form.is_valid():
+                # Do other stuff before saving here
+                if form.is_public():
+                    self.object.status = "public"
+                else:
+                    self.object.status = "private"
+                self.object.save()
+                messages.success(request, self.success_message)
+                # Redirect to object detail view or stay on form if "add another"
+                if "another" in request.POST:
+                    return redirect(request.path_info)
+                else:
+                    return (
+                        redirect(self.success_url)
+                        if self.success_url
+                        else redirect(self.object)
+                    )
+            messages.error(request, self.failure_message)
+        except FormulaError as e:
+            messages.error(
+                request,
+                f"{e} - Formula is not valid. Please check your formula or enter the mass manually.",
+            )
+        return render(request, self.template_name, {"form": form})
 
 
 class DataListView(ListView):
