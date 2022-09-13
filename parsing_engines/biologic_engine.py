@@ -117,7 +117,7 @@ def load_biologic_data(file_obj: TextIO, skip_rows: int, encoding: str) -> pd.Da
     Returns:
         pd.DataFrame: A pandas dataframe with all the data.
     """
-    kwargs = dict(skiprows=skip_rows, encoding=encoding)
+    kwargs = dict(skiprows=skip_rows, encoding=encoding, encoding_errors="replace")
     file_obj.open("r")
     try:
         file_obj.seek(0)
