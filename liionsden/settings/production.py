@@ -21,3 +21,4 @@ if os.environ.get("WEBSITE_HOSTNAME") == "liionsden.azurewebsites.net":
     DATABASES["default"]["USER"] = os.environ["AZURE_POSTGRESQL_USER"]
     DATABASES["default"]["PASSWORD"] = os.environ["AZURE_POSTGRESQL_PASS"]
     DATABSES["default"]["NAME"] = os.environ["AZURE_POSTGRESQL_NAME"]
+    DATABSES["default"]["OPTIONS"] = {"sslmode": "require"}
