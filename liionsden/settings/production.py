@@ -17,8 +17,10 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 if os.environ.get("WEBSITE_HOSTNAME") == "liionsden.azurewebsites.net":
     ALLOWED_HOSTS = ["liionsden.azurewebsites.net"]
-    DATABASES["default"]["HOST"] = os.environ["AZURE_POSTGRESQL_HOST"]
-    DATABASES["default"]["USER"] = os.environ["AZURE_POSTGRESQL_USER"]
-    DATABASES["default"]["PASSWORD"] = os.environ["AZURE_POSTGRESQL_PASS"]
-    DATABSES["default"]["NAME"] = os.environ["AZURE_POSTGRESQL_NAME"]
+    DATABASES["default"]["HOST"] = os.environ["AZURE_POSTGRESQL_POSTGRESQL_40DBE_HOST"]
+    DATABASES["default"]["USER"] = os.environ["AZURE_POSTGRESQL_POSTGRESQL_40DBE_USER"]
+    DATABASES["default"]["PASSWORD"] = os.environ[
+        "AZURE_POSTGRESQL_POSTGRESQL_40DBE_PASSWORD"
+    ]
+    DATABSES["default"]["NAME"] = os.environ["AZURE_POSTGRESQL_POSTGRESQL_40DBE_NAME"]
     DATABSES["default"]["OPTIONS"] = {"sslmode": "require"}
