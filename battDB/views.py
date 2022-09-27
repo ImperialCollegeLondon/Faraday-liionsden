@@ -462,6 +462,18 @@ class DownloadRawDataFileView(PermissionRequiredMixin, DetailView):
         return redirect(f"{blob_url}?{sas_token}")
 
 
+class DownloadSpecFileView(PermissionRequiredMixin, DetailView):
+    model = DeviceSpecification
+    permission_required = "battDB.view_devicespecification"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        blob_name = self.object.spec_file.name
+        blob_url = self.object.spec_file.url
+        sas_token = generate_sas_token(blob_name)
+        return redirect(f"{blob_url}?{sas_token}")
+
+
 ### API VIEWS ###
 class ExperimentAPIView(APIView):
     queryset = Experiment.objects.all()
