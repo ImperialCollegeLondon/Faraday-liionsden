@@ -11,6 +11,7 @@ from .views import (
     DeviceSpecificationTableView,
     DeviceSpecificationView,
     DownloadRawDataFileView,
+    DownloadSpecFileView,
     EquipmentTableView,
     EquipmentView,
     ExperimentTableView,
@@ -86,9 +87,14 @@ urlpatterns = [
         DownloadRawDataFileView.as_view(),
         name="Download File",
     ),
+    path(
+        "spec_files/download/<int:pk>/",
+        DownloadSpecFileView.as_view(),
+        name="Download Spec File",
+    ),
 ]
 
-"""The following url patterns will be added on a need basis, as new functionality 
+"""The following url patterns will be added on a need basis, as new functionality
 becomes available:
 
 path('viewData/<int:pk>', ExperimentDataView.as_view(), name='viewData'),
