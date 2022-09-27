@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 import magic
 from django.core.exceptions import ValidationError
