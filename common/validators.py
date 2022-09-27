@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 import magic
 from django.core.exceptions import ValidationError
@@ -38,7 +37,7 @@ def validate_pdf_file(file) -> None:
         ValidationError if validation not passed.
     """
 
-    extension = Path(file.path).suffix
+    extension = os.path.splitext(file.name)[1]
     file_mime_type = magic.from_buffer(file.read(1024), mime=True)
     if (file_mime_type != "application/pdf") or (extension != ".pdf"):
         raise ValidationError(
