@@ -1,4 +1,5 @@
 import django_tables2 as tables2
+import plotly.graph_objs as go
 from django.contrib import messages
 from django.db import IntegrityError, transaction
 from django.shortcuts import redirect, render
@@ -8,6 +9,7 @@ from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
 from django_tables2.views import MultiTableMixin, SingleTableMixin
 from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
+from plotly.offline import plot
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
@@ -75,6 +77,20 @@ from .tables import (
 
 def index(request):
     return redirect("/")
+
+
+# Test plot
+fig = go.Figure()
+scatter = go.Scatter(
+    x=[0, 1, 2, 3],
+    y=[a**2 for a in [0, 1, 2, 3]],
+    mode="lines",
+    name="test",
+    opacity=0.8,
+    marker_color="green",
+)
+fig.add_trace(scatter)
+plt_div = plot(fig, output_type="div")
 
 
 ######################## CREATE, ADD, DELETE VIEWS #########################
@@ -398,6 +414,12 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
                 tables.append(self.table_class(data=[{"None": "None"}]))
 
         return tables
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        context.update({"plt_div": plt_div})
+        return self.render_to_response(context)
 
     def get_tables_data(self, n_rows: int = 20, decimal_places: int = 2):
         """

@@ -74,6 +74,12 @@
   </div>
 </div>
 
+<div class="card border-dark mb-3" style="max-width: 100%;">
+  {% autoescape off %}
+  {{ plt_div }}
+  {% endautoescape %}
+</div>
+
 {% if object.data_files.all %}
 {% for data_file, table in object.data_files.all|zip:tables %}
 {% get_obj_perms request.user for data_file as "df_perms" %}
