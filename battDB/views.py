@@ -9,6 +9,7 @@ from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
 from django_tables2.views import MultiTableMixin, SingleTableMixin
 from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
+from pandas import DataFrame
 from plotly.offline import plot
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
@@ -401,10 +402,11 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
     def get_plots(self):
         plots = []
         for table in self.get_tables_data():
+            df = DataFrame(table)
             fig = go.Figure()
             scatter = go.Scatter(
-                x=table.columns[0],
-                y=table.columns[1],
+                x=df["time/s"],
+                y=df["Ecell/V"],
                 mode="lines",
                 name="test",
                 opacity=0.8,
