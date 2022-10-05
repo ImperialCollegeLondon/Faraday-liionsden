@@ -74,14 +74,6 @@
   </div>
 </div>
 
-<div class="card border-dark mb-3" style="max-width: 100%;">
-  {% for plot in plots %}
-  {% autoescape off %}
-  {{ plot }}
-  {% endautoescape %}
-  {% endfor %}
-</div>
-
 {% if object.data_files.all %}
 {% for data_file, plot in object.data_files.all|zip:plots %}
 {% get_obj_perms request.user for data_file as "df_perms" %}

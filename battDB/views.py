@@ -80,20 +80,6 @@ def index(request):
     return redirect("/")
 
 
-# Test plot
-fig = go.Figure()
-scatter = go.Scatter(
-    x=[0, 1, 2, 3],
-    y=[a**2 for a in [0, 1, 2, 3]],
-    mode="lines",
-    name="test",
-    opacity=0.8,
-    marker_color="green",
-)
-fig.add_trace(scatter)
-plt_div = plot(fig, output_type="div", include_plotlyjs=False)
-
-
 ######################## CREATE, ADD, DELETE VIEWS #########################
 class NewDeviceView(PermissionRequiredMixin, NewDataViewInline):
     permission_required = "battDB.add_devicespecification"
@@ -400,19 +386,26 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
         return self.render_to_response(context)
 
     def get_plots(self):
+        """
+        TODO: Make plotting more general - need to select which columns to plot
+        dynamically from those present in the table and label them appropriately.
+        Plotting should probably be done in a separate function (in a separate module)
+        which is called here.
+        """
         plots = []
         for table in self.get_tables_data():
             df = DataFrame(table)
             fig = go.Figure()
-            scatter = go.Scatter(
-                x=df["time/s"],
-                y=df["Ecell/V"],
-                mode="lines",
-                name="test",
-                opacity=0.8,
-                marker_color="green",
-            )
-            fig.add_trace(scatter)
+            for y in ["Ecell/V", "I/mA"]:
+                fig.add_trace(
+                    go.Scatter(
+                        x=df["time/s"],
+                        y=df[y],
+                        mode="lines",
+                        name=y,
+                        opacity=0.8,
+                    ),
+                )
             plots.append(plot(fig, output_type="div", include_plotlyjs=False))
         return plots
 
@@ -439,7 +432,7 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
 
         return tables
 
-    def get_tables_data(self, n_rows: int = 20, decimal_places: int = 2):
+    def get_tables_data(self, n_rows: int = 0, decimal_places: int = 2):
         """
         Overriding to get top n rows of data displayed.
         Values are displayed to a chosen number of decimal_places for easy viewing.
@@ -448,7 +441,10 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
         data_previews = []
         for data_file in data_files:
             if data_file.file_exists() and data_file.raw_data_file.parse:
-                initial_data = data_file.ts_data[:n_rows]
+                if n_rows:
+                    initial_data = data_file.ts_data[:n_rows]
+                else:
+                    initial_data = data_file.ts_data
                 data_headers = data_file.ts_headers
                 data_preview = []
                 for i in initial_data:
