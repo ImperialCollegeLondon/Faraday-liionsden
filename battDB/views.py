@@ -90,7 +90,7 @@ scatter = go.Scatter(
     marker_color="green",
 )
 fig.add_trace(scatter)
-plt_div = plot(fig, output_type="div")
+plt_div = plot(fig, output_type="div", include_plotlyjs=False)
 
 
 ######################## CREATE, ADD, DELETE VIEWS #########################
@@ -392,6 +392,28 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
     permission_required = "battDB.view_experiment"
     table_class = ExperimentDataTable
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        context.update({"plots": self.get_plots()})
+        return self.render_to_response(context)
+
+    def get_plots(self):
+        plots = []
+        for table in self.get_tables_data():
+            fig = go.Figure()
+            scatter = go.Scatter(
+                x=table.columns[0],
+                y=table.columns[1],
+                mode="lines",
+                name="test",
+                opacity=0.8,
+                marker_color="green",
+            )
+            fig.add_trace(scatter)
+            plots.append(plot(fig, output_type="div", include_plotlyjs=False))
+        return plots
+
     def get_tables(self):
         """
         Overriding to include all columns dynamically.
@@ -414,12 +436,6 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
                 tables.append(self.table_class(data=[{"None": "None"}]))
 
         return tables
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        context = self.get_context_data(object=self.object)
-        context.update({"plt_div": plt_div})
-        return self.render_to_response(context)
 
     def get_tables_data(self, n_rows: int = 20, decimal_places: int = 2):
         """

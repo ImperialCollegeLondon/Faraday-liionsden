@@ -75,9 +75,11 @@
 </div>
 
 <div class="card border-dark mb-3" style="max-width: 100%;">
+  {% for plot in plots %}
   {% autoescape off %}
-  {{ plt_div }}
+  {{ plot }}
   {% endautoescape %}
+  {% endfor %}
 </div>
 
 {% if object.data_files.all %}
