@@ -74,6 +74,7 @@
   </div>
 </div>
 
+<!--Iterate through each data file associated with the experiment to show metadata and plots-->
 {% if object.data_files.all %}
 {% for data_file, plot_set in object.data_files.all|zip:plots %}
 {% get_obj_perms request.user for data_file as "df_perms" %}
@@ -140,16 +141,18 @@
     <br>
     <nav>
       <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <!--Iterate through plot_set (one for each data file)-->
         {% for plot in plot_set %}
+        <!--Display tabs TODO: display something useful rather than number-->
         <button class="nav-link" id="nav-tab-{{forloop.parentloop.counter}}-{{ forloop.counter }}" data-bs-toggle="tab"
           data-bs-target="#nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}" type="button" role="tab"
-          aria-controls="nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}"
-          aria-selected="false">{{forloop.parentloop.counter}}-{{ forloop.counter }}</button>
+          aria-controls="nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}" aria-selected="false">
+          {{ forloop.counter }}</button>
         {% endfor %}
       </div>
     </nav>
-
-    <div class="tab-content" id="nav-tabContent">
+    <!--Display the actual plots-->
+    <div class="tab-content align-items-center" id="nav-tabContent">
       {% for plot in plot_set %}
       <div class="tab-pane fade" id="nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}" role="tabpanel"
         aria-labelledby="nav-tab-{{forloop.parentloop.counter}}-{{ forloop.counter }}">
@@ -161,6 +164,7 @@
     </div>
     <br>
     <br>
+    <!--Buttons for downloading, editing and deleting data-->
     <a href=/battDB/data_files/download/{{data_file.pk}} class="btn btn-primary" , role="button"> Download raw data
       file</a>
     {% if "change_experimentdatafile" in df_perms %}
