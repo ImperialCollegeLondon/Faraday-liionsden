@@ -56,6 +56,7 @@ from .models import (
     Parser,
     UploadedFile,
 )
+from .plots import get_html_plot
 from .serializers import (
     DataFileSerializer,
     DataRangeSerializer,
@@ -387,26 +388,13 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
 
     def get_plots(self):
         """
-        TODO: Make plotting more general - need to select which columns to plot
-        dynamically from those present in the table and label them appropriately.
-        Plotting should probably be done in a separate function (in a separate module)
-        which is called here.
+        For each of the data files associated with the experiment, generate a
+        plot of the data using the get_html_plot function.
         """
         plots = []
         for table in self.get_tables_data():
             df = DataFrame(table)
-            fig = go.Figure()
-            for y in ["Ecell/V", "I/mA"]:
-                fig.add_trace(
-                    go.Scatter(
-                        x=df["time/s"],
-                        y=df[y],
-                        mode="lines",
-                        name=y,
-                        opacity=0.8,
-                    ),
-                )
-            plots.append(plot(fig, output_type="div", include_plotlyjs=False))
+            plots.append(get_html_plot(df))
         return plots
 
     def get_tables(self):

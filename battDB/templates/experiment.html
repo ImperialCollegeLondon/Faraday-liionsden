@@ -75,7 +75,7 @@
 </div>
 
 {% if object.data_files.all %}
-{% for data_file, plot in object.data_files.all|zip:plots %}
+{% for data_file, plot_set in object.data_files.all|zip:plots %}
 {% get_obj_perms request.user for data_file as "df_perms" %}
 {% if "view_experimentdatafile" in df_perms %}
 <div class="card border-dark mb-3" style="max-width: 100%;">
@@ -138,9 +138,11 @@
     <br>
     <b> Parsed data preview </b>
     <br>
+    {% for plot in plot_set %}
     {% autoescape off %}
     {{ plot }}
     {% endautoescape %}
+    {% endfor %}
     <a href=/battDB/data_files/download/{{data_file.pk}} class="btn btn-primary" , role="button"> Download raw data
       file</a>
     {% if "change_experimentdatafile" in df_perms %}
