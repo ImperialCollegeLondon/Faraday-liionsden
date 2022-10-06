@@ -27,9 +27,16 @@ def get_html_plot(df):
                 y=df[col],
                 mode="lines",
                 name=col,
+                text=col,
                 opacity=0.8,
             )
         )
+        fig.update_layout(
+            title=col,
+            xaxis_title=time_col,
+            yaxis_title=col,
+        )
+
         # Add the figure to the list
         figures.append(plot(fig, output_type="div", include_plotlyjs=False))
     # Return the list of figures
