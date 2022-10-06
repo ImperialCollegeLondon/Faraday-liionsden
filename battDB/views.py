@@ -56,7 +56,7 @@ from .models import (
     Parser,
     UploadedFile,
 )
-from .plots import get_html_plot
+from .plots import get_html_plots
 from .serializers import (
     DataFileSerializer,
     DataRangeSerializer,
@@ -388,18 +388,21 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
 
     def get_plots(self):
         """
-        For each of the data files associated with the experiment, generate a
-        plot of the data using the get_html_plot function.
+        For each of the data files associated with the experiment, generate a list of
+        plots (one for each column) using the get_html_plots function. Return a list of
+        these lists. TODO: Move away from list of lists to a dictionary of lists.
         """
         plots = []
         for table in self.get_tables_data():
             df = DataFrame(table)
-            plots.append(get_html_plot(df))
+            plots.append(get_html_plots(df))
         return plots
 
     def get_tables(self):
         """
-        Overriding to include all columns dynamically.
+        Overriding from django_tables2.views.MultiTableMixin to include all columns
+        dynamically. This is necessary to ensure that all columns are included in the
+        table.
         """
         data = self.get_tables_data()
         data_files = self.object.data_files.all()
@@ -422,8 +425,17 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
 
     def get_tables_data(self, n_rows: int = 0, decimal_places: int = 2):
         """
-        Overriding to get top n rows of data displayed.
-        Values are displayed to a chosen number of decimal_places for easy viewing.
+        Overriding from django_tables2.views.MultiTableMixin to optionally get top n
+        rows of data. Values are displayed to a chosen number of decimal_places for easy
+        viewing. TODO: We could probably do this more efficiently, not iterating over
+        the data in nested loops.
+        Args:
+            n_rows: Number of rows to return. If 0, return all rows.
+            decimal_places: Number of decimal places to display.
+        Returns:
+            List of lists of dictionaries, where each list corresponds to a data file
+            and each dictionary corresponds to a row of data.
+            TODO: Return a better data structure.
         """
         data_files = self.object.data_files.all()
         data_previews = []

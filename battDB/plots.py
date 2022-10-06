@@ -2,10 +2,12 @@ import plotly.graph_objs as go
 from plotly.offline import plot
 
 
-def get_html_plot(df):
+def get_html_plots(df):
     """
     Given a pandas.DataFrame object, returns a list of plotly figures
     each of which is a scatter plot of time vs each other column.
+    Args: df (pandas.DataFrame): the dataframe to plot
+    Returns: list of plotly figures
     """
     # Get the columns
     cols = df.columns
