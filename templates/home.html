@@ -8,75 +8,102 @@
 <div class="container py-2">
     Welcome to the database web page. Please browse existing data below or choose another option from the navigation
     bar.
-</div>
-<div class="container py-2">
-    <table class="table">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col" style="width: 22%">Data type</th>
-                <th scope="col" style="width: 70%">Description</th>
-                {% if perms.battDB.can_add_experiment %}
-                <th scope="col" style="width: 8%">Add new</th>
-                {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><a href="{% url 'battDB:Devices' %}">Device specification</a></td>
-                <td>Details a device - typically a cell but can be a module - including parameters such as form factor,
-                    cathode/anode size etc.; PDF of manufacturer's specification sheet.</td>
-                {% if perms.battDB.can_add_devicespecification %}
-                <td><a href="{% url 'battDB:New Device' %}" class="btn btn-success bi bi-plus" , role="button"></a></td>
-                {% endif %}
-            </tr>
-            <tr>
-                <td><a href="{% url 'battDB:Batches' %}">Batch</a></td>
-                <td>A specific batch of devices with a certain specification (Device specification), size and
-                    batch/serial number. Also details
-                    the experiment(s) each device in the batch has been used in.</td>
-                {% if perms.battDB.can_add_batch %}
-                <td><a href="{% url 'battDB:New Batch' %}" class="btn btn-success bi bi-plus" , role="button"></a></td>
-                {% endif %}
-            </tr>
-            <tr>
-                <td><a href="{% url 'battDB:Experiments' %}">Experiment</a></td>
-                <td>A battery cycling experiment with associated data. Details which devices (batch and sequence number)
-                    were used and which battery cycler.</td>
-                {% if perms.battDB.can_add_experiment %}
-                <td><a href="{% url 'battDB:New Experiment' %}" class="btn btn-success bi bi-plus" , role="button"></a>
-                </td>
-                {% endif %}
-            </tr>
-            <tr>
-                <td><a href="{% url 'battDB:Equipment list' %}">Equipment</a></td>
-                <td>Details of equipment - typically battery cyclers - including the institution it belongs to and its
-                    serial number.</td>
-                {% if perms.battDB.can_add_equipment %}
-                <td><a href="{% url 'battDB:New Equipment' %}" class="btn btn-success bi bi-plus" , role="button"></a>
-                </td>
-                {% endif %}
-            </tr>
-            <tr>
-                <td><a href="{% url 'dfndb:Components' %}">Component</a></td>
-                <td>Cell components - cathode, anode, electrolytes, separators. Details their composition in terms of
-                    percentage make up of compounds.</td>
-                {% if perms.dfndb.can_add_component %}
-                <td><a href="{% url 'dfndb:New Component' %}" class="btn btn-success bi bi-plus" , role="button"></a>
-                </td>
-                {% endif %}
-            </tr>
-            <tr>
-                <td><a href="{% url 'dfndb:Compounds' %}">Compound</a></td>
-                <td>Chemical compound with a formula and atomic mass.</td>
-                {% if perms.dfndb.can_add_compound %}
-                <td><a href="{% url 'dfndb:New Compound' %}" class="btn btn-success bi bi-plus" , role="button"></a>
-                </td>
-                {% endif %}
-            </tr>
-        </tbody>
-    </table>
+    <br>
+    <br>
+    <div class="card text-black bg-light mb-3">
+        <div class="card-header">Warning!</div>
+        <div class="card-body">
+            <h5 class="card-title">This database is in active development</h5>
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-warning">Please keep a backup of any raw data files uploaded
+                    to this platform.</li>
+                <li class="list-group-item list-group-item-warning">Please help us improve the platform by <a
+                        href="https://github.com/ImperialCollegeLondon/Faraday-liionsden/issues/new/choose">reporting
+                        bugs and suggesting changes here</a>.</li>
+                <li class="list-group-item list-group-item-warning">If you want to become a test user please <a
+                        href="https://liionsden.azurewebsites.net/accounts/register/">register here</a> then contact the
+                    developers to activate your account.</li>
+            </ul>
+
+        </div>
+    </div>
+    <div class="container py-2">
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col" style="width: 22%">Data type</th>
+                    <th scope="col" style="width: 70%">Description</th>
+                    {% if perms.battDB.can_add_experiment %}
+                    <th scope="col" style="width: 8%">Add new</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="{% url 'battDB:Devices' %}">Device specification</a></td>
+                    <td>Details a device - typically a cell but can be a module - including parameters such as form
+                        factor,
+                        cathode/anode size etc.; PDF of manufacturer's specification sheet.</td>
+                    {% if perms.battDB.can_add_devicespecification %}
+                    <td><a href="{% url 'battDB:New Device' %}" class="btn btn-success bi bi-plus" , role="button"></a>
+                    </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td><a href="{% url 'battDB:Batches' %}">Batch</a></td>
+                    <td>A specific batch of devices with a certain specification (Device specification), size and
+                        batch/serial number. Also details
+                        the experiment(s) each device in the batch has been used in.</td>
+                    {% if perms.battDB.can_add_batch %}
+                    <td><a href="{% url 'battDB:New Batch' %}" class="btn btn-success bi bi-plus" , role="button"></a>
+                    </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td><a href="{% url 'battDB:Experiments' %}">Experiment</a></td>
+                    <td>A battery cycling experiment with associated data. Details which devices (batch and sequence
+                        number)
+                        were used and which battery cycler.</td>
+                    {% if perms.battDB.can_add_experiment %}
+                    <td><a href="{% url 'battDB:New Experiment' %}" class="btn btn-success bi bi-plus" ,
+                            role="button"></a>
+                    </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td><a href="{% url 'battDB:Equipment list' %}">Equipment</a></td>
+                    <td>Details of equipment - typically battery cyclers - including the institution it belongs to and
+                        its
+                        serial number.</td>
+                    {% if perms.battDB.can_add_equipment %}
+                    <td><a href="{% url 'battDB:New Equipment' %}" class="btn btn-success bi bi-plus" ,
+                            role="button"></a>
+                    </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td><a href="{% url 'dfndb:Components' %}">Component</a></td>
+                    <td>Cell components - cathode, anode, electrolytes, separators. Details their composition in terms
+                        of
+                        percentage make up of compounds.</td>
+                    {% if perms.dfndb.can_add_component %}
+                    <td><a href="{% url 'dfndb:New Component' %}" class="btn btn-success bi bi-plus" ,
+                            role="button"></a>
+                    </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td><a href="{% url 'dfndb:Compounds' %}">Compound</a></td>
+                    <td>Chemical compound with a formula and atomic mass.</td>
+                    {% if perms.dfndb.can_add_compound %}
+                    <td><a href="{% url 'dfndb:New Compound' %}" class="btn btn-success bi bi-plus" , role="button"></a>
+                    </td>
+                    {% endif %}
+                </tr>
+            </tbody>
+        </table>
 
 
-</div>
+    </div>
 
-{% endblock %}
+    {% endblock %}
