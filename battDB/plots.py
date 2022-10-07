@@ -40,6 +40,11 @@ def get_html_plots(df):
         )
 
         # Add the figure to the list
-        figures.append(plot(fig, output_type="div", include_plotlyjs=False))
+        figures.append(
+            {
+                "column": col,
+                "plot": plot(fig, output_type="div", include_plotlyjs=False),
+            }
+        )
     # Return the list of figures
     return figures

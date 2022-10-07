@@ -147,7 +147,7 @@
         <button class="nav-link" id="nav-tab-{{forloop.parentloop.counter}}-{{ forloop.counter }}" data-bs-toggle="tab"
           data-bs-target="#nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}" type="button" role="tab"
           aria-controls="nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}" aria-selected="false">
-          {{ forloop.counter }}</button>
+          {{ plot.column }}</button>
         {% endfor %}
       </div>
     </nav>
@@ -157,7 +157,7 @@
       <div class="tab-pane fade" id="nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}" role="tabpanel"
         aria-labelledby="nav-tab-{{forloop.parentloop.counter}}-{{ forloop.counter }}">
         {% autoescape off %}
-        {{ plot }}
+        {{ plot.plot }}
         {% endautoescape %}
       </div>
       {% endfor %}
