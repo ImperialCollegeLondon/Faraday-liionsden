@@ -144,17 +144,10 @@
         <!--Iterate through plot_set (one for each data file)-->
         {% for plot in plot_set %}
         <!--Display tabs TODO: display something useful rather than number-->
-        {% if {{forloop.counter}} == 1 %}
-        <button class="nav-link" id="nav-tab-{{forloop.parentloop.counter}}-{{ forloop.counter }}" data-bs-toggle="tab"
-          data-bs-target="#nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}" type="button" role="tab"
-          aria-controls="nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}" aria-selected="true">
-          {{ forloop.counter }}</button>
-        {% else %}
         <button class="nav-link" id="nav-tab-{{forloop.parentloop.counter}}-{{ forloop.counter }}" data-bs-toggle="tab"
           data-bs-target="#nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}" type="button" role="tab"
           aria-controls="nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}" aria-selected="false">
           {{ forloop.counter }}</button>
-        {% endif %}
         {% endfor %}
       </div>
     </nav>
