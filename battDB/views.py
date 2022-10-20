@@ -389,14 +389,24 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
     def get_plots(self):
         """
         For each of the data files associated with the experiment, generate a list of
-        plots (one for each column) using the get_html_plots function. Return a list of
-        these lists. TODO: Move away from list of lists to a dictionary of lists.
+        plots  using the get_html_plot function.
+        By default, it generates two plots:
+        - Voltage vs. Current against Time
+        - Voltage vs. Temparature against Time
+        Returns a list of these lists.
         """
+
         plots = []
-        for table in self.get_tables_data():
+        for data_file, table in self.get_tables_data().items():
             df = DataFrame(table)
-            plots.append(get_html_plots(df))
-        return plots
+            # find the columns that are time, voltage, current, temperature
+            edf = self.object.data_files.get(name=data_file)
+            parser = edf.raw_data_file.use_parser
+            columns = parser.columns.get_queryset()
+            time_col = columns.get(parameter__name="Time")
+            voltage_col = columns.get(parameter__name="Voltage")
+            current_col = columns.get(parameter__name="Current")
+            temperature_col = columns.get(parameter__name="Temperature")
 
     def get_tables(self):
         """
@@ -427,38 +437,31 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
         """
         Overriding from django_tables2.views.MultiTableMixin to optionally get top n
         rows of data. Values are displayed to a chosen number of decimal_places for easy
-        viewing. TODO: We could probably do this more efficiently, not iterating over
-        the data in nested loops.
+        viewing.
         Args:
             n_rows: Number of rows to return. If 0, return all rows.
             decimal_places: Number of decimal places to display.
         Returns:
-            List of lists of dictionaries, where each list corresponds to a data file
-            and each dictionary corresponds to a row of data.
-            TODO: Return a better data structure.
+            Dictionary of lists. Each list contains a dictionary for each row of data.
         """
         data_files = self.object.data_files.all()
-        data_previews = []
+        data_previews = {}
         for data_file in data_files:
             if data_file.file_exists() and data_file.raw_data_file.parse:
-                if n_rows:
-                    initial_data = data_file.ts_data[:n_rows]
-                else:
-                    initial_data = data_file.ts_data
+                # Get the headers and data
                 data_headers = data_file.ts_headers
+                data = data_file.ts_data[:n_rows] if n_rows else data_file.ts_data
                 data_preview = []
-                for i in initial_data:
+                for row in data:
                     data_preview.append(
                         {
                             header: round(value, decimal_places)
-                            for (header, value) in zip(data_headers, i)
+                            for (header, value) in zip(data_headers, row)
                         }
                     )
-
-                data_previews.append(data_preview)
-
+                data_previews[data_file.name] = data_preview
             else:
-                data_previews.append(None)
+                data_previews[data_file.name] = None
         return data_previews
 
 
