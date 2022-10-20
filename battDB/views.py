@@ -56,7 +56,7 @@ from .models import (
     Parser,
     UploadedFile,
 )
-from .plots import get_html_plots
+from .plots import get_html_plot
 from .serializers import (
     DataFileSerializer,
     DataRangeSerializer,
@@ -396,7 +396,7 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
         Returns a list of these lists.
         """
 
-        plots = []
+        experiment_plots = []
         for data_file, table in self.get_tables_data().items():
             df = DataFrame(table)
             # find the columns that are time, voltage, current, temperature
@@ -407,6 +407,27 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
             voltage_col = columns.get(parameter__name="Voltage")
             current_col = columns.get(parameter__name="Current")
             temperature_col = columns.get(parameter__name="Temperature")
+
+            # generate the plots
+            plots = []
+            if time_col and voltage_col and current_col:
+                plots.append(
+                    get_html_plot(
+                        df,
+                        x_col=time_col.col_name,
+                        y_cols=[voltage_col.col_name, current_col.col_name],
+                    )
+                )
+            # if time_col and voltage_col and temperature_col:
+            #    plots.append(
+            #        get_html_plot(
+            #            df,
+            #            x_col=time_col.col_name,
+            #            y_cols=[voltage_col.col_name, temperature_col.col_name],
+            #        )
+            #   )
+            experiment_plots.append(plots)
+        return experiment_plots
 
     def get_tables(self):
         """
