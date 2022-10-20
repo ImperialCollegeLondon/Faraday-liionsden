@@ -166,6 +166,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                             "Could not parse data file - does it contain data?",
                         )
                         self.object.delete()
+                        return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
                 except IntegrityError:
                     messages.error(
                         request,

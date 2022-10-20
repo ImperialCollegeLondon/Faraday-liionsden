@@ -157,8 +157,10 @@ LOGGING = {
         },
         "console": {"class": "logging.StreamHandler", "formatter": "verbose"},
     },
-    "loggers": {"django": {"handlers": ["file", "console"], "level": "INFO"},
-    "azure": {"handlers": ["file", "console"], "level": "DEBUG"},},
+    "loggers": {
+        "django": {"handlers": ["file", "console"], "level": "INFO"},
+        "azure": {"handlers": ["file", "console"], "level": "DEBUG"},
+    },
 }
 
 AUTH_USER_MODEL = "management.User"
