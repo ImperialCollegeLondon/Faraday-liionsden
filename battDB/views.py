@@ -160,6 +160,12 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                 try:
                     formset.save()
                     form.instance.full_clean()
+                    if not self.object.ts_data and formset[0].instance.use_parser:
+                        messages.error(
+                            request,
+                            "Could not parse data file - does it contain data?",
+                        )
+                        self.object.delete()
                 except IntegrityError:
                     messages.error(
                         request,
