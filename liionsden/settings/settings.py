@@ -157,9 +157,7 @@ LOGGING = {
         },
         "console": {"class": "logging.StreamHandler", "formatter": "verbose"},
     },
-    "loggers": {
-        "django": {"handlers": ["file", "console"], "level": "INFO"}
-    },
+    "loggers": {"django": {"handlers": ["file", "console"], "level": "INFO"}}
 }
 
 AUTH_USER_MODEL = "management.User"
