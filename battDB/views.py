@@ -397,12 +397,14 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
         """
 
         experiment_plots = []
+        # TODO refactor to neatly check that the column has been parsed. If not, can't plot.
         for data_file, table in self.get_tables_data().items():
             df = DataFrame(table)
             # find the columns that are time, voltage, current, temperature
             edf = self.object.data_files.get(name=data_file)
             parser = edf.raw_data_file.use_parser
             columns = parser.columns.get_queryset()
+            parsed_columns = edf.ts_headers
             time_col = columns.get(parameter__name="Time")
             voltage_col = columns.get(parameter__name="Voltage")
             current_col = columns.get(parameter__name="Current")
@@ -410,7 +412,14 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
 
             # generate the plots
             plots = []
-            if time_col and voltage_col and current_col:
+            if all(
+                item in parsed_columns
+                for item in [
+                    time_col.col_name,
+                    voltage_col.col_name,
+                    current_col.col_name,
+                ]
+            ):
                 plots.append(
                     get_html_plot(
                         df,
@@ -418,14 +427,21 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
                         y_cols=[voltage_col.col_name, current_col.col_name],
                     )
                 )
-            # if time_col and voltage_col and temperature_col:
-            #    plots.append(
-            #        get_html_plot(
-            #            df,
-            #            x_col=time_col.col_name,
-            #            y_cols=[voltage_col.col_name, temperature_col.col_name],
-            #        )
-            #   )
+            if all(
+                item in parsed_columns
+                for item in [
+                    time_col.col_name,
+                    voltage_col.col_name,
+                    temperature_col.col_name,
+                ]
+            ):
+                plots.append(
+                    get_html_plot(
+                        df,
+                        x_col=time_col.col_name,
+                        y_cols=[voltage_col.col_name, temperature_col.col_name],
+                    )
+                )
             experiment_plots.append(plots)
         return experiment_plots
 
