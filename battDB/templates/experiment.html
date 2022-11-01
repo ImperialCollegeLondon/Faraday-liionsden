@@ -157,7 +157,7 @@
       <div class="tab-pane fade" id="nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}" role="tabpanel"
         aria-labelledby="nav-tab-{{forloop.parentloop.counter}}-{{ forloop.counter }}">
         {% autoescape off %}
-        {{ plot.plot }}
+        {{ plot }}
         {% endautoescape %}
       </div>
       {% endfor %}
