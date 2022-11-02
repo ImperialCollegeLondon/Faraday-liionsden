@@ -386,6 +386,28 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
         context.update({"plots": self.get_plots()})
         return self.render_to_response(context)
 
+    def get_parsed_col_names(self, edf, parameter_names):
+        """
+        Given a list of parameter names, returns a list of the parsed column
+        headers. If any parameters have not been parsed, returns an empty list.
+        Args:
+            edf (ExperimentDataFile): The data file to check
+            parameter_names (list): list of parameter names
+        Returns:
+            list: list of parsed column headers
+        """
+        # get all the columns that can be parsed by the parser used
+        all_cols = edf.raw_data_file.use_parser.columns.get_queryset()
+        # of those, get the columns that match the parameter names given
+        cols = all_cols.filter(parameter__name__in=parameter_names)
+        # check that all of those columns have been parsed (are in ts_headers)
+        all_parsed = all(i.col_name in edf.ts_headers for i in cols)
+
+        if (len(cols) == len(parameter_names)) and all_parsed:
+            return [i.col_name for i in cols]
+        else:
+            return []
+
     def get_plots(self):
         """
         For each of the data files associated with the experiment, generate a list of
@@ -395,51 +417,30 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
         - Voltage vs. Temparature against Time
         Returns a list of these lists.
         """
-
         experiment_plots = []
-        # TODO refactor to neatly check that the column has been parsed. If not, can't plot.
         for data_file, table in self.get_tables_data().items():
-            df = DataFrame(table)
-            # find the columns that are time, voltage, current, temperature
             edf = self.object.data_files.get(name=data_file)
-            parser = edf.raw_data_file.use_parser
-            columns = parser.columns.get_queryset()
-            parsed_columns = edf.ts_headers
-            time_col = columns.get(parameter__name="Time")
-            voltage_col = columns.get(parameter__name="Voltage")
-            current_col = columns.get(parameter__name="Current")
-            temperature_col = columns.get(parameter__name="Temperature")
-
+            df = DataFrame(table)
             # generate the plots
             plots = []
-            if all(
-                item in parsed_columns
-                for item in [
-                    time_col.col_name,
-                    voltage_col.col_name,
-                    current_col.col_name,
-                ]
-            ):
+            parsed_cols = self.get_parsed_col_names(edf, ["Time", "Voltage", "Current"])
+            if parsed_cols:
                 plots.append(
                     get_html_plot(
                         df,
-                        x_col=time_col.col_name,
-                        y_cols=[voltage_col.col_name, current_col.col_name],
+                        x_col=parsed_cols[0],
+                        y_cols=parsed_cols[1:],
                     )
                 )
-            if all(
-                item in parsed_columns
-                for item in [
-                    time_col.col_name,
-                    voltage_col.col_name,
-                    temperature_col.col_name,
-                ]
-            ):
+            parsed_cols = self.get_parsed_col_names(
+                edf, ["Time", "Voltage", "Temperature"]
+            )
+            if parsed_cols:
                 plots.append(
                     get_html_plot(
                         df,
-                        x_col=time_col.col_name,
-                        y_cols=[voltage_col.col_name, temperature_col.col_name],
+                        x_col=parsed_cols[0],
+                        y_cols=parsed_cols[1:],
                     )
                 )
             experiment_plots.append(plots)
