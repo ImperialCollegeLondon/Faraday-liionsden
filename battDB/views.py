@@ -394,7 +394,7 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
             edf (ExperimentDataFile): The data file to check
             parameter_names (list): list of parameter names
         Returns:
-            list: list of parsed column headers
+            list: list of parsed column headers (column names)
         """
         # get all the columns that can be parsed by the parser used
         all_cols = edf.raw_data_file.use_parser.columns.get_queryset()
@@ -411,8 +411,8 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
     def get_plots(self):
         """
         For each of the data files associated with the experiment, generate a list of
-        plots  using the get_html_plot function.
-        By default, it generates two plots:
+        plots using the get_html_plot function.
+        For now, it generates two plots if the necessary columns have been parsed:
         - Voltage vs. Current against Time
         - Voltage vs. Temparature against Time
         Returns a list of these lists.
