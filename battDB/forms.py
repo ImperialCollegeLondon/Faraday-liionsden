@@ -344,7 +344,7 @@ class NewExperimentDataFileForm(DataCreateForm):
                     HTML(
                         (
                             "Upload the raw data file here. Select 'parse' to process "
-                            "the data using your chosen parser."
+                            "the data using your chosen parser. "
                         )
                     ),
                     HTML(
