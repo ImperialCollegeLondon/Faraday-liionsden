@@ -1,7 +1,7 @@
 ---
 name: File upload error
 about: Help us improve the robustness of parsing data files
-title: "[FILE UPLOAD PROBLEM]"
+title: "[SHORT DESCRIPTION OF PROBLEM]"
 labels: ''
 assignees: ''
 

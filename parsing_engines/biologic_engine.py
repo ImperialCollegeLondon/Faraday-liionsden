@@ -45,8 +45,12 @@ class BiologicParsingEngine(ParsingEngineBase):
             file_obj (TextIO): File to parse.
         """
         skip_rows = get_header_size(file_obj, cls.encoding)
-        data = load_biologic_data(file_obj, skip_rows, cls.encoding)
-        file_metadata = get_file_header(file_obj, skip_rows, cls.encoding)
+        if skip_rows == 0:
+            data = pd.DataFrame([])
+            file_metadata = []
+        else:
+            data = load_biologic_data(file_obj, skip_rows, cls.encoding)
+            file_metadata = get_file_header(file_obj, skip_rows, cls.encoding)
         return cls(file_obj, skip_rows, data, file_metadata)
 
 
