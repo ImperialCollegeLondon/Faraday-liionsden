@@ -1,7 +1,7 @@
 pandas
 psycopg2-binary
 django_jsoneditor
-Django
+Django>=4.1.2
 djangorestframework
 preparenovonix
 PyYAML
@@ -28,3 +28,4 @@ django-storages[azure]
 django-override-storage
 molmass
 plotly
+oauthlib>=3.2.1
