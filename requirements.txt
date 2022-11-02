@@ -128,6 +128,8 @@ pandas==1.4.4
     # via -r requirements.in
 pillow==9.2.0
     # via matplotlib
+plotly==5.10.0
+    # via -r requirements.in
 preparenovonix==1.0.3
     # via -r requirements.in
 psycopg2-binary==2.9.3
@@ -170,6 +172,8 @@ sqlparse==0.4.2
     # via django
 tablib==3.2.1
     # via -r requirements.in
+tenacity==8.1.0
+    # via plotly
 typing-extensions==4.3.0
     # via azure-core
 uritemplate==4.1.1

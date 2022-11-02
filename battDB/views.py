@@ -1,4 +1,5 @@
 import django_tables2 as tables2
+import plotly.graph_objs as go
 from django.contrib import messages
 from django.db import IntegrityError, transaction
 from django.shortcuts import redirect, render
@@ -8,6 +9,8 @@ from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
 from django_tables2.views import MultiTableMixin, SingleTableMixin
 from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
+from pandas import DataFrame
+from plotly.offline import plot
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
@@ -53,6 +56,7 @@ from .models import (
     Parser,
     UploadedFile,
 )
+from .plots import get_html_plot
 from .serializers import (
     DataFileSerializer,
     DataRangeSerializer,
@@ -383,9 +387,77 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
     permission_required = "battDB.view_experiment"
     table_class = ExperimentDataTable
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        context.update({"plots": self.get_plots()})
+        return self.render_to_response(context)
+
+    def get_parsed_col_names(self, edf, parameter_names):
+        """
+        Given a list of parameter names, returns a list of the parsed column
+        headers. If any parameters have not been parsed, returns an empty list.
+        Args:
+            edf (ExperimentDataFile): The data file to check
+            parameter_names (list): list of parameter names
+        Returns:
+            list: list of parsed column headers (column names)
+        """
+        # get all the columns that can be parsed by the parser used
+        all_cols = edf.raw_data_file.use_parser.columns.get_queryset()
+        # of those, get the columns that match the parameter names given
+        cols = all_cols.filter(parameter__name__in=parameter_names)
+        # check that all of those columns have been parsed (are in ts_headers)
+        all_parsed = all(i.col_name in edf.ts_headers for i in cols)
+
+        if (len(cols) == len(parameter_names)) and all_parsed:
+            return [i.col_name for i in cols]
+        else:
+            return []
+
+    def get_plots(self):
+        """
+        For each of the data files associated with the experiment, generate a list of
+        plots using the get_html_plot function.
+        For now, it generates two plots if the necessary columns have been parsed:
+        - Voltage vs. Current against Time
+        - Voltage vs. Temparature against Time
+        Returns a list of these lists.
+        """
+        experiment_plots = []
+        for data_file, table in self.get_tables_data().items():
+            edf = self.object.data_files.get(name=data_file)
+            df = DataFrame(table)
+            # generate the plots
+            plots = []
+            parsed_cols = self.get_parsed_col_names(edf, ["Time", "Voltage", "Current"])
+            if parsed_cols:
+                plots.append(
+                    get_html_plot(
+                        df,
+                        x_col=parsed_cols[0],
+                        y_cols=parsed_cols[1:],
+                    )
+                )
+            parsed_cols = self.get_parsed_col_names(
+                edf, ["Time", "Voltage", "Temperature"]
+            )
+            if parsed_cols:
+                plots.append(
+                    get_html_plot(
+                        df,
+                        x_col=parsed_cols[0],
+                        y_cols=parsed_cols[1:],
+                    )
+                )
+            experiment_plots.append(plots)
+        return experiment_plots
+
     def get_tables(self):
         """
-        Overriding to include all columns dynamically.
+        Overriding from django_tables2.views.MultiTableMixin to include all columns
+        dynamically. This is necessary to ensure that all columns are included in the
+        table.
         """
         data = self.get_tables_data()
         data_files = self.object.data_files.all()
@@ -406,30 +478,35 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
 
         return tables
 
-    def get_tables_data(self, n_rows: int = 20, decimal_places: int = 2):
+    def get_tables_data(self, n_rows: int = 0, decimal_places: int = 2):
         """
-        Overriding to get top n rows of data displayed.
-        Values are displayed to a chosen number of decimal_places for easy viewing.
+        Overriding from django_tables2.views.MultiTableMixin to optionally get top n
+        rows of data. Values are displayed to a chosen number of decimal_places for easy
+        viewing.
+        Args:
+            n_rows: Number of rows to return. If 0, return all rows.
+            decimal_places: Number of decimal places to display.
+        Returns:
+            Dictionary of lists. Each list contains a dictionary for each row of data.
         """
         data_files = self.object.data_files.all()
-        data_previews = []
+        data_previews = {}
         for data_file in data_files:
             if data_file.file_exists() and data_file.raw_data_file.parse:
-                initial_data = data_file.ts_data[:n_rows]
+                # Get the headers and data
                 data_headers = data_file.ts_headers
+                data = data_file.ts_data[:n_rows] if n_rows else data_file.ts_data
                 data_preview = []
-                for i in initial_data:
+                for row in data:
                     data_preview.append(
                         {
                             header: round(value, decimal_places)
-                            for (header, value) in zip(data_headers, i)
+                            for (header, value) in zip(data_headers, row)
                         }
                     )
-
-                data_previews.append(data_preview)
-
+                data_previews[data_file.name] = data_preview
             else:
-                data_previews.append(None)
+                data_previews[data_file.name] = None
         return data_previews
 
 

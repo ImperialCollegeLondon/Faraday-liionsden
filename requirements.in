@@ -27,3 +27,4 @@ openpyxl
 django-storages[azure]
 django-override-storage
 molmass
+plotly

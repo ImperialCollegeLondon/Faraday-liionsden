@@ -23,7 +23,7 @@ from .views import index
 urlpatterns = [
     path("", index, name="home"),
     path("battDB/", include("battDB.urls")),
-    path("admin/", admin.site.urls),
+    path(r"admin/", admin.site.urls),
     path("accounts/", include("management.urls")),
     path("dfndb/", include("dfndb.urls")),
 ]
