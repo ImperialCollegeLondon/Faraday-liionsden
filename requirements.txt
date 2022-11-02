@@ -116,8 +116,10 @@ numpy==1.23.2
     #   matplotlib
     #   pandas
     #   preparenovonix
-oauthlib==3.2.0
-    # via requests-oauthlib
+oauthlib==3.2.2
+    # via
+    #   -r requirements.in
+    #   requests-oauthlib
 openpyxl==3.0.10
     # via -r requirements.in
 packaging==21.3

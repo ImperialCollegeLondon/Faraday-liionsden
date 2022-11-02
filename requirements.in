@@ -28,3 +28,4 @@ django-storages[azure]
 django-override-storage
 molmass
 plotly
+oauthlib>=3.2.1
