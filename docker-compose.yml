@@ -23,6 +23,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_NAME=postgres
       - POSTGRES_HOST=db
+      - ADMIN_PASSWORD=password
     volumes:
       - .:/usr/src/app
       - ./log:/usr/src/app/log
