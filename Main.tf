@@ -189,6 +189,7 @@ resource "azurerm_linux_web_app" "app" {
     ADMIN_PASSWORD                  = var.admin_password
     AZURE_STORAGE_CONTAINER         = azurerm_storage_container.media.name
     AZURE_STORAGE_CONNECTION_STRING = azurerm_storage_account.media.primary_connection_string
+    AZURE_ACCOUNT_NAME              = azurerm_storage_account.media.name
   }
   logs {
     http_logs {

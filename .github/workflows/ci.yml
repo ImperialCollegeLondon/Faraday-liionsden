@@ -15,7 +15,13 @@ jobs:
     needs: qa
 
     runs-on: ubuntu-latest
-
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_NAME: postgres
+      POSTGRES_HOST: localhost
+      AZURE_STORAGE_CONTAINER: test
+      AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://localhost:10000/devstoreaccount1;QueueEndpoint=http://localhost:10001/devstoreaccount1;
     services:
       postgres:
         image: postgres
@@ -27,7 +33,13 @@ jobs:
           - 5432:5432
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
+      azurite:
+        image: mcr.microsoft.com/azure-storage/azurite:3.20.1
+        ports:
+          - 10000:10000
+          - 10001:10001
+          - 10002:10002
+        options: --health-cmd "nc -z 127.0.0.1 10000"
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.8
@@ -40,6 +52,8 @@ jobs:
         pip install -r requirements.txt
     - name: Run migrations
       run: python manage.py migrate
+    - name: Create storage container
+      run: python manage.py createstoragecontainer
     - name: Run tests
       env:
         AZURE_STORAGE_ACCOUNT_KEY: '${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}'

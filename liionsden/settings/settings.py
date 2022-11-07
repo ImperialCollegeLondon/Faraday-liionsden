@@ -173,9 +173,10 @@ LOGOUT_REDIRECT_URL = "/"
 # File storage
 # Azure blob storage for media files
 DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
-AZURE_CONTAINER = "media"
+AZURE_CONTAINER = os.getenv("AZURE_STORAGE_CONTAINER")
+AZURE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
 AZURE_ACCOUNT_NAME = "liionsdenmedia"
-AZURE_ACCOUNT_KEY = os.getenv("AZURE_STORAGE_ACCOUNT_KEY")
+# AZURE_ACCOUNT_KEY = os.getenv("AZURE_STORAGE_ACCOUNT_KEY")
 AZURE_CUSTOM_DOMAIN = f"{AZURE_ACCOUNT_NAME}.blob.core.windows.net"
 MEDIA_URL = f"https://{AZURE_CUSTOM_DOMAIN}/{AZURE_CONTAINER}/"
 
