@@ -547,6 +547,7 @@ class DataUploadViewTest(TestCase):
             reverse("battDB:Download File", kwargs={"pk": edf.id})
         )
         self.assertEqual(download_response.status_code, 302)
+        print(download_response.url)
         self.assertTrue(
             download_response.url.startswith(
                 "https://liionsdenmedia.blob.core.windows.net/media/uploaded_files/biologic_example"

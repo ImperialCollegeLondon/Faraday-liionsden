@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 import tempfile
 
+from azure.core.utils import parse_connection_string
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -175,10 +177,7 @@ LOGOUT_REDIRECT_URL = "/"
 DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
 AZURE_CONTAINER = os.getenv("AZURE_STORAGE_CONTAINER")
 AZURE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
-AZURE_ACCOUNT_NAME = "liionsdenmedia"
-# AZURE_ACCOUNT_KEY = os.getenv("AZURE_STORAGE_ACCOUNT_KEY")
-AZURE_CUSTOM_DOMAIN = f"{AZURE_ACCOUNT_NAME}.blob.core.windows.net"
-MEDIA_URL = f"https://{AZURE_CUSTOM_DOMAIN}/{AZURE_CONTAINER}/"
+AZURE_ACCOUNT_NAME = os.getenv("AZURE_STORAGE_ACCOUNT_NAME")
 
 # Standard local storage for static files
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
