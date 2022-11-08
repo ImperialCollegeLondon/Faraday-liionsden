@@ -186,6 +186,7 @@ if AZURE_CONTAINER and AZURE_CONNECTION_STRING is None:
     # address of the azurite container. This way urls for the storage will work
     # from both the app container and host system.
     import socket
+
     try:
         local_ip = socket.gethostbyname("azurite")
         AZURE_CONNECTION_STRING = f"DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://{local_ip}:10000/devstoreaccount1;QueueEndpoint=http://{local_ip}:10001/devstoreaccount1;"  # noqa: E501
