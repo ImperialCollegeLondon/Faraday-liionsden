@@ -20,6 +20,8 @@ services:
       - azurite:/data
     ports:
       - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
     healthcheck:
       test: nc -z 127.0.0.1 10000
       interval: 5s
@@ -37,7 +39,6 @@ services:
       - ADMIN_PASSWORD=password
       - AZURE_STORAGE_CONTAINER=test
       - AZURE_STORAGE_ACCOUNT_NAME=devstoreaccount1
-      - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;QueueEndpoint=http://azurite:10001/devstoreaccount1;
     volumes:
       - .:/usr/src/app
       - ./log:/usr/src/app/log

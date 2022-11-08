@@ -179,6 +179,20 @@ AZURE_CONTAINER = os.getenv("AZURE_STORAGE_CONTAINER")
 AZURE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
 AZURE_ACCOUNT_NAME = os.getenv("AZURE_STORAGE_ACCOUNT_NAME")
 
+if AZURE_CONTAINER and AZURE_CONNECTION_STRING is None:
+    # Assume working in docker compose development environment.
+
+    # Try and set the connection string for use with azurite but using the ip
+    # address of the azurite container. This way urls for the storage will work
+    # from both the app container and host system.
+    import socket
+    try:
+        local_ip = socket.gethostbyname("azurite")
+        AZURE_CONNECTION_STRING = f"DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://{local_ip}:10000/devstoreaccount1;QueueEndpoint=http://{local_ip}:10001/devstoreaccount1;"  # noqa: E501
+    except socket.gaierror:
+        # ignore if expected hostname is not present
+        pass
+
 # Standard local storage for static files
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
