@@ -1,3 +1,4 @@
+from azure.core.utils import parse_connection_string
 from django.conf import settings
 from django.db import connection
 from django.db.models.base import ModelBase
