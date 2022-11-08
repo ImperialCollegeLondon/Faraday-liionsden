@@ -18,6 +18,8 @@ services:
     image: mcr.microsoft.com/azure-storage/azurite:3.20.1
     volumes:
       - azurite:/data
+    ports:
+      - "10000:10000"
     healthcheck:
       test: nc -z 127.0.0.1 10000
       interval: 5s
@@ -49,3 +51,4 @@ services:
         condition: service_healthy
 volumes:
   azurite:
+  db:
