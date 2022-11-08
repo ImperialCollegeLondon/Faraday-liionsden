@@ -40,7 +40,7 @@ variable "admin_password" {
 locals {
   project_name           = "liionsden"                     # REVIEW
   location               = "ukwest"                        # REVIEW - the azure region to deploy into - https://github.com/claranet/terraform-azurerm-regions/blob/master/REGIONS.md
-  django_settings_module = "liionsden.settings.production" # REVIEW - import path for project's azure settings
+  django_settings_module = "liionsden.settings.azure"      # REVIEW - import path for project's azure settings
   postgres_admin_login   = "postgres"
   email_user             = "rcsazbot"
 }
