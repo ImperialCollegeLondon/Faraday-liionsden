@@ -10,6 +10,21 @@ from django.conf import settings
 logger = getLogger()
 
 
+def get_blob_endpoint():
+    """
+    Returns the blob endpoint for the Azure storage account.
+    Detects if the connection string container is for a local emulator.
+    If it is, modifies the endpoint to use the localhost.
+    TODO: modify based on whether in local dev or production - see download_blob.
+    """
+    blob_endpoint = parse_connection_string(settings.AZURE_CONNECTION_STRING)[
+        "blobendpoint"
+    ]
+    if "azurite" in blob_endpoint:
+        blob_endpoint = blob_endpoint.replace("azurite", "localhost")
+    return blob_endpoint
+
+
 def generate_sas_token(blob_name, permission="r"):
     """
     Generates a SAS token for the Azure storage account.
@@ -33,12 +48,11 @@ def generate_sas_token(blob_name, permission="r"):
 
 def download_blob(local_path="./tmp", blob_name="", sas_token=""):
     """
-    Downloads a file from azure and saves it locally given the blob
-    name and local file path.
+    TODO: This is not used. Remove and replace with a function to get the correct
+    blob URL, which are used by the views. Correct URL based on whether in local
+    dev or production.
     """
-    blob_endpoint = parse_connection_string(settings.AZURE_CONNECTION_STRING)[
-        "blobendpoint"
-    ]
+    blob_endpoint = get_blob_endpoint()
     try:
         os.makedirs(os.path.join(local_path, "uploaded_files"), exist_ok=True)
         blob_service_client = BlobServiceClient(blob_endpoint, sas_token)
@@ -62,9 +76,7 @@ def delete_blobs(blob_names, container):
     """
     Deletes the given blobs from the Azure storage account.
     """
-    blob_endpoint = parse_connection_string(settings.AZURE_CONNECTION_STRING)[
-        "blobendpoint"
-    ]
+    blob_endpoint = get_blob_endpoint()
     account_key = parse_connection_string(settings.AZURE_CONNECTION_STRING)[
         "accountkey"
     ]
@@ -79,9 +91,7 @@ def list_blobs(container):
     """
     Lists all the blobs in the Azure storage account.
     """
-    blob_endpoint = parse_connection_string(settings.AZURE_CONNECTION_STRING)[
-        "blobendpoint"
-    ]
+    blob_endpoint = get_blob_endpoint()
     account_key = parse_connection_string(settings.AZURE_CONNECTION_STRING)[
         "accountkey"
     ]
