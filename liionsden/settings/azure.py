@@ -4,7 +4,7 @@ import sys
 
 from .production import *  # noqa: F401, F403
 
-# configure sending emails from Imperial mail servers
+# Configure sending emails from Imperial mail servers
 EMAIL_HOST = "smtp.cc.ic.ac.uk"
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
@@ -13,14 +13,24 @@ EMAIL_HOST_PASSWORD = os.environ["EMAIL_PASSWORD"]
 SERVER_EMAIL = "rcs-noreply@imperial.ac.uk"
 DEFAULT_FROM_EMAIL = "rcs-noreply@imperial.ac.uk"
 
-# Azure postgres requires connections to be encrypted
-DATABASES["default"]["OPTIONS"].update(dict(sslmode="require"))  # noqa: F405
+# Configure database settings for azure
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ["POSTGRES_NAME"],
+        "USER": os.environ["POSTGRES_USER"],
+        "PASSWORD": os.environ["POSTGRES_PASSWORD"],
+        "HOST": os.environ["POSTGRES_HOST"],
+        "PORT": 5432,
+        # Azure postgres requires connections to be encrypted
+        "OPTIONS": {"sslmode": "require"},
+    }
+}
+
 
 # Below configuration splits console logging into stdout and stderr (for warnings or
 # worse). This helps the Azure AppServiceConsoleLogs mechanism to distinguish between
 # error and information messages in the log analytics workspace.
-
-
 class InfoFilter(logging.Filter):
     def filter(self, rec):
         return rec.levelno in (logging.DEBUG, logging.INFO)
