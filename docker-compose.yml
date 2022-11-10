@@ -29,7 +29,6 @@ services:
     build: .
     environment:
       - LOGGING_FILE=/usr/src/app/log/liionsden
-      - AZURE_STORAGE_ACCOUNT_KEY
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_NAME=postgres
