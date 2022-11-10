@@ -8,7 +8,6 @@ from override_storage import override_storage
 from override_storage.storage import LocMemStorage
 
 import battDB.models as bdb
-from tests.fixtures import TEST_AZURE_CONTAINER, TEST_MEDIA_URL
 
 # flake8: noqa: E501
 
@@ -465,10 +464,8 @@ class BatchViewTest(TestCase):
 
 # The LocMemStorage of override_storage is too transient for the tests to work
 # here so we use @override settings and FileSystemStorage.
-@override_settings(
-    MEDIA_ROOT=tempfile.mkdtemp(),
-    DEFAULT_FILE_STORAGE="django.core.files.storage.FileSystemStorage",
-)
+
+
 class DataUploadViewTest(TestCase):
     def setUp(self):
         self.user = baker.make_recipe(
@@ -550,7 +547,7 @@ class DataUploadViewTest(TestCase):
         print(download_response.url)
         self.assertTrue(
             download_response.url.startswith(
-                "https://liionsdenmedia.blob.core.windows.net/media/uploaded_files/biologic_example"
+                "http://localhost:10000/devstoreaccount1/test/uploaded_files/biologic_example"
             ),
         )
 
@@ -606,6 +603,6 @@ class DataUploadViewTest(TestCase):
         self.assertEqual(download_response.status_code, 302)
         self.assertTrue(
             download_response.url.startswith(
-                "https://liionsdenmedia.blob.core.windows.net/media/uploaded_files/maccor_example_new"
+                "http://localhost:10000/devstoreaccount1/test/uploaded_files/maccor_example_new"
             ),
         )
