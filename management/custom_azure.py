@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from logging import getLogger
+from urllib.parse import urlparse
 
 from azure.core.utils import parse_connection_string
 from azure.storage.blob import generate_blob_sas
@@ -8,19 +9,21 @@ from django.conf import settings
 logger = getLogger()
 
 
-def get_blob_endpoint():
+def get_blob_url(uploaded_file):
     """
-    Returns the blob endpoint for the Azure storage account.
-    Detects if the connection string container is for a local emulator.
-    If it is, modifies the endpoint to use the localhost.
-    TODO: modify based on whether in local dev or production - see download_blob.
+    Returns the blob url of a raw data file in an Azure storage account.
+    Detects if a local azurite emulator is being used for local development
+    and redirects to the localhost url if so.
+    args:
+        uploaded_file: UploadedFile object
+    returns:
+        blob_url: string
     """
-    blob_endpoint = parse_connection_string(settings.AZURE_CONNECTION_STRING)[
-        "blobendpoint"
-    ]
-    if "azurite" in blob_endpoint:
-        blob_endpoint = blob_endpoint.replace("azurite", "localhost")
-    return blob_endpoint
+    parsed_url = urlparse(uploaded_file.url)
+
+    if urlparse(uploaded_file.url).hostname == "azurite":
+        return parsed_url._replace(netloc=f"localhost:{parsed_url.port}").geturl()
+    return uploaded_file.url
 
 
 def generate_sas_token(blob_name, permission="r"):
