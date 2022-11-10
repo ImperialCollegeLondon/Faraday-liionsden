@@ -162,8 +162,9 @@ LOGGING = {
     },
     "loggers": {
         "django": {"handlers": ["file", "console"], "level": "INFO"},
-        "azure": {"handlers": ["file", "console"], "level": "DEBUG"},
-        "urllib3": {"handlers": ["file", "console"], "level": "DEBUG"},
+        # Turn on azure and urllib to diagnose issues with Azure storage
+        # "azure": {"handlers": ["file", "console"], "level": "DEBUG"},
+        # "urllib3": {"handlers": ["file", "console"], "level": "DEBUG"},
     },
 }
 
