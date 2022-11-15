@@ -25,7 +25,7 @@ from common.views import (
     UpdateDataInlineView,
     UpdateDataView,
 )
-from management.custom_azure import generate_sas_token
+from management.custom_azure import generate_sas_token, get_blob_url
 
 from .filters import (
     BatchFilter,
@@ -541,7 +541,7 @@ class DownloadRawDataFileView(PermissionRequiredMixin, DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         blob_name = self.object.raw_data_file.file.name
-        blob_url = self.object.raw_data_file.file.url
+        blob_url = get_blob_url(self.object.raw_data_file.file)
         sas_token = generate_sas_token(blob_name)
         return redirect(f"{blob_url}?{sas_token}")
 
@@ -553,7 +553,7 @@ class DownloadSpecFileView(PermissionRequiredMixin, DetailView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         blob_name = self.object.spec_file.name
-        blob_url = self.object.spec_file.url
+        blob_url = get_blob_url(self.object.spec_file)
         sas_token = generate_sas_token(blob_name)
         return redirect(f"{blob_url}?{sas_token}")
 
