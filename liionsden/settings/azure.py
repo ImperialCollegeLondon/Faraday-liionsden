@@ -4,6 +4,8 @@ import sys
 
 from .production import *  # noqa: F401, F403
 
+ALLOWED_HOSTS = [os.environ["WEBSITE_HOSTNAME"]]
+
 # Configure sending emails from Imperial mail servers
 EMAIL_HOST = "smtp.cc.ic.ac.uk"
 EMAIL_PORT = 465
