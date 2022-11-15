@@ -38,9 +38,9 @@ variable "admin_password" {
 # REVIEW - add any additional secrets/changing config settings as variables
 
 locals {
-  project_name           = "liionsden"                     # REVIEW
-  location               = "ukwest"                        # REVIEW - the azure region to deploy into - https://github.com/claranet/terraform-azurerm-regions/blob/master/REGIONS.md
-  django_settings_module = "liionsden.settings.azure"      # REVIEW - import path for project's azure settings
+  project_name           = "liionsden"                # REVIEW
+  location               = "ukwest"                   # REVIEW - the azure region to deploy into - https://github.com/claranet/terraform-azurerm-regions/blob/master/REGIONS.md
+  django_settings_module = "liionsden.settings.azure" # REVIEW - import path for project's azure settings
   postgres_admin_login   = "postgres"
   email_user             = "rcsazbot"
 }
@@ -189,7 +189,7 @@ resource "azurerm_linux_web_app" "app" {
     ADMIN_PASSWORD                  = var.admin_password
     AZURE_STORAGE_CONTAINER         = azurerm_storage_container.media.name
     AZURE_STORAGE_CONNECTION_STRING = azurerm_storage_account.media.primary_blob_connection_string
-    AZURE_ACCOUNT_NAME              = azurerm_storage_account.media.name
+    AZURE_STORAGE_ACCOUNT_NAME      = azurerm_storage_account.media.name
   }
   logs {
     http_logs {
