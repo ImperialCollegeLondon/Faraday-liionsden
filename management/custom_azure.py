@@ -1,12 +1,29 @@
-import os
 from datetime import datetime, timedelta
 from logging import getLogger
+from urllib.parse import urlparse
 
-from azure.core.exceptions import ResourceNotFoundError
-from azure.storage.blob import BlobServiceClient, generate_blob_sas
+from azure.core.utils import parse_connection_string
+from azure.storage.blob import generate_blob_sas
 from django.conf import settings
 
 logger = getLogger()
+
+
+def get_blob_url(uploaded_file):
+    """
+    Returns the blob url of a raw data file in an Azure storage account.
+    Detects if a local azurite emulator is being used for local development
+    and redirects to the localhost url if so.
+    args:
+        uploaded_file: UploadedFile object
+    returns:
+        blob_url: string
+    """
+    parsed_url = urlparse(uploaded_file.url)
+
+    if urlparse(uploaded_file.url).hostname == "azurite":
+        return parsed_url._replace(netloc=f"localhost:{parsed_url.port}").geturl()
+    return uploaded_file.url
 
 
 def generate_sas_token(blob_name, permission="r"):
@@ -14,7 +31,9 @@ def generate_sas_token(blob_name, permission="r"):
     Generates a SAS token for the Azure storage account.
     Permissions are read only and expiry 1 hour for now.
     """
-    account_key = os.getenv("AZURE_STORAGE_ACCOUNT_KEY")
+    account_key = parse_connection_string(settings.AZURE_CONNECTION_STRING)[
+        "accountkey"
+    ]
     azure_container = settings.AZURE_CONTAINER
     sas_token = generate_blob_sas(
         account_name=settings.AZURE_ACCOUNT_NAME,
@@ -26,49 +45,3 @@ def generate_sas_token(blob_name, permission="r"):
     )
 
     return sas_token
-
-
-def download_blob(local_path="./tmp", blob_name="", sas_token=""):
-    """
-    Downloads a file from azure and saves it locally given the blob
-    name and local file path.
-    """
-    try:
-        os.makedirs(os.path.join(local_path, "uploaded_files"), exist_ok=True)
-        blob_service_client = BlobServiceClient(settings.AZURE_CUSTOM_DOMAIN, sas_token)
-        blob_client = blob_service_client.get_container_client(
-            container=settings.AZURE_CONTAINER
-        )
-        download_path = os.path.join(local_path, blob_name)
-        with open(download_path, "wb") as f:
-            f.write(blob_client.download_blob(blob_name).readall())
-
-        return download_path
-
-    except ResourceNotFoundError:
-        logger.error(
-            f"Could not find blob {blob_name} in container {settings.AZURE_CONTAINER}"
-        )
-        return None
-
-
-def delete_blobs(blob_names, container):
-    """
-    Deletes the given blobs from the Azure storage account.
-    """
-    account_key = os.getenv("AZURE_STORAGE_ACCOUNT_KEY")
-    blob_service_client = BlobServiceClient(settings.AZURE_CUSTOM_DOMAIN, account_key)
-    blob_client = blob_service_client.get_container_client(container=container)
-    for blob_name in blob_names:
-        blob_client.delete_blob(blob_name)
-    return blob_names
-
-
-def list_blobs(container):
-    """
-    Lists all the blobs in the Azure storage account.
-    """
-    account_key = os.getenv("AZURE_STORAGE_ACCOUNT_KEY")
-    blob_service_client = BlobServiceClient(settings.AZURE_CUSTOM_DOMAIN, account_key)
-    blob_client = blob_service_client.get_container_client(container=container)
-    return blob_client.list_blobs()

@@ -118,3 +118,6 @@ GitHub.sublime-settings
 # Other excluded
 _other/
 log/
+
+# terraform
+vars.tfvars

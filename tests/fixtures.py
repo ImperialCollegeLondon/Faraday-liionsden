@@ -1,11 +1,7 @@
-from django.conf import settings
 from django.db import connection
 from django.db.models.base import ModelBase
 from django.db.utils import ProgrammingError
 from django.test import TestCase
-
-TEST_AZURE_CONTAINER = "testmedia"
-TEST_MEDIA_URL = f"https://{settings.AZURE_CUSTOM_DOMAIN}/{TEST_AZURE_CONTAINER}/"
 
 
 class AbstractModelMixinTestCase(TestCase):
