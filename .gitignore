@@ -121,3 +121,6 @@ log/
 
 # terraform
 vars.tfvars
+terraform.tfstate
+terraform-provider*
+.terraform.lock.hcl
