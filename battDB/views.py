@@ -182,9 +182,8 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                 # Everything was fine - save and view experiment details page
                 messages.success(request, self.success_message)
                 return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
-            # formset is not valid so delete EDF object and return to form
-            else:
-                self.object.delete()
+        # form or formset is not valid so delete EDF object and return to form
+        self.object.delete()
         messages.error(request, "Could not save data file - form not valid.")
         return render(request, self.template_name, context)
 
