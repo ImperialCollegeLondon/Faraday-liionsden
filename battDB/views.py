@@ -429,31 +429,36 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
         """
         experiment_plots = []
         for data_file, table in self.get_tables_data().items():
-            edf = self.object.data_files.get(name=data_file)
-            df = DataFrame(table)
-            # generate the plots
-            plots = []
-            parsed_cols = self.get_parsed_col_names(edf, ["Time", "Voltage", "Current"])
-            if parsed_cols:
-                plots.append(
-                    get_html_plot(
-                        df,
-                        x_col=parsed_cols[0],
-                        y_cols=parsed_cols[1:],
-                    )
+            if table:
+                edf = self.object.data_files.get(name=data_file)
+                df = DataFrame(table)
+                # generate the plots
+                plots = []
+                parsed_cols = self.get_parsed_col_names(
+                    edf, ["Time", "Voltage", "Current"]
                 )
-            parsed_cols = self.get_parsed_col_names(
-                edf, ["Time", "Voltage", "Temperature"]
-            )
-            if parsed_cols:
-                plots.append(
-                    get_html_plot(
-                        df,
-                        x_col=parsed_cols[0],
-                        y_cols=parsed_cols[1:],
+                if parsed_cols:
+                    plots.append(
+                        get_html_plot(
+                            df,
+                            x_col=parsed_cols[0],
+                            y_cols=parsed_cols[1:],
+                        )
                     )
+                parsed_cols = self.get_parsed_col_names(
+                    edf, ["Time", "Voltage", "Temperature"]
                 )
-            experiment_plots.append(plots)
+                if parsed_cols:
+                    plots.append(
+                        get_html_plot(
+                            df,
+                            x_col=parsed_cols[0],
+                            y_cols=parsed_cols[1:],
+                        )
+                    )
+                experiment_plots.append(plots)
+            else:
+                experiment_plots.append([])
         return experiment_plots
 
     def get_tables(self):
@@ -467,7 +472,7 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
 
         tables = []
         for data_set, data_file in zip(data, data_files):
-            if data_set:
+            if data[data_set]:
                 tables.append(
                     self.table_class(
                         data_set,
