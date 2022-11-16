@@ -30,7 +30,7 @@ In future, this will also be posible via the API.
 ## Local installation
 
 If you want to run a local version of Liionsden, we recommend using [Docker](https://www.docker.com/). A `docker-compose.yml` is provided to include all the required environment variables and containers.
-
+To start the app, run `docker compose up --build`.
 Full instructions to follow once the platform is in production.
 
 ## Development notes
