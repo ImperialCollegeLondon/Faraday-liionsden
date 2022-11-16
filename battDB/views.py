@@ -167,7 +167,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                     if not self.object.ts_data and formset[0].instance.use_parser:
                         messages.error(
                             request,
-                            "Could not parse data file - does it contain data?",
+                            "Could not parse file - is it a valid data file?",
                         )
                         self.object.delete()
                         return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
