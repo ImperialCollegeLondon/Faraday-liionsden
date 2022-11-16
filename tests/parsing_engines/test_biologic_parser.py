@@ -20,7 +20,7 @@ class TestBiologicParsingEngine(TestCase):
         from parsing_engines import BiologicParsingEngine as BP
 
         mock_data.return_value = pd.DataFrame()
-        mock_size.return_value = 1
+        mock_size.return_value = (1, "valid")
         mock_head.return_value = {"answer": 42}
 
         file_path = Path(__file__).parent / "biologic_example.csv"
@@ -65,7 +65,7 @@ class TestBiologicFunctions(TestCase):
             lines = iter([i.decode("iso-8859-1") for i in f.readlines()])
             for line in lines:
                 if "Nb header lines" in line:
-                    expected = int(line.strip().split(" ")[-1]) - 1
+                    expected = (int(line.strip().split(" ")[-1]) - 1, "valid")
                     break
 
         self.assertEqual(actual, expected)
@@ -73,7 +73,9 @@ class TestBiologicFunctions(TestCase):
     def test_load_data(self):
         from parsing_engines.biologic_engine import get_header_size, load_biologic_data
 
-        skip_rows = get_header_size(self.parser.file_obj, encoding="iso-8859-1")
+        skip_rows, file_type = get_header_size(
+            self.parser.file_obj, encoding="iso-8859-1"
+        )
 
         actual = load_biologic_data(
             self.parser.file_obj, skip_rows, encoding="iso-8859-1"
@@ -84,7 +86,9 @@ class TestBiologicFunctions(TestCase):
     def test_get_file_header(self):
         from parsing_engines.biologic_engine import get_file_header, get_header_size
 
-        skip_rows = get_header_size(self.parser.file_obj, encoding="iso-8859-1")
+        skip_rows, file_type = get_header_size(
+            self.parser.file_obj, encoding="iso-8859-1"
+        )
 
         header = get_file_header(self.parser.file_obj, skip_rows, encoding="iso-8859-1")
         self.assertGreaterEqual(len(header), 1)
