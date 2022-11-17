@@ -97,7 +97,7 @@ def get_header_size(file_obj: TextIO, encoding: str) -> Tuple[int, str]:
         encoding (str): Encoding of the file.
 
     Returns:
-       Tuple (int, str): The number of rows in the header and a string describing the
+        Tuple (int, str): The number of rows in the header and a string describing the
             file format. The str can be "valid", "settings" or "invalid" depending on
             whether the file is a valid data file, a settings file, or an invalid file.
     """
