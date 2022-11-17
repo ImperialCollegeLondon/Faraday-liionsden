@@ -1,1 +1,2 @@
+#Disables CRLF conversion for .sh files
 *.sh        text eol=lf
