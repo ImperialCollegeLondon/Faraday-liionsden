@@ -164,6 +164,8 @@ class NewExperimentForm(DataCreateForm):
             "exp_type",
             "thermal",
             "notes",
+            "external_link",
+            "summary",
         ]
         help_texts = {
             "date": "When this experiment started",
@@ -183,6 +185,8 @@ class NewExperimentForm(DataCreateForm):
                 Column("exp_type", css_class="col-3"),
                 Column("c_rate", css_class="col-3"),
                 Column("thermal", css_class="col-3"),
+                Column("external_link", css_class="col-3"),
+                Field("summary"),
                 Fieldset(
                     "Add devices",
                     Div(

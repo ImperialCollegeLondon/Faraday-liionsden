@@ -439,6 +439,19 @@ class Experiment(cm.BaseModel):
         " If 'other', technique should be specified in the notes section.",
     )
 
+    external_link = models.URLField(
+        blank=True,
+        null=True,
+        help_text="Specific link to a reference for this experiment.",
+    )
+
+    summary = models.TextField(
+        null=True,
+        blank=True,
+        help_text="Summary of what was done in the experiment e.g. what was the "
+        "motivation, etc.",
+    )
+
     def devices_(self):
         return self.devices.count()
 
