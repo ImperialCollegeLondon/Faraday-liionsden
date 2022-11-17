@@ -16,7 +16,7 @@
   <table width="100%">
     <tr>
       <td>
-        <h4>{{ object.user_owner.institution }} </h4>
+        <h4>{{ object.user_owner.institution|default_if_none:"No Institution" }} </h4>
       </td>
       <td style="text-align:center">
         <h4> {{ object.name }} </h4>
@@ -33,7 +33,7 @@
     <h5>Experiment details</h5>
   </div>
   <div class="card-body">
-    <b>Configuration </b>
+    <b>Configuration</b>
     <br>
     {{object.config}}
     <br>
@@ -48,6 +48,14 @@
     <b>Thermal management</b>
     <br>
     {{object.get_thermal_display}}
+    <br>
+    <b>Summary</b>
+    <br>
+    {{object.summary}}
+    <br>
+    <b>External Link</b>
+    <br>
+    <a href="{{object.external_link}}">{{object.external_link}}</a>
     <br>
     <br><br>
 
