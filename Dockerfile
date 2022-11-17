@@ -2,14 +2,18 @@ FROM python:3.8-slim-buster as python
 
 FROM python
 
+RUN apt-get update && apt-get install -y dos2unix
+
 # ssh
 COPY scripts/install_ssh.sh .
+RUN dos2unix install_ssh.sh
 RUN chmod u+x install_ssh.sh
 RUN ./install_ssh.sh
 COPY scripts/sshd_config /etc/ssh/
 
 # Initialization
 COPY scripts/init.sh /usr/local/bin/
+RUN dos2unix /usr/local/bin/init.sh
 RUN chmod u+x /usr/local/bin/init.sh
 CMD ["/usr/local/bin/init.sh"]
 
