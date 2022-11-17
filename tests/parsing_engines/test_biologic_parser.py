@@ -82,6 +82,7 @@ class TestBiologicFunctions(TestCase):
         )
         self.assertGreater(len(actual.columns), 1)
         self.assertGreater(len(actual), 100)
+        self.assertEqual(file_type, "valid")
 
     def test_get_file_header(self):
         from parsing_engines.biologic_engine import get_file_header, get_header_size
