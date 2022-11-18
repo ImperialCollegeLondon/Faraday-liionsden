@@ -415,6 +415,8 @@ UploadDataFileFormset = inlineformset_factory(
     help_texts={
         "file": None,
     },
+    min_num=1,
+    validate_min=True,
 )
 
 
