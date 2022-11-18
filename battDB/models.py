@@ -4,7 +4,7 @@ from datetime import datetime
 
 from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
+from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
@@ -437,6 +437,18 @@ class Experiment(cm.BaseModel):
         default="none",
         help_text="Thermal management technique used in this experiment. "
         " If 'other', technique should be specified in the notes section.",
+    )
+
+    external_link = models.URLField(
+        blank=True,
+        null=True,
+        help_text="Specific link to a reference for this experiment.",
+    )
+
+    summary = models.TextField(
+        help_text="Summary of what was done in the experiment e.g. what was the "
+        "motivation, etc.",
+        validators=[MinLengthValidator(20)],
     )
 
     def devices_(self):

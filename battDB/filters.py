@@ -23,6 +23,7 @@ class ExperimentFilter(BaseFilter):
             "temperature",
             "c_rate",
             "thermal",
+            "summary",
         ]
 
     # Modify init slightly to add custom label(s)
