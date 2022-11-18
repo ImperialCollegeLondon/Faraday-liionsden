@@ -4,7 +4,7 @@ from datetime import datetime
 
 from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
+from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
@@ -446,10 +446,9 @@ class Experiment(cm.BaseModel):
     )
 
     summary = models.TextField(
-        null=True,
-        blank=True,
         help_text="Summary of what was done in the experiment e.g. what was the "
         "motivation, etc.",
+        validators=[MinLengthValidator(20)],
     )
 
     def devices_(self):
