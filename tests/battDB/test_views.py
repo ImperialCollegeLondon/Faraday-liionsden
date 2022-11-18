@@ -606,3 +606,44 @@ class DataUploadViewTest(TestCase):
                 "http://localhost:10000/devstoreaccount1/test/uploaded_files/maccor_example_new"
             ),
         )
+
+    def test_upload_view_unparsed_data(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        # Check file upload response
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/biologic_example.csv",
+        )
+        with open(file_path) as input_file:
+            post_response = self.client.post(
+                reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                {
+                    "name": "Device 3",
+                    "raw_data_file-TOTAL_FORMS": 1,
+                    "raw_data_file-INITIAL_FORMS": 0,
+                    "raw_data_file-0-file": input_file,
+                },
+            )
+        # Check redirect to correct page
+        self.assertEqual(post_response.url, f"/battDB/exps/{self.experiment.id}")
+
+        # Check ExperimentDataFile has been created
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 3")
+        self.assertTrue(edf.file_exists())
+
+        # Check Experiment Detail view contains message about unparsed data
+        get_response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(
+            get_response, "This file was uploaded without being processed."
+        )
