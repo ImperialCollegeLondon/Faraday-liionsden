@@ -647,3 +647,119 @@ class DataUploadViewTest(TestCase):
         self.assertContains(
             get_response, "This file was uploaded without being processed."
         )
+
+    def test_upload_view_binary_file(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        # Check file upload response
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/biologic_example.csv",
+        )
+
+        binary_file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/common/sample_files/sample_binary.mpr",
+        )
+
+        with open(file_path) as input_file:
+            with open(binary_file_path, "rb") as binary_file:
+                post_response = self.client.post(
+                    reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                    {
+                        "name": "Device 4",
+                        "binary_file": binary_file,
+                        "raw_data_file-TOTAL_FORMS": 1,
+                        "raw_data_file-INITIAL_FORMS": 0,
+                        "raw_data_file-0-file": input_file,
+                    },
+                )
+        # Check redirect to correct page
+        self.assertEqual(post_response.url, f"/battDB/exps/{self.experiment.id}")
+
+        # Check ExperimentDataFile has been created
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 4")
+        self.assertTrue(edf.file_exists())
+
+        # Check Experiment Detail view contains message about unparsed data
+        get_response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(get_response, "Download binary")
+
+        # Finally, check the binary file can be downloaded
+        download_response = self.client.get(
+            reverse("battDB:Download Binary File", kwargs={"pk": edf.id})
+        )
+        self.assertEqual(download_response.status_code, 302)
+        self.assertTrue(
+            download_response.url.startswith(
+                "http://localhost:10000/devstoreaccount1/test/uploaded_files/sample_binary"
+            ),
+        )
+
+    def test_upload_view_settings_file(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        # Check file upload response
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/biologic_example.csv",
+        )
+
+        settings_file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/common/sample_files/sample_settings.mps",
+        )
+
+        with open(file_path) as input_file:
+            with open(settings_file_path) as settings_file:
+                post_response = self.client.post(
+                    reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                    {
+                        "name": "Device 5",
+                        "settings_file": settings_file,
+                        "raw_data_file-TOTAL_FORMS": 1,
+                        "raw_data_file-INITIAL_FORMS": 0,
+                        "raw_data_file-0-file": input_file,
+                    },
+                )
+        # Check redirect to correct page
+        self.assertEqual(post_response.url, f"/battDB/exps/{self.experiment.id}")
+
+        # Check ExperimentDataFile has been created
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 5")
+        self.assertTrue(edf.file_exists())
+
+        # Check Experiment Detail view contains message about unparsed data
+        get_response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(get_response, "Download settings")
+
+        # Finally, check the settings file can be downloaded
+        download_response = self.client.get(
+            reverse("battDB:Download Settings File", kwargs={"pk": edf.id})
+        )
+        self.assertEqual(download_response.status_code, 302)
+        self.assertTrue(
+            download_response.url.startswith(
+                "http://localhost:10000/devstoreaccount1/test/uploaded_files/sample_settings"
+            ),
+        )
