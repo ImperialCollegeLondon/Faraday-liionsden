@@ -532,7 +532,8 @@ class ExperimentDataFile(cm.BaseModel):
         blank=True,
         validators=(validate_settings_file,),
         verbose_name="Settings file",
-        help_text="Input settings file for the cycler used to produce this data",
+        help_text="Input settings file for the cycler used to produce this data (if "
+        "available)",
     )
 
     binary_file = models.FileField(
@@ -541,7 +542,8 @@ class ExperimentDataFile(cm.BaseModel):
         blank=True,
         validators=(validate_binary_file,),
         verbose_name="Binary file",
-        help_text="Binary file version of this data output by the cycler",
+        help_text="Binary file version of this data output by the cycler (if "
+        "available)",
     )
 
     def num_cycles(self):
