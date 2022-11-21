@@ -318,6 +318,8 @@ class HashedFile(models.Model):
 
     def clean(self):
         print(self.file.name)
+        if not self.file:
+            raise ValidationError("No file was uploaded.")
         self.hash = hash_file(self.file)
         return super(HashedFile, self).clean()
 

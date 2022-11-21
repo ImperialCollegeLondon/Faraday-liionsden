@@ -347,8 +347,9 @@ class NewExperimentDataFileForm(DataCreateForm):
                 Div(
                     HTML(
                         (
-                            "Upload the raw data file here. Select 'parse' to process "
-                            "the data using your chosen parser. "
+                            "Upload the raw data file here. Select a parser to process "
+                            "the data, or leave blank to upload the file without "
+                            "parsing. "
                         )
                     ),
                     HTML(
@@ -418,6 +419,8 @@ UploadDataFileFormset = inlineformset_factory(
     help_texts={
         "file": None,
     },
+    min_num=1,
+    validate_min=True,
 )
 
 

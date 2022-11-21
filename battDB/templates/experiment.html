@@ -168,6 +168,11 @@
     </nav>
     <!--Display the actual plots-->
     <div class="tab-content" id="nav-tabContent">
+      {% if not plot_set %}
+        <br>
+        <li class="list-group-item list-group-item-warning">This file was uploaded without being processed. You can still 
+          download the raw data file using the button below.</li>
+      {% endif %}
       {% for plot in plot_set %}
       {% if forloop.first %}
       <div class="tab-pane active show" id="nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}" role="tabpanel"

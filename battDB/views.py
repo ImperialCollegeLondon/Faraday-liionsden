@@ -433,49 +433,55 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
         For now, it generates two plots if the necessary columns have been parsed:
         - Voltage vs. Current against Time
         - Voltage vs. Temparature against Time
-        Returns a list of these lists.
+        Returns a list of these lists. If there is no table data, returns an empty list.
         """
         experiment_plots = []
         for data_file, table in self.get_tables_data().items():
-            edf = self.object.data_files.get(name=data_file)
-            df = DataFrame(table)
-            # generate the plots
-            plots = []
-            parsed_cols = self.get_parsed_col_names(edf, ["Time", "Voltage", "Current"])
-            if parsed_cols:
-                plots.append(
-                    get_html_plot(
-                        df,
-                        x_col=parsed_cols[0],
-                        y_cols=parsed_cols[1:],
-                    )
+            if table:
+                edf = self.object.data_files.get(name=data_file)
+                df = DataFrame(table)
+                # generate the plots
+                plots = []
+                parsed_cols = self.get_parsed_col_names(
+                    edf, ["Time", "Voltage", "Current"]
                 )
-            parsed_cols = self.get_parsed_col_names(
-                edf, ["Time", "Voltage", "Temperature"]
-            )
-            if parsed_cols:
-                plots.append(
-                    get_html_plot(
-                        df,
-                        x_col=parsed_cols[0],
-                        y_cols=parsed_cols[1:],
+                if parsed_cols:
+                    plots.append(
+                        get_html_plot(
+                            df,
+                            x_col=parsed_cols[0],
+                            y_cols=parsed_cols[1:],
+                        )
                     )
+                parsed_cols = self.get_parsed_col_names(
+                    edf, ["Time", "Voltage", "Temperature"]
                 )
-            experiment_plots.append(plots)
+                if parsed_cols:
+                    plots.append(
+                        get_html_plot(
+                            df,
+                            x_col=parsed_cols[0],
+                            y_cols=parsed_cols[1:],
+                        )
+                    )
+                experiment_plots.append(plots)
+            else:
+                experiment_plots.append([])
         return experiment_plots
 
     def get_tables(self):
         """
         Overriding from django_tables2.views.MultiTableMixin to include all columns
         dynamically. This is necessary to ensure that all columns are included in the
-        table.
+        table. The data files are used to determine which columns are available.
+        Returns: list of tables
         """
         data = self.get_tables_data()
         data_files = self.object.data_files.all()
-
         tables = []
+        # Iterate over the data dictionaries and create a table for each
         for data_set, data_file in zip(data, data_files):
-            if data_set:
+            if data[data_set]:
                 tables.append(
                     self.table_class(
                         data_set,
