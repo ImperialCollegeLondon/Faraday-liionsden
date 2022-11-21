@@ -382,7 +382,7 @@ class NewExperimentDataFileForm(DataCreateForm):
 
         self.helper.layout = Layout(
             Div(
-                Div(HTML(f"<h1> {mode} file </h1>")),
+                Div(HTML(f"<h1> {mode} experiment data </h1>")),
                 Column("name", css_class="col-6"),
                 Column("machine", css_class="col-6"),
                 fieldset,
