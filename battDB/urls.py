@@ -10,7 +10,9 @@ from .views import (
     DeleteExperimentView,
     DeviceSpecificationTableView,
     DeviceSpecificationView,
+    DownloadBinaryFileView,
     DownloadRawDataFileView,
+    DownloadSettingsFileView,
     DownloadSpecFileView,
     EquipmentTableView,
     EquipmentView,
@@ -86,6 +88,16 @@ urlpatterns = [
         "data_files/download/<int:pk>/",
         DownloadRawDataFileView.as_view(),
         name="Download File",
+    ),
+    path(
+        "binary_files/download/<int:pk>/",
+        DownloadBinaryFileView.as_view(),
+        name="Download Binary File",
+    ),
+    path(
+        "settings_files/download/<int:pk>/",
+        DownloadSettingsFileView.as_view(),
+        name="Download Binary File",
     ),
     path(
         "spec_files/download/<int:pk>/",

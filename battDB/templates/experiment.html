@@ -169,9 +169,9 @@
     <!--Display the actual plots-->
     <div class="tab-content" id="nav-tabContent">
       {% if not plot_set %}
-        <br>
-        <li class="list-group-item list-group-item-warning">This file was uploaded without being processed. You can still 
-          download the raw data file using the button below.</li>
+      <br>
+      <li class="list-group-item list-group-item-warning">This file was uploaded without being processed. You can still
+        download the raw data file using the button below.</li>
       {% endif %}
       {% for plot in plot_set %}
       {% if forloop.first %}
@@ -192,6 +192,15 @@
       <!--Buttons for downloading, editing and deleting data-->
       <a href=/battDB/data_files/download/{{data_file.pk}} class="btn btn-primary" , role="button"> Download raw data
         file</a>
+      {% if data_file.settings_file %}
+      <a href=/battDB/settings_files/download/{{data_file.pk}} class="btn btn-secondary" , role="button"> Download
+        settings
+        file</a>
+      {% endif %}
+      {% if data_file.binary_file %}
+      <a href=/battDB/binary_files/download/{{data_file.pk}} class="btn btn-secondary" , role="button"> Download binary
+        file</a>
+      {% endif %}
       {% if "change_experimentdatafile" in df_perms %}
       <a href="/battDB/data_files/delete/{{data_file.pk}}" class="btn btn-danger" , role="button"> Delete </a>
       <a href="/battDB/exps/update_data/{{data_file.pk}}" class="btn btn-warning" , role="button"> Edit </a>

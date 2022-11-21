@@ -563,6 +563,30 @@ class DownloadRawDataFileView(PermissionRequiredMixin, DetailView):
         return redirect(f"{blob_url}?{sas_token}")
 
 
+class DownloadBinaryFileView(PermissionRequiredMixin, DetailView):
+    model = ExperimentDataFile
+    permission_required = "battDB.view_experimentdatafile"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        blob_name = self.object.binary_file.name
+        blob_url = get_blob_url(self.object.binary_file)
+        sas_token = generate_sas_token(blob_name)
+        return redirect(f"{blob_url}?{sas_token}")
+
+
+class DownloadSettingsFileView(PermissionRequiredMixin, DetailView):
+    model = ExperimentDataFile
+    permission_required = "battDB.view_experimentdatafile"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        blob_name = self.object.settings_file.name
+        blob_url = get_blob_url(self.object.settings_file)
+        sas_token = generate_sas_token(blob_name)
+        return redirect(f"{blob_url}?{sas_token}")
+
+
 class DownloadSpecFileView(PermissionRequiredMixin, DetailView):
     model = DeviceSpecification
     permission_required = "battDB.view_devicespecification"
