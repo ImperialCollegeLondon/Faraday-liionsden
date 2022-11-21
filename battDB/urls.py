@@ -97,7 +97,7 @@ urlpatterns = [
     path(
         "settings_files/download/<int:pk>/",
         DownloadSettingsFileView.as_view(),
-        name="Download Binary File",
+        name="Download Settings File",
     ),
     path(
         "spec_files/download/<int:pk>/",
