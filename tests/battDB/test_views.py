@@ -729,7 +729,7 @@ class DataUploadViewTest(TestCase):
         )
 
         with open(file_path) as input_file:
-            with open(settings_file_path) as settings_file:
+            with open(settings_file_path, "rb") as settings_file:
                 post_response = self.client.post(
                     reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
                     {
@@ -751,7 +751,7 @@ class DataUploadViewTest(TestCase):
         get_response = self.client.get(
             reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
         )
-        self.assertContains(get_response, "Download settings")
+        self.assertContains(get_response, "settings file")
 
         # Finally, check the settings file can be downloaded
         download_response = self.client.get(
