@@ -660,8 +660,11 @@ class DataUploadViewTest(TestCase):
         )
         # This is invalid because the raw_data_file formset is missing
         post_response = self.client.post(
-            reverse("battDB:New File", kwargs={" pk": self.experiment.id}),
+            reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
             {"name": "Device 4"},
         )
         # Check redirect to correct page
         self.assertContains(post_response, "Could not save data file - form not valid.")
+        # Check ExperimentDataFile has not been created
+        with self.assertRaises(bdb.ExperimentDataFile.DoesNotExist):
+            bdb.ExperimentDataFile.objects.get(name="Device 4")
