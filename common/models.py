@@ -181,7 +181,9 @@ class BaseModel(BaseModelNoName, HasName):
 class BaseModelMandatoryName(BaseModel):
     """Changed BaseModel.name to blank=False."""
 
-    name = models.CharField(max_length=128, blank=False, default="", null=False)
+    name = models.CharField(
+        max_length=128, blank=False, default="", null=False, unique=True
+    )
 
     class Meta:
         abstract = True
