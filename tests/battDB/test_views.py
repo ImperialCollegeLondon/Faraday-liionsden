@@ -763,3 +763,53 @@ class DataUploadViewTest(TestCase):
                 "http://localhost:10000/devstoreaccount1/test/uploaded_files/sample_settings"
             ),
         )
+
+    def test_update_data(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        # Check file upload response
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/biologic_example.csv",
+        )
+        with open(file_path) as input_file:
+            post_response = self.client.post(
+                reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                {
+                    "name": "Device 5",
+                    "raw_data_file-TOTAL_FORMS": 1,
+                    "raw_data_file-INITIAL_FORMS": 0,
+                    "raw_data_file-0-file": input_file,
+                },
+            )
+        # Go to update page for this experiment data file
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 5")
+        update_response = self.client.get(
+            reverse("battDB:Update File", kwargs={"pk": edf.id})
+        )
+        self.assertContains(update_response, "Device 5")
+
+        # Make an update to the form
+        updated_post_response = self.client.post(
+            reverse("battDB:Update File", kwargs={"pk": edf.id}),
+            {
+                "name": "Device 5 updated",
+            },
+        )
+        self.assertEqual(
+            updated_post_response.url, f"/battDB/exps/{self.experiment.id}"
+        )
+        # Check the name has been updated
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 5 updated")
+        self.assertTrue(edf.file_exists())
+        # Check the original name is no longer in the database
+        with self.assertRaises(bdb.ExperimentDataFile.DoesNotExist):
+            bdb.ExperimentDataFile.objects.get(name="Device 5")
