@@ -262,7 +262,6 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
             instance=self.object,
         )
         context = self.get_context_data()
-        formset = context["raw_data_file"]
         if form.is_valid():
             # Save instance incluing setting user owner and status
             with transaction.atomic():
@@ -271,16 +270,6 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
                 else:
                     self.object.status = "private"
                 self.object.save()
-            # Save individual parameters from inline form
-            if formset.is_valid():
-                formset.instance = self.object
-                # Handle uploaded files in formsets slightly differently to usual
-                formset[0].instance.status = self.object.status
-                if formset[0].instance.use_parser:
-                    formset[0].instance.parse = True
-                formset.save()
-                form.instance.full_clean()
-
                 messages.success(request, self.success_message)
                 # Redirect to experiment detail view or stay on form if "add another"
                 if "another" in request.POST:
