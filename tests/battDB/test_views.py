@@ -689,7 +689,7 @@ class DataUploadViewTest(TestCase):
         edf = bdb.ExperimentDataFile.objects.get(name="Device 4")
         self.assertTrue(edf.file_exists())
 
-        # Check Experiment Detail view contains message about unparsed data
+        # Check Experiment Detail view contains button to download binary file
         get_response = self.client.get(
             reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
         )
@@ -747,7 +747,7 @@ class DataUploadViewTest(TestCase):
         edf = bdb.ExperimentDataFile.objects.get(name="Device 5")
         self.assertTrue(edf.file_exists())
 
-        # Check Experiment Detail view contains message about unparsed data
+        # Check Experiment Detail view contains button to download settings file
         get_response = self.client.get(
             reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
         )
