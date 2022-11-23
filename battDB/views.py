@@ -186,6 +186,8 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                     return redirect(request.path_info)
                 else:
                     return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
+            # formset not valid so delete EDF object and return to form
+            self.object.delete()
         # form or formset is not valid so return to form
         messages.error(request, "Could not save data file - form not valid.")
         return render(request, self.template_name, context)
