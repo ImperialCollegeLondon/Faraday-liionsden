@@ -658,9 +658,9 @@ class DataUploadViewTest(TestCase):
             "/accounts/login/",
             {"username": "test_contributor", "password": "contributorpass"},
         )
-
+        # This is invalid because the raw_data_file formset is missing
         post_response = self.client.post(
-            reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+            reverse("battDB:New File", kwargs={" pk": self.experiment.id}),
             {"name": "Device 4"},
         )
         # Check redirect to correct page
