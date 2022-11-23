@@ -24,13 +24,9 @@ class NewCompoundForm(DataCreateForm):
 
     class Meta:
         model = Compound
-        fields = ["name", "formula", "mass"]
+        fields = ["name", "formula"]
         help_texts = {
-            "formula": "Chemical formula. This will be used to calculate the mass.",
-            "mass": (
-                "Only fill in if the formula should not be used to automatically "
-                " calculate the mass. Otherwise, leave as 0."
-            ),
+            "formula": "Chemical formula. This will be used to automatically calculate the mass.",
         }
 
     def __init__(self, *args, **kwargs):
@@ -44,8 +40,7 @@ class NewCompoundForm(DataCreateForm):
                         """
                         Compounds should be specified in their discharged state
                         (if relevant) and are always public (visible to all users).
-                        The mass is calculated automatically from the formula unless
-                        specified otherwise.
+                        The mass is calculated automatically from the formula.
                         <a href="https://www.sciencegateway.org/tools/fwcal.htm"
                         target="_blank"> Click here for an external molecular weight
                         calculator &#10697;</a>.

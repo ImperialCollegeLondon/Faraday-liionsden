@@ -28,10 +28,9 @@ class Compound(models.Model):
 
     def clean(self):
         """
-        Use the formula to calculate the mass if not specified.
+        Use the formula to calculate the mass.
         """
-        if self.mass == 0:
-            self.mass = Formula(self.formula).mass
+        self.mass = Formula(self.formula).mass
 
     class Meta:
         unique_together = (

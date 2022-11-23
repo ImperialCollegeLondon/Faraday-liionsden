@@ -60,7 +60,7 @@ class NewCompoundView(PermissionRequiredMixin, NewDataView):
         except FormulaError as e:
             messages.error(
                 request,
-                f"{e} - Formula is not valid. Please check your formula or enter the mass manually.",
+                f"{e} - Formula is not valid. Please check your formula.",
             )
         return render(request, self.template_name, {"form": form})
 
@@ -157,7 +157,7 @@ class UpdateCompoundView(PermissionRequiredMixin, UpdateDataView):
         except FormulaError as e:
             messages.error(
                 request,
-                f"{e} - Formula is not valid. Please check your formula or enter the mass manually.",
+                f"{e} - Formula is not valid. Please check your formula.",
             )
         return render(request, self.template_name, {"form": form})
 
