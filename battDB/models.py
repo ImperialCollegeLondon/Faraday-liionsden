@@ -19,7 +19,7 @@ from common.validators import (
 from parsing_engines import available_parsing_engines, parse_data_file
 
 
-class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
+class DeviceSpecification(cm.BaseModelMandatoryName, cm.HasMPTT):
     """A template for creating a device or batch of devices in the system.
 
     <br> Specifications are structured as a tree, so that each device can be composed of
@@ -345,7 +345,7 @@ class Parser(cm.BaseModelMandatoryName):
         return self.columns.count()
 
 
-class Equipment(cm.BaseModel):
+class Equipment(cm.BaseModelMandatoryName):
     """Definitions of equipment such as cycler machines."""
 
     institution = models.ForeignKey(
@@ -372,7 +372,7 @@ class Equipment(cm.BaseModel):
         verbose_name_plural = "Equipment"
 
 
-class Experiment(cm.BaseModel):
+class Experiment(cm.BaseModelMandatoryName):
     """Main "Experiment" aka DataSet class.
 
     <br> Has many: data files (from cyclers) <br> Has many: devices (actual physical
@@ -473,6 +473,12 @@ class Experiment(cm.BaseModel):
 
     def get_absolute_url(self):
         return reverse("battDB:Experiment", kwargs={"pk": self.pk})
+
+    class Meta:
+        unique_together = (
+            "name",
+            "user_owner",
+        )
 
 
 class ExperimentDataFile(cm.BaseModel):
