@@ -9,7 +9,6 @@ class TestCompound(TestCase):
         self.model = baker.make_recipe(
             "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2"
         )
-        self.model.clean()  # to calculate the mass from the formula
 
     def test_compound_creation(self):
         for k, v in self.expected.items():
