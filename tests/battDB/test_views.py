@@ -647,3 +647,24 @@ class DataUploadViewTest(TestCase):
         self.assertContains(
             get_response, "This file was uploaded without being processed."
         )
+
+    def test_invalid_form(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+        # This is invalid because the raw_data_file formset is missing
+        post_response = self.client.post(
+            reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+            {"name": "Device 4"},
+        )
+        # Check redirect to correct page
+        self.assertContains(post_response, "Could not save data file - form not valid.")
+        # Check ExperimentDataFile has not been created
+        with self.assertRaises(bdb.ExperimentDataFile.DoesNotExist):
+            bdb.ExperimentDataFile.objects.get(name="Device 4")
