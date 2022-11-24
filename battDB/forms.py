@@ -16,6 +16,7 @@ from django.utils.safestring import mark_safe
 
 from battDB.models import (
     Batch,
+    Device,
     DeviceComponent,
     DeviceParameter,
     DeviceSpecification,
@@ -319,6 +320,10 @@ class NewExperimentDataFileForm(DataCreateForm):
     """
     Add a new experiment data file.
     """
+
+    devices = forms.ModelMultipleChoiceField(
+        queryset=Device.objects.all(), widget=forms.CheckboxSelectMultiple
+    )
 
     class Meta:
         model = ExperimentDataFile
