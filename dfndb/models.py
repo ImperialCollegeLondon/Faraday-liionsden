@@ -23,14 +23,12 @@ class Compound(models.Model):
         help_text="Optional molar mass, in g/mol",
     )
 
+    @property
+    def mass(self):
+        return Formula(self.formula).mass
+
     def __str__(self):
         return "%s (%s)" % (self.name, self.formula)
-
-    def clean(self):
-        """
-        Use the formula to calculate the mass.
-        """
-        self.mass = Formula(self.formula).mass
 
     class Meta:
         unique_together = (
