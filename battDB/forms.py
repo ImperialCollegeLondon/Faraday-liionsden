@@ -1,3 +1,6 @@
+import operator
+from functools import reduce
+
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (
     HTML,
@@ -10,6 +13,7 @@ from crispy_forms.layout import (
     Submit,
 )
 from django import forms
+from django.db.models import Q
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.utils.safestring import mark_safe
@@ -322,7 +326,7 @@ class NewExperimentDataFileForm(DataCreateForm):
     """
 
     devices = forms.ModelMultipleChoiceField(
-        queryset=Device.objects.all(), widget=forms.CheckboxSelectMultiple
+        queryset=None, widget=forms.CheckboxSelectMultiple
     )
 
     class Meta:
@@ -346,9 +350,26 @@ class NewExperimentDataFileForm(DataCreateForm):
 
     def __init__(self, *args, **kwargs):
         mode = "Update" if "instance" in kwargs.keys() else "New"
+        self.experiment = kwargs.pop("experiment", None)
         super(NewExperimentDataFileForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.attrs = {"enctype": "multipart/form-data"}
+
+        # TODO: Untested
+        if self.experiment:
+            if self.experiment.devices.count() > 0:
+                batch_ids = [dev.batch_id for dev in self.experiment.devices.all()]
+                batch_seqs = [
+                    dev.batch_sequence for dev in self.experiment.devices.all()
+                ]
+                query = reduce(
+                    operator.or_,
+                    (
+                        Q(batch_id=bid, batch_sequence=seq)
+                        for bid, seq in zip(batch_ids, batch_seqs)
+                    ),
+                )
+                self.fields["devices"].queryset = Device.objects.filter(query)
 
         if mode == "New":
             fieldset = Fieldset(

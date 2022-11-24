@@ -128,6 +128,16 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
     failure_message = "Could not add new data file. Invalid information."
     inline_formsets = {"raw_data_file": UploadDataFileFormset}
 
+    def get_form_kwargs(self):
+        """
+        Passes the request object to the form class.
+        This is necessary to only display devices that belong to the experiment.
+        """
+
+        kwargs = super(NewDataFileView, self).get_form_kwargs()
+        kwargs["experiment"] = Experiment.objects.get(pk=self.kwargs.get("pk"))
+        return kwargs
+
     def get_permission_object(self, *args, **kwargs):
         # Only allowed by users who can change current Experiment
         return Experiment.objects.get(pk=self.kwargs.get("pk"))
