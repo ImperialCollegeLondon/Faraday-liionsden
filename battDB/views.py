@@ -263,7 +263,6 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
             instance=self.object,
         )
         context = self.get_context_data()
-        formset = context["raw_data_file"]
         if form.is_valid():
             # Save instance incluing setting user owner and status
             with transaction.atomic():
@@ -272,16 +271,6 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
                 else:
                     self.object.status = "private"
                 self.object.save()
-            # Save individual parameters from inline form
-            if formset.is_valid():
-                formset.instance = self.object
-                # Handle uploaded files in formsets slightly differently to usual
-                formset[0].instance.status = self.object.status
-                if formset[0].instance.use_parser:
-                    formset[0].instance.parse = True
-                formset.save()
-                form.instance.full_clean()
-
                 messages.success(request, self.success_message)
                 # Redirect to experiment detail view or stay on form if "add another"
                 if "another" in request.POST:
@@ -560,6 +549,30 @@ class DownloadRawDataFileView(PermissionRequiredMixin, DetailView):
         self.object = self.get_object()
         blob_name = self.object.raw_data_file.file.name
         blob_url = get_blob_url(self.object.raw_data_file.file)
+        sas_token = generate_sas_token(blob_name)
+        return redirect(f"{blob_url}?{sas_token}")
+
+
+class DownloadBinaryFileView(PermissionRequiredMixin, DetailView):
+    model = ExperimentDataFile
+    permission_required = "battDB.view_experimentdatafile"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        blob_name = self.object.binary_file.name
+        blob_url = get_blob_url(self.object.binary_file)
+        sas_token = generate_sas_token(blob_name)
+        return redirect(f"{blob_url}?{sas_token}")
+
+
+class DownloadSettingsFileView(PermissionRequiredMixin, DetailView):
+    model = ExperimentDataFile
+    permission_required = "battDB.view_experimentdatafile"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        blob_name = self.object.settings_file.name
+        blob_url = get_blob_url(self.object.settings_file)
         sas_token = generate_sas_token(blob_name)
         return redirect(f"{blob_url}?{sas_token}")
 
