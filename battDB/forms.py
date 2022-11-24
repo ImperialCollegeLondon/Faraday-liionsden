@@ -328,6 +328,7 @@ class NewExperimentDataFileForm(DataCreateForm):
             "notes",
             "settings_file",
             "binary_file",
+            "devices",
         ]
         help_texts = {
             "name": mark_safe("If left blank, the file name will be used."),
@@ -388,6 +389,7 @@ class NewExperimentDataFileForm(DataCreateForm):
                 Div(HTML(f"<h1> {mode} experiment data </h1>")),
                 Column("name", css_class="col-6"),
                 Column("machine", css_class="col-6"),
+                Column("devices", css_class="col-6"),
                 fieldset,
                 Column("settings_file", css_class="col-6"),
                 Column("binary_file", css_class="col-6"),
