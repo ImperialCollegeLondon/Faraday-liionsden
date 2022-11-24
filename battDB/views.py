@@ -264,19 +264,20 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
         )
         context = self.get_context_data()
         if form.is_valid():
+            obj = form.save(commit=False)
             # Save instance incluing setting user owner and status
-            with transaction.atomic():
-                if form.is_public():
-                    self.object.status = "public"
-                else:
-                    self.object.status = "private"
-                self.object.save()
-                messages.success(request, self.success_message)
-                # Redirect to experiment detail view or stay on form if "add another"
-                if "another" in request.POST:
-                    return redirect(request.path_info)
-                else:
-                    return redirect("/battDB/exps/{}".format(self.object.experiment.id))
+            if form.is_public():
+                obj.status = "public"
+            else:
+                obj.status = "private"
+            obj.save()
+            form.save_m2m()
+            messages.success(request, self.success_message)
+            # Redirect to experiment detail view or stay on form if "add another"
+            if "another" in request.POST:
+                return redirect(request.path_info)
+            else:
+                return redirect("/battDB/exps/{}".format(self.object.experiment.id))
         messages.error(request, "Could not update information - form not valid.")
         return render(request, self.template_name, context)
 
