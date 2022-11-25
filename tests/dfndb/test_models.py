@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from model_bakery import baker
@@ -15,21 +16,20 @@ class TestCompound(TestCase):
             self.assertEqual(getattr(self.model, k), v)
 
     def test_str(self):
-        self.assertEqual(self.model.__str__(), "Carbon Dioxide (CO2)")
+        self.assertEqual(
+            self.model.__str__(),
+            f"{self.expected['name']} ({self.expected['formula']})",
+        )
 
     def test_unique_together(self):
-        baker.make_recipe(
-            "tests.dfndb.compound", name="Carbon Dioxide", formula="CO3", mass=44.01
-        )
+        baker.make_recipe("tests.dfndb.compound", name="Carbon Dioxide", formula="CO3")
         with self.assertRaises(IntegrityError):
             baker.make_recipe(
-                "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2", mass=44.01
+                "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2"
             )
 
     def test_invalid_formula(self):
-        from molmass import FormulaError
-
-        with self.assertRaises(FormulaError):
+        with self.assertRaises(ValidationError):
             invalid_comp = baker.make_recipe("tests.dfndb.compound", formula="H2So4")
             invalid_comp.clean()
 
