@@ -31,7 +31,7 @@ class TestCompound(TestCase):
     def test_invalid_formula(self):
         with self.assertRaises(ValidationError):
             invalid_comp = baker.make_recipe("tests.dfndb.compound", formula="H2So4")
-            invalid_comp.clean()
+            invalid_comp.full_clean()
 
 
 class TestComponent(TestCase):
