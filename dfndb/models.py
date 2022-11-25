@@ -1,5 +1,5 @@
 import numpy as np
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import Sum
 from django.urls import reverse
@@ -7,6 +7,8 @@ from django_better_admin_arrayfield.models.fields import ArrayField
 from molmass import Formula
 
 import common.models as cm
+
+from .validators import validate_formula
 
 
 class Compound(models.Model):
@@ -16,11 +18,8 @@ class Compound(models.Model):
         max_length=100,
         help_text="Full name for the element or compound.",
     )
-    formula = models.CharField(max_length=20, help_text="Chemical formula")
-    mass = models.FloatField(
-        default=0,
-        validators=[MinValueValidator(0, "Mass cannot be negative!")],
-        help_text="Optional molar mass, in g/mol",
+    formula = models.CharField(
+        max_length=20, help_text="Chemical formula", validators=[validate_formula]
     )
 
     @property
