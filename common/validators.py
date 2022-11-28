@@ -43,3 +43,46 @@ def validate_pdf_file(file) -> None:
         raise ValidationError(
             "Unsupported file type and/or extension - must be a PDF file."
         )
+
+
+def validate_settings_file(file) -> None:
+    """
+    Validates the settings file against the mime type and extension.
+
+    Args:
+        file (FileField): File to validate.
+
+    Raises:
+        ValidationError if validation not passed.
+    """
+    allowed_mime_and_extensions = [
+        ("text/plain", ".txt"),
+        ("text/plain", ".mps"),
+    ]
+    extension = os.path.splitext(file.name)[1]
+    file_mime_type = magic.from_buffer(file.read(1024), mime=True)
+    if (file_mime_type, extension) not in allowed_mime_and_extensions:
+        raise ValidationError(
+            "Unsupported file type and/or extension - must be a text file."
+        )
+
+
+def validate_binary_file(file) -> None:
+    """
+    Validates the binary file against the mime type and extension.
+
+    Args:
+        file (FileField): File to validate.
+
+    Raises:
+        ValidationError if validation not passed.
+    """
+    allowed_mime_and_extensions = [
+        ("application/octet-stream", ".mpr"),
+    ]
+    extension = os.path.splitext(file.name)[1]
+    file_mime_type = magic.from_buffer(file.read(1024), mime=True)
+    if (file_mime_type, extension) not in allowed_mime_and_extensions:
+        raise ValidationError(
+            "Unsupported file type and/or extension - must be a binary file."
+        )

@@ -647,3 +647,190 @@ class DataUploadViewTest(TestCase):
         self.assertContains(
             get_response, "This file was uploaded without being processed."
         )
+
+    def test_upload_view_binary_file(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        # Check file upload response
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/biologic_example.csv",
+        )
+
+        binary_file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/common/sample_files/sample_binary.mpr",
+        )
+
+        with open(file_path) as input_file:
+            with open(binary_file_path, "rb") as binary_file:
+                post_response = self.client.post(
+                    reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                    {
+                        "name": "Device 4",
+                        "binary_file": binary_file,
+                        "raw_data_file-TOTAL_FORMS": 1,
+                        "raw_data_file-INITIAL_FORMS": 0,
+                        "raw_data_file-0-file": input_file,
+                    },
+                )
+        # Check redirect to correct page
+        self.assertEqual(post_response.url, f"/battDB/exps/{self.experiment.id}")
+
+        # Check ExperimentDataFile has been created
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 4")
+        self.assertTrue(edf.file_exists())
+
+        # Check Experiment Detail view contains button to download binary file
+        get_response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(get_response, "Download binary")
+
+        # Finally, check the binary file can be downloaded
+        download_response = self.client.get(
+            reverse("battDB:Download Binary File", kwargs={"pk": edf.id})
+        )
+        self.assertEqual(download_response.status_code, 302)
+        self.assertTrue(
+            download_response.url.startswith(
+                "http://localhost:10000/devstoreaccount1/test/uploaded_files/sample_binary"
+            ),
+        )
+
+    def test_upload_view_settings_file(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        # Check file upload response
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/biologic_example.csv",
+        )
+
+        settings_file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/common/sample_files/sample_settings.mps",
+        )
+
+        with open(file_path) as input_file:
+            with open(settings_file_path, "rb") as settings_file:
+                post_response = self.client.post(
+                    reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                    {
+                        "name": "Device 5",
+                        "settings_file": settings_file,
+                        "raw_data_file-TOTAL_FORMS": 1,
+                        "raw_data_file-INITIAL_FORMS": 0,
+                        "raw_data_file-0-file": input_file,
+                    },
+                )
+        # Check redirect to correct page
+        self.assertEqual(post_response.url, f"/battDB/exps/{self.experiment.id}")
+
+        # Check ExperimentDataFile has been created
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 5")
+        self.assertTrue(edf.file_exists())
+
+        # Check Experiment Detail view contains button to download settings file
+        get_response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(get_response, "settings file")
+
+        # Finally, check the settings file can be downloaded
+        download_response = self.client.get(
+            reverse("battDB:Download Settings File", kwargs={"pk": edf.id})
+        )
+        self.assertEqual(download_response.status_code, 302)
+        self.assertTrue(
+            download_response.url.startswith(
+                "http://localhost:10000/devstoreaccount1/test/uploaded_files/sample_settings"
+            ),
+        )
+
+    def test_update_data(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        # Check file upload response
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/biologic_example.csv",
+        )
+        with open(file_path) as input_file:
+            post_response = self.client.post(
+                reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                {
+                    "name": "Device 6",
+                    "raw_data_file-TOTAL_FORMS": 1,
+                    "raw_data_file-INITIAL_FORMS": 0,
+                    "raw_data_file-0-file": input_file,
+                },
+            )
+        # Go to update page for this experiment data file
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 6")
+        update_response = self.client.get(
+            reverse("battDB:Update File", kwargs={"pk": edf.id})
+        )
+        self.assertContains(update_response, "Device 6")
+
+        # Make an update to the form
+        updated_post_response = self.client.post(
+            reverse("battDB:Update File", kwargs={"pk": edf.id}),
+            {
+                "name": "Device 6 updated",
+            },
+        )
+        self.assertEqual(
+            updated_post_response.url, f"/battDB/exps/{self.experiment.id}"
+        )
+        # Check the name has been updated
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 6 updated")
+        self.assertTrue(edf.file_exists())
+        # Check the original name is no longer in the database
+        with self.assertRaises(bdb.ExperimentDataFile.DoesNotExist):
+            bdb.ExperimentDataFile.objects.get(name="Device 6")
+
+    def test_invalid_form(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+        # This is invalid because the raw_data_file formset is missing
+        post_response = self.client.post(
+            reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+            {"name": "Device 7"},
+        )
+        # Check redirect to correct page
+        self.assertContains(post_response, "Could not save data file - form not valid.")
+        # Check ExperimentDataFile has not been created
+        with self.assertRaises(bdb.ExperimentDataFile.DoesNotExist):
+            bdb.ExperimentDataFile.objects.get(name="Device 7")

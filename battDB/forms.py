@@ -326,6 +326,8 @@ class NewExperimentDataFileForm(DataCreateForm):
             "name",
             "machine",
             "notes",
+            "settings_file",
+            "binary_file",
         ]
         help_texts = {
             "machine": mark_safe(
@@ -382,10 +384,12 @@ class NewExperimentDataFileForm(DataCreateForm):
 
         self.helper.layout = Layout(
             Div(
-                Div(HTML(f"<h1> {mode} file </h1>")),
+                Div(HTML(f"<h1> {mode} experiment data </h1>")),
                 Column("name", css_class="col-6"),
                 Column("machine", css_class="col-6"),
                 fieldset,
+                Column("settings_file", css_class="col-6"),
+                Column("binary_file", css_class="col-6"),
                 Field("notes"),
                 HTML("<br>"),
                 Field("make_public"),

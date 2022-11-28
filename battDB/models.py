@@ -11,7 +11,11 @@ from django.urls import reverse
 
 import common.models as cm
 import dfndb.models as dfn
-from common.validators import validate_pdf_file
+from common.validators import (
+    validate_binary_file,
+    validate_pdf_file,
+    validate_settings_file,
+)
 from parsing_engines import available_parsing_engines, parse_data_file
 
 
@@ -520,6 +524,26 @@ class ExperimentDataFile(cm.BaseModel):
         blank=True,
         limit_choices_to={"type": dfn.Method.METHOD_TYPE_EXPERIMENTAL},
         help_text="Test protocol used in this experiment",
+    )
+
+    settings_file = models.FileField(
+        upload_to="uploaded_files",
+        null=True,
+        blank=True,
+        validators=(validate_settings_file,),
+        verbose_name="Settings file",
+        help_text="Input settings file for the cycler used to produce this data (if "
+        "available)",
+    )
+
+    binary_file = models.FileField(
+        upload_to="uploaded_files",
+        null=True,
+        blank=True,
+        validators=(validate_binary_file,),
+        verbose_name="Binary file",
+        help_text="Binary file version of this data output by the cycler (if "
+        "available)",
     )
 
     def num_cycles(self):
