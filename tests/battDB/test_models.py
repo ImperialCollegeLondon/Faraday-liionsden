@@ -179,6 +179,16 @@ class TestExperiment(TestCase):
         url = self.model.get_absolute_url()
         self.assertIn("battDB/exps", url)
 
+    def test_unique_name(self):
+        with self.assertRaises(ValidationError):
+            new = baker.make_recipe(
+                "tests.battDB.experiment",
+                name=self.model.name,
+                user_owner=self.model.user_owner,
+            )
+            new.clean()
+        baker.make_recipe("tests.battDB.experiment", name=self.model.name)
+
 
 class TestExperimentDataFile(TestCase):
     def setUp(self):
