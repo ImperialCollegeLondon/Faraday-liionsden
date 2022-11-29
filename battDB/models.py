@@ -372,7 +372,7 @@ class Equipment(cm.BaseModelMandatoryName):
         verbose_name_plural = "Equipment"
 
 
-class Experiment(cm.BaseModelMandatoryName):
+class Experiment(cm.BaseModel):
     """Main "Experiment" aka DataSet class.
 
     <br> Has many: data files (from cyclers) <br> Has many: devices (actual physical
@@ -396,6 +396,13 @@ class Experiment(cm.BaseModelMandatoryName):
         ("surface", "Surface cooled"),
         ("tab", "Tab cooled"),
         ("other", "Other"),
+    )
+
+    name = models.CharField(
+        max_length=128,
+        blank=False,
+        default="",
+        null=False,
     )
 
     date = models.DateField(default=datetime.now)
@@ -474,11 +481,23 @@ class Experiment(cm.BaseModelMandatoryName):
     def get_absolute_url(self):
         return reverse("battDB:Experiment", kwargs={"pk": self.pk})
 
-    class Meta:
-        unique_together = (
-            "name",
-            "user_owner",
+    def clean(self):
+        """Validate that the name for an experiment is unique per institution.
+
+        Args:
+            name: The name attempting to be saved.
+
+        Raises:
+            ValidationError: _description_
+        """
+        instances = Experiment.objects.filter(
+            name=self.name,
+            user_owner__institution=self.user_owner.institution,
         )
+        if len(instances) > 0:
+            raise ValidationError(
+                f"Name '{self.name}' is already used in your institution"
+            )
 
 
 class ExperimentDataFile(cm.BaseModel):
