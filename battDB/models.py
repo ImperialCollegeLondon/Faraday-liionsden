@@ -494,7 +494,7 @@ class Experiment(cm.BaseModel):
             name=self.name,
             user_owner__institution=self.user_owner.institution,
         )
-        if len(instances) > 0:
+        if len(instances) > 0 and instances[0] != self:
             raise ValidationError(
                 f"Name '{self.name}' is already used in your institution"
             )
