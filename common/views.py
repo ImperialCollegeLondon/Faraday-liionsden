@@ -19,10 +19,10 @@ class NewDataView(FormView):
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
+        form.instance.user_owner = request.user
         if form.is_valid():
             obj = form.save(commit=False)
             # Do other stuff before saving here
-            obj.user_owner = request.user
             if form.is_public():
                 obj.status = "public"
             else:
@@ -70,12 +70,13 @@ class NewDataViewInline(FormView):
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
+        form.instance.user_owner = request.user
         context = self.get_context_data()
+        context["form"] = form
         if form.is_valid():
             # Save instance incluing setting user owner and status
             with transaction.atomic():
                 obj = form.save(commit=False)
-                obj.user_owner = request.user
                 if form.is_public():
                     obj.status = "public"
                 else:
