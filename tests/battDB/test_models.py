@@ -158,6 +158,8 @@ class TestEquipment(TestCase):
 class TestExperiment(TestCase):
     def setUp(self):
         self.model = baker.make_recipe("tests.battDB.experiment")
+        self.model.user_owner.institution = baker.make_recipe("tests.common.org")
+        self.model.user_owner.save()
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "date"))
@@ -187,7 +189,8 @@ class TestExperiment(TestCase):
                 user_owner=self.model.user_owner,
             )
             new.clean()
-        baker.make_recipe("tests.battDB.experiment", name=self.model.name)
+        another = baker.make_recipe("tests.battDB.experiment", name=self.model.name)
+        another.clean()
 
 
 class TestExperimentDataFile(TestCase):
