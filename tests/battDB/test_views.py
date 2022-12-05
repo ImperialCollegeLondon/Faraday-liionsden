@@ -340,6 +340,7 @@ class CreateExperimentTest(TestCase):
         with self.assertRaises(bdb.Experiment.DoesNotExist):
             bdb.Experiment.objects.get()
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Ensure this value has at least 20 characters")
 
         # Create new experiment
         form_fields["summary"] = "At least 20 characters"
