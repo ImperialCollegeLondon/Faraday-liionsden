@@ -72,7 +72,7 @@ class NewDataViewInline(FormView):
         form = self.form_class(request.POST, request.FILES)
         form.instance.user_owner = request.user
         context = self.get_context_data()
-        context["form"] = form
+        context["form"] = form  # update form in context for form errors in render
         if form.is_valid():
             # Save instance incluing setting user owner and status
             with transaction.atomic():

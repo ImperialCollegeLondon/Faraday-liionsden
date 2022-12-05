@@ -25,7 +25,7 @@ from tests.management.baker_recipes import user
 device_specification = Recipe(
     DeviceSpecification,
     user_owner=foreign_key(user),
-    name=seq("Device Specification"),
+    name=seq("Device Specification"),  # Ensure uniqueness
 )
 
 device_parameter = Recipe(
@@ -64,14 +64,14 @@ equipment = Recipe(
     Equipment,
     institution=foreign_key(org),
     user_owner=foreign_key(user),
-    name=seq("Equipment"),
+    name=seq("Equipment"),  # Ensure uniqueness
 )
 
 experiment = Recipe(
     Experiment,
     config=foreign_key(device_config),
     user_owner=foreign_key(user),
-    name=seq("Experiment"),
+    name=seq("Experiment"),  # Ensure uniqueness
 )
 
 edf = Recipe(ExperimentDataFile, user_owner=foreign_key(user))
