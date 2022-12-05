@@ -332,11 +332,8 @@ class CreateExperimentTest(TestCase):
             "summary": "Not long enough",
         }
 
-        # Invalid Form
-        response = self.client.post(
-            reverse("battDB:New Experiment"),
-            form_fields,
-        )
+        # Invalid Form (short summary)
+        response = self.client.post(reverse("battDB:New Experiment"), form_fields)
         with self.assertRaises(bdb.Experiment.DoesNotExist):
             bdb.Experiment.objects.get()
         self.assertEqual(response.status_code, 200)
@@ -344,10 +341,7 @@ class CreateExperimentTest(TestCase):
 
         # Create new experiment
         form_fields["summary"] = "At least 20 characters"
-        response = self.client.post(
-            reverse("battDB:New Experiment"),
-            form_fields,
-        )
+        response = self.client.post(reverse("battDB:New Experiment"), form_fields)
         experiment = bdb.Experiment.objects.get(name="Experiment 1")
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, f"/battDB/exps/{experiment.id}/")
@@ -357,14 +351,13 @@ class CreateExperimentTest(TestCase):
         for key, val in form_fields.items():
             self.assertEqual(getattr(experiment, key), val)
 
-        # Create new experiment with same name
-        response = self.client.post(
-            reverse("battDB:New Experiment"),
-            form_fields,
-        )
+        # Create new experiment with same name - should fail
+        response = self.client.post(reverse("battDB:New Experiment"), form_fields)
         self.assertEqual(len(bdb.Experiment.objects.all()), 1)
         self.assertEqual(bdb.Experiment.objects.get(name="Experiment 1"), experiment)
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, " is already used in your institution")
+        self.assertContains(response, form_fields["name"])
 
         # Update experiment
         form_fields["summary"] = "A longer and more detailed summary"
