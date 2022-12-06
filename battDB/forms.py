@@ -371,6 +371,8 @@ class NewExperimentDataFileForm(DataCreateForm):
                     ),
                 )
                 self.fields["devices"].queryset = Device.objects.filter(query)
+            else:
+                self.fields["devices"].queryset = Device.objects.none()
 
         if mode == "New":
             fieldset = Fieldset(
