@@ -355,13 +355,14 @@ class NewExperimentDataFileForm(DataCreateForm):
         self.helper = FormHelper()
         self.helper.attrs = {"enctype": "multipart/form-data"}
 
-        # TODO: Untested
+        # Get queryset of devices in the associated experiment
         if self.experiment:
             if self.experiment.devices.count() > 0:
                 batch_ids = [dev.batch_id for dev in self.experiment.devices.all()]
                 batch_seqs = [
                     dev.batch_sequence for dev in self.experiment.devices.all()
                 ]
+                # Each device needs to have the right batch_id, batch_seq combo
                 query = reduce(
                     operator.or_,
                     (
