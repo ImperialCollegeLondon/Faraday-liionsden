@@ -261,6 +261,16 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
     failure_message = "Could not update data file. Invalid information."
     inline_formsets = {"raw_data_file": UploadDataFileFormset}
 
+    def get_form_kwargs(self):
+        """
+        Passes the request object to the form class.
+        This is necessary to only display devices that belong to the experiment.
+        """
+
+        kwargs = super(UpdateDataFileView, self).get_form_kwargs()
+        kwargs["experiment"] = Experiment.objects.get(pk=self.object.experiment.id)
+        return kwargs
+
     def post(self, request, *args, **kwargs):
         """
         Unique post method for data files to handle a) setting user_owner and
