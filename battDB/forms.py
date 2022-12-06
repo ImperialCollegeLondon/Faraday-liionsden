@@ -326,7 +326,7 @@ class NewExperimentDataFileForm(DataCreateForm):
     """
 
     devices = forms.ModelMultipleChoiceField(
-        queryset=None, widget=forms.CheckboxSelectMultiple
+        queryset=Device.objects.none(), widget=forms.CheckboxSelectMultiple
     )
 
     class Meta:
@@ -365,7 +365,7 @@ class NewExperimentDataFileForm(DataCreateForm):
                 query = reduce(
                     operator.or_,
                     (
-                        Q(batch_id=bid, batch_sequence=seq)
+                        Q(batch_id=bid, seq_num=seq)
                         for bid, seq in zip(batch_ids, batch_seqs)
                     ),
                 )
