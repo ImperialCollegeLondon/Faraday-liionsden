@@ -326,7 +326,7 @@ class NewExperimentDataFileForm(DataCreateForm):
     """
 
     devices = forms.ModelMultipleChoiceField(
-        queryset=Device.objects.get_queryset(), widget=forms.CheckboxSelectMultiple
+        queryset=Device.objects.get_queryset(),
     )
 
     class Meta:
