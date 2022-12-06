@@ -330,11 +330,12 @@ class NewExperimentDataFileForm(DataCreateForm):
             "binary_file",
         ]
         help_texts = {
+            "name": mark_safe("If left blank, the file name will be used."),
             "machine": mark_safe(
                 "The machine this data file was collected on. "
                 '<a href="/battDB/new_equipment/" target="_blank"> '
                 "new machine &#10697;</a>"
-            )
+            ),
         }
 
     def __init__(self, *args, **kwargs):

@@ -17,9 +17,13 @@ class Compound(models.Model):
     name = models.CharField(
         max_length=100,
         help_text="Full name for the element or compound.",
+        unique=True,
     )
     formula = models.CharField(
-        max_length=20, help_text="Chemical formula", validators=[validate_formula]
+        max_length=20,
+        help_text="Chemical formula",
+        unique=True,
+        validators=[validate_formula],
     )
 
     @property
@@ -29,14 +33,8 @@ class Compound(models.Model):
     def __str__(self):
         return "%s (%s)" % (self.name, self.formula)
 
-    class Meta:
-        unique_together = (
-            "name",
-            "formula",
-        )
 
-
-class Component(cm.BaseModel):
+class Component(cm.BaseModelMandatoryName):
     """A component used as part of an electrochemical cell specification, e.g. NMC622.
 
     Make use of the 'notes' field for additional explanation

@@ -19,7 +19,7 @@ from common.validators import (
 from parsing_engines import available_parsing_engines, parse_data_file
 
 
-class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
+class DeviceSpecification(cm.BaseModelMandatoryName, cm.HasMPTT):
     """A template for creating a device or batch of devices in the system.
 
     <br> Specifications are structured as a tree, so that each device can be composed of
@@ -345,7 +345,7 @@ class Parser(cm.BaseModelMandatoryName):
         return self.columns.count()
 
 
-class Equipment(cm.BaseModel):
+class Equipment(cm.BaseModelMandatoryName):
     """Definitions of equipment such as cycler machines."""
 
     institution = models.ForeignKey(
@@ -396,6 +396,13 @@ class Experiment(cm.BaseModel):
         ("surface", "Surface cooled"),
         ("tab", "Tab cooled"),
         ("other", "Other"),
+    )
+
+    name = models.CharField(
+        max_length=128,
+        blank=False,
+        default="",
+        null=False,
     )
 
     date = models.DateField(default=datetime.now)
@@ -473,6 +480,24 @@ class Experiment(cm.BaseModel):
 
     def get_absolute_url(self):
         return reverse("battDB:Experiment", kwargs={"pk": self.pk})
+
+    def clean(self):
+        """Validate that the name for an experiment is unique per institution.
+
+        Args:
+            name: The name attempting to be saved.
+
+        Raises:
+            ValidationError: _description_
+        """
+        instances = Experiment.objects.filter(
+            name=self.name,
+            user_owner__institution=self.user_owner.institution,
+        )
+        if len(instances) > 0 and instances[0] != self:
+            raise ValidationError(
+                f"Name '{self.name}' is already used in your institution"
+            )
 
 
 class ExperimentDataFile(cm.BaseModel):

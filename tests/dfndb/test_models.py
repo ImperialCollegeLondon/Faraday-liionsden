@@ -21,12 +21,19 @@ class TestCompound(TestCase):
             f"{self.expected['name']} ({self.expected['formula']})",
         )
 
-    def test_unique_together(self):
-        baker.make_recipe("tests.dfndb.compound", name="Carbon Dioxide", formula="CO3")
+    def test_unique(self):
+        from django.db import transaction
+
         with self.assertRaises(IntegrityError):
-            baker.make_recipe(
-                "tests.dfndb.compound", name="Carbon Dioxide", formula="CO2"
-            )
+            with transaction.atomic():
+                baker.make_recipe(
+                    "tests.dfndb.compound", name="Carbon Dioxide", formula="CO3"
+                )
+        with self.assertRaises(IntegrityError):
+            with transaction.atomic():
+                baker.make_recipe(
+                    "tests.dfndb.compound", name="Carbon Dioxide 2", formula="CO2"
+                )
 
     def test_invalid_formula(self):
         with self.assertRaises(ValidationError):

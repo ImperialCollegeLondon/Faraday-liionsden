@@ -1,4 +1,5 @@
 import tempfile
+from datetime import datetime
 
 from django.contrib.auth.models import Group
 from django.test import TestCase, override_settings
@@ -300,6 +301,84 @@ class ExperimentViewTest(TestCase):
             reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
         )
         self.assertContains(response, "<h4> test experiment </h4>")
+
+
+class CreateExperimentTest(TestCase):
+    def setUp(self):
+        self.user = baker.make_recipe(
+            "tests.management.user",
+            username="test_contributor",
+        )
+        self.user.is_active = True
+        self.user.set_password("contribpass")
+        self.user.institution = baker.make_recipe("tests.common.org")
+        self.user.save()
+        group = Group.objects.get(name="Contributor")
+        group.user_set.add(self.user)
+
+    def test_create_update_delete_experiment(self):
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contribpass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        form_fields = {
+            "name": "Experiment 1",
+            "date": datetime.now().date(),
+            "exp_type": "constant",
+            "thermal": "none",
+            "summary": "Not long enough",
+        }
+
+        # Invalid Form (short summary)
+        response = self.client.post(reverse("battDB:New Experiment"), form_fields)
+        with self.assertRaises(bdb.Experiment.DoesNotExist):
+            bdb.Experiment.objects.get()
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Ensure this value has at least 20 characters")
+
+        # Create new experiment
+        form_fields["summary"] = "At least 20 characters"
+        response = self.client.post(reverse("battDB:New Experiment"), form_fields)
+        experiment = bdb.Experiment.objects.get(name="Experiment 1")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f"/battDB/exps/{experiment.id}/")
+        self.assertEqual(experiment.user_owner.username, "test_contributor")
+        self.assertEqual(experiment.user_owner.institution, self.user.institution)
+        self.assertEqual(experiment.status, "private")
+        for key, val in form_fields.items():
+            self.assertEqual(getattr(experiment, key), val)
+
+        # Create new experiment with same name - should fail
+        response = self.client.post(reverse("battDB:New Experiment"), form_fields)
+        self.assertEqual(len(bdb.Experiment.objects.all()), 1)
+        self.assertEqual(bdb.Experiment.objects.get(name="Experiment 1"), experiment)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, " is already used in your institution")
+        self.assertContains(response, form_fields["name"])
+
+        # Update experiment
+        form_fields["summary"] = "A longer and more detailed summary"
+        update_response = self.client.post(
+            reverse("battDB:Update Experiment", kwargs={"pk": experiment.id}),
+            form_fields,
+        )
+        self.assertEqual(update_response.status_code, 302)
+        self.assertEqual(update_response.url, f"/battDB/exps/{experiment.id}/")
+
+        experiment.refresh_from_db()
+        self.assertEqual(experiment.summary, "A longer and more detailed summary")
+
+        # Delete experiment
+        delete_response = self.client.post(
+            reverse("battDB:Delete Experiment", kwargs={"pk": experiment.id})
+        )
+        self.assertEqual(delete_response.status_code, 302)
+        self.assertEqual(delete_response.url, "/battDB/exps/")
+        experiment.refresh_from_db()
+        self.assertEqual(experiment.status, "deleted")
 
 
 class DeviceSpecificationViewTest(TestCase):
