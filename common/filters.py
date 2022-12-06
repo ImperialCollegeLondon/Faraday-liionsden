@@ -15,5 +15,11 @@ class BaseFilter(FilterSet):
                 "extra": lambda f: {
                     "lookup_expr": "icontains",
                 },
-            }
+            },
+            models.TextField: {
+                "filter_class": CharFilter,
+                "extra": lambda f: {
+                    "lookup_expr": "icontains",
+                },
+            },
         }

@@ -25,8 +25,13 @@ class ExperimentTable(tables.Table):
             "date",
             "config",
             "created_on",
+            "summary",
         )
         row_attrs = {"status": lambda record: record.status}
+
+    def render_summary(self, value):
+        """Only display the first 20 characters of the summary in the table."""
+        return f"{value[:20]}..."
 
 
 class BatchTable(tables.Table):

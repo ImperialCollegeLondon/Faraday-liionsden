@@ -16,7 +16,7 @@
   <table width="100%">
     <tr>
       <td>
-        <h4>{{ object.user_owner.institution }} </h4>
+        <h4>{{ object.user_owner.institution|default_if_none:"No Institution" }} </h4>
       </td>
       <td style="text-align:center">
         <h4> {{ object.name }} </h4>
@@ -33,7 +33,7 @@
     <h5>Experiment details</h5>
   </div>
   <div class="card-body">
-    <b>Configuration </b>
+    <b>Configuration</b>
     <br>
     {{object.config}}
     <br>
@@ -48,6 +48,14 @@
     <b>Thermal management</b>
     <br>
     {{object.get_thermal_display}}
+    <br>
+    <b>Summary</b>
+    <br>
+    {{object.summary}}
+    <br>
+    <b>External Link</b>
+    <br>
+    <a href="{{object.external_link}}">{{object.external_link}}</a>
     <br>
     <br><br>
 
@@ -160,6 +168,11 @@
     </nav>
     <!--Display the actual plots-->
     <div class="tab-content" id="nav-tabContent">
+      {% if not plot_set %}
+      <br>
+      <li class="list-group-item list-group-item-warning">This file was uploaded without being processed. You can still
+        download the raw data file using the button below.</li>
+      {% endif %}
       {% for plot in plot_set %}
       {% if forloop.first %}
       <div class="tab-pane active show" id="nav-{{forloop.parentloop.counter}}-{{ forloop.counter }}" role="tabpanel"
@@ -179,6 +192,14 @@
       <!--Buttons for downloading, editing and deleting data-->
       <a href=/battDB/data_files/download/{{data_file.pk}} class="btn btn-primary" , role="button"> Download raw data
         file</a>
+      {% if data_file.settings_file %}
+      <a href=/battDB/settings_files/download/{{data_file.pk}} class="btn btn-secondary" , role="button"> Download
+        settings file</a>
+      {% endif %}
+      {% if data_file.binary_file %}
+      <a href=/battDB/binary_files/download/{{data_file.pk}} class="btn btn-secondary" , role="button"> Download binary
+        file</a>
+      {% endif %}
       {% if "change_experimentdatafile" in df_perms %}
       <a href="/battDB/data_files/delete/{{data_file.pk}}" class="btn btn-danger" , role="button"> Delete </a>
       <a href="/battDB/exps/update_data/{{data_file.pk}}" class="btn btn-warning" , role="button"> Edit </a>

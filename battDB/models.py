@@ -4,18 +4,22 @@ from datetime import datetime
 
 from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
+from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
 from django.db.models import Q
 from django.urls import reverse
 
 import common.models as cm
 import dfndb.models as dfn
-from common.validators import validate_pdf_file
+from common.validators import (
+    validate_binary_file,
+    validate_pdf_file,
+    validate_settings_file,
+)
 from parsing_engines import available_parsing_engines, parse_data_file
 
 
-class DeviceSpecification(cm.BaseModel, cm.HasMPTT):
+class DeviceSpecification(cm.BaseModelMandatoryName, cm.HasMPTT):
     """A template for creating a device or batch of devices in the system.
 
     <br> Specifications are structured as a tree, so that each device can be composed of
@@ -341,7 +345,7 @@ class Parser(cm.BaseModelMandatoryName):
         return self.columns.count()
 
 
-class Equipment(cm.BaseModel):
+class Equipment(cm.BaseModelMandatoryName):
     """Definitions of equipment such as cycler machines."""
 
     institution = models.ForeignKey(
@@ -394,6 +398,13 @@ class Experiment(cm.BaseModel):
         ("other", "Other"),
     )
 
+    name = models.CharField(
+        max_length=128,
+        blank=False,
+        default="",
+        null=False,
+    )
+
     date = models.DateField(default=datetime.now)
 
     config = models.ForeignKey(
@@ -439,6 +450,18 @@ class Experiment(cm.BaseModel):
         " If 'other', technique should be specified in the notes section.",
     )
 
+    external_link = models.URLField(
+        blank=True,
+        null=True,
+        help_text="Specific link to a reference for this experiment.",
+    )
+
+    summary = models.TextField(
+        help_text="Summary of what was done in the experiment e.g. what was the "
+        "motivation, etc.",
+        validators=[MinLengthValidator(20)],
+    )
+
     def devices_(self):
         return self.devices.count()
 
@@ -457,6 +480,24 @@ class Experiment(cm.BaseModel):
 
     def get_absolute_url(self):
         return reverse("battDB:Experiment", kwargs={"pk": self.pk})
+
+    def clean(self):
+        """Validate that the name for an experiment is unique per institution.
+
+        Args:
+            name: The name attempting to be saved.
+
+        Raises:
+            ValidationError: _description_
+        """
+        instances = Experiment.objects.filter(
+            name=self.name,
+            user_owner__institution=self.user_owner.institution,
+        )
+        if len(instances) > 0 and instances[0] != self:
+            raise ValidationError(
+                f"Name '{self.name}' is already used in your institution"
+            )
 
 
 class ExperimentDataFile(cm.BaseModel):
@@ -508,6 +549,26 @@ class ExperimentDataFile(cm.BaseModel):
         blank=True,
         limit_choices_to={"type": dfn.Method.METHOD_TYPE_EXPERIMENTAL},
         help_text="Test protocol used in this experiment",
+    )
+
+    settings_file = models.FileField(
+        upload_to="uploaded_files",
+        null=True,
+        blank=True,
+        validators=(validate_settings_file,),
+        verbose_name="Settings file",
+        help_text="Input settings file for the cycler used to produce this data (if "
+        "available)",
+    )
+
+    binary_file = models.FileField(
+        upload_to="uploaded_files",
+        null=True,
+        blank=True,
+        validators=(validate_binary_file,),
+        verbose_name="Binary file",
+        help_text="Binary file version of this data output by the cycler (if "
+        "available)",
     )
 
     def num_cycles(self):

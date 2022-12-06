@@ -181,7 +181,9 @@ class BaseModel(BaseModelNoName, HasName):
 class BaseModelMandatoryName(BaseModel):
     """Changed BaseModel.name to blank=False."""
 
-    name = models.CharField(max_length=128, blank=False, default="", null=False)
+    name = models.CharField(
+        max_length=128, blank=False, default="", null=False, unique=True
+    )
 
     class Meta:
         abstract = True
@@ -318,6 +320,8 @@ class HashedFile(models.Model):
 
     def clean(self):
         print(self.file.name)
+        if not self.file:
+            raise ValidationError("No file was uploaded.")
         self.hash = hash_file(self.file)
         return super(HashedFile, self).clean()
 

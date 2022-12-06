@@ -1,5 +1,5 @@
 import numpy as np
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator
 from django.db import models
 from django.db.models import Sum
 from django.urls import reverse
@@ -8,6 +8,8 @@ from molmass import Formula
 
 import common.models as cm
 
+from .validators import validate_formula
+
 
 class Compound(models.Model):
     """Chemical Compound or Element, e.g. Lithium, Graphite."""
@@ -15,32 +17,24 @@ class Compound(models.Model):
     name = models.CharField(
         max_length=100,
         help_text="Full name for the element or compound.",
+        unique=True,
     )
-    formula = models.CharField(max_length=20, help_text="Chemical formula")
-    mass = models.FloatField(
-        default=0,
-        validators=[MinValueValidator(0, "Mass cannot be negative!")],
-        help_text="Optional molar mass, in g/mol",
+    formula = models.CharField(
+        max_length=20,
+        help_text="Chemical formula",
+        unique=True,
+        validators=[validate_formula],
     )
+
+    @property
+    def mass(self):
+        return Formula(self.formula).mass
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.formula)
 
-    def clean(self):
-        """
-        Use the formula to calculate the mass if not specified.
-        """
-        if self.mass == 0:
-            self.mass = Formula(self.formula).mass
 
-    class Meta:
-        unique_together = (
-            "name",
-            "formula",
-        )
-
-
-class Component(cm.BaseModel):
+class Component(cm.BaseModelMandatoryName):
     """A component used as part of an electrochemical cell specification, e.g. NMC622.
 
     Make use of the 'notes' field for additional explanation

@@ -164,6 +164,8 @@ class NewExperimentForm(DataCreateForm):
             "exp_type",
             "thermal",
             "notes",
+            "external_link",
+            "summary",
         ]
         help_texts = {
             "date": "When this experiment started",
@@ -183,6 +185,8 @@ class NewExperimentForm(DataCreateForm):
                 Column("exp_type", css_class="col-3"),
                 Column("c_rate", css_class="col-3"),
                 Column("thermal", css_class="col-3"),
+                Column("external_link", css_class="col-3"),
+                Field("summary"),
                 Fieldset(
                     "Add devices",
                     Div(
@@ -322,13 +326,16 @@ class NewExperimentDataFileForm(DataCreateForm):
             "name",
             "machine",
             "notes",
+            "settings_file",
+            "binary_file",
         ]
         help_texts = {
+            "name": mark_safe("If left blank, the file name will be used."),
             "machine": mark_safe(
                 "The machine this data file was collected on. "
                 '<a href="/battDB/new_equipment/" target="_blank"> '
                 "new machine &#10697;</a>"
-            )
+            ),
         }
 
     def __init__(self, *args, **kwargs):
@@ -343,8 +350,9 @@ class NewExperimentDataFileForm(DataCreateForm):
                 Div(
                     HTML(
                         (
-                            "Upload the raw data file here. Select 'parse' to process "
-                            "the data using your chosen parser. "
+                            "Upload the raw data file here. Select a parser to process "
+                            "the data, or leave blank to upload the file without "
+                            "parsing. "
                         )
                     ),
                     HTML(
@@ -377,10 +385,12 @@ class NewExperimentDataFileForm(DataCreateForm):
 
         self.helper.layout = Layout(
             Div(
-                Div(HTML(f"<h1> {mode} file </h1>")),
+                Div(HTML(f"<h1> {mode} experiment data </h1>")),
                 Column("name", css_class="col-6"),
                 Column("machine", css_class="col-6"),
                 fieldset,
+                Column("settings_file", css_class="col-6"),
+                Column("binary_file", css_class="col-6"),
                 Field("notes"),
                 HTML("<br>"),
                 Field("make_public"),
@@ -414,6 +424,8 @@ UploadDataFileFormset = inlineformset_factory(
     help_texts={
         "file": None,
     },
+    min_num=1,
+    validate_min=True,
 )
 
 

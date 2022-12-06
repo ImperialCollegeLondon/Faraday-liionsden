@@ -1,4 +1,5 @@
 import tempfile
+from datetime import datetime
 
 from django.contrib.auth.models import Group
 from django.test import TestCase, override_settings
@@ -300,6 +301,84 @@ class ExperimentViewTest(TestCase):
             reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
         )
         self.assertContains(response, "<h4> test experiment </h4>")
+
+
+class CreateExperimentTest(TestCase):
+    def setUp(self):
+        self.user = baker.make_recipe(
+            "tests.management.user",
+            username="test_contributor",
+        )
+        self.user.is_active = True
+        self.user.set_password("contribpass")
+        self.user.institution = baker.make_recipe("tests.common.org")
+        self.user.save()
+        group = Group.objects.get(name="Contributor")
+        group.user_set.add(self.user)
+
+    def test_create_update_delete_experiment(self):
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contribpass"},
+        )
+        self.assertEqual(login_response.status_code, 302)
+        self.assertEqual(login_response.url, "/")
+
+        form_fields = {
+            "name": "Experiment 1",
+            "date": datetime.now().date(),
+            "exp_type": "constant",
+            "thermal": "none",
+            "summary": "Not long enough",
+        }
+
+        # Invalid Form (short summary)
+        response = self.client.post(reverse("battDB:New Experiment"), form_fields)
+        with self.assertRaises(bdb.Experiment.DoesNotExist):
+            bdb.Experiment.objects.get()
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Ensure this value has at least 20 characters")
+
+        # Create new experiment
+        form_fields["summary"] = "At least 20 characters"
+        response = self.client.post(reverse("battDB:New Experiment"), form_fields)
+        experiment = bdb.Experiment.objects.get(name="Experiment 1")
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f"/battDB/exps/{experiment.id}/")
+        self.assertEqual(experiment.user_owner.username, "test_contributor")
+        self.assertEqual(experiment.user_owner.institution, self.user.institution)
+        self.assertEqual(experiment.status, "private")
+        for key, val in form_fields.items():
+            self.assertEqual(getattr(experiment, key), val)
+
+        # Create new experiment with same name - should fail
+        response = self.client.post(reverse("battDB:New Experiment"), form_fields)
+        self.assertEqual(len(bdb.Experiment.objects.all()), 1)
+        self.assertEqual(bdb.Experiment.objects.get(name="Experiment 1"), experiment)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, " is already used in your institution")
+        self.assertContains(response, form_fields["name"])
+
+        # Update experiment
+        form_fields["summary"] = "A longer and more detailed summary"
+        update_response = self.client.post(
+            reverse("battDB:Update Experiment", kwargs={"pk": experiment.id}),
+            form_fields,
+        )
+        self.assertEqual(update_response.status_code, 302)
+        self.assertEqual(update_response.url, f"/battDB/exps/{experiment.id}/")
+
+        experiment.refresh_from_db()
+        self.assertEqual(experiment.summary, "A longer and more detailed summary")
+
+        # Delete experiment
+        delete_response = self.client.post(
+            reverse("battDB:Delete Experiment", kwargs={"pk": experiment.id})
+        )
+        self.assertEqual(delete_response.status_code, 302)
+        self.assertEqual(delete_response.url, "/battDB/exps/")
+        experiment.refresh_from_db()
+        self.assertEqual(experiment.status, "deleted")
 
 
 class DeviceSpecificationViewTest(TestCase):
@@ -606,3 +685,231 @@ class DataUploadViewTest(TestCase):
                 "http://localhost:10000/devstoreaccount1/test/uploaded_files/maccor_example_new"
             ),
         )
+
+    def test_upload_view_unparsed_data(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        # Check file upload response
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/biologic_example.csv",
+        )
+        with open(file_path) as input_file:
+            post_response = self.client.post(
+                reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                {
+                    "name": "Device 3",
+                    "raw_data_file-TOTAL_FORMS": 1,
+                    "raw_data_file-INITIAL_FORMS": 0,
+                    "raw_data_file-0-file": input_file,
+                },
+            )
+        # Check redirect to correct page
+        self.assertEqual(post_response.url, f"/battDB/exps/{self.experiment.id}")
+
+        # Check ExperimentDataFile has been created
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 3")
+        self.assertTrue(edf.file_exists())
+
+        # Check Experiment Detail view contains message about unparsed data
+        get_response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(
+            get_response, "This file was uploaded without being processed."
+        )
+
+    def test_upload_view_binary_file(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        # Check file upload response
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/biologic_example.csv",
+        )
+
+        binary_file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/common/sample_files/sample_binary.mpr",
+        )
+
+        with open(file_path) as input_file:
+            with open(binary_file_path, "rb") as binary_file:
+                post_response = self.client.post(
+                    reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                    {
+                        "name": "Device 4",
+                        "binary_file": binary_file,
+                        "raw_data_file-TOTAL_FORMS": 1,
+                        "raw_data_file-INITIAL_FORMS": 0,
+                        "raw_data_file-0-file": input_file,
+                    },
+                )
+        # Check redirect to correct page
+        self.assertEqual(post_response.url, f"/battDB/exps/{self.experiment.id}")
+
+        # Check ExperimentDataFile has been created
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 4")
+        self.assertTrue(edf.file_exists())
+
+        # Check Experiment Detail view contains button to download binary file
+        get_response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(get_response, "Download binary")
+
+        # Finally, check the binary file can be downloaded
+        download_response = self.client.get(
+            reverse("battDB:Download Binary File", kwargs={"pk": edf.id})
+        )
+        self.assertEqual(download_response.status_code, 302)
+        self.assertTrue(
+            download_response.url.startswith(
+                "http://localhost:10000/devstoreaccount1/test/uploaded_files/sample_binary"
+            ),
+        )
+
+    def test_upload_view_settings_file(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        # Check file upload response
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/biologic_example.csv",
+        )
+
+        settings_file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/common/sample_files/sample_settings.mps",
+        )
+
+        with open(file_path) as input_file:
+            with open(settings_file_path, "rb") as settings_file:
+                post_response = self.client.post(
+                    reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                    {
+                        "name": "Device 5",
+                        "settings_file": settings_file,
+                        "raw_data_file-TOTAL_FORMS": 1,
+                        "raw_data_file-INITIAL_FORMS": 0,
+                        "raw_data_file-0-file": input_file,
+                    },
+                )
+        # Check redirect to correct page
+        self.assertEqual(post_response.url, f"/battDB/exps/{self.experiment.id}")
+
+        # Check ExperimentDataFile has been created
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 5")
+        self.assertTrue(edf.file_exists())
+
+        # Check Experiment Detail view contains button to download settings file
+        get_response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(get_response, "settings file")
+
+        # Finally, check the settings file can be downloaded
+        download_response = self.client.get(
+            reverse("battDB:Download Settings File", kwargs={"pk": edf.id})
+        )
+        self.assertEqual(download_response.status_code, 302)
+        self.assertTrue(
+            download_response.url.startswith(
+                "http://localhost:10000/devstoreaccount1/test/uploaded_files/sample_settings"
+            ),
+        )
+
+    def test_update_data(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        # Check file upload response
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/biologic_example.csv",
+        )
+        with open(file_path) as input_file:
+            post_response = self.client.post(
+                reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                {
+                    "name": "Device 6",
+                    "raw_data_file-TOTAL_FORMS": 1,
+                    "raw_data_file-INITIAL_FORMS": 0,
+                    "raw_data_file-0-file": input_file,
+                },
+            )
+        # Go to update page for this experiment data file
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 6")
+        update_response = self.client.get(
+            reverse("battDB:Update File", kwargs={"pk": edf.id})
+        )
+        self.assertContains(update_response, "Device 6")
+
+        # Make an update to the form
+        updated_post_response = self.client.post(
+            reverse("battDB:Update File", kwargs={"pk": edf.id}),
+            {
+                "name": "Device 6 updated",
+            },
+        )
+        self.assertEqual(
+            updated_post_response.url, f"/battDB/exps/{self.experiment.id}"
+        )
+        # Check the name has been updated
+        edf = bdb.ExperimentDataFile.objects.get(name="Device 6 updated")
+        self.assertTrue(edf.file_exists())
+        # Check the original name is no longer in the database
+        with self.assertRaises(bdb.ExperimentDataFile.DoesNotExist):
+            bdb.ExperimentDataFile.objects.get(name="Device 6")
+
+    def test_invalid_form(self):
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+        # This is invalid because the raw_data_file formset is missing
+        post_response = self.client.post(
+            reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+            {"name": "Device 7"},
+        )
+        # Check redirect to correct page
+        self.assertContains(post_response, "Could not save data file - form not valid.")
+        # Check ExperimentDataFile has not been created
+        with self.assertRaises(bdb.ExperimentDataFile.DoesNotExist):
+            bdb.ExperimentDataFile.objects.get(name="Device 7")

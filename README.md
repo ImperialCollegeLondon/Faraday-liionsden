@@ -29,11 +29,15 @@ In future, this will also be posible via the API.
 
 ## Local installation
 
-If you want to run a local version of Liionsden, we recommend using [Docker](https://www.docker.com/).
-
+If you want to run a local version of Liionsden, we recommend using [Docker](https://www.docker.com/). A `docker-compose.yml` is provided to include all the required environment variables and containers.
+To start the app, run `docker compose up --build`.
 Full instructions to follow once the platform is in production.
 
 ## Development notes
+
+To run Django management commands, you will need to execute them inside the container, ie `docker-compose exec web python manage.py showmigrations`
+
+This container defines the password for the admin user so you can access the admin backend while developing.
 
 ### Contribution guidelines
 

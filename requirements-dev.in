@@ -4,3 +4,4 @@ mypy
 isort
 bump2version
 pre-commit
+pip-tools

@@ -1,4 +1,4 @@
-from model_bakery.recipe import Recipe, foreign_key
+from model_bakery.recipe import Recipe, foreign_key, seq
 
 from battDB.models import (
     Batch,
@@ -22,7 +22,11 @@ from tests.common.baker_recipes import org
 from tests.dfndb.baker_recipes import component, parameter
 from tests.management.baker_recipes import user
 
-device_specification = Recipe(DeviceSpecification, user_owner=foreign_key(user))
+device_specification = Recipe(
+    DeviceSpecification,
+    user_owner=foreign_key(user),
+    name=seq("Device Specification"),  # Ensure uniqueness
+)
 
 device_parameter = Recipe(
     DeviceParameter,
@@ -57,11 +61,17 @@ device = Recipe(Device, batch=foreign_key(batch))
 parser = Recipe(Parser, user_owner=foreign_key(user))
 
 equipment = Recipe(
-    Equipment, institution=foreign_key(org), user_owner=foreign_key(user)
+    Equipment,
+    institution=foreign_key(org),
+    user_owner=foreign_key(user),
+    name=seq("Equipment"),  # Ensure uniqueness
 )
 
 experiment = Recipe(
-    Experiment, config=foreign_key(device_config), user_owner=foreign_key(user)
+    Experiment,
+    config=foreign_key(device_config),
+    user_owner=foreign_key(user),
+    name=seq("Experiment"),  # Ensure uniqueness
 )
 
 edf = Recipe(ExperimentDataFile, user_owner=foreign_key(user))

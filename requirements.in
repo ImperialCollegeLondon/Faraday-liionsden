@@ -29,3 +29,5 @@ django-override-storage
 molmass
 plotly
 oauthlib>=3.2.1
+pillow>=9.3.0
+cryptography>=38.0.3

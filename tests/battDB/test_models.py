@@ -158,6 +158,8 @@ class TestEquipment(TestCase):
 class TestExperiment(TestCase):
     def setUp(self):
         self.model = baker.make_recipe("tests.battDB.experiment")
+        self.model.user_owner.institution = baker.make_recipe("tests.common.org")
+        self.model.user_owner.save()
 
     def test_definition(self):
         self.assertTrue(hasattr(self.model, "date"))
@@ -179,6 +181,17 @@ class TestExperiment(TestCase):
         url = self.model.get_absolute_url()
         self.assertIn("battDB/exps", url)
 
+    def test_unique_name(self):
+        with self.assertRaises(ValidationError):
+            new = baker.make_recipe(
+                "tests.battDB.experiment",
+                name=self.model.name,
+                user_owner=self.model.user_owner,
+            )
+            new.clean()
+        another = baker.make_recipe("tests.battDB.experiment", name=self.model.name)
+        another.clean()
+
 
 class TestExperimentDataFile(TestCase):
     def setUp(self):
@@ -191,6 +204,8 @@ class TestExperimentDataFile(TestCase):
         self.assertTrue(hasattr(self.model, "machine"))
         self.assertTrue(hasattr(self.model, "devices"))
         self.assertTrue(hasattr(self.model, "protocol"))
+        self.assertTrue(hasattr(self.model, "binary_file"))
+        self.assertTrue(hasattr(self.model, "settings_file"))
 
     def test_num_cycles(self):
         self.assertEqual(self.model.num_cycles(), 0)

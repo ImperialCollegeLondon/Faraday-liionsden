@@ -152,6 +152,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                 else:
                     obj.status = "private"
                 self.object = form.save()
+
             # Save individual parameters from inline form
             if formset.is_valid():
                 formset.instance = self.object
@@ -167,7 +168,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                     if not self.object.ts_data and formset[0].instance.use_parser:
                         messages.error(
                             request,
-                            "Could not parse data file - does it contain data?",
+                            "Could not parse file - is it a valid data file?",
                         )
                         self.object.delete()
                         return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
@@ -178,10 +179,17 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                     )
                     self.object.delete()
                     return render(request, self.template_name, context)
-
-            messages.success(request, self.success_message)
-            return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
-        messages.error(request, request.error)
+                # Everything was fine - save and view experiment details page
+                messages.success(request, self.success_message)
+                # Redirect to experiment detail view or stay on form if "add another"
+                if "another" in request.POST:
+                    return redirect(request.path_info)
+                else:
+                    return redirect("/battDB/exps/{}".format(self.kwargs.get("pk")))
+            # formset not valid so delete EDF object and return to form
+            self.object.delete()
+        # form or formset is not valid so return to form
+        messages.error(request, "Could not save data file - form not valid.")
         return render(request, self.template_name, context)
 
 
@@ -255,7 +263,6 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
             instance=self.object,
         )
         context = self.get_context_data()
-        formset = context["raw_data_file"]
         if form.is_valid():
             # Save instance incluing setting user owner and status
             with transaction.atomic():
@@ -264,19 +271,13 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
                 else:
                     self.object.status = "private"
                 self.object.save()
-            # Save individual parameters from inline form
-            if formset.is_valid():
-                formset.instance = self.object
-                # Handle uploaded files in formsets slightly differently to usual
-                formset[0].instance.status = self.object.status
-                if formset[0].instance.use_parser:
-                    formset[0].instance.parse = True
-                formset.save()
-                form.instance.full_clean()
-
-            messages.success(request, self.success_message)
-            return redirect("/battDB/exps/{}".format(self.object.experiment.id))
-        messages.error(request, self.failure_message)
+                messages.success(request, self.success_message)
+                # Redirect to experiment detail view or stay on form if "add another"
+                if "another" in request.POST:
+                    return redirect(request.path_info)
+                else:
+                    return redirect("/battDB/exps/{}".format(self.object.experiment.id))
+        messages.error(request, "Could not update information - form not valid.")
         return render(request, self.template_name, context)
 
 
@@ -422,49 +423,55 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
         For now, it generates two plots if the necessary columns have been parsed:
         - Voltage vs. Current against Time
         - Voltage vs. Temparature against Time
-        Returns a list of these lists.
+        Returns a list of these lists. If there is no table data, returns an empty list.
         """
         experiment_plots = []
         for data_file, table in self.get_tables_data().items():
-            edf = self.object.data_files.get(name=data_file)
-            df = DataFrame(table)
-            # generate the plots
-            plots = []
-            parsed_cols = self.get_parsed_col_names(edf, ["Time", "Voltage", "Current"])
-            if parsed_cols:
-                plots.append(
-                    get_html_plot(
-                        df,
-                        x_col=parsed_cols[0],
-                        y_cols=parsed_cols[1:],
-                    )
+            if table:
+                edf = self.object.data_files.get(name=data_file)
+                df = DataFrame(table)
+                # generate the plots
+                plots = []
+                parsed_cols = self.get_parsed_col_names(
+                    edf, ["Time", "Voltage", "Current"]
                 )
-            parsed_cols = self.get_parsed_col_names(
-                edf, ["Time", "Voltage", "Temperature"]
-            )
-            if parsed_cols:
-                plots.append(
-                    get_html_plot(
-                        df,
-                        x_col=parsed_cols[0],
-                        y_cols=parsed_cols[1:],
+                if parsed_cols:
+                    plots.append(
+                        get_html_plot(
+                            df,
+                            x_col=parsed_cols[0],
+                            y_cols=parsed_cols[1:],
+                        )
                     )
+                parsed_cols = self.get_parsed_col_names(
+                    edf, ["Time", "Voltage", "Temperature"]
                 )
-            experiment_plots.append(plots)
+                if parsed_cols:
+                    plots.append(
+                        get_html_plot(
+                            df,
+                            x_col=parsed_cols[0],
+                            y_cols=parsed_cols[1:],
+                        )
+                    )
+                experiment_plots.append(plots)
+            else:
+                experiment_plots.append([])
         return experiment_plots
 
     def get_tables(self):
         """
         Overriding from django_tables2.views.MultiTableMixin to include all columns
         dynamically. This is necessary to ensure that all columns are included in the
-        table.
+        table. The data files are used to determine which columns are available.
+        Returns: list of tables
         """
         data = self.get_tables_data()
         data_files = self.object.data_files.all()
-
         tables = []
+        # Iterate over the data dictionaries and create a table for each
         for data_set, data_file in zip(data, data_files):
-            if data_set:
+            if data[data_set]:
                 tables.append(
                     self.table_class(
                         data_set,
@@ -542,6 +549,30 @@ class DownloadRawDataFileView(PermissionRequiredMixin, DetailView):
         self.object = self.get_object()
         blob_name = self.object.raw_data_file.file.name
         blob_url = get_blob_url(self.object.raw_data_file.file)
+        sas_token = generate_sas_token(blob_name)
+        return redirect(f"{blob_url}?{sas_token}")
+
+
+class DownloadBinaryFileView(PermissionRequiredMixin, DetailView):
+    model = ExperimentDataFile
+    permission_required = "battDB.view_experimentdatafile"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        blob_name = self.object.binary_file.name
+        blob_url = get_blob_url(self.object.binary_file)
+        sas_token = generate_sas_token(blob_name)
+        return redirect(f"{blob_url}?{sas_token}")
+
+
+class DownloadSettingsFileView(PermissionRequiredMixin, DetailView):
+    model = ExperimentDataFile
+    permission_required = "battDB.view_experimentdatafile"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        blob_name = self.object.settings_file.name
+        blob_url = get_blob_url(self.object.settings_file)
         sas_token = generate_sas_token(blob_name)
         return redirect(f"{blob_url}?{sas_token}")
 

@@ -21,6 +21,7 @@ class BiologicParsingEngine(ParsingEngineBase):
         ("text/plain", ".mpt"),
         ("text/plain", ".tsv"),
         ("text/plain", ".txt"),
+        ("text/plain", ".mps"),
     ]
     mandatory_columns: Dict[str, Dict[str, Union[str, Tuple[str, str]]]] = {
         "time/s": dict(symbol="t", unit=("Time", "s")),
@@ -44,10 +45,14 @@ class BiologicParsingEngine(ParsingEngineBase):
         Args:
             file_obj (TextIO): File to parse.
         """
-        skip_rows = get_header_size(file_obj, cls.encoding)
-        if skip_rows == 0:
+        skip_rows, file_type = get_header_size(file_obj, cls.encoding)
+        # check validity of file
+        if file_type in ("invalid", "settings"):
             data = pd.DataFrame([])
             file_metadata = []
+            getLogger().error(
+                f"File {file_obj.name} cannot be parsed: File type: {file_type}."
+            )
         else:
             data = load_biologic_data(file_obj, skip_rows, cls.encoding)
             file_metadata = get_file_header(file_obj, skip_rows, cls.encoding)
@@ -69,6 +74,8 @@ def get_file_header(
         A list of rows for the header, without the termination characters and
         empty lines.
     """
+    if skip_rows == 0:
+        return []
     with file_obj.open("r") as f:
         header = list(filter(len, (f.readline().rstrip() for _ in range(skip_rows))))
         if type(header[0]) == bytes:
@@ -82,7 +89,7 @@ def get_file_header(
     return header
 
 
-def get_header_size(file_obj: TextIO, encoding: str) -> int:
+def get_header_size(file_obj: TextIO, encoding: str) -> Tuple[int, str]:
     """Reads the file and determines the size of the header.
 
     Args:
@@ -90,15 +97,30 @@ def get_header_size(file_obj: TextIO, encoding: str) -> int:
         encoding (str): Encoding of the file.
 
     Returns:
-        Header size as an int
+        Tuple (int, str): The number of rows in the header and a string describing the
+            file format. The str can be "valid", "settings" or "invalid" depending on
+            whether the file is a valid data file, a settings file, or an invalid file.
     """
     file_obj.seek(0)
     with file_obj.open("r") as f:
         lines = iter([i.decode(encoding) for i in f.readlines()])
-        if "ASCII FILE" in next(lines):
-            return int(re.findall(r"[0-9]+", next(lines))[0]) - 1
-        file_obj.seek(0)
-        return 0
+        first_line = next(lines)
+        # Check if the file starts with a line containing the string "ASCII FILE"
+        if "ASCII FILE" in first_line:
+            # Read the next line containing header size, returning it as an int
+            file_obj.seek(0)
+            return (int(re.findall(r"[0-9]+", next(lines))[0]) - 1, "valid")
+        elif "SETTING FILE" in first_line:
+            file_obj.seek(0)
+            return (0, "settings")
+        # If the file does not start with "ASCII FILE", check if there is no header
+        # and the data starts there
+        elif "time/s" in first_line:
+            file_obj.seek(0)
+            return (0, "valid")
+        else:
+            file_obj.seek(0)
+            return (0, "invalid")
 
 
 def load_biologic_data(file_obj: TextIO, skip_rows: int, encoding: str) -> pd.DataFrame:
