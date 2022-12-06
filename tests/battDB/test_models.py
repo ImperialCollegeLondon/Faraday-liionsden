@@ -272,7 +272,6 @@ class TestExperimentDevice(TestCase):
         self.assertTrue(hasattr(self.model, "batch"))
         self.assertTrue(hasattr(self.model, "batch_sequence"))
         self.assertTrue(hasattr(self.model, "device_position"))
-        self.assertTrue(hasattr(self.model, "data_file"))
 
     @skip("Wait until this is implemented properly before adding tests.")
     def test_get_serial_no(self):

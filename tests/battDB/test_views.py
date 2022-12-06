@@ -595,6 +595,7 @@ class DataUploadViewTest(TestCase):
                 reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
                 {
                     "name": "Device 1",
+                    "devices": baker.make_recipe("tests.battDB.device").id,
                     "raw_data_file-TOTAL_FORMS": 1,
                     "raw_data_file-INITIAL_FORMS": 0,
                     "raw_data_file-0-file": input_file,
@@ -653,6 +654,7 @@ class DataUploadViewTest(TestCase):
                 reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
                 {
                     "name": "Device 2",
+                    "devices": baker.make_recipe("tests.battDB.device").id,
                     "raw_data_file-TOTAL_FORMS": 1,
                     "raw_data_file-INITIAL_FORMS": 0,
                     "raw_data_file-0-file": input_file,
@@ -707,6 +709,7 @@ class DataUploadViewTest(TestCase):
                 reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
                 {
                     "name": "Device 3",
+                    "devices": baker.make_recipe("tests.battDB.device").id,
                     "raw_data_file-TOTAL_FORMS": 1,
                     "raw_data_file-INITIAL_FORMS": 0,
                     "raw_data_file-0-file": input_file,
@@ -755,6 +758,7 @@ class DataUploadViewTest(TestCase):
                     reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
                     {
                         "name": "Device 4",
+                        "devices": baker.make_recipe("tests.battDB.device").id,
                         "binary_file": binary_file,
                         "raw_data_file-TOTAL_FORMS": 1,
                         "raw_data_file-INITIAL_FORMS": 0,
@@ -813,6 +817,7 @@ class DataUploadViewTest(TestCase):
                     reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
                     {
                         "name": "Device 5",
+                        "devices": baker.make_recipe("tests.battDB.device").id,
                         "settings_file": settings_file,
                         "raw_data_file-TOTAL_FORMS": 1,
                         "raw_data_file-INITIAL_FORMS": 0,
@@ -864,6 +869,7 @@ class DataUploadViewTest(TestCase):
                 reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
                 {
                     "name": "Device 6",
+                    "devices": baker.make_recipe("tests.battDB.device").id,
                     "raw_data_file-TOTAL_FORMS": 1,
                     "raw_data_file-INITIAL_FORMS": 0,
                     "raw_data_file-0-file": input_file,
@@ -881,6 +887,7 @@ class DataUploadViewTest(TestCase):
             reverse("battDB:Update File", kwargs={"pk": edf.id}),
             {
                 "name": "Device 6 updated",
+                "devices": baker.make_recipe("tests.battDB.device").id,
             },
         )
         self.assertEqual(
@@ -906,7 +913,10 @@ class DataUploadViewTest(TestCase):
         # This is invalid because the raw_data_file formset is missing
         post_response = self.client.post(
             reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
-            {"name": "Device 7"},
+            {
+                "name": "Device 7",
+                "devices": baker.make_recipe("tests.battDB.device").id,
+            },
         )
         # Check redirect to correct page
         self.assertContains(post_response, "Could not save data file - form not valid.")
