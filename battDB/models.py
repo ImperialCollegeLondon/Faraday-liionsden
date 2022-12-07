@@ -549,6 +549,12 @@ class ExperimentDataFile(cm.BaseModel):
         help_text="Test protocol used in this experiment",
     )
 
+    time_recorded = models.DateTimeField(
+        blank=True,
+        null=True,
+        help_text="Time at which the experiment data was recoreded",
+    )
+
     settings_file = models.FileField(
         upload_to="uploaded_files",
         null=True,
