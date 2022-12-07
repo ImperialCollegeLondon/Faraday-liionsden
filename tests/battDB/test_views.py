@@ -923,3 +923,49 @@ class DataUploadViewTest(TestCase):
         # Check ExperimentDataFile has not been created
         with self.assertRaises(bdb.ExperimentDataFile.DoesNotExist):
             bdb.ExperimentDataFile.objects.get(name="Device 7")
+
+
+class ExperimentDataDeviceTest(TestCase):
+    def setUp(self):
+        self.user = baker.make_recipe(
+            "tests.management.user",
+            username="test_contributor",
+        )
+        self.user.is_active = True
+        self.user.set_password("contributorpass")
+        self.user.save()
+        group = Group.objects.get(name="Contributor")
+        group.user_set.add(self.user)
+
+        self.experiment1 = baker.make_recipe(
+            "tests.battDB.experiment", user_owner=self.user
+        )
+        self.experiment2 = baker.make_recipe(
+            "tests.battDB.experiment", user_owner=self.user
+        )
+        self.batch = baker.make_recipe(
+            "tests.battDB.batch", batch_size=5, serialNo="abc-123"
+        )
+        self.experiment_device = baker.make_recipe(
+            "tests.battDB.experiment_device",
+            experiment=self.experiment1,
+            batch=self.batch,
+            batch_sequence=1,
+        )
+        self.experiment_device.clean()
+
+    def test_available_devices(self):
+        # Login
+        self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        response = self.client.get(
+            reverse("battDB:New File", kwargs={"pk": self.experiment1.id})
+        )
+        self.assertContains(response, "Device Specification1/abc-123/1")
+        response = self.client.get(
+            reverse("battDB:New File", kwargs={"pk": self.experiment2.id})
+        )
+        self.assertNotContains(response, "Device Specification1/abc-123/1")
