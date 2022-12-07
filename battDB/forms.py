@@ -1,6 +1,7 @@
 import operator
 from functools import reduce
 
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (
     HTML,
@@ -329,6 +330,8 @@ class NewExperimentDataFileForm(DataCreateForm):
         queryset=Device.objects.get_queryset(),
     )
 
+    time_recorded = forms.DateTimeField(widget=DateTimePickerInput())
+
     class Meta:
         model = ExperimentDataFile
         fields = [
@@ -338,6 +341,7 @@ class NewExperimentDataFileForm(DataCreateForm):
             "settings_file",
             "binary_file",
             "devices",
+            "time_recorded",
         ]
         help_texts = {
             "name": mark_safe("If left blank, the file name will be used."),
@@ -429,6 +433,7 @@ class NewExperimentDataFileForm(DataCreateForm):
                 Column("name", css_class="col-6"),
                 Column("machine", css_class="col-6"),
                 Column("devices", css_class="col-6"),
+                Column("time_recorded", css_class="col-6"),
                 fieldset,
                 Column("settings_file", css_class="col-6"),
                 Column("binary_file", css_class="col-6"),
