@@ -206,6 +206,7 @@ class TestExperimentDataFile(TestCase):
         self.assertTrue(hasattr(self.model, "protocol"))
         self.assertTrue(hasattr(self.model, "binary_file"))
         self.assertTrue(hasattr(self.model, "settings_file"))
+        self.assertTrue(hasattr(self.model, "time_recorded"))
 
     def test_num_cycles(self):
         self.assertEqual(self.model.num_cycles(), 0)
