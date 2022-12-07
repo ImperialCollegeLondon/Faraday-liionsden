@@ -330,7 +330,7 @@ class NewExperimentDataFileForm(DataCreateForm):
         queryset=Device.objects.get_queryset(),
     )
 
-    time_recorded = forms.DateTimeField(widget=DateTimePickerInput())
+    time_recorded = forms.DateTimeField(widget=DateTimePickerInput(), required=False)
 
     class Meta:
         model = ExperimentDataFile
