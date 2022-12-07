@@ -21,6 +21,7 @@ python-magic
 django-better-admin-arrayfield
 django-crispy-forms
 crispy-bootstrap5
+django-bootstrap-datepicker-plus
 django-filter
 tablib
 openpyxl

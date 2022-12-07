@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "django_filters",
+    "bootstrap_datepicker_plus",
     "django_cleanup.apps.CleanupConfig",  # <-- This must be last
 ]
 
