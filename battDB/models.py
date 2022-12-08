@@ -635,7 +635,7 @@ class ExperimentDataFile(cm.BaseModel):
                 for c in self.raw_data_file.use_parser.columns.all().order_by("order")
             ]
             file_obj = self.raw_data_file.file
-            file_format = self.raw_data_file.use_parser.name
+            file_format = self.raw_data_file.use_parser.file_format
             parsed_file = parse_data_file(file_obj, file_format, columns=cols)
 
             self.attributes["parsed_metadata"] = parsed_file["metadata"]
