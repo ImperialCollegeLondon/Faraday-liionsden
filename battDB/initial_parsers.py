@@ -60,3 +60,19 @@ def populate_parsers(apps, schema_editor):
             SignalType.objects.create(
                 parameter=param, col_name=col_name, order=i + 1, parser=parser
             )
+
+
+def update_parser_file_formats(apps, schema_editor):
+    """Updates the file formats of initial parsers parsers to correct the migration above.
+    The file_formats should be set to the name of the parser.
+
+    Args:
+        apps (_type_): app registry with the current status of the apps in the migration
+            process.
+        schema_editor (_type_): Not used.
+    """
+    Parser = apps.get_model("battDB", "Parser")
+    parsers = Parser.objects.get_queryset()
+    for parser in parsers:
+        parser.file_format = parser.name
+        parser.save()
