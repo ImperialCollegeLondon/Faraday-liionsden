@@ -10,11 +10,14 @@
     {% csrf_token %}
     {% bootstrap_form form %}
     {% buttons %}
-      <button type="submit" class="btn btn-primary">
-        Submit
-      </button>
+    <button type="submit" class="btn btn-primary">
+      Submit
+    </button>
     {% endbuttons %}
   </form>
+  {% if SETTING_TYPE == "liionsden.settings.azure" %}
+  <p>view our <a href={{PRIVACY_NOTICE_SAS_URL}} target="_blank">privacy
+      notice</a>.</p>
 </div>
-
+{% endif %}
 {% endblock %}
