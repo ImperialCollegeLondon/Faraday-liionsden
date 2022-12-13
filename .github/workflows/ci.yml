@@ -55,6 +55,7 @@ jobs:
     - name: Run tests
       env:
         AZURE_STORAGE_ACCOUNT_KEY: '${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}'
+        PRIVACY_NOTICE_SAS_URL: '${{ secrets.PRIVACY_NOTICE_SAS_URL }}'
       run: python manage.py test
 
   publish:
