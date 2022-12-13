@@ -165,7 +165,7 @@ class AdminMediaWidget(AdminFileWidget):
             blob_name = value.name
             blob_url = get_blob_url(value)
             sas_token = generate_sas_token(blob_name)
-            output.append(f"Download: {blob_url}?{sas_token}")
+            output.append(f"<a href={blob_url}?{sas_token}>Download File</a>")
 
         output.append(super(AdminFileWidget, self).render(name, value, attrs))
         return mark_safe("".join(output))
