@@ -1,9 +1,12 @@
 import mptt
 from django.contrib import admin
+from django.contrib.admin.widgets import AdminFileWidget
+from django.db.models import FileField
 from django.utils.safestring import mark_safe
 
 import common
 from common.admin import BaseAdmin
+from management.custom_azure import generate_sas_token, get_blob_url
 
 from .models import (
     Batch,
@@ -155,7 +158,23 @@ class DeviceDataInline(common.admin.TabularInline):
     extra = 0
 
 
+class AdminMediaWidget(AdminFileWidget):
+    def render(self, name, value, attrs=None, renderer=None):
+        output = []
+        if value and getattr(value, "url", None):
+            blob_name = value.name
+            blob_url = get_blob_url(value)
+            sas_token = generate_sas_token(blob_name)
+            output.append(f"Download: {blob_url}?{sas_token}")
+
+        output.append(super(AdminFileWidget, self).render(name, value, attrs))
+        return mark_safe("".join(output))
+
+
 class DataFileInline(admin.StackedInline):
+    formfield_overrides = {
+        FileField: {"widget": AdminMediaWidget},
+    }
     readonly_fields = ["size", "local_date", "exists", "hash"]
     max_num = 1
     model = UploadedFile
