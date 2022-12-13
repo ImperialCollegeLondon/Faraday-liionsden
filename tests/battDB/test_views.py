@@ -563,7 +563,7 @@ class DataUploadViewTest(TestCase):
             status="public",
             user_owner=self.user,
         )
-        self.biologic_parser = bdb.Parser.objects.get(name="Biologic")
+        self.biologic_parser = bdb.Parser.objects.get(name="Biologic Ecell")
         self.maccor_parser = bdb.Parser.objects.get(name="Maccor")
 
     def test_upload_view_biologic_data(self):
