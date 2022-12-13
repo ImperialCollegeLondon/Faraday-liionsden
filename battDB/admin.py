@@ -159,6 +159,10 @@ class DeviceDataInline(common.admin.TabularInline):
 
 
 class AdminMediaWidget(AdminFileWidget):
+    """
+    Override the default AdminFileWidget to add a download link that uses a SAS token.
+    """
+
     def render(self, name, value, attrs=None, renderer=None):
         output = []
         if value and getattr(value, "url", None):
@@ -168,6 +172,7 @@ class AdminMediaWidget(AdminFileWidget):
             output.append(f"<a href={blob_url}?{sas_token}>Download File</a>")
 
         output.append(super(AdminFileWidget, self).render(name, value, attrs))
+        output[-1] = "<br>" + output[-1].split("<br>")[-1]
         return mark_safe("".join(output))
 
 
