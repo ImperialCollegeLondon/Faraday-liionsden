@@ -171,8 +171,11 @@ class AdminMediaWidget(AdminFileWidget):
             sas_token = generate_sas_token(blob_name)
             output.append(f"<a href={blob_url}?{sas_token}>Download File</a>")
 
+        # Put the usual output at the end
         output.append(super(AdminFileWidget, self).render(name, value, attrs))
+        # Remove the current url from the output that is being replaced
         output[-1] = "<br>" + output[-1].split("<br>")[-1]
+
         return mark_safe("".join(output))
 
 
