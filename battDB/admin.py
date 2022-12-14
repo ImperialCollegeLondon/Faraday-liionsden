@@ -284,11 +284,13 @@ class DataAdmin(BaseAdmin):
 
     def get_file_link(self, obj):
         if hasattr(obj, "raw_data_file") and obj.raw_data_file is not None:
+            blob_name = obj.raw_data_file.file.name
+            blob_url = get_blob_url(obj.raw_data_file.file)
+            sas_token = generate_sas_token(blob_name)
+            size = obj.raw_data_file.size()
+
             return mark_safe(
-                """
-            <button type="button"> <a href="%s">\u2193%s</a> </button>
-            """
-                % (obj.raw_data_file.file.url, obj.raw_data_file.size())
+                f'<button type="button"> <a href={blob_url}?{sas_token}>{size}</a> </button>'
             )
         else:
             return "N/A"
