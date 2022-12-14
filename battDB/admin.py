@@ -174,7 +174,8 @@ class AdminMediaWidget(AdminFileWidget):
         # Put the usual output at the end
         output.append(super(AdminFileWidget, self).render(name, value, attrs))
         # Remove the current url from the output that is being replaced
-        output[-1] = "<br>" + output[-1].split("<br>")[-1]
+        if "Currently" in output[-1]:
+            output[-1] = "<br>" + output[-1].split("<br>")[-1]
 
         return mark_safe("".join(output))
 
@@ -230,6 +231,10 @@ class DataAdmin(BaseAdmin):
         2 additional queries are fired.
         This should be done with a JOIN instead.
     """
+
+    formfield_overrides = {
+        FileField: {"widget": AdminMediaWidget},
+    }
 
     inlines = [
         DataFileInline,
