@@ -60,3 +60,45 @@ def populate_parsers(apps, schema_editor):
             SignalType.objects.create(
                 parameter=param, col_name=col_name, order=i + 1, parser=parser
             )
+
+
+def update_parser_file_formats(apps, schema_editor):
+    """Updates the file formats of initial parsers parsers to correct the migration above.
+    The file_formats should be set to the name of the parser.
+
+    Args:
+        apps (_type_): app registry with the current status of the apps in the migration
+            process.
+        schema_editor (_type_): Not used.
+    """
+    Parser = apps.get_model("battDB", "Parser")
+    parsers = Parser.objects.get_queryset()
+    for parser in parsers:
+        parser.file_format = parser.name
+        parser.save()
+
+
+def separate_biologic_parser(apps, schema_editor):
+    """Separates the Biologic parser into two parsers.
+
+    Args:
+        apps (_type_): app registry with the current status of the apps in the migration
+            process.
+        schema_editor (_type_): Not used.
+    """
+    Parser = apps.get_model("battDB", "Parser")
+    SignalType = apps.get_model("battDB", "SignalType")
+
+    parser = Parser.objects.get(name="Biologic")
+    parser.name = "Biologic Ecell"
+    parser.save()
+    parser.pk = None
+    parser.name = "Biologic Ewe"
+    parser.save()
+
+    for signal in SignalType.objects.filter(parser__name="Biologic Ecell"):
+        signal.pk = None
+        signal.parser = parser
+        if signal.col_name == "Ecell/V":
+            signal.col_name = "Ewe/V"
+        signal.save()

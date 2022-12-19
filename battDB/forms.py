@@ -377,6 +377,16 @@ class NewExperimentDataFileForm(DataCreateForm):
                 self.fields["devices"].queryset = Device.objects.filter(query)
             else:
                 self.fields["devices"].queryset = Device.objects.none()
+                self.fields["devices"].help_text = mark_safe(
+                    """
+                    <div class="alert alert-danger" role="alert">
+                    No devices have been added to this experiment yet!
+                    You must associate devices with the experiemnt before you can
+                    add experimental data. Go back and edit the experiment to add 
+                    devices from an existing batch.
+                    </div>
+                    """
+                )
 
         if mode == "New":
             fieldset = Fieldset(
