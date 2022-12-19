@@ -530,16 +530,14 @@ class ExperimentDataFile(cm.BaseModel):
         related_name="data_files",
     )
 
+    devices = models.ManyToManyField(Device, related_name="data_files")
+
     machine = models.ForeignKey(
         Equipment,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
         help_text="Equipment on which this data was recorded",
-    )
-
-    devices = models.ManyToManyField(
-        Batch, through="ExperimentDevice", related_name="used_in"
     )
 
     protocol = models.ForeignKey(
@@ -700,9 +698,6 @@ class ExperimentDevice(models.Model):
         help_text="Device Position ID in Experiment Config - e.g. Cell_A1 for the "
         "first cell of a series-parallel pack (leave as cell_01 for single cell experiments)",  # noqa E501
     )
-    data_file = models.ForeignKey(
-        ExperimentDataFile, null=True, blank=True, on_delete=models.SET_NULL
-    )
 
     def get_serial_no(self):
         """TODO: implement id_to_serialno and serialno_to_id functions."""
@@ -726,16 +721,6 @@ class ExperimentDevice(models.Model):
 
     def __str__(self):
         return self.device_position
-
-    class Meta:
-        unique_together = [
-            [
-                "device_position",
-                "data_file",
-            ],  # cannot have the same device position ID twice in a data file
-            # cannot use the same device twice in a data file
-            ["experiment", "batch", "batch_sequence", "data_file"],
-        ]
 
 
 class DataColumn(models.Model):

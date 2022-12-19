@@ -128,6 +128,16 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
     failure_message = "Could not add new data file. Invalid information."
     inline_formsets = {"raw_data_file": UploadDataFileFormset}
 
+    def get_form_kwargs(self):
+        """
+        Passes the request object to the form class.
+        This is necessary to only display devices that belong to the experiment.
+        """
+
+        kwargs = super(NewDataFileView, self).get_form_kwargs()
+        kwargs["experiment"] = Experiment.objects.get(pk=self.kwargs.get("pk"))
+        return kwargs
+
     def get_permission_object(self, *args, **kwargs):
         # Only allowed by users who can change current Experiment
         return Experiment.objects.get(pk=self.kwargs.get("pk"))
@@ -251,6 +261,16 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
     failure_message = "Could not update data file. Invalid information."
     inline_formsets = {"raw_data_file": UploadDataFileFormset}
 
+    def get_form_kwargs(self):
+        """
+        Passes the request object to the form class.
+        This is necessary to only display devices that belong to the experiment.
+        """
+
+        kwargs = super(UpdateDataFileView, self).get_form_kwargs()
+        kwargs["experiment"] = Experiment.objects.get(pk=self.object.experiment.id)
+        return kwargs
+
     def post(self, request, *args, **kwargs):
         """
         Unique post method for data files to handle a) setting user_owner and
@@ -264,19 +284,20 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
         )
         context = self.get_context_data()
         if form.is_valid():
+            obj = form.save(commit=False)
             # Save instance incluing setting user owner and status
-            with transaction.atomic():
-                if form.is_public():
-                    self.object.status = "public"
-                else:
-                    self.object.status = "private"
-                self.object.save()
-                messages.success(request, self.success_message)
-                # Redirect to experiment detail view or stay on form if "add another"
-                if "another" in request.POST:
-                    return redirect(request.path_info)
-                else:
-                    return redirect("/battDB/exps/{}".format(self.object.experiment.id))
+            if form.is_public():
+                obj.status = "public"
+            else:
+                obj.status = "private"
+            obj.save()
+            form.save_m2m()
+            messages.success(request, self.success_message)
+            # Redirect to experiment detail view or stay on form if "add another"
+            if "another" in request.POST:
+                return redirect(request.path_info)
+            else:
+                return redirect("/battDB/exps/{}".format(self.object.experiment.id))
         messages.error(request, "Could not update information - form not valid.")
         return render(request, self.template_name, context)
 
