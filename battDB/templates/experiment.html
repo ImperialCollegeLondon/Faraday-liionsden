@@ -105,6 +105,14 @@
           <td>{{ data_file.raw_data_file.file.name }} </td>
         </tr>
         <tr>
+          <td><b>Devices:</b></td>
+          <td>
+            {% for i in data_file.devices.all %}
+            {{ i }}
+            {% endfor %}
+          </td>
+        </tr>
+        <tr>
           <td><b>Parsed columns:</b></td>
           <td>{{ data_file.ts_headers }} </td>
         </tr>
