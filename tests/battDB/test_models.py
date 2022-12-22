@@ -206,6 +206,7 @@ class TestExperimentDataFile(TestCase):
         self.assertTrue(hasattr(self.model, "protocol"))
         self.assertTrue(hasattr(self.model, "binary_file"))
         self.assertTrue(hasattr(self.model, "settings_file"))
+        self.assertTrue(hasattr(self.model, "time_recorded"))
 
     def test_num_cycles(self):
         self.assertEqual(self.model.num_cycles(), 0)
@@ -272,7 +273,6 @@ class TestExperimentDevice(TestCase):
         self.assertTrue(hasattr(self.model, "batch"))
         self.assertTrue(hasattr(self.model, "batch_sequence"))
         self.assertTrue(hasattr(self.model, "device_position"))
-        self.assertTrue(hasattr(self.model, "data_file"))
 
     @skip("Wait until this is implemented properly before adding tests.")
     def test_get_serial_no(self):

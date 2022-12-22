@@ -1,3 +1,7 @@
+import operator
+from functools import reduce
+
+from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (
     HTML,
@@ -10,12 +14,14 @@ from crispy_forms.layout import (
     Submit,
 )
 from django import forms
+from django.db.models import Q
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.utils.safestring import mark_safe
 
 from battDB.models import (
     Batch,
+    Device,
     DeviceComponent,
     DeviceParameter,
     DeviceSpecification,
@@ -320,6 +326,12 @@ class NewExperimentDataFileForm(DataCreateForm):
     Add a new experiment data file.
     """
 
+    devices = forms.ModelMultipleChoiceField(
+        queryset=Device.objects.get_queryset(),
+    )
+
+    time_recorded = forms.DateTimeField(widget=DateTimePickerInput(), required=False)
+
     class Meta:
         model = ExperimentDataFile
         fields = [
@@ -328,6 +340,8 @@ class NewExperimentDataFileForm(DataCreateForm):
             "notes",
             "settings_file",
             "binary_file",
+            "devices",
+            "time_recorded",
         ]
         help_texts = {
             "name": mark_safe("If left blank, the file name will be used."),
@@ -340,9 +354,39 @@ class NewExperimentDataFileForm(DataCreateForm):
 
     def __init__(self, *args, **kwargs):
         mode = "Update" if "instance" in kwargs.keys() else "New"
+        self.experiment = kwargs.pop("experiment", None)
         super(NewExperimentDataFileForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.attrs = {"enctype": "multipart/form-data"}
+
+        # Get queryset of devices in the associated experiment
+        if self.experiment:
+            if self.experiment.devices.count() > 0:
+                batch_ids = [dev.batch_id for dev in self.experiment.devices.all()]
+                batch_seqs = [
+                    dev.batch_sequence for dev in self.experiment.devices.all()
+                ]
+                # Each device needs to have the right batch_id, batch_seq combo
+                query = reduce(
+                    operator.or_,
+                    (
+                        Q(batch_id=bid, seq_num=seq)
+                        for bid, seq in zip(batch_ids, batch_seqs)
+                    ),
+                )
+                self.fields["devices"].queryset = Device.objects.filter(query)
+            else:
+                self.fields["devices"].queryset = Device.objects.none()
+                self.fields["devices"].help_text = mark_safe(
+                    """
+                    <div class="alert alert-danger" role="alert">
+                    No devices have been added to this experiment yet!
+                    You must associate devices with the experiemnt before you can
+                    add experimental data. Go back and edit the experiment to add 
+                    devices from an existing batch.
+                    </div>
+                    """
+                )
 
         if mode == "New":
             fieldset = Fieldset(
@@ -388,6 +432,8 @@ class NewExperimentDataFileForm(DataCreateForm):
                 Div(HTML(f"<h1> {mode} experiment data </h1>")),
                 Column("name", css_class="col-6"),
                 Column("machine", css_class="col-6"),
+                Column("devices", css_class="col-6"),
+                Column("time_recorded", css_class="col-6"),
                 fieldset,
                 Column("settings_file", css_class="col-6"),
                 Column("binary_file", css_class="col-6"),
