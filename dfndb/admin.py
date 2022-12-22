@@ -18,7 +18,7 @@ class DataParameterInline(admin.TabularInline):
 
 
 class ComponentAdmin(BaseAdmin):
-    list_display = BaseAdmin.list_display + ["type", "polymer"]
+    list_display = BaseAdmin.list_display + ["type"]
     list_filter = BaseAdmin.list_filter + ["type"]
     inlines = (ComponentCompositionInline,)
 

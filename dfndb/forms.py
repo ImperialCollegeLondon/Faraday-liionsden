@@ -66,7 +66,7 @@ class NewComponentForm(DataCreateForm):
 
     class Meta:
         model = Component
-        fields = ["name", "type", "polymer", "notes"]
+        fields = ["name", "type", "notes"]
 
     def __init__(self, *args, **kwargs):
         super(NewComponentForm, self).__init__(*args, **kwargs)
@@ -76,7 +76,6 @@ class NewComponentForm(DataCreateForm):
                 Div(HTML("<h1> Component </h1>")),
                 Column("name", css_class="col-4"),
                 Column("type", css_class="col-4"),
-                Column("polymer", css_class="col-4"),
                 Fieldset(
                     "Composition",
                     Div(

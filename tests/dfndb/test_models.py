@@ -48,7 +48,7 @@ class TestComponent(TestCase):
         )
         comp2 = baker.make_recipe("tests.dfndb.compound", name="Sulphur", formula="S")
         self.model = baker.make_recipe(
-            "tests.dfndb.component", name="Contaminant", type=1, polymer=0
+            "tests.dfndb.component", name="Contaminant", type=1
         )
         baker.make_recipe(
             "tests.dfndb.composition_part",
@@ -72,7 +72,6 @@ class TestComponent(TestCase):
         self.assertEqual(self.model.composition.all().count(), 2)
         self.assertEqual(self.model.composition.get(name=name), cmp)
         self.assertEqual(self.model.type, 1)
-        self.assertEqual(self.model.polymer, 0)
 
     def test_str(self):
         self.assertEqual(self.model.__str__(), "Contaminant")
