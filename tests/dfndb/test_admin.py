@@ -46,7 +46,7 @@ class TestComponentAdmin(TestCase):
         ma = ComponentAdmin(Component, self.site)
         self.assertEqual(ma.model, Component)
         self.assertEqual(
-            ma.get_list_display(request), BaseAdmin.list_display + ["type", "polymer"]
+            ma.get_list_display(request), BaseAdmin.list_display + ["type"]
         )
         self.assertEqual(ma.get_list_filter(request), BaseAdmin.list_filter + ["type"])
         self.assertTrue(site.is_registered(Component))
