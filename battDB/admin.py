@@ -1,9 +1,12 @@
 import mptt
 from django.contrib import admin
+from django.contrib.admin.widgets import AdminFileWidget
+from django.db.models import FileField
 from django.utils.safestring import mark_safe
 
 import common
 from common.admin import BaseAdmin
+from management.custom_azure import generate_sas_token, get_blob_url
 
 from .models import (
     Batch,
@@ -155,7 +158,32 @@ class DeviceDataInline(common.admin.TabularInline):
     extra = 0
 
 
+class AdminMediaWidget(AdminFileWidget):
+    """
+    Override the default AdminFileWidget to add a download link that uses a SAS token.
+    """
+
+    def render(self, name, value, attrs=None, renderer=None):
+        output = []
+        if value and getattr(value, "url", None):
+            blob_name = value.name
+            blob_url = get_blob_url(value)
+            sas_token = generate_sas_token(blob_name)
+            output.append(f"<a href={blob_url}?{sas_token}>Download File</a>")
+
+        # Put the usual output at the end
+        output.append(super(AdminFileWidget, self).render(name, value, attrs))
+        # Remove the current url from the output that is being replaced
+        if "Currently" in output[-1]:
+            output[-1] = "<br>" + output[-1].split("<br>")[-1]
+
+        return mark_safe("".join(output))
+
+
 class DataFileInline(admin.StackedInline):
+    formfield_overrides = {
+        FileField: {"widget": AdminMediaWidget},
+    }
     readonly_fields = ["size", "local_date", "exists", "hash"]
     max_num = 1
     model = UploadedFile
@@ -203,6 +231,10 @@ class DataAdmin(BaseAdmin):
         2 additional queries are fired.
         This should be done with a JOIN instead.
     """
+
+    formfield_overrides = {
+        FileField: {"widget": AdminMediaWidget},
+    }
 
     inlines = [
         DataFileInline,
@@ -257,11 +289,9 @@ class DataAdmin(BaseAdmin):
 
     def get_file_link(self, obj):
         if hasattr(obj, "raw_data_file") and obj.raw_data_file is not None:
+            size = obj.raw_data_file.size()
             return mark_safe(
-                """
-            <button type="button"> <a href="%s">\u2193%s</a> </button>
-            """
-                % (obj.raw_data_file.file.url, obj.raw_data_file.size())
+                f'<button type="button"> <a href={reverse("battDB:Download File", kwargs={"pk": obj.id})}>{size}</a> </button>'
             )
         else:
             return "N/A"
