@@ -153,6 +153,7 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
     serialNo = models.CharField(
         max_length=60,
         blank=True,
+        unique=True,
         help_text="Batch number or some other unique identifier",
     )
     batch_size = models.PositiveSmallIntegerField(default=1)
