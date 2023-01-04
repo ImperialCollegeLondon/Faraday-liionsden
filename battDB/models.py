@@ -390,7 +390,6 @@ class Experiment(cm.BaseModel):
     )
 
     THERMAL_CHOICES = (
-        ("none", "None"),
         ("chamber", "Thermal chamber"),
         ("base", "Base cooled"),
         ("surface", "Surface cooled"),
@@ -445,7 +444,8 @@ class Experiment(cm.BaseModel):
         verbose_name="Thermal management",
         max_length=50,
         choices=THERMAL_CHOICES,
-        default="none",
+        null=True,
+        blank=True,
         help_text="Thermal management technique used in this experiment. "
         " If 'other', technique should be specified in the notes section.",
     )
