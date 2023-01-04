@@ -448,7 +448,7 @@ class Experiment(cm.BaseModel):
         null=True,
         blank=True,
         help_text="Thermal management technique used in this experiment. "
-        " If 'other', technique should be specified in the notes section.",
+        " If 'other', technique should be specified in the experiment summary.",
     )
 
     external_link = models.URLField(
