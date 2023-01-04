@@ -54,6 +54,7 @@ batch = Recipe(
     specification=foreign_key(device_specification),
     manufacturer=foreign_key(org),
     user_owner=foreign_key(user),
+    serialNo=seq("abc123"),  # Ensure uniqueness
 )
 
 device = Recipe(Device, batch=foreign_key(batch))

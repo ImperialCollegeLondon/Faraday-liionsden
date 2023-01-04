@@ -193,7 +193,7 @@ class CreateBatchTest(TestCase):
         group = Group.objects.get(name="Contributor")
         group.user_set.add(self.user)
 
-        self.institution = baker.make_recipe("tests.common.org")
+        self.institution = baker.make_recipe("tests.common.org", is_mfg_cells=True)
         self.specification = baker.make_recipe(
             "tests.battDB.device_specification", abstract=False
         )
@@ -328,7 +328,7 @@ class CreateExperimentTest(TestCase):
             "name": "Experiment 1",
             "date": datetime.now().date(),
             "exp_type": "constant",
-            "thermal": "none",
+            "thermal": "no",
             "summary": "Not long enough",
         }
 
