@@ -31,6 +31,9 @@ In future, this will also be posible via the API.
 
 If you want to run a local version of Liionsden, we recommend using [Docker](https://www.docker.com/). A `docker-compose.yml` is provided to include all the required environment variables and containers.
 To start the app, run `docker compose up --build`.
+
+Dummy data can be loaded by running `manage.py loaddata dummy_data/dummy_data.json` from inside the web application container.
+
 Full instructions to follow once the platform is in production.
 
 ## Development notes
