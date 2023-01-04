@@ -395,6 +395,7 @@ class Experiment(cm.BaseModel):
         ("surface", "Surface cooled"),
         ("tab", "Tab cooled"),
         ("other", "Other"),
+        ("no", "No thermal management"),
     )
 
     name = models.CharField(
