@@ -633,7 +633,7 @@ class ExperimentDataFile(cm.BaseModel):
             except UploadedFile.DoesNotExist:
                 self.name = "Unnamed data set"
 
-        if self.file_exists() and self.raw_data_file.parse:
+        if self.file_exists() and self.raw_data_file.parse and not self.is_parsed():
             cols = [
                 c.col_name
                 for c in self.raw_data_file.use_parser.columns.all().order_by("order")
