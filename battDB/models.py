@@ -148,7 +148,11 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
         help_text="Type of device in this batch",
     )
     manufacturer = models.ForeignKey(
-        cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True
+        cm.Org,
+        default=1,
+        on_delete=models.SET_DEFAULT,
+        null=True,
+        limit_choices_to={"is_mfg_cells": True},
     )
     serialNo = models.CharField(
         max_length=60,

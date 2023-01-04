@@ -1195,7 +1195,7 @@
     ],
     "is_research": true,
     "is_publisher": false,
-    "is_mfg_cells": false,
+    "is_mfg_cells": true,
     "is_mfg_equip": false,
     "website": null
   }
