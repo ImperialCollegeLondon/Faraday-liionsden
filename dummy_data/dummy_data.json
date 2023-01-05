@@ -175,7 +175,7 @@
     "slug": "admin-test-experiment-2023-01-04",
     "name": "Test Experiment",
     "date": "2023-01-04",
-    "config": null,
+    "config": 1,
     "temperature": null,
     "c_rate": null,
     "exp_type": "constant",
