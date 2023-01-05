@@ -315,6 +315,9 @@ class CreateExperimentTest(TestCase):
         self.user.save()
         group = Group.objects.get(name="Contributor")
         group.user_set.add(self.user)
+        self.device_config = baker.make_recipe(
+            "tests.battDB.device_config", name="test device config", config_type="expmt"
+        )
 
     def test_create_update_delete_experiment(self):
         login_response = self.client.post(
@@ -330,6 +333,7 @@ class CreateExperimentTest(TestCase):
             "exp_type": "constant",
             "thermal": "no",
             "summary": "Not long enough",
+            "config": self.device_config.id,
         }
 
         # Invalid Form (short summary)
@@ -348,8 +352,10 @@ class CreateExperimentTest(TestCase):
         self.assertEqual(experiment.user_owner.username, "test_contributor")
         self.assertEqual(experiment.user_owner.institution, self.user.institution)
         self.assertEqual(experiment.status, "private")
+        self.assertEqual(getattr(experiment, "config").id, form_fields["config"])
         for key, val in form_fields.items():
-            self.assertEqual(getattr(experiment, key), val)
+            if key != "config":
+                self.assertEqual(getattr(experiment, key), val)
 
         # Create new experiment with same name - should fail
         response = self.client.post(reverse("battDB:New Experiment"), form_fields)
