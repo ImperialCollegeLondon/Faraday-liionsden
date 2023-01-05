@@ -41,4 +41,6 @@ def populate_devices(apps, schema_editor):
         user_owner=user,
         lft=1,
         rght=2,
+        tree_id=1,
+        level=0,
     )
