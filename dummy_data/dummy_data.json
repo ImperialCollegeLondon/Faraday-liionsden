@@ -1,7 +1,7 @@
 [
 {
   "model": "battDB.devicespecification",
-  "pk": 1,
+  "pk": 3,
   "fields": {
     "status": "private",
     "user_owner": [
