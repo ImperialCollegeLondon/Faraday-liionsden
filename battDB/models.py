@@ -395,12 +395,12 @@ class Experiment(cm.BaseModel):
     )
 
     THERMAL_CHOICES = (
+        ("no", "No thermal management"),
         ("chamber", "Thermal chamber"),
         ("base", "Base cooled"),
         ("surface", "Surface cooled"),
         ("tab", "Tab cooled"),
         ("other", "Other"),
-        ("no", "No thermal management"),
     )
 
     name = models.CharField(
@@ -449,8 +449,7 @@ class Experiment(cm.BaseModel):
         verbose_name="Thermal management",
         max_length=50,
         choices=THERMAL_CHOICES,
-        null=True,
-        blank=True,
+        default="no",
         help_text="Thermal management technique used in this experiment. "
         " If 'other', technique should be specified in the experiment summary.",
     )
