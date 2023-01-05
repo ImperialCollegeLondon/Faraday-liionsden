@@ -442,7 +442,7 @@ class Experiment(cm.BaseModel):
         choices=TYPE_CHOICES,
         default="constant",
         help_text="Type of experiment carried out. If 'other', "
-        "experiment type should be specified in the notes section.",
+        "experiment type should be specified in the experiment summary.",
     )
 
     thermal = models.CharField(
