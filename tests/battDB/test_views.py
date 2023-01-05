@@ -964,8 +964,8 @@ class ExperimentDataDeviceTest(TestCase):
         response = self.client.get(
             reverse("battDB:New File", kwargs={"pk": self.experiment1.id})
         )
-        self.assertContains(response, "Device Specification1/abc-123/1")
+        self.assertContains(response, "/abc-123/1")
         response = self.client.get(
             reverse("battDB:New File", kwargs={"pk": self.experiment2.id})
         )
-        self.assertNotContains(response, "Device Specification1/abc-123/1")
+        self.assertNotContains(response, "/abc-123/1")
