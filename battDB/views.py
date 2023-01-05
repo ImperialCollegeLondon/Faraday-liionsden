@@ -190,6 +190,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
                     self.object.delete()
                     return render(request, self.template_name, context)
                 # Everything was fine - save and view experiment details page
+                form.instance.save()
                 messages.success(request, self.success_message)
                 # Redirect to experiment detail view or stay on form if "add another"
                 if "another" in request.POST:
