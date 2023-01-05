@@ -651,11 +651,11 @@ class ExperimentDataFile(cm.BaseModel):
             self.ts_headers = self.parsed_columns()
             self.ts_data = parsed_file["data"]
 
-            # This needs to be reviewed to avoid a recursion loop
-            self.save()
+    def save(self):
+        super(ExperimentDataFile, self).save()
 
-            if self.is_parsed():
-                self.create_ranges()
+        if self.is_parsed():
+            self.create_ranges()
 
     class Meta:
         verbose_name = "Data File"
