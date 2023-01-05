@@ -414,9 +414,8 @@ class Experiment(cm.BaseModel):
 
     config = models.ForeignKey(
         DeviceConfig,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
+        default=1,
         related_name="used_in",
         limit_choices_to={"config_type": "expmt"},
         help_text="All devices in the same experiment must be of the same "
