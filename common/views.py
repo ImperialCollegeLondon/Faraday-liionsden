@@ -88,6 +88,9 @@ class NewDataViewInline(FormView):
                 if formset.is_valid():
                     formset.instance = self.object
                     formset.save()
+                # TODO: Work out why this is breaking the tests so spectacularly
+                # with unexpected EOF on client connection with an open transaction
+                # (and same for update below)
                 else:
                     messages.error(request, self.failure_message)
                     return render(request, self.template_name, context)
