@@ -96,7 +96,7 @@ class DeviceParameter(cm.HasName):
         on_delete=models.CASCADE,
         limit_choices_to={"parameter_type": "device"},
     )
-    value = models.JSONField(blank=True, null=True)
+    value = models.JSONField(default=float)
     inherit_to_children = models.BooleanField(default=False)
 
     @property
