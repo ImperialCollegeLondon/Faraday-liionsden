@@ -1,7 +1,7 @@
 [
 {
   "model": "battDB.devicespecification",
-  "pk": 1,
+  "pk": 3,
   "fields": {
     "status": "private",
     "user_owner": [
@@ -175,7 +175,7 @@
     "slug": "admin-test-experiment-2023-01-04",
     "name": "Test Experiment",
     "date": "2023-01-04",
-    "config": null,
+    "config": 1,
     "temperature": null,
     "c_rate": null,
     "exp_type": "constant",
@@ -1195,7 +1195,7 @@
     ],
     "is_research": true,
     "is_publisher": false,
-    "is_mfg_cells": false,
+    "is_mfg_cells": true,
     "is_mfg_equip": false,
     "website": null
   }

@@ -40,7 +40,7 @@ class CreateDeviceSpecificationTest(TestCase):
         )
         self.assertContains(
             response,
-            '<input type="text" name="deviceparameter_set-0-value" value="null" class="textinput textInput form-control" id="id_deviceparameter_set-0-value">',
+            '<input type="text" name="deviceparameter_set-0-value" value="0.0" class="textinput textInput form-control" id="id_deviceparameter_set-0-value">',
         )
         self.assertContains(
             response,
@@ -193,7 +193,7 @@ class CreateBatchTest(TestCase):
         group = Group.objects.get(name="Contributor")
         group.user_set.add(self.user)
 
-        self.institution = baker.make_recipe("tests.common.org")
+        self.institution = baker.make_recipe("tests.common.org", is_mfg_cells=True)
         self.specification = baker.make_recipe(
             "tests.battDB.device_specification", abstract=False
         )
@@ -315,6 +315,9 @@ class CreateExperimentTest(TestCase):
         self.user.save()
         group = Group.objects.get(name="Contributor")
         group.user_set.add(self.user)
+        self.device_config = baker.make_recipe(
+            "tests.battDB.device_config", name="test device config", config_type="expmt"
+        )
 
     def test_create_update_delete_experiment(self):
         login_response = self.client.post(
@@ -328,8 +331,9 @@ class CreateExperimentTest(TestCase):
             "name": "Experiment 1",
             "date": datetime.now().date(),
             "exp_type": "constant",
-            "thermal": "none",
+            "thermal": "no",
             "summary": "Not long enough",
+            "config": self.device_config.id,
         }
 
         # Invalid Form (short summary)
@@ -348,8 +352,10 @@ class CreateExperimentTest(TestCase):
         self.assertEqual(experiment.user_owner.username, "test_contributor")
         self.assertEqual(experiment.user_owner.institution, self.user.institution)
         self.assertEqual(experiment.status, "private")
+        self.assertEqual(getattr(experiment, "config").id, form_fields["config"])
         for key, val in form_fields.items():
-            self.assertEqual(getattr(experiment, key), val)
+            if key != "config":
+                self.assertEqual(getattr(experiment, key), val)
 
         # Create new experiment with same name - should fail
         response = self.client.post(reverse("battDB:New Experiment"), form_fields)
@@ -964,8 +970,8 @@ class ExperimentDataDeviceTest(TestCase):
         response = self.client.get(
             reverse("battDB:New File", kwargs={"pk": self.experiment1.id})
         )
-        self.assertContains(response, "Device Specification1/abc-123/1")
+        self.assertContains(response, "/abc-123/1")
         response = self.client.get(
             reverse("battDB:New File", kwargs={"pk": self.experiment2.id})
         )
-        self.assertNotContains(response, "Device Specification1/abc-123/1")
+        self.assertNotContains(response, "/abc-123/1")

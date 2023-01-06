@@ -96,7 +96,7 @@ class DeviceParameter(cm.HasName):
         on_delete=models.CASCADE,
         limit_choices_to={"parameter_type": "device"},
     )
-    value = models.JSONField(blank=True, null=True)
+    value = models.JSONField(default=float)
     inherit_to_children = models.BooleanField(default=False)
 
     @property
@@ -148,11 +148,16 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
         help_text="Type of device in this batch",
     )
     manufacturer = models.ForeignKey(
-        cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True
+        cm.Org,
+        default=1,
+        on_delete=models.SET_DEFAULT,
+        null=True,
+        limit_choices_to={"is_mfg_cells": True},
     )
     serialNo = models.CharField(
         max_length=60,
         blank=True,
+        unique=True,
         help_text="Batch number or some other unique identifier",
     )
     batch_size = models.PositiveSmallIntegerField(default=1)
@@ -390,7 +395,7 @@ class Experiment(cm.BaseModel):
     )
 
     THERMAL_CHOICES = (
-        ("none", "None"),
+        ("no", "No thermal management"),
         ("chamber", "Thermal chamber"),
         ("base", "Base cooled"),
         ("surface", "Surface cooled"),
@@ -409,9 +414,8 @@ class Experiment(cm.BaseModel):
 
     config = models.ForeignKey(
         DeviceConfig,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
+        default=1,
         related_name="used_in",
         limit_choices_to={"config_type": "expmt"},
         help_text="All devices in the same experiment must be of the same "
@@ -438,16 +442,16 @@ class Experiment(cm.BaseModel):
         choices=TYPE_CHOICES,
         default="constant",
         help_text="Type of experiment carried out. If 'other', "
-        "experiment type should be specified in the notes section.",
+        "experiment type should be specified in the experiment summary.",
     )
 
     thermal = models.CharField(
         verbose_name="Thermal management",
         max_length=50,
         choices=THERMAL_CHOICES,
-        default="none",
+        default="no",
         help_text="Thermal management technique used in this experiment. "
-        " If 'other', technique should be specified in the notes section.",
+        " If 'other', technique should be specified in the experiment summary.",
     )
 
     external_link = models.URLField(
