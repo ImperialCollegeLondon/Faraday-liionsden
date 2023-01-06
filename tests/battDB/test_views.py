@@ -40,7 +40,7 @@ class CreateDeviceSpecificationTest(TestCase):
         )
         self.assertContains(
             response,
-            '<input type="text" name="deviceparameter_set-0-value" value="null" class="textinput textInput form-control" id="id_deviceparameter_set-0-value">',
+            '<input type="text" name="deviceparameter_set-0-value" value="0.0" class="textinput textInput form-control" id="id_deviceparameter_set-0-value">',
         )
         self.assertContains(
             response,
