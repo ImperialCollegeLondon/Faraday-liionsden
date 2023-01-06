@@ -171,6 +171,9 @@ class UpdateDataInlineView(UpdateView):
                 if formset.is_valid():
                     formset.instance = self.object
                     formset.save()
+                else:
+                    messages.error(request, self.failure_message)
+                    return render(request, self.template_name, context)
             messages.success(request, self.success_message)
             # Redirect to object detail view or stay on form if "add another"
             if "another" in request.POST:
