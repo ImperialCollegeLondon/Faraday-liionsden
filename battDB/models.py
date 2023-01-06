@@ -716,10 +716,13 @@ class ExperimentDevice(models.Model):
         # raise NotImplementedError
 
     def clean(self):
-        if self.batch is not None and self.batch_sequence > self.batch.batch_size:
-            raise ValidationError("Batch sequence ID cannot exceed batch size!")
-        elif self.batch is not None:
-            Device.objects.get_or_create(batch=self.batch, seq_num=self.batch_sequence)
+        if hasattr(self, "batch"):
+            if self.batch is not None and self.batch_sequence > self.batch.batch_size:
+                raise ValidationError("Batch sequence ID cannot exceed batch size!")
+            elif self.batch is not None:
+                Device.objects.get_or_create(
+                    batch=self.batch, seq_num=self.batch_sequence
+                )
 
     @property
     def user_owner(self):
