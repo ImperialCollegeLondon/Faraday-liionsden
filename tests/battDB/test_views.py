@@ -68,6 +68,10 @@ class CreateDeviceSpecificationTest(TestCase):
                 "abstract": False,
                 "device_type": abstract_device.id,
                 "notes": "Some notes",
+                "deviceparameter_set-INITIAL_FORMS": 0,
+                "deviceparameter_set-TOTAL_FORMS": 0,
+                "devicecomponent_set-INITIAL_FORMS": 0,
+                "devicecomponent_set-TOTAL_FORMS": 0,
             },
         )
         device = bdb.DeviceSpecification.objects.get(name="Actual device")
@@ -86,6 +90,10 @@ class CreateDeviceSpecificationTest(TestCase):
                 "make_public": True,
                 "device_type": abstract_device.id,
                 "notes": "Some other notes",
+                "deviceparameter_set-INITIAL_FORMS": 0,
+                "deviceparameter_set-TOTAL_FORMS": 0,
+                "devicecomponent_set-INITIAL_FORMS": 0,
+                "devicecomponent_set-TOTAL_FORMS": 0,
             },
         )
         self.assertEqual(update_response.status_code, 302)
