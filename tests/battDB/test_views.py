@@ -342,6 +342,8 @@ class CreateExperimentTest(TestCase):
             "thermal": "no",
             "summary": "Not long enough",
             "config": self.device_config.id,
+            "devices-TOTAL_FORMS": 0,
+            "devices-INITIAL_FORMS": 0,
         }
 
         # Invalid Form (short summary)
