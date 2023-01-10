@@ -1,22 +1,21 @@
-
 {% load crispy_forms_tags %}
 <table width="100%">
-{{ formset.management_form|crispy }}
+    {{ formset.management_form|crispy }}
 
     {% for form in formset.forms %}
-            <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ formset.prefix }}">
-                {% for field in form.visible_fields %}
-                <td class="align-baseline">
-                    {# Include the hidden fields in the form #}
-                    {% if forloop.first %}
-                        {% for hidden in form.hidden_fields %}
-                            {{ hidden }}
-                        {% endfor %}
-                    {% endif %}
-                    {{ field|as_crispy_field }}
-                </td>
-                {% endfor %}
-            </tr>
+    <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ formset.prefix }}">
+        {% for field in form.visible_fields %}
+        <td class="align-baseline">
+            {# Include the hidden fields in the form #}
+            {% if forloop.first %}
+            {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+            {% endfor %}
+            {% endif %}
+            {{ field|as_crispy_field }}
+        </td>
+        {% endfor %}
+    </tr>
     {% endfor %}
 
 </table>
@@ -33,6 +32,6 @@
 
 <style type="text/css">
     td {
-      padding: 0 15px;
+        padding: 0 15px;
     }
-  </style>
+</style>

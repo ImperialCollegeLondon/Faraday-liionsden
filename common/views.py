@@ -83,17 +83,29 @@ class NewDataViewInline(FormView):
                     obj.status = "private"
                 self.object = form.save()
             # Save individual parameters from inline forms
+            formsets_valid = True
             for key in self.inline_formsets.keys():
                 formset = context[key]
                 if formset.is_valid():
                     formset.instance = self.object
                     formset.save()
-            messages.success(request, self.success_message)
-            # Redirect to object detail view or stay on form if "add another"
-            if "another" in request.POST:
-                return redirect(request.path_info)
-            else:
-                return redirect(self.success_url) if self.success_url else redirect(obj)
+                else:
+                    self.object.delete()
+                    formsets_valid = False
+                    break
+            # If all inline forms are valid, save instance and redirect
+            if formsets_valid:
+                messages.success(request, self.success_message)
+                # Redirect to object detail view or stay on form if "add another"
+                if "another" in request.POST:
+                    return redirect(request.path_info)
+                else:
+                    return (
+                        redirect(self.success_url)
+                        if self.success_url
+                        else redirect(obj)
+                    )
+        # If form or a formset is not valid, render form with errors
         messages.error(request, self.failure_message)
         return render(request, self.template_name, context)
 
@@ -166,21 +178,28 @@ class UpdateDataInlineView(UpdateView):
                     self.object.status = "private"
                 self.object.save()
             # Save individual parameters from inline form
+            formsets_valid = True
             for key in self.inline_formsets.keys():
                 formset = context[key]
                 if formset.is_valid():
                     formset.instance = self.object
                     formset.save()
-            messages.success(request, self.success_message)
-            # Redirect to object detail view or stay on form if "add another"
-            if "another" in request.POST:
-                return redirect(request.path_info)
-            else:
-                return (
-                    redirect(self.success_url)
-                    if self.success_url
-                    else redirect(self.object)
-                )
+                else:
+                    formsets_valid = False
+                    break
+            # If all inline forms are valid, save instance and redirect
+            if formsets_valid:
+                messages.success(request, self.success_message)
+                # Redirect to object detail view or stay on form if "add another"
+                if "another" in request.POST:
+                    return redirect(request.path_info)
+                else:
+                    return (
+                        redirect(self.success_url)
+                        if self.success_url
+                        else redirect(self.object)
+                    )
+        # If form or a formset is not valid, render form with errors
         messages.error(request, self.failure_message)
         return render(request, self.template_name, context)
 

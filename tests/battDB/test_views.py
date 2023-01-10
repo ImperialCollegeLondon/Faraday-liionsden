@@ -68,6 +68,10 @@ class CreateDeviceSpecificationTest(TestCase):
                 "abstract": False,
                 "device_type": abstract_device.id,
                 "notes": "Some notes",
+                "deviceparameter_set-INITIAL_FORMS": 0,
+                "deviceparameter_set-TOTAL_FORMS": 0,
+                "devicecomponent_set-INITIAL_FORMS": 0,
+                "devicecomponent_set-TOTAL_FORMS": 0,
             },
         )
         device = bdb.DeviceSpecification.objects.get(name="Actual device")
@@ -86,6 +90,10 @@ class CreateDeviceSpecificationTest(TestCase):
                 "make_public": True,
                 "device_type": abstract_device.id,
                 "notes": "Some other notes",
+                "deviceparameter_set-INITIAL_FORMS": 0,
+                "deviceparameter_set-TOTAL_FORMS": 0,
+                "devicecomponent_set-INITIAL_FORMS": 0,
+                "devicecomponent_set-TOTAL_FORMS": 0,
             },
         )
         self.assertEqual(update_response.status_code, 302)
@@ -334,6 +342,8 @@ class CreateExperimentTest(TestCase):
             "thermal": "no",
             "summary": "Not long enough",
             "config": self.device_config.id,
+            "devices-TOTAL_FORMS": 0,
+            "devices-INITIAL_FORMS": 0,
         }
 
         # Invalid Form (short summary)
@@ -354,7 +364,7 @@ class CreateExperimentTest(TestCase):
         self.assertEqual(experiment.status, "private")
         self.assertEqual(getattr(experiment, "config").id, form_fields["config"])
         for key, val in form_fields.items():
-            if key != "config":
+            if key not in ["config", "devices-TOTAL_FORMS", "devices-INITIAL_FORMS"]:
                 self.assertEqual(getattr(experiment, key), val)
 
         # Create new experiment with same name - should fail
