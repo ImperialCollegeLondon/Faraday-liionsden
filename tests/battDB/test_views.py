@@ -364,7 +364,7 @@ class CreateExperimentTest(TestCase):
         self.assertEqual(experiment.status, "private")
         self.assertEqual(getattr(experiment, "config").id, form_fields["config"])
         for key, val in form_fields.items():
-            if key != "config":
+            if key not in ["config", "devices-TOTAL_FORMS", "devices-INITIAL_FORMS"]:
                 self.assertEqual(getattr(experiment, key), val)
 
         # Create new experiment with same name - should fail
