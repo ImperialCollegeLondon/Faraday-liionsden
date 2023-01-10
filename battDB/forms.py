@@ -193,16 +193,20 @@ class NewExperimentForm(DataCreateForm):
                 Column("thermal", css_class="col-3"),
                 Column("external_link", css_class="col-3"),
                 Field("summary"),
-                Fieldset(
-                    "Add devices",
-                    Div(
-                        HTML("Add the device(s) used in this experiment."),
-                        css_class="container pb-4",
-                    ),
-                    Formset("devices"),
-                    required=False,
-                ),
                 Field("notes"),
+                Div(
+                    Fieldset(
+                        "Devices",
+                        HTML(
+                            "Optionally specify the device(s) used in this experiment."
+                        ),
+                        Formset(
+                            "devices",
+                        ),
+                        required=False,
+                    ),
+                    css_class="card bg-light mb-3",
+                ),
                 HTML("<br>"),
                 Field("make_public"),
                 HTML("<br>"),
@@ -223,6 +227,12 @@ class ExperimentDeviceForm(ModelForm):
     class meta:
         model = ExperimentDevice
         exclude = ()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["batch"].initial = None
+        self.fields["batch_sequence"].initial = None
+        self.fields["device_position"].initial = None
 
 
 ExperimentDeviceFormSet = inlineformset_factory(
