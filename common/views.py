@@ -90,9 +90,6 @@ class NewDataViewInline(FormView):
                     formset.instance = self.object
                     formset.save()
                 else:
-                    print("XXXXXX")
-                    print(formset.errors)
-                    print(formset.non_form_errors())
                     self.object.delete()
                     formsets_valid = False
                     break
