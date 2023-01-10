@@ -75,18 +75,23 @@ class NewDeviceForm(DataCreateForm):
                 Column("spec_file", css_class="col-4"),
                 Column("parent", css_class="col-4"),
                 Column("config", css_class="col-4"),
-                HTML("<hr>"),
-                Fieldset(
-                    "Define parameters",
-                    Formset("parameters"),
-                ),
-                HTML("<hr>"),
-                Fieldset(
-                    "Add components",
-                    Formset("components"),
-                ),
-                HTML("<hr>"),
                 Field("notes"),
+                Div(
+                    Fieldset(
+                        "Parameters",
+                        HTML("Optionally specify the parameters of this device"),
+                        Formset("parameters"),
+                    ),
+                    css_class="card bg-light mb-3",
+                ),
+                Div(
+                    Fieldset(
+                        "Components",
+                        HTML("Optionally specify the components of this device"),
+                        Formset("components"),
+                    ),
+                    css_class="card bg-light mb-3",
+                ),
                 HTML("<br>"),
                 Field("make_public"),
                 HTML("<br>"),
@@ -198,7 +203,7 @@ class NewExperimentForm(DataCreateForm):
                     Fieldset(
                         "Devices",
                         HTML(
-                            "Optionally specify the device(s) used in this experiment."
+                            "Optionally specify the device(s) used in this experiment"
                         ),
                         Formset(
                             "devices",
