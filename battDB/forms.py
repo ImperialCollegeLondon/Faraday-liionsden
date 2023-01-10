@@ -233,12 +233,6 @@ class ExperimentDeviceForm(ModelForm):
         model = ExperimentDevice
         exclude = ()
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["batch"].initial = None
-        self.fields["batch_sequence"].initial = None
-        self.fields["device_position"].initial = None
-
 
 ExperimentDeviceFormSet = inlineformset_factory(
     Experiment,
