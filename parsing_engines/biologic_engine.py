@@ -7,7 +7,6 @@ import yaml
 from yaml.scanner import ScannerError
 
 from .battery_exceptions import UnsupportedFileTypeError
-from .mappings import COLUMN_NAME_MAPPING
 from .parsing_engines_base import ParsingEngineBase
 
 
@@ -33,7 +32,6 @@ class BiologicParsingEngine(ParsingEngineBase):
         "Ns changes": dict(symbol="Ns changes", unit=("Unitless", "1")),
         "cycle number": dict(symbol="Cyl", unit=("Unitless", "1")),
     }
-    column_name_mapping = COLUMN_NAME_MAPPING
 
     # Assumed to be this encoding, but it might be different...
     encoding = "iso-8859-1"
