@@ -649,6 +649,9 @@ class ExperimentDataFile(cm.BaseModel):
             self.attributes["parsed_metadata"] = parsed_file["metadata"]
             self.attributes["file_columns"] = parsed_file["file_columns"]
             self.attributes["parsed_columns"] = parsed_file["parsed_columns"]
+            self.attributes["parsed_header_columns"] = parsed_file[
+                "parsed_header_columns"
+            ]
             self.attributes["missing_columns"] = parsed_file["missing_columns"]
             self.attributes["total_rows"] = parsed_file["total_rows"]
             self.attributes["range_config"] = parsed_file["range_config"]
