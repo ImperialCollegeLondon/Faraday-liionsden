@@ -1,5 +1,5 @@
 """
-TODO
+TODO: Mappings can all be defined here! No need for separate files. 
 """
 
 COLUMN_NAME_MAPPING = {
