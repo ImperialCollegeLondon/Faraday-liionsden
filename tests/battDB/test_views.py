@@ -604,7 +604,7 @@ class DataUploadViewTest(TestCase):
         # Check file upload response
         file_path = os.path.join(
             settings.BASE_DIR,
-            "tests/parsing_engines/biologic_example.csv",
+            "tests/parsing_engines/example_files/biologic_example.csv",
         )
         with open(file_path) as input_file:
             post_response = self.client.post(
@@ -663,7 +663,7 @@ class DataUploadViewTest(TestCase):
         # Check file upload response
         file_path = os.path.join(
             settings.BASE_DIR,
-            "tests/parsing_engines/maccor_example_new.xlsx",
+            "tests/parsing_engines/example_files/maccor_example_new.xlsx",
         )
         with open(file_path, "rb") as input_file:
             post_response = self.client.post(
@@ -718,7 +718,7 @@ class DataUploadViewTest(TestCase):
         # Check file upload response
         file_path = os.path.join(
             settings.BASE_DIR,
-            "tests/parsing_engines/biologic_example.csv",
+            "tests/parsing_engines/example_files/biologic_example.csv",
         )
         with open(file_path) as input_file:
             post_response = self.client.post(
@@ -760,7 +760,7 @@ class DataUploadViewTest(TestCase):
         # Check file upload response
         file_path = os.path.join(
             settings.BASE_DIR,
-            "tests/parsing_engines/biologic_example.csv",
+            "tests/parsing_engines/example_files/biologic_example.csv",
         )
 
         binary_file_path = os.path.join(
@@ -819,7 +819,7 @@ class DataUploadViewTest(TestCase):
         # Check file upload response
         file_path = os.path.join(
             settings.BASE_DIR,
-            "tests/parsing_engines/biologic_example.csv",
+            "tests/parsing_engines/example_files/biologic_example.csv",
         )
 
         settings_file_path = os.path.join(
@@ -878,7 +878,7 @@ class DataUploadViewTest(TestCase):
         # Check file upload response
         file_path = os.path.join(
             settings.BASE_DIR,
-            "tests/parsing_engines/biologic_example.csv",
+            "tests/parsing_engines/example_files/biologic_example.csv",
         )
         with open(file_path) as input_file:
             post_response = self.client.post(
