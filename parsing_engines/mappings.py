@@ -12,6 +12,7 @@ COLUMN_NAME_MAPPING = {
     "I Range": "I Range",
     "control/V/mA": "control/V/mA",
     "Ecell/V": "Ecell/V",
+    "Ewe/V": "Ecell/V",
     "I/mA": "I/mA",
     "dq/mA.h": "dq/mA_h",
     "(Q-Qo)/mA_h": "(Q-Qo)/mA.h",

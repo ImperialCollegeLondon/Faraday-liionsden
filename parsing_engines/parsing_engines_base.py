@@ -46,11 +46,13 @@ class ParsingEngineBase(abc.ABC):
         skip_rows: int,
         data: pd.DataFrame,
         file_metadata: Dict[str, Any],
+        column_name_mapping: Optional[Dict[str, str]] = None,
     ):
         self.file_obj = file_obj
         self.skip_rows = skip_rows
         self.data = data
         self.file_metadata = file_metadata
+        self.column_name_mapping = column_name_mapping
 
         self._drop_unnamed_columns()
         self._create_rec_no()
@@ -110,30 +112,19 @@ class ParsingEngineBase(abc.ABC):
         return metadata
 
     def get_data_generator_for_columns(
-        self, columns: List, col_mapping: Optional[Dict] = None
+        self, columns: List
     ) -> Generator[list, None, None]:
         """Provides the data filtered by the requested columns and a column mapping.
 
         Args:
             columns (List): Columns of data to provide
-            col_mapping (Optional[Dict], optional): Dictionary to map the required
-                column names to the Maccor file column names. Defaults to None.
-
-        Raises:
-            KeyError if the required columns, after applying the mapping, do not exist
-                in the data.
 
         Returns:
             Generator[Dict, None, None]: A generator that produces each row of the data
                 as a list.
         """
-        col_mapping = (
-            col_mapping if col_mapping is not None else self.column_name_mapping
-        )
 
-        cols = [col_mapping.get(c, c) for c in columns] if col_mapping else columns
-
-        for row in self.data[cols].itertuples():
+        for row in self.data[columns].itertuples():
             yield list(row)[1:]
 
 
@@ -213,11 +204,40 @@ def mime_and_extension() -> List[Tuple[str, str]]:
     )
 
 
+def get_parsed_columns(file_columns, parser_columns, col_mapping):
+    """Get the columns that will be parsed from the file.
+    Uses col_mapping to determine the mapping between the file columns and the standard
+    columns if they are not already in the standard format. Returns a subset of
+    parser_columns that are either in the file_column list or for which there is a
+    mapping from a file_column value in col_mapping.
+
+    Args:
+        file_columns: List of column headings as in the file.
+        parser_columns: List of columns defined in the Parser that should be parsed.
+        col_mapping: Mapping of {"file column name": "standard column name"}.
+
+    Returns:
+        Tuple of lists of columns to parse and the corresponding header columns.
+    """
+    parsed_columns = []
+    header_columns = []
+    for col in parser_columns:
+        if col in file_columns:
+            parsed_columns.append(col)
+            header_columns.append(col)
+        else:
+            for file_col, parser_col in col_mapping.items():
+                if parser_col == col and file_col in file_columns:
+                    parsed_columns.append(col)
+                    header_columns.append(file_col)
+                    break
+    return (parsed_columns, header_columns)
+
+
 def parse_data_file(
     file_obj: TextIO,
     file_format: str,
     columns=("time/s", "Ecell/V", "I/mA"),
-    col_mapping: Optional[Dict[str, str]] = None,
 ) -> Dict:
     """Parse a file according to the chosen format. The file is first retrieved from
     blob storage and copied to a local temporary file. After parsing, the temporary
@@ -227,7 +247,7 @@ def parse_data_file(
         file_obj: The file to be parsed.
         file_format: String indicating the format of the file. Should match the name of
         one of the parsers.
-        columns: Columns that will be retrieved, if possible.
+        columns: Columns defined in the Parser that will be retrieved, if possible.
         col_mapping: Mapping of column names to match the standard 'columns' above.
 
     Raises:
@@ -248,12 +268,17 @@ def parse_data_file(
             message={"raw_data_file": "File parsing failed: " + str(e)}
         )
 
+    # Use the engine's column mapping here, to ensure all the relevant columns are added
+    # to parsed_columns.
+    col_mapping = engine.column_name_mapping
     file_columns = list(cols.keys())
-    parsed_columns = [c for c in columns if c in file_columns]
-    missing_columns = [c for c in columns if c not in file_columns]
+    parsed_columns, parsed_header_columns = get_parsed_columns(
+        file_columns, columns, col_mapping
+    )
+    missing_columns = [c for c in columns if c not in parsed_columns]
     total_rows = metadata.get("num_rows", 0)
     range_config = {"all": {"start": 1, "end": total_rows, "action": "all"}}
-    data = engine.get_data_generator_for_columns(parsed_columns, col_mapping)
+    data = engine.get_data_generator_for_columns(parsed_header_columns)
 
     return {
         "metadata": metadata,
