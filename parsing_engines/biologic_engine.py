@@ -7,7 +7,7 @@ import yaml
 from yaml.scanner import ScannerError
 
 from .battery_exceptions import UnsupportedFileTypeError
-from .mappings import COLUMN_NAME_MAPPING
+from .mappings import BIOLOGIC_COLUMN_MAPPING
 from .parsing_engines_base import ParsingEngineBase
 
 
@@ -44,7 +44,7 @@ class BiologicParsingEngine(ParsingEngineBase):
         Args:
             file_obj (TextIO): File to parse.
         """
-        column_name_mapping = COLUMN_NAME_MAPPING
+        column_name_mapping = BIOLOGIC_COLUMN_MAPPING
         skip_rows, file_type = get_header_size(file_obj, cls.encoding)
         # check validity of file
         if file_type in ("invalid", "settings"):
