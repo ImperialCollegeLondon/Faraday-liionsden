@@ -134,9 +134,9 @@ class TestParsingEngineBase(TestCase):
                 }
             ),
         )
-        column_name_mapping = {"Volt / V": "Voltage"}
         actual = ParsingEngineBase.get_data_generator_for_columns(
-            engine, columns=["Volt / V", "I / A"], col_mapping=column_name_mapping
+            engine,
+            columns=["Voltage", "I / A"],
         )
         for i, row in enumerate(actual):
             self.assertEqual(row, list(engine.data.loc[i, ["Voltage", "I / A"]].values))

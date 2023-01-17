@@ -284,6 +284,7 @@ def parse_data_file(
         "metadata": metadata,
         "file_columns": file_columns,
         "parsed_columns": parsed_columns,
+        "parsed_header_columns": parsed_header_columns,
         "missing_columns": missing_columns,
         "total_rows": total_rows,
         "range_config": range_config,
