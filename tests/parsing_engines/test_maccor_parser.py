@@ -52,7 +52,7 @@ class TestMaccorXLSParser(TestCase):
         mock_drop.assert_called_once()
         mock_create.assert_called_once()
         mock_size.assert_called_once_with(sheet, set(MP.mandatory_columns.keys()))
-        mock_data.assert_called_once_with(file_obj, skip_rows)
+        mock_data.assert_called_once_with(file_obj, skip_rows, ".xls")
         mock_head.assert_called_once_with(sheet, skip_rows, datemode)
         self.assertEqual(len(parser.data), 0)
         self.assertEqual(parser.name, "Maccor")
@@ -146,7 +146,7 @@ class TestMaccorFunctions(TestCase):
         skip_rows = get_header_size(sheet, MaccorParsingEngine.mandatory_columns)
 
         with open(self.file_path, "rb") as file_obj:
-            actual = load_maccor_data(file_obj, skip_rows)
+            actual = load_maccor_data(file_obj, skip_rows, ".xls")
             self.assertGreater(len(actual.columns), 1)
             self.assertGreater(len(actual), 30)
 
