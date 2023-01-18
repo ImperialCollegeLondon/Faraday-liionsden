@@ -12,7 +12,7 @@ class TestMaccorXLSParser(TestCase):
     @patch("parsing_engines.MaccorParsingEngine._create_rec_no")
     @patch("parsing_engines.maccor_engine.get_header_size")
     @patch("parsing_engines.maccor_engine.load_maccor_data")
-    @patch("parsing_engines.maccor_engine.get_file_header")
+    @patch("parsing_engines.maccor_engine.get_file_header_excel")
     @patch("parsing_engines.maccor_engine.factory_xlsx")
     @patch("parsing_engines.maccor_engine.factory_xls")
     def test_factory(
@@ -51,7 +51,9 @@ class TestMaccorXLSParser(TestCase):
         mock_xlsx.assert_not_called()
         mock_drop.assert_called_once()
         mock_create.assert_called_once()
-        mock_size.assert_called_once_with(sheet, set(MP.mandatory_columns.keys()))
+        mock_size.assert_called_once_with(
+            sheet, set(MP.mandatory_columns.keys()), ".xls"
+        )
         mock_data.assert_called_once_with(file_obj, skip_rows, ".xls")
         mock_head.assert_called_once_with(sheet, skip_rows, datemode)
         self.assertEqual(len(parser.data), 0)
@@ -121,7 +123,7 @@ class TestMaccorFunctions(TestCase):
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         sheet = workbook.sheet_by_index(0)
-        actual = get_header_size(sheet, MaccorParsingEngine.mandatory_columns)
+        actual = get_header_size(sheet, MaccorParsingEngine.mandatory_columns, ".xlsx")
 
         expected = 0
         for i, row in enumerate(sheet.get_rows()):
@@ -143,28 +145,32 @@ class TestMaccorFunctions(TestCase):
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         sheet = workbook.sheet_by_index(0)
-        skip_rows = get_header_size(sheet, MaccorParsingEngine.mandatory_columns)
+        skip_rows = get_header_size(
+            sheet, MaccorParsingEngine.mandatory_columns, ".xls"
+        )
 
         with open(self.file_path, "rb") as file_obj:
             actual = load_maccor_data(file_obj, skip_rows, ".xls")
             self.assertGreater(len(actual.columns), 1)
             self.assertGreater(len(actual), 30)
 
-    def test_get_file_header(self):
+    def test_get_file_header_excel(self):
         import xlrd
 
         from parsing_engines.maccor_engine import (
             MaccorParsingEngine,
-            get_file_header,
+            get_file_header_excel,
             get_header_size,
         )
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         sheet = workbook.sheet_by_index(0)
         datemode = workbook.datemode
-        skip_rows = get_header_size(sheet, MaccorParsingEngine.mandatory_columns)
+        skip_rows = get_header_size(
+            sheet, MaccorParsingEngine.mandatory_columns, ".xlsx"
+        )
 
-        header = get_file_header(sheet, skip_rows, datemode)
+        header = get_file_header_excel(sheet, skip_rows, datemode)
         self.assertGreater(len(header), 2)
 
     def test_clean_value(self):
@@ -179,10 +185,10 @@ class TestMaccorFunctions(TestCase):
 
         row = ["A", "B", "C", "D"]
         withnesses = [1, 2]
-        self.assertTrue(is_metadata_row(row, withnesses))
+        self.assertTrue(is_metadata_row(row, withnesses, ".xls"))
 
         withnesses = [1, "A"]
-        self.assertFalse(is_metadata_row(row, withnesses))
+        self.assertFalse(is_metadata_row(row, withnesses, ".xls"))
 
     def test_get_metadata_value(self):
         import xlrd
