@@ -76,7 +76,7 @@ class MaccorParsingEngine(ParsingEngineBase):
 
         skip_rows = get_header_size(sheet, set(cls.mandatory_columns.keys()), ext)
         data = load_maccor_data(file_obj, skip_rows, ext)
-        if datemode:
+        if ext in [".xls", ".xlsx"]:
             file_metadata = get_file_header_excel(sheet, skip_rows, datemode)
         else:
             file_metadata = get_file_header_csv(sheet, skip_rows)
