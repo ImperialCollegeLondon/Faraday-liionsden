@@ -6,7 +6,6 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from model_bakery import baker
 from override_storage import override_storage
-from override_storage.storage import LocMemStorage
 
 import battDB.models as bdb
 
@@ -557,10 +556,6 @@ class BatchViewTest(TestCase):
         )
 
 
-# The LocMemStorage of override_storage is too transient for the tests to work
-# here so we use @override settings and FileSystemStorage.
-
-
 class DataUploadViewTest(TestCase):
     def setUp(self):
         self.user = baker.make_recipe(
@@ -583,6 +578,9 @@ class DataUploadViewTest(TestCase):
         self.maccor_parser = bdb.Parser.objects.get(name="Maccor")
 
     def test_upload_view_biologic_data(self):
+        """
+        Test uploading and parsing of biologic_example.csv.
+        """
         import os
 
         from liionsden.settings import settings
@@ -610,7 +608,7 @@ class DataUploadViewTest(TestCase):
             post_response = self.client.post(
                 reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
                 {
-                    "name": "Device 1",
+                    "name": "Device Biologic Example",
                     "devices": baker.make_recipe("tests.battDB.device").id,
                     "raw_data_file-TOTAL_FORMS": 1,
                     "raw_data_file-INITIAL_FORMS": 0,
@@ -622,7 +620,7 @@ class DataUploadViewTest(TestCase):
         self.assertEqual(post_response.url, f"/battDB/exps/{self.experiment.id}")
 
         # Check ExperimentDataFile has been created and parsed
-        edf = bdb.ExperimentDataFile.objects.get(name="Device 1")
+        edf = bdb.ExperimentDataFile.objects.get(name="Device Biologic Example")
         self.assertTrue(edf.file_exists())
         self.assertEqual(len(edf.parsed_columns()), 7)
 
@@ -644,6 +642,65 @@ class DataUploadViewTest(TestCase):
         self.assertTrue(
             download_response.url.startswith(
                 "http://localhost:10000/devstoreaccount1/test/uploaded_files/biologic_example"
+            ),
+        )
+
+    def test_upload_view_biologic_data_2(self):
+        """
+        Test uploading and parsing of biologic_example_Ewe.tsv.
+        """
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        # Check file upload response
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/example_files/biologic_example_Ewe.tsv",
+        )
+        with open(file_path) as input_file:
+            post_response = self.client.post(
+                reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                {
+                    "name": "Device Biologic Example Ewe",
+                    "devices": baker.make_recipe("tests.battDB.device").id,
+                    "raw_data_file-TOTAL_FORMS": 1,
+                    "raw_data_file-INITIAL_FORMS": 0,
+                    "raw_data_file-0-file": input_file,
+                    "raw_data_file-0-use_parser": self.biologic_parser.id,
+                },
+            )
+        # Check redirect to correct page
+        self.assertEqual(post_response.url, f"/battDB/exps/{self.experiment.id}")
+
+        # Check ExperimentDataFile has been created and parsed
+        edf = bdb.ExperimentDataFile.objects.get(name="Device Biologic Example Ewe")
+        self.assertTrue(edf.file_exists())
+        self.assertEqual(len(edf.parsed_columns()), 7)
+
+        # Check Experiment Detail view contains experimental data
+        get_response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(get_response, "Ecell/V")
+        self.assertContains(get_response, "Ewe/V")
+
+        # Finally, check the raw data file can be downloaded
+        # Note: this will currently fail if azure storage isn't used
+        download_response = self.client.get(
+            reverse("battDB:Download File", kwargs={"pk": edf.id})
+        )
+        self.assertEqual(download_response.status_code, 302)
+        print(download_response.url)
+        self.assertTrue(
+            download_response.url.startswith(
+                "http://localhost:10000/devstoreaccount1/test/uploaded_files/biologic_example_Ewe"
             ),
         )
 
