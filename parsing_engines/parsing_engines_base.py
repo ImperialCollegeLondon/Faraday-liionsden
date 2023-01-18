@@ -114,7 +114,7 @@ class ParsingEngineBase(abc.ABC):
     def get_data_generator_for_columns(
         self, columns: List
     ) -> Generator[list, None, None]:
-        """Provides the data filtered by the requested columns and a column mapping.
+        """Provides the data filtered by the requested columns.
 
         Args:
             columns (List): Columns of data to provide
