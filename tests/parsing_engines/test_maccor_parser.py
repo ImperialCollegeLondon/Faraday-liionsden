@@ -10,8 +10,8 @@ from django.core.files.base import File
 class TestMaccorXLSParser(TestCase):
     @patch("parsing_engines.MaccorParsingEngine._drop_unnamed_columns")
     @patch("parsing_engines.MaccorParsingEngine._create_rec_no")
-    @patch("parsing_engines.maccor_engine.get_header_size")
-    @patch("parsing_engines.maccor_engine.load_maccor_data")
+    @patch("parsing_engines.maccor_engine.get_header_size_excel")
+    @patch("parsing_engines.maccor_engine.load_maccor_data_excel")
     @patch("parsing_engines.maccor_engine.get_file_header_excel")
     @patch("parsing_engines.maccor_engine.factory_xlsx")
     @patch("parsing_engines.maccor_engine.factory_xls")
@@ -51,10 +51,8 @@ class TestMaccorXLSParser(TestCase):
         mock_xlsx.assert_not_called()
         mock_drop.assert_called_once()
         mock_create.assert_called_once()
-        mock_size.assert_called_once_with(
-            sheet, set(MP.mandatory_columns.keys()), ".xls"
-        )
-        mock_data.assert_called_once_with(file_obj, skip_rows, ".xls")
+        mock_size.assert_called_once_with(sheet, set(MP.mandatory_columns.keys()))
+        mock_data.assert_called_once_with(file_obj, skip_rows)
         mock_head.assert_called_once_with(sheet, skip_rows, datemode)
         self.assertEqual(len(parser.data), 0)
         self.assertEqual(parser.name, "Maccor")
@@ -116,14 +114,17 @@ class TestMaccorFunctions(TestCase):
             self.assertEqual(sheet, sheet)
             self.assertEqual(datemode, None)
 
-    def test_get_header_size(self):
+    def test_get_header_size_excel(self):
         import xlrd
 
-        from parsing_engines.maccor_engine import MaccorParsingEngine, get_header_size
+        from parsing_engines.maccor_engine import (
+            MaccorParsingEngine,
+            get_header_size_excel,
+        )
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         sheet = workbook.sheet_by_index(0)
-        actual = get_header_size(sheet, MaccorParsingEngine.mandatory_columns, ".xlsx")
+        actual = get_header_size_excel(sheet, MaccorParsingEngine.mandatory_columns)
 
         expected = 0
         for i, row in enumerate(sheet.get_rows()):
@@ -134,23 +135,21 @@ class TestMaccorFunctions(TestCase):
 
         self.assertEqual(actual, expected)
 
-    def test_load_data(self):
+    def test_load_data_excel(self):
         import xlrd
 
         from parsing_engines.maccor_engine import (
             MaccorParsingEngine,
-            get_header_size,
-            load_maccor_data,
+            get_header_size_excel,
+            load_maccor_data_excel,
         )
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         sheet = workbook.sheet_by_index(0)
-        skip_rows = get_header_size(
-            sheet, MaccorParsingEngine.mandatory_columns, ".xls"
-        )
+        skip_rows = get_header_size_excel(sheet, MaccorParsingEngine.mandatory_columns)
 
         with open(self.file_path, "rb") as file_obj:
-            actual = load_maccor_data(file_obj, skip_rows, ".xls")
+            actual = load_maccor_data_excel(file_obj, skip_rows)
             self.assertGreater(len(actual.columns), 1)
             self.assertGreater(len(actual), 30)
 
@@ -160,15 +159,13 @@ class TestMaccorFunctions(TestCase):
         from parsing_engines.maccor_engine import (
             MaccorParsingEngine,
             get_file_header_excel,
-            get_header_size,
+            get_header_size_excel,
         )
 
         workbook = xlrd.open_workbook(self.file_path, on_demand=True)
         sheet = workbook.sheet_by_index(0)
         datemode = workbook.datemode
-        skip_rows = get_header_size(
-            sheet, MaccorParsingEngine.mandatory_columns, ".xlsx"
-        )
+        skip_rows = get_header_size_excel(sheet, MaccorParsingEngine.mandatory_columns)
 
         header = get_file_header_excel(sheet, skip_rows, datemode)
         self.assertGreater(len(header), 2)
@@ -185,10 +182,10 @@ class TestMaccorFunctions(TestCase):
 
         row = ["A", "B", "C", "D"]
         withnesses = [1, 2]
-        self.assertTrue(is_metadata_row(row, withnesses, ".xls"))
+        self.assertTrue(is_metadata_row(row, withnesses, "excel"))
 
         withnesses = [1, "A"]
-        self.assertFalse(is_metadata_row(row, withnesses, ".xls"))
+        self.assertFalse(is_metadata_row(row, withnesses, "excel"))
 
     def test_get_metadata_value(self):
         import xlrd
