@@ -181,11 +181,11 @@ class TestMaccorFunctions(TestCase):
         from parsing_engines.maccor_engine import is_metadata_row
 
         row = ["A", "B", "C", "D"]
-        withnesses = [1, 2]
-        self.assertTrue(is_metadata_row(row, withnesses, "excel"))
+        indicators = [1, 2]
+        self.assertTrue(is_metadata_row(row, indicators, "excel"))
 
-        withnesses = [1, "A"]
-        self.assertFalse(is_metadata_row(row, withnesses, "excel"))
+        indicators = [1, "A"]
+        self.assertFalse(is_metadata_row(row, indicators, "excel"))
 
     def test_get_metadata_value(self):
         import xlrd

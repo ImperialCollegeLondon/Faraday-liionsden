@@ -261,12 +261,12 @@ def clean_value(value: str) -> str:
     return value.replace("''", "'").strip().rstrip("\0").strip()
 
 
-def is_metadata_row(row: Iterable, withnesses: Iterable, filetype: str) -> bool:
+def is_metadata_row(row: Iterable, indicators: Iterable, filetype: str) -> bool:
     """Checks if a row is a metadata row.
 
     Args:
         row (Iterable): Iterable with the row data to check
-        withnesses (Iterable): Iterable with the elements to check that would identify
+        indicators (Iterable): Iterable with the elements to check that would identify
             this as NOT a metadata row.
         filetype (Str): Either "excel" or "csv".
 
@@ -275,9 +275,9 @@ def is_metadata_row(row: Iterable, withnesses: Iterable, filetype: str) -> bool:
     """
     if filetype == "excel":
         row_values = [y.value if hasattr(y, "value") else y for y in row]
-        return not any(x in withnesses for x in row_values)
+        return not any(x in indicators for x in row_values)
     elif filetype == "csv":
-        return not any(x in row for x in withnesses)
+        return not any(x in row for x in indicators)
     else:
         raise ValueError(f"Unrecognized filetype: {filetype}")
 
