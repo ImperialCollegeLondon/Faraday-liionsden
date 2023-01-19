@@ -823,6 +823,65 @@ class DataUploadViewTest(TestCase):
             ),
         )
 
+    def test_upload_view_maccor_data_3(self):
+        """
+        Test uploading and parsing of maccor_example_discharge_test.csv.
+        """
+        import os
+
+        from liionsden.settings import settings
+
+        # Login
+        login_response = self.client.post(
+            "/accounts/login/",
+            {"username": "test_contributor", "password": "contributorpass"},
+        )
+
+        # Check file upload response
+        file_path = os.path.join(
+            settings.BASE_DIR,
+            "tests/parsing_engines/example_files/maccor_example_discharge_test.csv",
+        )
+        with open(file_path, "rb") as input_file:
+            post_response = self.client.post(
+                reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
+                {
+                    "name": "Device Maccor Example Discharge Test",
+                    "devices": baker.make_recipe("tests.battDB.device").id,
+                    "raw_data_file-TOTAL_FORMS": 1,
+                    "raw_data_file-INITIAL_FORMS": 0,
+                    "raw_data_file-0-file": input_file,
+                    "raw_data_file-0-use_parser": self.maccor_parser.id,
+                },
+            )
+        # Check redirect to correct page
+        self.assertEqual(post_response.url, f"/battDB/exps/{self.experiment.id}")
+
+        # Check ExperimentDataFile has been created and parsed
+        edf = bdb.ExperimentDataFile.objects.get(
+            name="Device Maccor Example Discharge Test"
+        )
+        self.assertTrue(edf.file_exists())
+        self.assertEqual(len(edf.parsed_columns()), 10)
+
+        # Check Experiment Detail view contains experimental data
+        get_response = self.client.get(
+            reverse("battDB:Experiment", kwargs={"pk": self.experiment.id})
+        )
+        self.assertContains(get_response, "TestTime(s)")
+        self.assertContains(get_response, "StepTime(s)")
+
+        # Finally, check the raw data file can be downloaded
+        download_response = self.client.get(
+            reverse("battDB:Download File", kwargs={"pk": edf.id})
+        )
+        self.assertEqual(download_response.status_code, 302)
+        self.assertTrue(
+            download_response.url.startswith(
+                "http://localhost:10000/devstoreaccount1/test/uploaded_files/maccor_example_discharge_test"
+            ),
+        )
+
     def test_upload_view_unparsed_data(self):
         import os
 
