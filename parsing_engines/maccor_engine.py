@@ -52,13 +52,23 @@ class MaccorParsingEngine(ParsingEngineBase):
     @classmethod
     def factory(cls, file_obj: TextIO) -> ParsingEngineBase:
         """Factory method for creating a parsing engine.
+        Different functions/methods are used depending on the file extension.
 
         Args:
             file_obj (TextIO): File to parse.
         """
         column_name_mapping = MACCOR_COLUMN_MAPPING
         ext = os.path.splitext(file_obj.name)[1]
-        if ext == ".xls":
+        if ext in [".csv", ".txt"]:
+            skip_rows = get_header_size_csv(file_obj, set(cls.mandatory_columns.keys()))
+            data = load_maccor_data_csv(file_obj, skip_rows)
+            file_metadata = get_file_header_csv(file_obj, skip_rows)
+            return cls(file_obj, skip_rows, data, file_metadata, column_name_mapping)
+        elif ext not in [".xls", ".xlsx"]:
+            raise UnsupportedFileTypeError(
+                f"Unknown file extension for Maccor parsing engine '{ext}'."
+            )
+        elif ext == ".xls":
             sheet, datemode = factory_xls(file_obj)
             if sheet.ncols < 1 or sheet.nrows < 2:
                 raise EmptyFileError()
@@ -66,20 +76,9 @@ class MaccorParsingEngine(ParsingEngineBase):
             sheet, datemode = factory_xlsx(file_obj)
             if sheet.max_column < 1 or sheet.max_row < 2:
                 raise EmptyFileError()
-        elif ext not in [".csv", ".txt"]:
-            raise UnsupportedFileTypeError(
-                f"Unknown file extension for Maccor parsing engine '{ext}'."
-            )
-        else:
-            sheet = file_obj
-            datemode = None
-
-        skip_rows = get_header_size(sheet, set(cls.mandatory_columns.keys()), ext)
-        data = load_maccor_data(file_obj, skip_rows, ext)
-        if ext in [".xls", ".xlsx"]:
-            file_metadata = get_file_header_excel(sheet, skip_rows, datemode)
-        else:
-            file_metadata = get_file_header_csv(sheet, skip_rows)
+        skip_rows = get_header_size_excel(sheet, set(cls.mandatory_columns.keys()))
+        data = load_maccor_data_excel(file_obj, skip_rows)
+        file_metadata = get_file_header_excel(sheet, skip_rows, datemode)
         return cls(file_obj, skip_rows, data, file_metadata, column_name_mapping)
 
 
@@ -142,7 +141,7 @@ def get_file_header_excel(
     return header
 
 
-def get_file_header_csv(file_obj, skip_rows):
+def get_file_header_csv(file_obj: TextIO, skip_rows: int) -> List[str]:
     """Extracts the header from the Maccor csv or txt file.
 
     Args:
@@ -163,35 +162,43 @@ def get_file_header_csv(file_obj, skip_rows):
     return header
 
 
-def get_header_size(
-    sheet: Union[Sheet, Worksheet], columns: Set, extension: str
-) -> int:
+def get_header_size_excel(sheet: Union[Sheet, Worksheet], columns: Set) -> int:
     """Reads the file and determines the size of the header.
 
     Args:
         sheet (Union[Sheet, Worksheet]): The Excel sheet to scan.
         columns (Set): Iterable with the elements to check that would identify
             this as NOT a metadata row.
-        extension (str): The extension of the file.
 
     Returns:
         int: The size of the header.
     """
-    if extension in [".xls", ".xlsx"]:
-        for i, row in enumerate(sheet):
-            if not is_metadata_row(row, columns, extension):
+    for i, row in enumerate(sheet):
+        if not is_metadata_row(row, columns, "excel"):
+            return i
+    return 0
+
+
+def get_header_size_csv(file_obj: TextIO, columns: Set) -> int:
+    """Reads the file and determines the size of the header.
+
+    Args:
+        file_obj (TextIO): File to load the data from.
+        columns (Set): Iterable with the elements to check that would identify
+            this as NOT a metadata row.
+
+    Returns:
+        int: The size of the header.
+    """
+    file_obj.seek(0)
+    with file_obj.open("r") as f:
+        lines = iter([i.decode("iso-8859-1") for i in f.readlines()])
+        for i, line in enumerate(lines):
+            if not is_metadata_row(line, columns, "csv"):
                 return i
-        return 0
-    else:
-        sheet.seek(0)
-        with sheet.open("r") as f:
-            lines = iter([i.decode("iso-8859-1") for i in f.readlines()])
-            for i, line in enumerate(lines):
-                if not is_metadata_row(line, columns, extension):
-                    return i
 
 
-def load_maccor_data(file_obj: TextIO, skip_rows: int, extension: str) -> pd.DataFrame:
+def load_maccor_data_excel(file_obj: TextIO, skip_rows: int) -> pd.DataFrame:
     """Loads the data as a Pandas data frame.
 
     Args:
@@ -203,37 +210,41 @@ def load_maccor_data(file_obj: TextIO, skip_rows: int, extension: str) -> pd.Dat
         pd.DataFrame: A pandas dataframe with all the data.
     """
     file_obj.seek(0)
+    data = pd.read_excel(file_obj, sheet_name=None, header=skip_rows, index_col=None)
+    if isinstance(data, dict):
+        data = pd.concat(data.values(), ignore_index=True)
+    return data
 
-    # For Excel files
-    if extension in [".xls", ".xlsx"]:
-        data = pd.read_excel(
-            file_obj, sheet_name=None, header=skip_rows, index_col=None
-        )
-        if isinstance(data, dict):
-            data = pd.concat(data.values(), ignore_index=True)
 
-    # For .csv and .txt files - similar logic to Biologic parsing engine
-    else:
-        kwargs = dict(
-            skiprows=skip_rows, encoding="iso-8859-1", encoding_errors="replace"
-        )
-        file_obj.open("r")
+def load_maccor_data_csv(file_obj: TextIO, skip_rows: int) -> pd.DataFrame:
+    """Loads the data as a Pandas data frame.
+
+    Args:
+        file_obj (TextIO): File to load.
+        skip_rows (int): Location of the header, assumed equal to the number of rows to
+            skip.
+
+    Returns:
+        pd.DataFrame: A pandas dataframe with all the data.
+    """
+    kwargs = dict(skiprows=skip_rows, encoding="iso-8859-1", encoding_errors="replace")
+    file_obj.open("r")
+    try:
+        file_obj.seek(0)
+        data = pd.read_csv(file_obj, delimiter=",", **kwargs)
+    except pd.errors.ParserError:
         try:
             file_obj.seek(0)
-            data = pd.read_csv(file_obj, delimiter=",", **kwargs)
-        except pd.errors.ParserError:
-            try:
-                file_obj.seek(0)
-                data = pd.read_csv(file_obj, delimiter="\t", **kwargs)
-            except pd.errors.ParserError as err:
-                raise UnsupportedFileTypeError(err)
-
-        if len(data.columns) == 1:
-            file_obj.seek(0)
             data = pd.read_csv(file_obj, delimiter="\t", **kwargs)
+        except pd.errors.ParserError as err:
+            raise UnsupportedFileTypeError(err)
 
-        if len(data.columns) == 1:
-            raise UnsupportedFileTypeError()
+    if len(data.columns) == 1:
+        file_obj.seek(0)
+        data = pd.read_csv(file_obj, delimiter="\t", **kwargs)
+
+    if len(data.columns) == 1:
+        raise UnsupportedFileTypeError()
 
     return data
 
@@ -250,23 +261,25 @@ def clean_value(value: str) -> str:
     return value.replace("''", "'").strip().rstrip("\0").strip()
 
 
-def is_metadata_row(row: Iterable, withnesses: Iterable, extension: str) -> bool:
+def is_metadata_row(row: Iterable, withnesses: Iterable, filetype: str) -> bool:
     """Checks if a row is a metadata row.
 
     Args:
         row (Iterable): Iterable with the row data to check
         withnesses (Iterable): Iterable with the elements to check that would identify
             this as NOT a metadata row.
-        extension (Str): The extension of the file.
+        filetype (Str): Either "excel" or "csv".
 
     Returns:
         bool: True if it is identified as a metadata row
     """
-    if extension in [".xls", ".xlsx"]:
+    if filetype == "excel":
         row_values = [y.value if hasattr(y, "value") else y for y in row]
         return not any(x in withnesses for x in row_values)
-    else:
+    elif filetype == "csv":
         return not any(x in row for x in withnesses)
+    else:
+        raise ValueError(f"Unrecognized filetype: {filetype}")
 
 
 def get_metadata_value(
