@@ -142,6 +142,7 @@ class DataUploadViewTest(TestCase):
         )
         self.assertContains(get_response, "Ecell/V")
         self.assertContains(get_response, "Ewe/V")
+        self.assertNotContains(get_response, "without being processed")
 
         # Finally, check the raw data file can be downloaded
         # Note: this will currently fail if azure storage isn't used
@@ -263,6 +264,7 @@ class DataUploadViewTest(TestCase):
         )
         self.assertContains(get_response, "TestTime(s)")
         self.assertContains(get_response, "StepTime(s)")
+        self.assertNotContains(get_response, "without being processed")
 
         # Finally, check the raw data file can be downloaded
         download_response = self.client.get(
@@ -322,6 +324,7 @@ class DataUploadViewTest(TestCase):
         )
         self.assertContains(get_response, "TestTime(s)")
         self.assertContains(get_response, "StepTime(s)")
+        self.assertNotContains(get_response, "without being processed")
 
         # Finally, check the raw data file can be downloaded
         download_response = self.client.get(
