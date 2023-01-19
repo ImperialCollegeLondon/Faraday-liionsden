@@ -15,7 +15,7 @@ class TestMaccorXLSParser(TestCase):
     @patch("parsing_engines.maccor_engine.get_file_header_excel")
     @patch("parsing_engines.maccor_engine.factory_xlsx")
     @patch("parsing_engines.maccor_engine.factory_xls")
-    def test_factory(
+    def test_factory_excel(
         self,
         mock_xls,
         mock_xlsx,
@@ -79,6 +79,46 @@ class TestMaccorXLSParser(TestCase):
         # Unsupported file
         file_obj = File(b"", name="unsupported.file")
         self.assertRaises(UnsupportedFileTypeError, MP.factory, file_obj)
+
+    @patch("parsing_engines.MaccorParsingEngine._drop_unnamed_columns")
+    @patch("parsing_engines.MaccorParsingEngine._create_rec_no")
+    @patch("parsing_engines.maccor_engine.get_header_size_csv")
+    @patch("parsing_engines.maccor_engine.load_maccor_data_csv")
+    @patch("parsing_engines.maccor_engine.get_file_header_csv")
+    def test_factory_csv(
+        self,
+        mock_head,
+        mock_data,
+        mock_size,
+        mock_create,
+        mock_drop,
+    ):
+        import pandas as pd
+
+        from parsing_engines import MaccorParsingEngine as MP
+
+        skip_rows = 4
+        mock_data.return_value = pd.DataFrame()
+        mock_size.return_value = skip_rows
+        mock_head.return_value = {"answer": 42}
+
+        # csv file
+        file_path = (
+            Path(__file__).parent / "example_files/maccor_example_discharge_test.csv"
+        )
+        with open(file_path, "rb") as f:
+            file_obj = File(f)
+        parser = MP.factory(file_obj)
+        mock_drop.assert_called_once()
+        mock_create.assert_called_once()
+        mock_size.assert_called_once_with(file_obj, set(MP.mandatory_columns.keys()))
+        mock_data.assert_called_once_with(file_obj, skip_rows)
+        mock_head.assert_called_once_with(file_obj, skip_rows)
+        self.assertEqual(len(parser.data), 0)
+        self.assertEqual(parser.name, "Maccor")
+        self.assertEqual(parser.skip_rows, skip_rows)
+        self.assertEqual(parser.file_obj, file_obj)
+        self.assertEqual(parser.file_metadata, {"answer": 42})
 
 
 class TestMaccorFunctions(TestCase):
