@@ -43,7 +43,7 @@ class TestMaccorXLSParser(TestCase):
         mock_head.return_value = {"answer": 42}
 
         # XLS file
-        file_path = Path(__file__).parent / "maccor_example.xls"
+        file_path = Path(__file__).parent / "example_files/maccor_example.xls"
         with open(file_path, "rb") as file_obj:
             parser = MP.factory(file_obj=file_obj)
 
@@ -61,7 +61,7 @@ class TestMaccorXLSParser(TestCase):
         self.assertEqual(parser.file_metadata, {"answer": 42})
 
         # XLSX file
-        file_path = Path(__file__).parent / "maccor_example_new.xlsx"
+        file_path = Path(__file__).parent / "example_files/maccor_example_new.xlsx"
         mock_xls.reset_mock()
         mock_xlsx.reset_mock()
 
@@ -83,7 +83,7 @@ class TestMaccorXLSParser(TestCase):
 
 class TestMaccorFunctions(TestCase):
 
-    file_path = Path(__file__).parent / "maccor_example.xls"
+    file_path = Path(__file__).parent / "example_files/maccor_example.xls"
 
     @patch("xlrd.open_workbook")
     def test_factory_xls(self, mock_open):

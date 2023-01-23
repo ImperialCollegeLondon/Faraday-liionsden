@@ -20,6 +20,7 @@ from openpyxl.worksheet.worksheet import Worksheet
 from xlrd.sheet import Cell, Sheet
 
 from .battery_exceptions import EmptyFileError, UnsupportedFileTypeError
+from .mappings import MACCOR_COLUMN_MAPPING
 from .parsing_engines_base import ParsingEngineBase
 
 
@@ -53,6 +54,7 @@ class MaccorParsingEngine(ParsingEngineBase):
         Args:
             file_obj (TextIO): File to parse.
         """
+        column_name_mapping = MACCOR_COLUMN_MAPPING
         ext = os.path.splitext(file_obj.name)[1]
         if ext == ".xls":
             sheet, datemode = factory_xls(file_obj)
@@ -70,7 +72,7 @@ class MaccorParsingEngine(ParsingEngineBase):
         skip_rows = get_header_size(sheet, set(cls.mandatory_columns.keys()))
         data = load_maccor_data(file_obj, skip_rows)
         file_metadata = get_file_header(sheet, skip_rows, datemode)
-        return cls(file_obj, skip_rows, data, file_metadata)
+        return cls(file_obj, skip_rows, data, file_metadata, column_name_mapping)
 
 
 def factory_xls(file_obj: TextIO) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
