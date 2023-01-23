@@ -150,6 +150,7 @@ class TestParsingEngineBase(TestCase):
         col_mapping = {"Voltage": "Volts / V"}
         actual = get_parsed_columns(file_columns, parser_columns, col_mapping)
         expected = (["Volts / V", "I / A"], ["Voltage", "I / A"])
+        self.assertEqual(actual, expected)
 
 
 class TestDummyParsingEngine(TestCase):
