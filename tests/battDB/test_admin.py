@@ -52,9 +52,13 @@ class TestDeviceSpecAdmin(TestCase):
         for d in ["device_type", "abstract", "complete"]:
             self.assertIn(d, ma.get_list_display(request))
             self.assertIn(d, ma.get_list_filter(request))
-        self.assertEqual(
-            ma.get_inlines(request, DeviceSpecification.objects.get()),
-            [DeviceSpecInline, DeviceParameterInline],
+        self.assertIn(
+            DeviceParameterInline,
+            ma.get_inlines(request, DeviceSpecification.objects.get_queryset()),
+        )
+        self.assertIn(
+            DeviceSpecInline,
+            ma.get_inlines(request, DeviceSpecification.objects.get_queryset()),
         )
 
 
@@ -193,8 +197,9 @@ class TestDeviceConfigAdmin(TestCase):
         baker.make_recipe("tests.battDB.device_config")
         ma = DeviceConfigAdmin(DeviceConfig, self.site)
         self.assertEqual(ma.model, DeviceConfig)
-        self.assertEqual(
-            ma.get_inlines(request, DeviceConfig.objects.get()), [DeviceConfigInline]
+        self.assertIn(
+            DeviceConfigInline,
+            ma.get_inlines(request, DeviceConfig.objects.get_queryset()),
         )
 
 

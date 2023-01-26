@@ -26,7 +26,8 @@ class NewCompoundForm(DataCreateForm):
         model = Compound
         fields = ["name", "formula"]
         help_texts = {
-            "formula": "Chemical formula. This will be used to automatically calculate the mass.",
+            "formula": "Chemical formula. This will be used to automatically calculate "
+            "the mass.",
         }
 
     def __init__(self, *args, **kwargs):
@@ -76,15 +77,18 @@ class NewComponentForm(DataCreateForm):
                 Div(HTML("<h1> Component </h1>")),
                 Column("name", css_class="col-4"),
                 Column("type", css_class="col-4"),
-                Fieldset(
-                    "Composition",
-                    Div(
-                        HTML(
-                            "Optionally specify the amount of each compound in this "
-                            "component. Amounts are relative and unitless."
-                        )
+                Div(
+                    Fieldset(
+                        "Composition",
+                        Div(
+                            HTML(
+                                "Optionally specify the amount of each compound in "
+                                "this component (amounts are relative and unitless)"
+                            )
+                        ),
+                        Formset("composition"),
                     ),
-                    Formset("composition"),
+                    css_class="card bg-light mb-3",
                 ),
                 HTML("<br>"),
                 Field("make_public"),

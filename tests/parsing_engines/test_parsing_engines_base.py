@@ -70,7 +70,7 @@ class TestParsingEngineBase(TestCase):
 
         engine = SName(
             data=pd.DataFrame({"Voltage": [4, 5, 6], "Trash": [None, None, None]}),
-            column_name_mapping={"Voltage": "Volt / V"},
+            column_name_mapping={"Voltage": "Volts / V"},
         )
         expected = {
             "Voltage": {
@@ -134,12 +134,23 @@ class TestParsingEngineBase(TestCase):
                 }
             ),
         )
-        column_name_mapping = {"Volt / V": "Voltage"}
         actual = ParsingEngineBase.get_data_generator_for_columns(
-            engine, columns=["Volt / V", "I / A"], col_mapping=column_name_mapping
+            engine,
+            columns=["Voltage", "I / A"],
         )
         for i, row in enumerate(actual):
             self.assertEqual(row, list(engine.data.loc[i, ["Voltage", "I / A"]].values))
+
+    def test_get_parsed_columns(self):
+
+        from parsing_engines.parsing_engines_base import get_parsed_columns
+
+        parser_columns = ["Volts / V", "I / A"]
+        file_columns = ["Voltage", "I / A"]
+        col_mapping = {"Voltage": "Volts / V"}
+        actual = get_parsed_columns(file_columns, parser_columns, col_mapping)
+        expected = (["Volts / V", "I / A"], ["Voltage", "I / A"])
+        self.assertEqual(actual, expected)
 
 
 class TestDummyParsingEngine(TestCase):

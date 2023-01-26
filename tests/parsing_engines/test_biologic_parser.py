@@ -23,7 +23,7 @@ class TestBiologicParsingEngine(TestCase):
         mock_size.return_value = (1, "valid")
         mock_head.return_value = {"answer": 42}
 
-        file_path = Path(__file__).parent / "biologic_example.csv"
+        file_path = Path(__file__).parent / "example_files/biologic_example.csv"
         with open(file_path, "rb") as f:
             file_obj = File(f)
 
@@ -42,7 +42,7 @@ class TestBiologicParsingEngine(TestCase):
 
 @override_storage(storage=LocMemStorage())
 class TestBiologicFunctions(TestCase):
-    file_path = Path(__file__).parent / "biologic_example.csv"
+    file_path = Path(__file__).parent / "example_files/biologic_example.csv"
 
     def setUp(self) -> None:
         from django.core.files.base import File
@@ -97,7 +97,7 @@ class TestBiologicFunctions(TestCase):
 
 @override_storage(storage=LocMemStorage())
 class TestHeaderToYaml(TestCase):
-    file_path = Path(__file__).parent / "biologic_example.csv"
+    file_path = Path(__file__).parent / "example_files/biologic_example.csv"
 
     def setUp(self) -> None:
         from django.core.files.base import File

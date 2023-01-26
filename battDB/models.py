@@ -96,7 +96,7 @@ class DeviceParameter(cm.HasName):
         on_delete=models.CASCADE,
         limit_choices_to={"parameter_type": "device"},
     )
-    value = models.JSONField(blank=True, null=True)
+    value = models.JSONField(default=float)
     inherit_to_children = models.BooleanField(default=False)
 
     @property
@@ -148,11 +148,16 @@ class Batch(cm.BaseModelNoName, cm.HasMPTT):
         help_text="Type of device in this batch",
     )
     manufacturer = models.ForeignKey(
-        cm.Org, default=1, on_delete=models.SET_DEFAULT, null=True
+        cm.Org,
+        default=1,
+        on_delete=models.SET_DEFAULT,
+        null=True,
+        limit_choices_to={"is_mfg_cells": True},
     )
     serialNo = models.CharField(
         max_length=60,
         blank=True,
+        unique=True,
         help_text="Batch number or some other unique identifier",
     )
     batch_size = models.PositiveSmallIntegerField(default=1)
@@ -390,7 +395,7 @@ class Experiment(cm.BaseModel):
     )
 
     THERMAL_CHOICES = (
-        ("none", "None"),
+        ("no", "No thermal management"),
         ("chamber", "Thermal chamber"),
         ("base", "Base cooled"),
         ("surface", "Surface cooled"),
@@ -409,9 +414,8 @@ class Experiment(cm.BaseModel):
 
     config = models.ForeignKey(
         DeviceConfig,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
+        default=1,
         related_name="used_in",
         limit_choices_to={"config_type": "expmt"},
         help_text="All devices in the same experiment must be of the same "
@@ -438,16 +442,16 @@ class Experiment(cm.BaseModel):
         choices=TYPE_CHOICES,
         default="constant",
         help_text="Type of experiment carried out. If 'other', "
-        "experiment type should be specified in the notes section.",
+        "experiment type should be specified in the experiment summary.",
     )
 
     thermal = models.CharField(
         verbose_name="Thermal management",
         max_length=50,
         choices=THERMAL_CHOICES,
-        default="none",
+        default="no",
         help_text="Thermal management technique used in this experiment. "
-        " If 'other', technique should be specified in the notes section.",
+        " If 'other', technique should be specified in the experiment summary.",
     )
 
     external_link = models.URLField(
@@ -633,7 +637,7 @@ class ExperimentDataFile(cm.BaseModel):
             except UploadedFile.DoesNotExist:
                 self.name = "Unnamed data set"
 
-        if self.file_exists() and self.raw_data_file.parse:
+        if self.file_exists() and self.raw_data_file.parse and not self.is_parsed():
             cols = [
                 c.col_name
                 for c in self.raw_data_file.use_parser.columns.all().order_by("order")
@@ -645,17 +649,20 @@ class ExperimentDataFile(cm.BaseModel):
             self.attributes["parsed_metadata"] = parsed_file["metadata"]
             self.attributes["file_columns"] = parsed_file["file_columns"]
             self.attributes["parsed_columns"] = parsed_file["parsed_columns"]
+            self.attributes["parsed_header_columns"] = parsed_file[
+                "parsed_header_columns"
+            ]
             self.attributes["missing_columns"] = parsed_file["missing_columns"]
             self.attributes["total_rows"] = parsed_file["total_rows"]
             self.attributes["range_config"] = parsed_file["range_config"]
             self.ts_headers = self.parsed_columns()
             self.ts_data = parsed_file["data"]
 
-            # This needs to be reviewed to avoid a recursion loop
-            self.save()
+    def save(self):
+        super(ExperimentDataFile, self).save()
 
-            if self.is_parsed():
-                self.create_ranges()
+        if self.is_parsed():
+            self.create_ranges()
 
     class Meta:
         verbose_name = "Data File"
@@ -712,10 +719,13 @@ class ExperimentDevice(models.Model):
         # raise NotImplementedError
 
     def clean(self):
-        if self.batch is not None and self.batch_sequence > self.batch.batch_size:
-            raise ValidationError("Batch sequence ID cannot exceed batch size!")
-        elif self.batch is not None:
-            Device.objects.get_or_create(batch=self.batch, seq_num=self.batch_sequence)
+        if hasattr(self, "batch"):
+            if self.batch is not None and self.batch_sequence > self.batch.batch_size:
+                raise ValidationError("Batch sequence ID cannot exceed batch size!")
+            elif self.batch is not None:
+                Device.objects.get_or_create(
+                    batch=self.batch, seq_num=self.batch_sequence
+                )
 
     @property
     def user_owner(self):

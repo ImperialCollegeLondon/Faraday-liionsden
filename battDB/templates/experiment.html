@@ -118,7 +118,15 @@
         </tr>
         <tr>
           <td><b>Parsed columns:</b></td>
-          <td>{{ data_file.ts_headers }} </td>
+          <td>{{ data_file.attributes.parsed_columns }} </td>
+        </tr>
+        <tr>
+          <td><b>Parsed columns (original file headers):</b></td>
+          <td>{{ data_file.attributes.parsed_header_columns }} </td>
+        </tr>
+        <tr>
+          <td><b>All original file columns:</b></td>
+          <td>{{ data_file.attributes.file_columns }} </td>
         </tr>
         <tr>
           <td><b>Number of rows:</b></td>
