@@ -316,8 +316,6 @@ class NewBatchForm(DataCreateForm):
             self.fields["specification"].queryset = get_objects_for_user(
                 self.user, "view_devicespecification", DeviceSpecification
             )
-        else:
-            raise ValueError("NewBatchForm requires user kwarg")
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(

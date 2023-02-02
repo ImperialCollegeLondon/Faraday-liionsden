@@ -200,7 +200,7 @@ class CreateBatchTest(TestCase):
 
         self.institution = baker.make_recipe("tests.common.org", is_mfg_cells=True)
         self.specification = baker.make_recipe(
-            "tests.battDB.device_specification", abstract=False
+            "tests.battDB.device_specification", abstract=False, status="public"
         )
 
     def test_create_update_batch(self):
@@ -240,6 +240,7 @@ class CreateBatchTest(TestCase):
                 "specification": self.specification.id,
             },
         )
+
         self.assertEqual(update_response.status_code, 302)
         self.assertEqual(update_response.url, f"/battDB/batches/{batch.id}/")
 
