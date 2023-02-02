@@ -1,5 +1,6 @@
-from django_filters.filters import DateFromToRangeFilter
+from django_filters.filters import DateFromToRangeFilter, ModelChoiceFilter
 from django_filters.widgets import RangeWidget
+from guardian.shortcuts import get_objects_for_user
 
 from common.filters import BaseFilter
 
@@ -32,10 +33,20 @@ class ExperimentFilter(BaseFilter):
         self.filters["user_owner__institution"].label = "Institution"
 
 
+def allowed_device_specs(request):
+    if request is None:
+        return DeviceSpecification.objects.none()
+    allowed_device_specs = get_objects_for_user(
+        request.user, "view_devicespecification", DeviceSpecification
+    )
+    return allowed_device_specs
+
+
 class BatchFilter(BaseFilter):
     manufactured_on = DateFromToRangeFilter(
         widget=RangeWidget(attrs={"type": "manufactured_on"}), label="Date range"
     )
+    specification = ModelChoiceFilter(queryset=allowed_device_specs)
 
     class Meta(BaseFilter.Meta):
         model = Batch
