@@ -18,6 +18,7 @@ from django.db.models import Q
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.utils.safestring import mark_safe
+from guardian.shortcuts import get_objects_for_user
 
 from battDB.models import (
     Batch,
@@ -307,7 +308,16 @@ class NewBatchForm(DataCreateForm):
         }
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
         super(NewBatchForm, self).__init__(*args, **kwargs)
+
+        if self.user:
+            # Get queryset of device specifications the user has permission to view
+            self.fields["specification"].queryset = get_objects_for_user(
+                self.user, "view_devicespecification", DeviceSpecification
+            )
+        else:
+            raise ValueError("NewBatchForm requires user kwarg")
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(

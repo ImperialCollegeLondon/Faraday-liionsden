@@ -14,8 +14,8 @@ class NewDataView(FormView):
     success_url = None
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        return render(request, self.template_name, {"form": form})
+        context = self.get_context_data()
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)

@@ -119,6 +119,19 @@ class NewBatchView(PermissionRequiredMixin, NewDataView):
     success_message = "New batch created successfully."
     failure_message = "Could not save new batch. Invalid information."
 
+    def get_form_kwargs(self):
+        """
+        Passes the request object to the form class.
+        This is necessary to only display device_specifications in the dropdown
+        that the user has permsission to view.
+        """
+
+        kwargs = super(NewBatchView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        if not self.request.user:
+            raise ValueError("User object not passed to form class.")
+        return kwargs
+
 
 class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
     permission_required = "battDB.change_experiment"
@@ -251,6 +264,17 @@ class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
     form_class = NewBatchForm
     success_message = "Batch updated successfully."
     failure_message = "Could not update batch. Invalid information."
+
+    def get_form_kwargs(self):
+        """
+        Passes the request object to the form class.
+        This is necessary to only display device_specifications in the dropdown
+        that the user has permsission to view.
+        """
+
+        kwargs = super(UpdateBatchView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
