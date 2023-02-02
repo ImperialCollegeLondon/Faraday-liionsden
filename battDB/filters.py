@@ -34,6 +34,9 @@ class ExperimentFilter(BaseFilter):
 
 
 def allowed_device_specs(request):
+    """
+    Return a queryset of DeviceSpecifications that the user has permission to view.
+    """
     if request is None:
         return DeviceSpecification.objects.none()
     allowed_device_specs = get_objects_for_user(
@@ -46,6 +49,7 @@ class BatchFilter(BaseFilter):
     manufactured_on = DateFromToRangeFilter(
         widget=RangeWidget(attrs={"type": "manufactured_on"}), label="Date range"
     )
+    # limit the specifications to show device specs that the user has permission to view
     specification = ModelChoiceFilter(queryset=allowed_device_specs)
 
     class Meta(BaseFilter.Meta):
