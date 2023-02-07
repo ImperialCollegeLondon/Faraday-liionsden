@@ -46,7 +46,6 @@ def populate_parsers(apps, schema_editor):
         engine = get_parsing_engine(name)
 
         for i, (col_name, param_info) in enumerate(engine.mandatory_columns.items()):
-
             unit = QuantityUnit.objects.get(
                 quantityName__exact=param_info["unit"][0],
                 unitSymbol__exact=param_info["unit"][1],

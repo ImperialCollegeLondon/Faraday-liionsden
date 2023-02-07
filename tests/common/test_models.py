@@ -35,7 +35,7 @@ class TestHasStatus(AbstractModelMixinTestCase):
     model: mixin
 
     def setUp(self):
-        for (s, _) in self.mixin.OBJ_STATUS:
+        for s, _ in self.mixin.OBJ_STATUS:
             self.model.objects.create(status=s)
 
     def test_has_status_creation(self):
