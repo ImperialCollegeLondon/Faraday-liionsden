@@ -67,5 +67,4 @@ class TestGeneralSerializer(TestCase):
     model = GeneralSerializer
 
     def test_meta(self):
-
         self.assertEqual(self.model.Meta.model, None)

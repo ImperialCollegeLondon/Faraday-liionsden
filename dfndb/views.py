@@ -24,6 +24,7 @@ from .tables import ComponentTable, CompoundTable
 
 # flake8: noqa E266
 
+
 ######################## CREATE, ADD, DELETE VIEWS #########################
 class NewCompoundView(PermissionRequiredMixin, NewDataView):
     permission_required = "dfndb.add_compound"

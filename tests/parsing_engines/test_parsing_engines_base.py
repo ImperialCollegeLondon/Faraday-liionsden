@@ -142,7 +142,6 @@ class TestParsingEngineBase(TestCase):
             self.assertEqual(row, list(engine.data.loc[i, ["Voltage", "I / A"]].values))
 
     def test_get_parsed_columns(self):
-
         from parsing_engines.parsing_engines_base import get_parsed_columns
 
         parser_columns = ["Volts / V", "I / A"]
@@ -244,7 +243,6 @@ class TestParseDataFile(TestCase):
     @skip("Fix after updating parsers to use file objects not paths")
     @patch("parsing_engines.parsing_engines_base.get_parsing_engine")
     def test_parse_data_file(self, mock_parser):
-
         mock_parser.return_value = self.mock_parser
 
         from parsing_engines.parsing_engines_base import parse_data_file
