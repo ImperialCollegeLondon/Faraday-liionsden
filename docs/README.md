@@ -11,8 +11,3 @@ Ideas drawn from:
 * [dfndb](https://github.com/ndrewwang/dfndb) by @ndrewwang
 * Inspiration from commerical products such as [Voltaiq](http://www.voltaiq.com)
 * Cycler machines software e.g. Biologic BT-Lab
-
-Screenshots:
-![upload data via REST API](doc/screenshots/uploadFile.png)
-![configure parameters via Web interface](doc/screenshots/change_parameter.png)
-![Add academic paper cia Web interface](doc/screenshots/add_paper.png)
