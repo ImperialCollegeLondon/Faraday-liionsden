@@ -16,7 +16,7 @@ Parsers map column headers to parameters (`dfndb.Parameter` objects). A list of 
 in the database can be viewed at
 [<website_root>/battDB/parsers/](http://localhost:8000/battDB/parsers/).
 
-![mappings of column headings to parameters for the maccor parser](docs/screenshots/maccor_parser.png)
+![mappings of column headings to parameters for the maccor parser](screenshots/maccor_parser.png)
 
 Parsers can be created and edited via the admin site at
 [<website_root>/battDB/parser](http://localhost:8000/admin/battDB/parser/). Parameters
@@ -26,7 +26,7 @@ should exactly match the expected column header as it appears in the file.
 The "file format" field should be set to the file format that the parser is intended for.
 This will be the name of one of the underlying "parsing engines" (see below).
 
-![Editing the biologic parser via the admin site](docs/screenshots/edit_biologic_parser.png)
+![Editing the biologic parser via the admin site](screenshots/edit_biologic_parser.png)
 
 ## Adding new parsing engines
 
