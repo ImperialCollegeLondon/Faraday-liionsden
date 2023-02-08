@@ -122,7 +122,6 @@ class TestMaccorXLSParser(TestCase):
 
 
 class TestMaccorFunctions(TestCase):
-
     file_path = Path(__file__).parent / "example_files/maccor_example.xls"
 
     @patch("xlrd.open_workbook")
