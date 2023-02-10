@@ -91,3 +91,15 @@ The AnonymousUser should belong to the *Read only* group for the public data to 
 To make it so that users are required to authenticate to browse the database, simply remove the AnonymousUser from the "Read only" group.
 
 :warning: **Do NOT add the AnonymousUser to any other groups, or assign it any other individual permissions!** This would result in unauthenticated users having write permissions over the database.
+
+## Private groups (not implemented)
+
+There is a fairly obvious need to be able to share objects privately. E.g. so that one
+research group or institution can access an experiment, but it is not fully public. This
+is not imlemented yet, but would be a fairly straightforward extension given the current
+setup.
+
+Users already belong to an instutuion (an instance of `common.Org`) and research groups
+could similarly be set up as Orgs. It should be possible for users to choose, when
+saving an object, which Org(s) to share the data with. The logic in the signal handlers
+would need to be updated so that the new permissions are applied upon saving.
