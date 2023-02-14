@@ -23,6 +23,7 @@ Here is a brief summary of how and where imported Python packages and Django app
 
 ## Other Python packages
 
+- [pandas](https://pandas.pydata.org/): Used throughout for handling time-series data.
 - [preparenovonix](https://pypi.org/project/preparenovonix/): Can handle common issues encountered in data files generated with a range of software versions from the Novonix battery-testers, but novonix parsing has not been implemented yet.
 - pyYAML: unused?
 - [xlrd](https://xlrd.readthedocs.io/en/latest/): Used to read Excel spreadhseets of Maccor data.
