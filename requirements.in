@@ -1,14 +1,11 @@
 pandas
 psycopg2-binary
-django_jsoneditor
 Django>=4.1.2
 djangorestframework
 preparenovonix
 PyYAML
 xlrd
 django-extensions
-django-ipware
-coreapi-cli
 django-mptt
 idutils
 whitenoise
