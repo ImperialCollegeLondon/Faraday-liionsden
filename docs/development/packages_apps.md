@@ -25,19 +25,19 @@ Here is a brief summary of how and where imported Python packages and Django app
 
 - [pandas](https://pandas.pydata.org/): Used throughout for handling time-series data.
 - [preparenovonix](https://pypi.org/project/preparenovonix/): Can handle common issues encountered in data files generated with a range of software versions from the Novonix battery-testers, but novonix parsing has not been implemented yet.
-- pyYAML: unused?
+- pyYAML: Used to parse biologic header files.
 - [xlrd](https://xlrd.readthedocs.io/en/latest/): Used to read Excel spreadhseets of Maccor data.
 - [openpyxl](https://openpyxl.readthedocs.io/en/stable/): Used to read Excel spreadsheets of Maccor data.
-- [psycopg2-binary](https://pypi.org/project/psycopg2-binary/): unused?
-- [coreapi-cli](https://www.coreapi.org/tools-and-resources/command-line-client/): unused?
+- [psycopg2-binary](https://pypi.org/project/psycopg2-binary/): Needed for postgreSQL backend.
+- [coreapi-cli](https://www.coreapi.org/tools-and-resources/command-line-client/): Useful for Django REST Framework?
 - [idutils](https://pypi.org/project/idutils/): Used for DOI validation.
 - [whitenoise](https://whitenoise.evans.io/en/latest/): Middleware.
 - [model_bakery](https://model-bakery.readthedocs.io/en/latest/): Fixtures for tests in Django.
 - [python-magic](https://pypi.org/project/python-magic/): Used to identify the extension and MIME type of files to see if they are valid for e.g. parsing.
-- [tablib](https://tablib.readthedocs.io/en/stable/): unused?
+- [tablib](https://tablib.readthedocs.io/en/stable/): You must have tablib installed in order to use the django-tables2 export functionality.
 - [molmass](https://pypi.org/project/molmass/): Used to automatically calculate the chemical formula of compounds.
 - [plotly](https://plotly.com/python/): Used to generate interactive plots of parsed data.
-- [oauthlib](https://github.com/oauthlib/oauthlib): Pytho OAuth framework - possibly unused?
-- [pillow](https://pillow.readthedocs.io/en/stable/): Image processing library - unused?
-- [cryptography](https://cryptography.io/en/latest/): Unused?
+- [oauthlib](https://github.com/oauthlib/oauthlib): Python OAuth framework. Required by django-storages[azure] and version specified due to dependabot security recommendation.
+- [pillow](https://pillow.readthedocs.io/en/stable/): Image processing library. Required by matplotlib and version specified due to dependabot security recommendation.
+- [cryptography](https://cryptography.io/en/latest/): Required by django-storages[azure] and version specified due to dependabot security recommendation.
 - [debugpy](https://github.com/microsoft/debugpy): Used to enable debug sessions in VS Code when Django is running in a Docker container.
