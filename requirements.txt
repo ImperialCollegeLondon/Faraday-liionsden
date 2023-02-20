@@ -12,8 +12,6 @@ azure-core==1.25.0
     #   msrest
 azure-storage-blob==12.13.1
     # via django-storages
-backports-zoneinfo==0.2.1
-    # via django
 beautifulsoup4==4.11.1
     # via django-bootstrap-v5
 certifi==2022.6.15
@@ -42,7 +40,7 @@ cycler==0.11.0
     # via matplotlib
 debugpy==1.6.5
     # via -r requirements.in
-django==4.1.3
+django==4.1.7
     # via
     #   -r requirements.in
     #   crispy-bootstrap5
