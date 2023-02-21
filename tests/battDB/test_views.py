@@ -550,6 +550,4 @@ class BatchViewTest(TestCase):
         response = self.client.get(
             reverse("battDB:Batch", kwargs={"pk": self.batch.id})
         )
-        self.assertContains(
-            response, '<td style="text-align:center" ><h4> test-batch </h4></td>'
-        )
+        self.assertContains(response, "<h4> test-batch </h4>")
