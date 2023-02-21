@@ -1,5 +1,12 @@
 from django import forms
 from django.forms import ModelForm
+from django.forms.models import BaseInlineFormSet
+
+
+class ModifiedFormSet(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super(ModifiedFormSet, self).__init__(*args, **kwargs)
 
 
 class DataCreateForm(ModelForm):
