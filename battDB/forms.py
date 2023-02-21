@@ -313,9 +313,11 @@ class NewBatchForm(DataCreateForm):
 
         if self.user:
             # Get queryset of device specifications the user has permission to view
-            self.fields["specification"].queryset = get_objects_for_user(
+            restricted_specs = get_objects_for_user(
                 self.user, "view_devicespecification", DeviceSpecification
             )
+            restricted_specs = restricted_specs.filter(abstract=False)
+            self.fields["specification"].queryset = restricted_specs
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(
