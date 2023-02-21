@@ -38,7 +38,6 @@ from .forms import (
     DeviceComponentFormSet,
     DeviceParameterFormSet,
     ExperimentDeviceFormSet,
-    ModifiedExperimentDeviceFormSet,
     NewBatchForm,
     NewDeviceForm,
     NewEquipmentForm,
@@ -102,12 +101,13 @@ class NewExperimentView(PermissionRequiredMixin, NewDataViewInline):
     form_class = NewExperimentForm
     success_message = "New experiment created successfully."
     failure_message = "Could not save new experiment. Invalid information."
-    inline_formsets = {"devices": ModifiedExperimentDeviceFormSet}
+    inline_formsets = {"devices": ExperimentDeviceFormSet}
 
     def get_context_data(self, **kwargs):
         """
         Helper function to get correct context to pass to render() in get()
-        and post().
+        and post(). Overridden here because this formset needs to be passed
+        the user object.
         """
         data = super(NewDataViewInline, self).get_context_data(**kwargs)
         if self.request.POST:

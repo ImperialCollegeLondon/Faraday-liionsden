@@ -32,7 +32,7 @@ from battDB.models import (
     ExperimentDevice,
     UploadedFile,
 )
-from common.forms import DataCreateForm, ModifiedFormSet
+from common.forms import DataCreateForm, FormSetWithUser
 from dfndb.models import Method
 
 from .custom_layout_object import Formset
@@ -235,11 +235,11 @@ class ExperimentDeviceForm(ModelForm):
         exclude = ()
 
 
-ExperimentDeviceFormSet = inlineformset_factory(
+ExperimentDeviceFormSetBase = inlineformset_factory(
     Experiment,
     ExperimentDevice,
     form=ExperimentDeviceForm,
-    formset=ModifiedFormSet,
+    formset=FormSetWithUser,
     fields=["batch", "batch_sequence", "device_position"],
     extra=1,
     can_delete=True,
@@ -253,10 +253,13 @@ ExperimentDeviceFormSet = inlineformset_factory(
 )
 
 
-# modify ExperimentDeviceFormset to limit batch field to those the user has access to
-class ModifiedExperimentDeviceFormSet(ExperimentDeviceFormSet):
+class ExperimentDeviceFormSet(ExperimentDeviceFormSetBase):
+    """
+    modify ExperimentDeviceFormset to limit batch field to those the user has access to.
+    """
+
     def __init__(self, *args, **kwargs):
-        super(ModifiedExperimentDeviceFormSet, self).__init__(*args, **kwargs)
+        super(ExperimentDeviceFormSet, self).__init__(*args, **kwargs)
         if self.user:
             # Get queryset of batches
             restricted_batches = get_objects_for_user(self.user, "view_batch", Batch)
