@@ -4,10 +4,8 @@ Here is a brief summary of how and where imported Python packages and Django app
 
 ## Django apps
 
-- django-jsoneditor: unused?
 - [django-rest-framework](https://www.django-rest-framework.org/): Some views are written using DRF but these are not used.
 - [django-extensions](https://django-extensions.readthedocs.io/en/latest/): Enables various extra Django management commands.
-- [django-ipware](https://pypi.org/project/django-ipware/): unused?
 - [django-mptt](https://django-mptt.readthedocs.io/en/latest/): Allows for modified preorder tree traversal in models. This is used for the DeviceSPecification model so that hierarchical structures of single cells, packs and modules can be defined.
 - [django-guardian](https://django-guardian.readthedocs.io/en/stable/): Object level permissions.
 - [django-bootstrap-v5](https://pypi.org/project/django-bootstrap-v5/): Blend bootstrap v5 with Django for clean and reactive frontend pages.
