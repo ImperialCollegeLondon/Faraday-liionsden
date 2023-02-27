@@ -44,6 +44,40 @@ service.
 have been applied that introduce changes which are not reflected in your current
 branch.**
 
+## Unit tests
+
+### Test basics
+
+Unit tests are orgainsed by app in the `tests/` directory. We use the `TestCase` class
+built in to Django, which is a subclass of the Python `unittest.TestCase` class. More
+information can be found in [the Django docs on writing and running
+tests](https://docs.djangoproject.com/en/4.1/topics/testing/overview/).
+
+### Model bakery
+
+We make use of [model bakery](https://model-bakery.readthedocs.io/en/latest/) to
+generate test fixtures.
+
+### Running tests
+
+Unit tests should be run locally from inside the running container. Run
+
+```bash
+docker-compose exec -it web bash
+```
+
+to start a bash session inside the container. Then run
+
+```python
+python manage.py test
+```
+
+to run the tests. You can add the `-v 2` option to get a more verbose
+output and you can specify which test(s)) to run as you would with the Python unittest
+library, e.g. `python manage.py test tests.battDB.test_views.CreateBatchTest -v 2`.
+
+Unit tests are run automatically as part of the CI actions on GitHub (see below).
+
 ## Continuous integration and deployment (CI  & CD)
 
 [GitHub Actions](https://github.com/features/actions) are used to automatically run
