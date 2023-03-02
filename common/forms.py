@@ -1,5 +1,16 @@
 from django import forms
 from django.forms import ModelForm
+from django.forms.models import BaseInlineFormSet
+
+
+class FormSetWithUser(BaseInlineFormSet):
+    """
+    Base class for inline formsets that need to know the user who is.
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super(FormSetWithUser, self).__init__(*args, **kwargs)
 
 
 class DataCreateForm(ModelForm):

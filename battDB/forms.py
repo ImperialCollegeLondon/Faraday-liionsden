@@ -18,6 +18,7 @@ from django.db.models import Q
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
 from django.utils.safestring import mark_safe
+from guardian.shortcuts import get_objects_for_user
 
 from battDB.models import (
     Batch,
@@ -31,7 +32,7 @@ from battDB.models import (
     ExperimentDevice,
     UploadedFile,
 )
-from common.forms import DataCreateForm
+from common.forms import DataCreateForm, FormSetWithUser
 from dfndb.models import Method
 
 from .custom_layout_object import Formset
@@ -234,10 +235,11 @@ class ExperimentDeviceForm(ModelForm):
         exclude = ()
 
 
-ExperimentDeviceFormSet = inlineformset_factory(
+ExperimentDeviceFormSetBase = inlineformset_factory(
     Experiment,
     ExperimentDevice,
     form=ExperimentDeviceForm,
+    formset=FormSetWithUser,
     fields=["batch", "batch_sequence", "device_position"],
     extra=1,
     can_delete=True,
@@ -249,6 +251,20 @@ ExperimentDeviceFormSet = inlineformset_factory(
         )
     },
 )
+
+
+class ExperimentDeviceFormSet(ExperimentDeviceFormSetBase):
+    """
+    modify ExperimentDeviceFormset to limit batch field to those the user has access to.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(ExperimentDeviceFormSet, self).__init__(*args, **kwargs)
+        if self.user:
+            # Get queryset of batches
+            restricted_batches = get_objects_for_user(self.user, "view_batch", Batch)
+            # Limit batch field to batches the user has access to
+            self.form.base_fields["batch"].queryset = restricted_batches
 
 
 class NewEquipmentForm(DataCreateForm):
@@ -307,7 +323,16 @@ class NewBatchForm(DataCreateForm):
         }
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
         super(NewBatchForm, self).__init__(*args, **kwargs)
+
+        if self.user:
+            # Get queryset of device specifications the user has permission to view
+            restricted_specs = get_objects_for_user(
+                self.user, "view_devicespecification", DeviceSpecification
+            )
+            restricted_specs = restricted_specs.filter(abstract=False)
+            self.fields["specification"].queryset = restricted_specs
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(
