@@ -1,7 +1,7 @@
 pandas
 psycopg2-binary
 django_jsoneditor
-Django>=4.1.2
+Django>=4.1.7
 djangorestframework
 preparenovonix
 PyYAML
