@@ -14,12 +14,14 @@ class NewDataView(FormView):
     success_url = None
 
     def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        return render(request, self.template_name, {"form": form})
+        context = self.get_context_data()
+        return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST, request.FILES)
         form.instance.user_owner = request.user
+        context = self.get_context_data()
+        context["form"] = form
         if form.is_valid():
             obj = form.save(commit=False)
             # Do other stuff before saving here
@@ -35,7 +37,7 @@ class NewDataView(FormView):
             else:
                 return redirect(self.success_url) if self.success_url else redirect(obj)
         messages.error(request, self.failure_message)
-        return render(request, self.template_name, {"form": form})
+        return render(request, self.template_name, context)
 
 
 class NewDataViewInline(FormView):
@@ -118,6 +120,8 @@ class UpdateDataView(UpdateView):
         self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
+        context = self.get_context_data()
+        context["form"] = form
         if form.is_valid():
             # Do other stuff before saving here
             if form.is_public():
@@ -136,7 +140,7 @@ class UpdateDataView(UpdateView):
                     else redirect(self.object)
                 )
         messages.error(request, self.failure_message)
-        return render(request, self.template_name, {"form": form})
+        return render(request, self.template_name, context)
 
 
 class UpdateDataInlineView(UpdateView):
