@@ -38,9 +38,13 @@ Full instructions to follow once the platform is in production.
 
 ## Development notes
 
-To run Django management commands, you will need to execute them inside the container, ie `docker-compose exec web python manage.py showmigrations`
+Development documentation is ongoing and can be found [in the relevant docs subdirectory](https://github.com/ImperialCollegeLondon/Faraday-liionsden/tree/develop/docs/development).
 
-This container defines the password for the admin user so you can access the admin backend while developing.
+Some general hints and potential gotchas:
+
+- To run Django management commands, you will need to execute them inside the container, ie `docker-compose exec web python manage.py showmigrations`.
+- For local development, the password for the admin user is set as `password` in an [initial migration](https://github.com/ImperialCollegeLondon/Faraday-liionsden/blob/develop/management/migrations/0004_add_superuser.py). This comes from an environment variable [set in docker-compose.yml](https://github.com/ImperialCollegeLondon/Faraday-liionsden/blob/develop/docker-compose.yml#L36).
+- If the `web` container won't start it may be because changes have been made such that the existing postgres database is incompatible with the Django code. The database is stored locally in `data/db` and persists after Docker is shutfown, so completely remove that directory and try again.
 
 ### Contribution guidelines
 
