@@ -14,7 +14,7 @@ azure-storage-blob==12.13.1
     # via django-storages
 beautifulsoup4==4.11.1
     # via django-bootstrap-v5
-certifi==2022.6.15
+certifi==2022.12.7
     # via
     #   msrest
     #   requests
