@@ -1,11 +1,11 @@
 repos:
   - repo: https://github.com/timothycrosley/isort
-    rev: "5.11.4"
+    rev: "5.12.0"
     hooks:
       - id: isort
         additional_dependencies: [toml]
   - repo: https://github.com/psf/black
-    rev: "22.12.0"
+    rev: "23.3.0"
     hooks:
       - id: black
         exclude: battDB/migrations/|common/migrations/|dfndb/migrations/|management/migrations/|_other/|data/

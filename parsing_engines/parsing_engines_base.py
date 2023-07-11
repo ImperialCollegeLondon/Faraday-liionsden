@@ -15,7 +15,6 @@ KNOWN_PARSING_ENGINES: Dict[str, Type[ParsingEngineBase]] = {}
 
 
 class ParsingEngineBase(abc.ABC):
-
     name: str = ""
     description: str = ""
     valid: List[Tuple[str, str]] = []
@@ -129,7 +128,6 @@ class ParsingEngineBase(abc.ABC):
 
 
 class DummyParsingEngine(ParsingEngineBase):
-
     name = "Dummy"
     description = "Dummy parsing engine that does nothing"
 

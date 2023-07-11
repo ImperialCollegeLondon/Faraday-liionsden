@@ -13,32 +13,40 @@
 
   <table width="100%">
     <tr>
-      <td style="text-align:left" ><h4> {{ object.manufacturer }} </h4></td>
-      <td style="text-align:center" ><h4> {{ object.serialNo }} </h4></td>
-      <td style="text-align:right" ><h4> {{ object.manufactured_on }} </h4></td>
+      <td style="text-align:left">
+        <h4> {{ object.manufacturer }} </h4>
+      </td>
+      <td style="text-align:center">
+        <h4> {{ object.serialNo }} </h4>
+      </td>
+      <td style="text-align:right">
+        <h4> {{ object.manufactured_on }} </h4>
+      </td>
     </tr>
-    </table>
+  </table>
 </div>
 
 <div class="card border-dark mb-3" style="max-width: 100%;">
-  <div class="card-header"><h5>Batch details</h5></div>
+  <div class="card-header">
+    <h5>Batch details</h5>
+  </div>
   <div class="card-body">
-    <b>Device Specification</b> 
+    <b>Device Specification</b>
     <br>
     <a href="{{ object.specification.get_absolute_url }}"><b>{{ object.specification }}</b></a>
     <br><br>
-    <b>Batch/Serial Number</b> 
+    <b>Batch/Serial Number</b>
     <br>
     {{ object.serialNo }}
     <br><br>
-    <b>Batch size</b> 
+    <b>Batch size</b>
     <br>
     {{ object.batch_size }}
     <br><br>
     <b>Related experiments</b>
-    <br>    
+    <br>
     <table class="table">
-      <thead class= "thead-light">
+      <thead class="thead-light">
         <tr>
           <th scope="col"> Batch sequence</th>
           <th scope="col">Experiment ID</th>
@@ -48,42 +56,71 @@
         </tr>
       </thead>
       <tbody>
-      {% for ed in object.experimentdevice_set.all %}
+        {% for ed in object.experimentdevice_set.all %}
+        {% get_obj_perms request.user for ed.experiment as "ex_perms" %}
+        {% if "view_experiment" in ex_perms %}
         <tr>
           <td>{{ ed.batch_sequence }}</td>
-          <td ><a href="{{ ed.experiment.get_absolute_url }}">{{ ed.experiment.id }}</a></td>
-          <td ><a href="{{ ed.experiment.get_absolute_url }}">{{ ed.experiment.name }}</a></td>
+          <td><a href="{{ ed.experiment.get_absolute_url }}">{{ ed.experiment.id }}</a></td>
+          <td><a href="{{ ed.experiment.get_absolute_url }}">{{ ed.experiment.name }}</a></td>
           <td>{{ ed.experiment.date }}</td>
           <td>{{ ed.device_position }}</td>
         </tr>
-      {% endfor %}
-    </tbody>
+        {% endif %}
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 </div>
 
 <div class="card border-dark mb-3" style="max-width: 100%;">
-  <div class="card-header"><h5>Metadata</h5></div>
+  <div class="card-header">
+    <h5>Metadata</h5>
+  </div>
   <div class="card-body">
     <table width="50%">
-      <tr><td><b>Manufacturing Protocol:</b></td><td>{{ object.manufacturing_protocol }} </td></tr>
-      <tr><td><b>Owner:</b></td><td>{{ object.user_owner }} </td></tr>
-      <tr><td><b>Created:</b></td><td>{{ object.created_on }} </td></tr>
-      <tr><td><b>Modified:</b></td><td>{{ object.modified_on }} </td></tr>
-      <tr><td><b>ID:</b></td><td>{{ object.id }} </td></tr>
-      <tr><td><b>Status:</b></td><td>{{ object.status }} </td></tr>
-      <tr><td><b>Notes:</b></td><td>{{ object.notes }} </td></tr>
-      <tr><td><b>Attributes:</b></td><td>{{ object.attributes }} </td></tr>
+      <tr>
+        <td><b>Manufacturing Protocol:</b></td>
+        <td>{{ object.manufacturing_protocol }} </td>
+      </tr>
+      <tr>
+        <td><b>Owner:</b></td>
+        <td>{{ object.user_owner }} </td>
+      </tr>
+      <tr>
+        <td><b>Created:</b></td>
+        <td>{{ object.created_on }} </td>
+      </tr>
+      <tr>
+        <td><b>Modified:</b></td>
+        <td>{{ object.modified_on }} </td>
+      </tr>
+      <tr>
+        <td><b>ID:</b></td>
+        <td>{{ object.id }} </td>
+      </tr>
+      <tr>
+        <td><b>Status:</b></td>
+        <td>{{ object.status }} </td>
+      </tr>
+      <tr>
+        <td><b>Notes:</b></td>
+        <td>{{ object.notes }} </td>
+      </tr>
+      <tr>
+        <td><b>Attributes:</b></td>
+        <td>{{ object.attributes }} </td>
+      </tr>
     </table>
   </div>
 
   {% get_obj_perms request.user for object as "object_perms" %}
   {% if "change_batch" in object_perms %}
-    </div>
-    <a href="/battDB/batches/edit/{{ object.pk }}" class="btn btn-warning", role="button"> Edit entry</a>
-    <a href="/battDB/batches/delete/{{ object.pk }}" class="btn btn-danger", role="button"> Delete entry</a>
-  </div>
-  {% endif %}
+</div>
+<a href="/battDB/batches/edit/{{ object.pk }}" class="btn btn-warning" , role="button"> Edit entry</a>
+<a href="/battDB/batches/delete/{{ object.pk }}" class="btn btn-danger" , role="button"> Delete entry</a>
+</div>
+{% endif %}
 
 </div>
 

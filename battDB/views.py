@@ -103,6 +103,21 @@ class NewExperimentView(PermissionRequiredMixin, NewDataViewInline):
     failure_message = "Could not save new experiment. Invalid information."
     inline_formsets = {"devices": ExperimentDeviceFormSet}
 
+    def get_context_data(self, **kwargs):
+        """
+        Helper function to get correct context to pass to render() in get()
+        and post(). Overridden here because this formset needs to be passed
+        the user object.
+        """
+        data = super(NewDataViewInline, self).get_context_data(**kwargs)
+        if self.request.POST:
+            for key, formset in self.inline_formsets.items():
+                data[key] = formset(self.request.POST, self.request.FILES)
+        else:
+            for key, formset in self.inline_formsets.items():
+                data[key] = formset(user=self.request.user)
+        return data
+
 
 class NewEquipmentView(PermissionRequiredMixin, NewDataView):
     permission_required = "battDB.add_equipment"
@@ -118,6 +133,19 @@ class NewBatchView(PermissionRequiredMixin, NewDataView):
     form_class = NewBatchForm
     success_message = "New batch created successfully."
     failure_message = "Could not save new batch. Invalid information."
+
+    def get_form_kwargs(self):
+        """
+        Passes the request object to the form class.
+        This is necessary to only display device_specifications in the dropdown
+        that the user has permsission to view.
+        """
+
+        kwargs = super(NewBatchView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        if not self.request.user:
+            raise ValueError("User object not passed to form class.")
+        return kwargs
 
 
 class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
@@ -251,6 +279,17 @@ class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
     form_class = NewBatchForm
     success_message = "Batch updated successfully."
     failure_message = "Could not update batch. Invalid information."
+
+    def get_form_kwargs(self):
+        """
+        Passes the request object to the form class.
+        This is necessary to only display device_specifications in the dropdown
+        that the user has permsission to view.
+        """
+
+        kwargs = super(UpdateBatchView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
 
 class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):

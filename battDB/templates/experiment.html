@@ -70,11 +70,14 @@
       </thead>
       <tbody>
         {% for device in object.devices.all %}
+        {% get_obj_perms request.user for device.batch as "batch_perms" %}
+        {% if "view_batch" in batch_perms %}
         <tr>
           <td><a href="{{ device.batch.get_absolute_url }}">{{ device.batch }}</a></td>
           <td>{{ device.batch_sequence }}</td>
           <td>{{ device.device_position }}</td>
         </tr>
+        {% endif %}
         {% endfor %}
       </tbody>
     </table>
