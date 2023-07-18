@@ -12,8 +12,6 @@ azure-core==1.25.0
     #   msrest
 azure-storage-blob==12.13.1
     # via django-storages
-backports-zoneinfo==0.2.1
-    # via django
 beautifulsoup4==4.11.1
     # via django-bootstrap-v5
 certifi==2022.12.7
@@ -34,7 +32,7 @@ coreschema==0.0.4
     # via coreapi
 crispy-bootstrap5==0.6
     # via -r requirements.in
-cryptography==41.0.1
+cryptography==41.0.2
     # via
     #   -r requirements.in
     #   azure-storage-blob
@@ -189,7 +187,6 @@ tenacity==8.1.0
     # via plotly
 typing-extensions==4.3.0
     # via
-    #   asgiref
     #   azure-core
     #   django-bootstrap-datepicker-plus
     #   pydantic
