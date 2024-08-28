@@ -1,3 +1,67 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+# Exclude the coverage report file from setuptools package finder
+exclude = ["htmlcov"]
+
+[project]
+name = "Liionsden"
+version = "0.2.0"
+authors = [
+    { name = "Imperial College London RSE Team", email = "ict-rse-team@imperial.ac.uk" },
+]
+requires-python = ">=3.11"
+
+dependencies = [
+    "pandas",
+    "psycopg2",
+    "django_jsoneditor",
+    "Django",
+    "djangorestframework",
+    "preparenovonix",
+    "PyYAML",
+    "xlrd",
+    "django-extensions",
+    "django-ipware",
+    "coreapi-cli",
+    "django-mptt",
+    "idutils",
+    "whitenoise",
+    "model_bakery",
+    "django-guardian",
+    "django-bootstrap-v5",
+    "django-tables2",
+    "django-cleanup",
+    "python-magic",
+    "django-better-admin-arrayfield",
+    "django-crispy-forms",
+    "crispy-bootstrap5",
+    "django-bootstrap-datepicker-plus",
+    "django-filter",
+    "tablib",
+    "openpyxl",
+    "django-storages[azure]",
+    "django-override-storage",
+    "molmass",
+    "plotly",
+    "oauthlib",
+    "pillow",
+    "cryptography",
+    "debugpy",
+]
+
+[project.optional-dependencies]
+dev = [
+    "flake8",
+    "black",
+    "isort",
+    "mypy",
+    "pip-tools",
+    "pre-commit",
+]
+
 [tool.black]
 exclude = "venv/|battDB/migrations/|common/migrations/|dfndb/migrations/|other/|data/"
 

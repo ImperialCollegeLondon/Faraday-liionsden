@@ -1,6 +1,4 @@
-FROM python:3.8-slim-buster as python
-
-FROM python
+FROM python:3.12-bullseye
 
 # ssh
 COPY scripts/install_ssh.sh .

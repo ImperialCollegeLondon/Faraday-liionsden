@@ -1,7 +1,0 @@
-flake8
-black
-mypy
-isort
-bump2version
-pre-commit
-pip-tools

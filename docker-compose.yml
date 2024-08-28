@@ -1,8 +1,6 @@
-version: "3.9"
-
 services:
   db:
-    image: postgres:13
+    image: postgres:15
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:
@@ -13,9 +11,11 @@ services:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
+    ports:
+      - 5432:5432
   azurite:
-    image: mcr.microsoft.com/azure-storage/azurite:3.24.0
+    image: mcr.microsoft.com/azure-storage/azurite:3.32.0
     volumes:
       - azurite:/data
     ports:
@@ -24,7 +24,7 @@ services:
       test: nc -z 127.0.0.1 10000
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
   web:
     build: .
     environment:
@@ -38,7 +38,6 @@ services:
       - AZURE_STORAGE_ACCOUNT_NAME=devstoreaccount1
       - AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://azurite:10000/devstoreaccount1;QueueEndpoint=http://azurite:10001/devstoreaccount1;
       - PRIVACY_NOTICE_SAS_URL
-
     volumes:
       - .:/usr/src/app
       - ./log:/usr/src/app/log
