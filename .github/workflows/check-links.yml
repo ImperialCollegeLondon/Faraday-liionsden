@@ -1,16 +1,17 @@
 name: Check links in Markdown files
 on:
-  push:
+  workflow_call:
   schedule:
     - cron: "0 0 * * 1" # midnight every Monday
 
 jobs:
   check-links:
+    timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
       - uses: gaurav-nelson/github-action-markdown-link-check@v1
+        name: Check links in markdown files
         with:
-          use-quiet-mode: 'yes'
-          use-verbose-mode: 'yes'
-          max-depth: 1 # Only check the md files in top dir until docs written
+          use-quiet-mode: "yes"
+          use-verbose-mode: "yes"
