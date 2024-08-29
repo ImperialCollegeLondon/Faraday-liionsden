@@ -134,7 +134,7 @@ class ExperimentAdmin(common.admin.BaseAdmin):
             )
         return mark_safe(links_str)
 
-    data_files_list.short_description = "Data Files"
+    setattr(data_files_list, "short_description", "Data Files")
 
 
 admin.site.register(Experiment, ExperimentAdmin)
@@ -215,7 +215,7 @@ class DataRangeInline(common.admin.TabularInline):
         else:
             return "N/A"
 
-    size.short_description = "Rows x Cols"
+    setattr(size, "short_description", "Rows x Cols")
 
     def get_graph_link(self, obj):
         if obj.ts_data is not None:
@@ -227,7 +227,7 @@ class DataRangeInline(common.admin.TabularInline):
         else:
             return "N/A"
 
-    get_graph_link.short_description = "Graph"
+    setattr(get_graph_link, "short_description", "Graph")
 
     def columns(self, obj):
         return str(obj.ts_headers)
@@ -272,14 +272,14 @@ class DataAdmin(BaseAdmin):
     def file_data(self, obj):
         return "%dx%d" % (obj.file_rows(), len(obj.file_columns()))
 
-    file_data.short_description = "Row x Col"
+    setattr(file_data, "short_description", "Row x Col")
 
     def parsed_data(self, obj):
         parsed = len(obj.parsed_columns())
         missing = len(obj.missing_columns())
         return "%d/%d: %s" % (parsed, parsed + missing, obj.parsed_columns())
 
-    parsed_data.short_description = "Imported Cols"
+    setattr(parsed_data, "short_description", "Imported Cols")
 
     def get_experiment_link(self, obj):
         if hasattr(obj, "experiment") and obj.experiment is not None:
@@ -294,7 +294,7 @@ class DataAdmin(BaseAdmin):
         else:
             return "N/A"
 
-    get_experiment_link.short_description = "Experiment"
+    setattr(get_experiment_link, "short_description", "Experiment")
 
     def get_file_link(self, obj):
         if hasattr(obj, "raw_data_file") and obj.raw_data_file is not None:
@@ -305,7 +305,7 @@ class DataAdmin(BaseAdmin):
         else:
             return "N/A"
 
-    get_file_link.short_description = "View RAW"
+    setattr(get_file_link, "short_description", "View RAW")
 
     def save_model(self, request, obj, form, change):
         pass  # don't actually save the parent instance

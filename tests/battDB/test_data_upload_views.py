@@ -92,9 +92,7 @@ class DataUploadViewTest(TestCase):
         self.assertEqual(download_response.status_code, 302)
         print(download_response.url)
         self.assertTrue(
-            download_response.url.startswith(
-                "http://localhost:10000/devstoreaccount1/test/uploaded_files/biologic_example"
-            ),
+            download_response.url.startswith("/uploaded_files/biologic_example"),
         )
 
     def test_upload_view_biologic_data_2(self):
@@ -152,9 +150,7 @@ class DataUploadViewTest(TestCase):
         self.assertEqual(download_response.status_code, 302)
         print(download_response.url)
         self.assertTrue(
-            download_response.url.startswith(
-                "http://localhost:10000/devstoreaccount1/test/uploaded_files/biologic_example_Ewe"
-            ),
+            download_response.url.startswith("/uploaded_files/biologic_example_Ewe"),
         )
 
     def test_upload_view_maccor_data(self):
@@ -212,9 +208,7 @@ class DataUploadViewTest(TestCase):
         )
         self.assertEqual(download_response.status_code, 302)
         self.assertTrue(
-            download_response.url.startswith(
-                "http://localhost:10000/devstoreaccount1/test/uploaded_files/maccor_example_new"
-            ),
+            download_response.url.startswith("/uploaded_files/maccor_example_new"),
         )
 
     def test_upload_view_maccor_data_2(self):
@@ -273,7 +267,7 @@ class DataUploadViewTest(TestCase):
         self.assertEqual(download_response.status_code, 302)
         self.assertTrue(
             download_response.url.startswith(
-                "http://localhost:10000/devstoreaccount1/test/uploaded_files/maccor_example_discharge_test"
+                "/uploaded_files/maccor_example_discharge_test"
             ),
         )
 
@@ -333,7 +327,7 @@ class DataUploadViewTest(TestCase):
         self.assertEqual(download_response.status_code, 302)
         self.assertTrue(
             download_response.url.startswith(
-                "http://localhost:10000/devstoreaccount1/test/uploaded_files/maccor_example_discharge_test"
+                "/uploaded_files/maccor_example_discharge_test"
             ),
         )
 
@@ -433,9 +427,7 @@ class DataUploadViewTest(TestCase):
         )
         self.assertEqual(download_response.status_code, 302)
         self.assertTrue(
-            download_response.url.startswith(
-                "http://localhost:10000/devstoreaccount1/test/uploaded_files/sample_binary"
-            ),
+            download_response.url.startswith("/uploaded_files/sample_binary"),
         )
 
     def test_upload_view_settings_file(self):
@@ -492,9 +484,7 @@ class DataUploadViewTest(TestCase):
         )
         self.assertEqual(download_response.status_code, 302)
         self.assertTrue(
-            download_response.url.startswith(
-                "http://localhost:10000/devstoreaccount1/test/uploaded_files/sample_settings"
-            ),
+            download_response.url.startswith("/uploaded_files/sample_settings"),
         )
 
     def test_update_data(self):
