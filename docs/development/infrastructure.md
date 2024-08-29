@@ -11,7 +11,7 @@ addition to the main `web` container:
   Django.
 - `azurite`: In production any media files (e.g. raw data files, PDFs etc. uploaded by
   users) are stored in [Azure
-  Blob](https://azure.microsoft.com/en-gb/products/storage/blobs) Containers. It is not
+  Blob](https://azure.microsoft.com/en-gb/products/storage/blobs) Containers. It is not  <!-- markdown-link-check-disable-line -->
   practical nor wise to rely on a cloud container for local development so the [Azurite
   image](https://hub.docker.com/_/microsoft-azure-storage-azurite) is used to run an
   Azure Storage emulator.
