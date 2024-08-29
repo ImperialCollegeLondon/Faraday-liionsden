@@ -123,3 +123,6 @@ vars.tfvars
 terraform.tfstate
 terraform-provider*
 .terraform.lock.hcl
+
+# tests
+uploaded_files

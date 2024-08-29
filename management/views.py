@@ -12,7 +12,7 @@ def register_request(request, backend=backend):
     if request.method == "POST":
         form = NewUserForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            form.save()
             messages.success(
                 request, "Registration successful. Your account is pending approval."
             )

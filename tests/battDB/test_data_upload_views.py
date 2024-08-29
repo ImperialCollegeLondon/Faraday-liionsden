@@ -106,7 +106,7 @@ class DataUploadViewTest(TestCase):
         from liionsden.settings import settings
 
         # Login
-        login_response = self.client.post(
+        self.client.post(
             "/accounts/login/",
             {"username": "test_contributor", "password": "contributorpass"},
         )
@@ -226,7 +226,7 @@ class DataUploadViewTest(TestCase):
         from liionsden.settings import settings
 
         # Login
-        login_response = self.client.post(
+        self.client.post(
             "/accounts/login/",
             {"username": "test_contributor", "password": "contributorpass"},
         )
@@ -286,7 +286,7 @@ class DataUploadViewTest(TestCase):
         from liionsden.settings import settings
 
         # Login
-        login_response = self.client.post(
+        self.client.post(
             "/accounts/login/",
             {"username": "test_contributor", "password": "contributorpass"},
         )
@@ -514,7 +514,7 @@ class DataUploadViewTest(TestCase):
             "tests/parsing_engines/example_files/biologic_example.csv",
         )
         with open(file_path) as input_file:
-            post_response = self.client.post(
+            self.client.post(
                 reverse("battDB:New File", kwargs={"pk": self.experiment.id}),
                 {
                     "name": "Device 6",
@@ -550,10 +550,6 @@ class DataUploadViewTest(TestCase):
             bdb.ExperimentDataFile.objects.get(name="Device 6")
 
     def test_invalid_form(self):
-        import os
-
-        from liionsden.settings import settings
-
         # Login
         self.client.post(
             "/accounts/login/",

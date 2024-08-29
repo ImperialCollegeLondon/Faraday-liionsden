@@ -3,6 +3,7 @@
 These functions are run as part of a migration and pre-populate the database with
 some default parsers.
 """
+
 from logging import getLogger
 
 logger = getLogger()
@@ -62,7 +63,7 @@ def populate_parsers(apps, schema_editor):
 
 
 def update_parser_file_formats(apps, schema_editor):
-    """Updates the file formats of initial parsers parsers to correct the migration above.
+    """Updates the file formats of initial parsers parsers to correct the migration.
     The file_formats should be set to the name of the parser.
 
     Args:

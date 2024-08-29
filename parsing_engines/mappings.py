@@ -1,5 +1,5 @@
 """
-TODO: Mappings can all be defined here! No need for separate files. 
+TODO: Mappings can all be defined here! No need for separate files.
 """
 
 GENERIC_COLUMN_MAPPING = {

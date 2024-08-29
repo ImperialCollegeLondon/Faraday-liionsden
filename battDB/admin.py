@@ -41,12 +41,14 @@ class DeviceSpecInline(common.admin.CompositeBaseInLine):
 class DeviceSpecAdmin(common.admin.HasMPTTAdmin):
     model = DeviceSpecification
     save_as = True
-    list_display = common.admin.HasMPTTAdmin.list_display + (
+    list_display = [
+        *common.admin.HasMPTTAdmin.list_display,
         "device_type",
         "abstract",
         "complete",
-    )
-    list_filter = (common.admin.HasMPTTAdmin.list_filter or []) + [
+    ]
+    list_filter = [
+        *common.admin.HasMPTTAdmin.list_filter,
         "device_type",
         "abstract",
         "complete",
@@ -80,12 +82,15 @@ class BatchInline(common.admin.TabularInline):
 
 
 class BatchAdmin(common.admin.BaseAdmin, mptt.admin.MPTTModelAdmin):
-    list_display = (
-        ["__str__"]
-        + ["manufacturer", "serialNo", "manufactured_on", "batch_size"]
-        + BaseAdmin.list_display_extra
-    )
-    list_filter = BaseAdmin.list_filter + ["manufacturer", "batch_size"]
+    list_display = [
+        "__str__",
+        "manufacturer",
+        "serialNo",
+        "manufactured_on",
+        "batch_size",
+        *BaseAdmin.list_display_extra,
+    ]
+    list_filter = [*BaseAdmin.list_filter, "manufacturer", "batch_size"]
     save_as = True
     inlines = [
         BatchInline,
@@ -109,10 +114,14 @@ class ExperimentDeviceInline(common.admin.TabularInline):
 
 
 class ExperimentAdmin(common.admin.BaseAdmin):
-    readonly_fields = ["data_files_list"] + BaseAdmin.readonly_fields
-    list_display = (
-        ["__str__"] + ["devices_", "files_", "cycles_"] + BaseAdmin.list_display_extra
-    )
+    readonly_fields = ["data_files_list", *BaseAdmin.readonly_fields]
+    list_display = [
+        "__str__",
+        "devices_",
+        "files_",
+        "cycles_",
+        *BaseAdmin.list_display_extra,
+    ]
     inlines = [ExperimentDeviceInline]
     save_as = True
 
@@ -212,9 +221,8 @@ class DataRangeInline(common.admin.TabularInline):
         if obj.ts_data is not None:
             return mark_safe(
                 """
-            <button type="button"> <a href="%s">%s</a> </button>
-            """
-                % ("/foo", "PLOT")
+            <button type="button"> <a href="{}">{}</a> </button>
+            """.format("/foo", "PLOT")
             )
         else:
             return "N/A"
@@ -251,8 +259,9 @@ class DataAdmin(BaseAdmin):
         "created_on",
         "status",
     ]
-    list_filter = ["experiment"] + BaseAdmin.list_filter
-    readonly_fields = BaseAdmin.readonly_fields + [
+    list_filter = ["experiment", *BaseAdmin.list_filter]
+    readonly_fields = [
+        *BaseAdmin.readonly_fields,
         "is_parsed",
         "get_experiment_link",
         "file_hash",
@@ -291,7 +300,7 @@ class DataAdmin(BaseAdmin):
         if hasattr(obj, "raw_data_file") and obj.raw_data_file is not None:
             size = obj.raw_data_file.size()
             return mark_safe(
-                f'<button type="button"> <a href={reverse("battDB:Download File", kwargs={"pk": obj.id})}>{size}</a> </button>'
+                f'<button type="button"> <a href={reverse("battDB:Download File", kwargs={"pk": obj.id})}>{size}</a> </button>'  # noqa: E501
             )
         else:
             return "N/A"

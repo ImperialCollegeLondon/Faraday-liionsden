@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.db import transaction
-from django.shortcuts import redirect, render  # noqa: F401
+from django.shortcuts import redirect, render
 from django.views.generic.edit import DeleteView, FormView, UpdateView
 
 
@@ -57,7 +57,7 @@ class NewDataViewInline(FormView):
         Helper function to get correct context to pass to render() in get()
         and post().
         """
-        data = super(NewDataViewInline, self).get_context_data(**kwargs)
+        data = super().get_context_data(**kwargs)
         if self.request.POST:
             for key, formset in self.inline_formsets.items():
                 data[key] = formset(self.request.POST, self.request.FILES)
@@ -159,7 +159,7 @@ class UpdateDataInlineView(UpdateView):
         Helper function to get correct context to pass to render() in get()
         and post().
         """
-        data = super(UpdateDataInlineView, self).get_context_data(**kwargs)
+        data = super().get_context_data(**kwargs)
         if self.request.POST:
             for key, formset in self.inline_formsets.items():
                 data[key] = formset(self.request.POST, instance=self.object)

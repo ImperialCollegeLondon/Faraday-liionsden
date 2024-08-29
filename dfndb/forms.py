@@ -31,7 +31,7 @@ class NewCompoundForm(DataCreateForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(NewCompoundForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(
@@ -70,7 +70,7 @@ class NewComponentForm(DataCreateForm):
         fields = ["name", "type", "notes"]
 
     def __init__(self, *args, **kwargs):
-        super(NewComponentForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(

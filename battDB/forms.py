@@ -64,7 +64,7 @@ class NewDeviceForm(DataCreateForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(NewDeviceForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["parameters"].required = False
         self.fields["components"].required = False
         self.helper = FormHelper()
@@ -185,7 +185,7 @@ class NewExperimentForm(DataCreateForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(NewExperimentForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(HTML("<h1> New Experiment </h1>")),
@@ -259,7 +259,7 @@ class ExperimentDeviceFormSet(ExperimentDeviceFormSetBase):
     """
 
     def __init__(self, *args, **kwargs):
-        super(ExperimentDeviceFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if self.user:
             # Get queryset of batches
             restricted_batches = get_objects_for_user(self.user, "view_batch", Batch)
@@ -277,7 +277,7 @@ class NewEquipmentForm(DataCreateForm):
         fields = ["name", "institution", "serialNo", "default_parser", "notes"]
 
     def __init__(self, *args, **kwargs):
-        super(NewEquipmentForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.layout = Layout(
             Div(
@@ -324,7 +324,7 @@ class NewBatchForm(DataCreateForm):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
-        super(NewBatchForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if self.user:
             # Get queryset of device specifications the user has permission to view
@@ -389,7 +389,7 @@ class NewExperimentDataFileForm(DataCreateForm):
     def __init__(self, *args, **kwargs):
         mode = "Update" if "instance" in kwargs.keys() else "New"
         self.experiment = kwargs.pop("experiment", None)
-        super(NewExperimentDataFileForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.attrs = {"enctype": "multipart/form-data"}
 
@@ -427,18 +427,14 @@ class NewExperimentDataFileForm(DataCreateForm):
                 "Upload file",
                 Div(
                     HTML(
-                        (
-                            "Upload the raw data file here. Select a parser to process "
-                            "the data, or leave blank to upload the file without "
-                            "parsing. "
-                        )
+                        "Upload the raw data file here. Select a parser to process "
+                        "the data, or leave blank to upload the file without "
+                        "parsing. "
                     ),
                     HTML(
-                        (
-                            "<b>Find detailed information about the behaviour of "
-                            "each parser <a href='/battDB/parsers/'  target='_blank'>"
-                            "here</a></b>."
-                        )
+                        "<b>Find detailed information about the behaviour of "
+                        "each parser <a href='/battDB/parsers/'  target='_blank'>"
+                        "here</a></b>."
                     ),
                     css_class="container pb-4",
                 ),
@@ -450,11 +446,9 @@ class NewExperimentDataFileForm(DataCreateForm):
                 "Upload file",
                 Div(
                     HTML(
-                        (
-                            "Note: You cannot change the file that has already been "
-                            "uploaded, only its metadata. If you want to "
-                            "change the file, delete this entry and upload a new one."
-                        )
+                        "Note: You cannot change the file that has already been "
+                        "uploaded, only its metadata. If you want to "
+                        "change the file, delete this entry and upload a new one."
                     ),
                     css_class="container pb-4",
                 ),

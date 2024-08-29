@@ -5,4 +5,4 @@ class DfndbConfig(AppConfig):
     name = "dfndb"
 
     def ready(self):
-        import dfndb.signals.handlers
+        import dfndb.signals.handlers  # noqa

@@ -88,7 +88,8 @@ def set_permissions_modifiable(sender, instance, **kwargs):
 
     else:
         raise ValueError(
-            f"Object status {instance.status} not allowed; must be private, public or deleted."
+            f"Object status {instance.status} not allowed; "
+            "must be private, public or deleted."
         )
 
 

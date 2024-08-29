@@ -18,14 +18,14 @@ class DataParameterInline(admin.TabularInline):
 
 
 class ComponentAdmin(BaseAdmin):
-    list_display = BaseAdmin.list_display + ["type"]
-    list_filter = BaseAdmin.list_filter + ["type"]
+    list_display = [*BaseAdmin.list_display, "type"]
+    list_filter = [*BaseAdmin.list_filter, "type"]
     inlines = (ComponentCompositionInline,)
 
 
 class MethodAdmin(BaseAdmin, DynamicArrayMixin):
-    list_display = BaseAdmin.list_display + ["type"]
-    list_filter = BaseAdmin.list_filter + ["type"]
+    list_display = [*BaseAdmin.list_display, "type"]
+    list_filter = [*BaseAdmin.list_filter, "type"]
 
 
 class DataAdmin(BaseAdmin):
@@ -42,8 +42,8 @@ class CompoundAdmin(admin.ModelAdmin):
 
 
 class ParameterAdmin(BaseAdmin):
-    list_display = BaseAdmin.list_display + ["parameter_type"]
-    list_filter = BaseAdmin.list_filter + ["parameter_type"]
+    list_display = [*BaseAdmin.list_display, "parameter_type"]
+    list_filter = [*BaseAdmin.list_filter, "parameter_type"]
 
 
 admin.site.register(cmodels.QuantityUnit, UnitAdmin)

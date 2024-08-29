@@ -1,6 +1,6 @@
 import re
 from logging import getLogger
-from typing import Any, Dict, List, TextIO, Tuple, Union
+from typing import Any, TextIO
 
 import pandas as pd
 import yaml
@@ -16,14 +16,14 @@ class BiologicParsingEngine(ParsingEngineBase):
 
     name = "Biologic"
     description = "Biologic CSV/TSV/MPT"
-    valid: List[Tuple[str, str]] = [
+    valid: list[tuple[str, str]] = [
         ("text/plain", ".csv"),
         ("text/plain", ".mpt"),
         ("text/plain", ".tsv"),
         ("text/plain", ".txt"),
         ("text/plain", ".mps"),
     ]
-    mandatory_columns: Dict[str, Dict[str, Union[str, Tuple[str, str]]]] = {
+    mandatory_columns: dict[str, dict[str, str | tuple[str, str]]] = {
         "time/s": dict(symbol="t", unit=("Time", "s")),
         "Ecell/V": dict(symbol="V", unit=("Voltage", "V")),
         "I/mA": dict(symbol="I", unit=("Current", "mA")),
@@ -61,7 +61,7 @@ class BiologicParsingEngine(ParsingEngineBase):
 
 def get_file_header(
     file_obj: TextIO, skip_rows: int, encoding: str
-) -> Union[Dict[str, Any], List[Any]]:
+) -> dict[str, Any] | list[Any]:
     """Extracts the header from the Biologic file.
 
     Args:
@@ -78,7 +78,7 @@ def get_file_header(
         return []
     with file_obj.open("r") as f:
         header = list(filter(len, (f.readline().rstrip() for _ in range(skip_rows))))
-        if type(header[0]) == bytes:
+        if type(header[0]) is bytes:
             header = [i.decode(encoding) for i in header]
     try:
         header = header_to_yaml(header)
@@ -89,7 +89,7 @@ def get_file_header(
     return header
 
 
-def get_header_size(file_obj: TextIO, encoding: str) -> Tuple[int, str]:
+def get_header_size(file_obj: TextIO, encoding: str) -> tuple[int, str]:
     """Reads the file and determines the size of the header.
 
     Args:
@@ -177,7 +177,7 @@ yaml_replacements = {
 }
 
 
-def header_to_yaml(header: List[str]) -> Dict:
+def header_to_yaml(header: list[str]) -> dict:
     """Adapt BioLog file header to YAML format.
 
     The format of the BioLogix header is "almost" parsable directly as YAML We can hack
@@ -196,7 +196,9 @@ def header_to_yaml(header: List[str]) -> Dict:
     """
 
     # 1) Apply replacements
-    regex = re.compile("(%s)" % "|".join(map(re.escape, yaml_replacements.keys())))
+    regex = re.compile(
+        "({})".format("|".join(map(re.escape, yaml_replacements.keys())))
+    )
     rep_header = [
         regex.sub(lambda mo: yaml_replacements.get(mo.group(), f"{h}"), h)
         for h in header

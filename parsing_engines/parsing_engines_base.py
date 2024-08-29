@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import abc
 import functools
-from typing import Any, Dict, Generator, List, Optional, TextIO, Tuple, Type, Union
+from collections.abc import Generator
+from typing import Any, TextIO
 from warnings import warn
 
 import pandas as pd
@@ -10,18 +11,18 @@ import pandas.errors
 from django.core.exceptions import ValidationError
 from pandas.core.dtypes.common import is_numeric_dtype
 
-KNOWN_PARSING_ENGINES: Dict[str, Type[ParsingEngineBase]] = {}
+KNOWN_PARSING_ENGINES: dict[str, type[ParsingEngineBase]] = {}
 """Registry of the known parsing engines."""
 
 
 class ParsingEngineBase(abc.ABC):
     name: str = ""
     description: str = ""
-    valid: List[Tuple[str, str]] = []
-    mandatory_columns: Dict[str, Dict[str, Union[str, Tuple[str, str]]]] = {}
-    column_name_mapping: Dict[str, str] = dict()
+    valid: list[tuple[str, str]] = []
+    mandatory_columns: dict[str, dict[str, str | tuple[str, str]]] = {}
+    column_name_mapping: dict[str, str] = dict()
 
-    def __init_subclass__(cls: Type[ParsingEngineBase]):
+    def __init_subclass__(cls: type[ParsingEngineBase]):
         if len(cls.name) == 0:
             msg = "A ParsingEngineBase subclass cannot have an empty attribute 'name'."
             raise ValueError(msg)
@@ -44,8 +45,8 @@ class ParsingEngineBase(abc.ABC):
         file_obj: TextIO,
         skip_rows: int,
         data: pd.DataFrame,
-        file_metadata: Dict[str, Any],
-        column_name_mapping: Optional[Dict[str, str]] = None,
+        file_metadata: dict[str, Any],
+        column_name_mapping: dict[str, str] | None = None,
     ):
         self.file_obj = file_obj
         self.skip_rows = skip_rows
@@ -66,7 +67,7 @@ class ParsingEngineBase(abc.ABC):
         cols = [c for c in self.data.columns if "Unnamed" not in c]
         self.data = self.data.loc[:, cols]
 
-    def get_column_info(self) -> Dict:
+    def get_column_info(self) -> dict:
         """Gathers some metadata for each column.
 
         In particular, it gathers if it is a numeric column and if it has data.
@@ -83,7 +84,7 @@ class ParsingEngineBase(abc.ABC):
             for k in self.data.columns
         }
 
-    def get_metadata(self) -> Dict[str, Any]:
+    def get_metadata(self) -> dict[str, Any]:
         """Puts together the metadata for the file
 
         Raises:
@@ -92,7 +93,7 @@ class ParsingEngineBase(abc.ABC):
         Returns:
             Dict[str, Any]: A dictionary with the metadata
         """
-        metadata: Dict[str, Any] = {
+        metadata: dict[str, Any] = {
             "dataset_name": self.file_obj.name,
             "dataset_size": self.file_obj.size,
             "num_rows": len(self.data),
@@ -111,7 +112,7 @@ class ParsingEngineBase(abc.ABC):
         return metadata
 
     def get_data_generator_for_columns(
-        self, columns: List
+        self, columns: list
     ) -> Generator[list, None, None]:
         """Provides the data filtered by the requested columns.
 
@@ -146,7 +147,7 @@ class DummyParsingEngine(ParsingEngineBase):
         )
 
 
-def get_parsing_engine(file_format: str) -> Type[ParsingEngineBase]:
+def get_parsing_engine(file_format: str) -> type[ParsingEngineBase]:
     """Provides the chosen parsing engine or the Dummy one if none found.
 
     Args:
@@ -172,7 +173,7 @@ def get_parsing_engine(file_format: str) -> Type[ParsingEngineBase]:
     return parser
 
 
-def available_parsing_engines() -> List[Tuple[str, str]]:
+def available_parsing_engines() -> list[tuple[str, str]]:
     """Generates a list of available parsing engines names and descriptions.
 
     Returns:
@@ -181,14 +182,14 @@ def available_parsing_engines() -> List[Tuple[str, str]]:
     return [(k, v.description) for k, v in KNOWN_PARSING_ENGINES.items()]
 
 
-def mime_and_extension() -> List[Tuple[str, str]]:
+def mime_and_extension() -> list[tuple[str, str]]:
     """Generates a list of valid mime types and extensions.
 
     Returns:
         A list of tuples with the mime type and the extension.
     """
 
-    def aggregate(store: List, new: Type[ParsingEngineBase]) -> List:
+    def aggregate(store: list, new: type[ParsingEngineBase]) -> list:
         return store + new.valid
 
     return list(
@@ -236,7 +237,7 @@ def parse_data_file(
     file_obj: TextIO,
     file_format: str,
     columns=("time/s", "Ecell/V", "I/mA"),
-) -> Dict:
+) -> dict:
     """Parse a file according to the chosen format. The file is first retrieved from
     blob storage and copied to a local temporary file. After parsing, the temporary
     file is deleted.

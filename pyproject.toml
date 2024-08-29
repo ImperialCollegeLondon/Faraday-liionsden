@@ -54,19 +54,32 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "flake8",
-    "black",
-    "isort",
+    "ruff",
     "mypy",
     "pip-tools",
     "pre-commit",
 ]
 
-[tool.black]
-exclude = "venv/|battDB/migrations/|common/migrations/|dfndb/migrations/|other/|data/"
+[tool.mypy] # TODO: increase the strictness here
+# disallow_any_explicit = true
+# disallow_any_generics = true
+warn_unreachable = true
+warn_unused_ignores = true
+# disallow_untyped_defs = true
+explicit_package_bases = true
 
-[tool.isort]
-known_third_party = ["django", "guardian", "idutils", "magic", "model_bakery", "mptt", "pandas", "rest_framework", "xlrd", "yaml"]
-line_length = 88
-multi_line_output = 3
-include_trailing_comma = true
+[tool.ruff]
+exclude = ["*/migrations"]
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    # "D",   # pydocstyle - TODO: enable this when working on the documentation
+    "E",   # pycodestyle
+    "F",   # Pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "RUF", # ruff
+]
+ignore = ["RUF012"] # Typing on mutable class attributes
+pydocstyle.convention = "google"

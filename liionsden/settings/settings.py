@@ -9,11 +9,11 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
+
 import os
 import re
 import tempfile
 
-from azure.core.utils import parse_connection_string
 from django_bootstrap5.core import BOOTSTRAP5_DEFAULTS
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

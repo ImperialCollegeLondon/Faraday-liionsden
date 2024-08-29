@@ -14,8 +14,6 @@ azure-core==1.30.2
     #   django-storages
 azure-storage-blob==12.22.0
     # via django-storages
-black==24.8.0
-    # via Liionsden (pyproject.toml)
 build==1.2.1
     # via pip-tools
 certifi==2024.7.4
@@ -28,7 +26,6 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via
-    #   black
     #   coreapi-cli
     #   pip-tools
 colorama==0.4.6
@@ -108,8 +105,6 @@ et-xmlfile==1.1.0
     # via openpyxl
 filelock==3.15.4
     # via virtualenv
-flake8==7.1.1
-    # via Liionsden (pyproject.toml)
 fonttools==4.53.1
     # via matplotlib
 identify==2.6.0
@@ -122,8 +117,6 @@ isbnlib==3.10.14
     # via idutils
 isodate==0.6.1
     # via azure-storage-blob
-isort==5.13.2
-    # via Liionsden (pyproject.toml)
 itypes==1.2.0
     # via coreapi
 jinja2==3.1.4
@@ -134,8 +127,6 @@ markupsafe==2.1.5
     # via jinja2
 matplotlib==3.9.2
     # via preparenovonix
-mccabe==0.7.0
-    # via flake8
 model-bakery==1.19.5
     # via Liionsden (pyproject.toml)
 molmass==2024.5.24
@@ -143,9 +134,7 @@ molmass==2024.5.24
 mypy==1.11.2
     # via Liionsden (pyproject.toml)
 mypy-extensions==1.0.0
-    # via
-    #   black
-    #   mypy
+    # via mypy
 nodeenv==1.9.1
     # via pre-commit
 numpy==2.1.0
@@ -160,15 +149,12 @@ openpyxl==3.1.5
     # via Liionsden (pyproject.toml)
 packaging==24.1
     # via
-    #   black
     #   build
     #   django-jsoneditor
     #   matplotlib
     #   plotly
 pandas==2.2.2
     # via Liionsden (pyproject.toml)
-pathspec==0.12.1
-    # via black
 pillow==10.4.0
     # via
     #   Liionsden (pyproject.toml)
@@ -176,9 +162,7 @@ pillow==10.4.0
 pip-tools==7.4.1
     # via Liionsden (pyproject.toml)
 platformdirs==4.2.2
-    # via
-    #   black
-    #   virtualenv
+    # via virtualenv
 plotly==5.23.0
     # via Liionsden (pyproject.toml)
 pre-commit==3.8.0
@@ -187,16 +171,12 @@ preparenovonix==1.0.3
     # via Liionsden (pyproject.toml)
 psycopg2==2.9.9
     # via Liionsden (pyproject.toml)
-pycodestyle==2.12.1
-    # via flake8
 pycparser==2.22
     # via cffi
 pydantic==2.8.2
     # via django-bootstrap-datepicker-plus
 pydantic-core==2.20.1
     # via pydantic
-pyflakes==3.2.0
-    # via flake8
 pyparsing==3.1.4
     # via matplotlib
 pyproject-hooks==1.1.0
@@ -221,6 +201,8 @@ requests==2.32.3
     # via
     #   azure-core
     #   coreapi
+ruff==0.6.2
+    # via Liionsden (pyproject.toml)
 six==1.16.0
     # via
     #   azure-core

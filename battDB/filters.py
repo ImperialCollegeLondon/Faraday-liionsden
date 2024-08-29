@@ -29,7 +29,7 @@ class ExperimentFilter(BaseFilter):
 
     # Modify init slightly to add custom label(s)
     def __init__(self, *args, **kwargs):
-        super(ExperimentFilter, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.filters["user_owner__institution"].label = "Institution"
 
 
@@ -78,7 +78,7 @@ class DeviceSpecificationFilter(BaseFilter):
 
     # Modify init slightly to add custom label(s)
     def __init__(self, *args, **kwargs):
-        super(DeviceSpecificationFilter, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.filters["user_owner"].label = "Added by"
 
 

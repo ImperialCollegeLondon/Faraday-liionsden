@@ -1,4 +1,4 @@
-"""Functions to populate the databse with an initial set of DeviceSpecification 
+"""Functions to populate the databse with an initial set of DeviceSpecification
 and DevciceConfig objects relating to single cells.
 
 These functions are run as part of a migration and pre-populate the database.

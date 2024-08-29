@@ -2,13 +2,10 @@ import datetime
 import os
 
 import idutils  # for DOI validation: https://idutils.readthedocs.io/en/latest/
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import JSONField
-from django.forms import forms
-from django.template.defaultfilters import filesizeformat
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from mptt.models import MPTTModel, TreeForeignKey
@@ -109,7 +106,7 @@ class HasSlug(models.Model):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(str(self))
-        return super(HasSlug, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     class Meta:
         abstract = True
@@ -254,7 +251,7 @@ class DOIField(models.URLField):
 
     def __init__(self, *args, **kwargs):
         kwargs["max_length"] = 128
-        super(DOIField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def validate(self, value, obj):
         if not idutils.is_doi(value):
@@ -268,7 +265,7 @@ class DOIField(models.URLField):
 class YearField(models.IntegerField):
     def validate(self, value, obj):
         """Validates the value of the year."""
-        super(YearField, self).validate(value, obj)
+        super().validate(value, obj)
         if value > datetime.date.today().year:
             raise ValidationError("Invalid year: Cannot be in the future")
         if value < 1791:
@@ -280,7 +277,7 @@ class YearField(models.IntegerField):
 class Reference(
     HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
 ):
-    """A source of data, typically an academic paper, but can be a dataset, repository."""
+    """A source of data, typically an academic paper, but can be a dataset or repo."""
 
     DOI = DOIField(
         blank=True,
@@ -323,7 +320,7 @@ class HashedFile(models.Model):
         if not self.file:
             raise ValidationError("No file was uploaded.")
         self.hash = hash_file(self.file)
-        return super(HashedFile, self).clean()
+        return super().clean()
 
     def __str__(self):
         return os.path.basename(self.file.name)

@@ -103,7 +103,7 @@ class TestCompositionPart(TestCase):
             self.amount[self.model.compound.formula] * 100 / sum(self.amount.values())
         )
         self.assertEqual(self.model.get_percentage(), expected)
-        self.assertEqual(self.model.percentage(), "%3.03f%%" % expected)
+        self.assertEqual(self.model.percentage(), f"{expected:3.3f}%")
 
     def test_str(self):
         from dfndb.models import Compound
@@ -168,8 +168,7 @@ class TestQuantityUnit(TestCase):
     def test_str(self):
         self.assertEqual(
             self.model.__str__(),
-            "%s (%s) / %s"
-            % (
+            "{} ({}) / {}".format(
                 self.expected["quantityName"],
                 self.expected["quantitySymbol"],
                 self.expected["unitSymbol"],
@@ -208,8 +207,7 @@ class TestParameter(TestCase):
     def test_str(self):
         self.assertEqual(
             self.model.__str__(),
-            "%s: %s / %s"
-            % (
+            "{}: {} / {}".format(
                 self.expected["name"],
                 self.expected["symbol"],
                 self.expected["unit"].unitSymbol,
@@ -272,7 +270,7 @@ class TestDataParameter(TestCase):
         self.assertEqual(self.model.parameter, self.param)
         self.assertEqual(self.model.component, self.mat)
         self.assertEqual(self.model.value, {})
-        self.assertIn(self.model.type, list(zip(*model.PARAM_TYPE))[0])
+        self.assertIn(self.model.type, next(zip(*model.PARAM_TYPE)))
 
     def test_str(self):
         self.assertEqual(self.model.__str__(), str(self.param))

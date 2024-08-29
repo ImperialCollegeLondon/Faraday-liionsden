@@ -2,7 +2,7 @@ import logging
 import os
 import sys
 
-from .production import *  # noqa: F401, F403
+from .production import *  # noqa: F403
 
 ALLOWED_HOSTS = [os.environ["WEBSITE_HOSTNAME"]]
 

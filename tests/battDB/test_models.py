@@ -76,7 +76,7 @@ class TestBatch(TestCase):
 
 class TestDevice(TestCase):
     def setUp(self):
-        batch = baker.make_recipe("tests.battDB.batch")
+        baker.make_recipe("tests.battDB.batch")
         self.model = baker.make_recipe("tests.battDB.device")
 
     def test_definition(self):
