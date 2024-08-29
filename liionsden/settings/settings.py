@@ -10,9 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 import os
+import re
 import tempfile
 
 from azure.core.utils import parse_connection_string
+from django_bootstrap5.core import BOOTSTRAP5_DEFAULTS
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -37,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "guardian",
-    "bootstrap5",
+    "django_bootstrap5",
     "django_better_admin_arrayfield",
     "django_tables2",
     "crispy_forms",
@@ -185,3 +187,23 @@ AZURE_ACCOUNT_NAME = os.getenv("AZURE_STORAGE_ACCOUNT_NAME")
 # Standard local storage for static files
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+X_FRAME_OPTIONS = "SAMEORIGIN"
+
+javascript_url = BOOTSTRAP5_DEFAULTS["javascript_url"]["url"]
+
+if not (match := re.search("@\\d+\\.\\d+\\.\\d+/", javascript_url)):
+    raise ValueError("Unable to determine Bootstrap 5 javascript version.")
+
+javascript_version = javascript_url[slice(*match.span())]
+
+BOOTSTRAP5 = dict(
+    css_url=dict(
+        url=f"https://cdn.jsdelivr.net/npm/bootswatch{javascript_version}dist/flatly/bootstrap.min.css",
+        integrity="sha384-Gn6TIhloBHiLpI1VM8qQG+H8QQhHXqsiUlMLS4uhr9gqQzFsOhMTo0lSTMbOrLoI",
+        crossorigin="anonymous",
+    )
+)

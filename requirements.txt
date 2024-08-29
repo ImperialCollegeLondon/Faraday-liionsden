@@ -14,8 +14,6 @@ azure-core==1.30.2
     #   django-storages
 azure-storage-blob==12.22.0
     # via django-storages
-beautifulsoup4==4.12.3
-    # via django-bootstrap-v5
 certifi==2024.7.4
     # via requests
 cffi==1.17.0
@@ -49,7 +47,7 @@ django==4.2.15
     #   Liionsden (pyproject.toml)
     #   crispy-bootstrap5
     #   django-bootstrap-datepicker-plus
-    #   django-bootstrap-v5
+    #   django-bootstrap5
     #   django-crispy-forms
     #   django-extensions
     #   django-filter
@@ -63,7 +61,7 @@ django-better-admin-arrayfield==1.4.2
     # via Liionsden (pyproject.toml)
 django-bootstrap-datepicker-plus==5.0.5
     # via Liionsden (pyproject.toml)
-django-bootstrap-v5==1.0.11
+django-bootstrap5==24.2
     # via Liionsden (pyproject.toml)
 django-cleanup==8.1.0
     # via Liionsden (pyproject.toml)
@@ -176,8 +174,6 @@ six==1.16.0
     #   idutils
     #   isodate
     #   python-dateutil
-soupsieve==2.6
-    # via beautifulsoup4
 sqlparse==0.5.1
     # via django
 tablib==3.6.1
