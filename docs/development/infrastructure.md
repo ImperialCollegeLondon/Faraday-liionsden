@@ -98,7 +98,7 @@ three CI/CD steps. This is configured in `.github/worklflows/ci.yml`:
 The development/production version of the app running on Azure was initially configured
 using [Terraform](https://www.terraform.io/) and [this guide on setting up a web
 application with
-Terraform](https://github.com/ImperialCollegeLondon/terraform_web_app_configuration). We
+Terraform](https://github.com/ImperialCollegeLondon/terraform_web_app_configuration). We <!-- markdown-link-check-disable-line -->
 have followed the "One Time Usage" workflow on that guide so please refer to it and the
 Terraform docs if any changes need to be made.
 

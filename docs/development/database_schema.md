@@ -76,4 +76,4 @@ certain apps, models and relationships depending on what you are trying to show.
 We also don't include `pygraphviz` explicity in dev-docs because depending on
 your local setup, you may have to separately configure `graphviz` itself (see
 [example for Homebrew installation on
-Mac](https://dev.to/javanibble/how-to-install-graphviz-on-macos-using-homebrew-3ig3)).
+Mac](https://dev.to/mathewchan/instruction-to-install-pygraphviz-package-in-pycharm-in-macos-21ip)).

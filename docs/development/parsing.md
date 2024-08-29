@@ -14,13 +14,13 @@ data itself and column headings end up in the `ExperimentDataFile.ts_data`
 
 Parsers map column headers to parameters (`dfndb.Parameter` objects). A list of
 parsers in the database can be viewed at
-[<website_root>/battDB/parsers/](http://localhost:8000/battDB/parsers/).
+[<website_root>/battDB/parsers/](http://localhost:8000/battDB/parsers/).<!-- markdown-link-check-disable-line -->
 
 ![mappings of column headings to parameters for the maccor
 parser](figures/maccor_parser.png)
 
 Parsers can be created and edited via the admin site at
-[<website_root>/battDB/parser](http://localhost:8000/admin/battDB/parser/).
+[<website_root>/battDB/parser](http://localhost:8000/admin/battDB/parser/).<!-- markdown-link-check-disable-line -->
 Parameters are mapped to column names using the `SignalType` model (through
 table). The "COL NAME" should exactly match the expected column header as it
 appears in the file.
