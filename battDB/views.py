@@ -1,3 +1,5 @@
+from typing import Any
+
 import django_tables2 as tables2
 from django.contrib import messages
 from django.db import IntegrityError, transaction
@@ -553,7 +555,7 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
             Dictionary of lists. Each list contains a dictionary for each row of data.
         """
         data_files = self.object.data_files.all()
-        data_previews = {}
+        data_previews: dict[str, list[dict[Any, Any]] | None] = {}
         for data_file in data_files:
             if data_file.file_exists() and data_file.raw_data_file.parse:
                 # Get the headers and data

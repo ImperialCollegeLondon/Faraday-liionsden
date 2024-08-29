@@ -9,6 +9,7 @@ from warnings import warn
 import pandas as pd
 import pandas.errors
 from django.core.exceptions import ValidationError
+from django.db import models
 from pandas.core.dtypes.common import is_numeric_dtype
 
 KNOWN_PARSING_ENGINES: dict[str, type[ParsingEngineBase]] = {}
@@ -20,7 +21,7 @@ class ParsingEngineBase(abc.ABC):
     description: str = ""
     valid: list[tuple[str, str]] = []
     mandatory_columns: dict[str, dict[str, str | tuple[str, str]]] = {}
-    column_name_mapping: dict[str, str] = dict()
+    column_name_mapping: dict[str, str] | None = dict()
 
     def __init_subclass__(cls: type[ParsingEngineBase]):
         if len(cls.name) == 0:
@@ -32,7 +33,7 @@ class ParsingEngineBase(abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def factory(cls, file_obj: TextIO) -> ParsingEngineBase:
+    def factory(cls, file_obj: models.FileField) -> ParsingEngineBase:
         """Factory method for creating a parsing engine.
 
         Args:
@@ -42,10 +43,10 @@ class ParsingEngineBase(abc.ABC):
 
     def __init__(
         self,
-        file_obj: TextIO,
+        file_obj: models.FileField,
         skip_rows: int,
         data: pd.DataFrame,
-        file_metadata: dict[str, Any],
+        file_metadata: dict[str, Any] | list[Any],
         column_name_mapping: dict[str, str] | None = None,
     ):
         self.file_obj = file_obj
@@ -189,13 +190,15 @@ def mime_and_extension() -> list[tuple[str, str]]:
         A list of tuples with the mime type and the extension.
     """
 
-    def aggregate(store: list, new: type[ParsingEngineBase]) -> list:
+    def aggregate(
+        store: list[tuple[str, str]], new: type[ParsingEngineBase]
+    ) -> list[tuple[str, str]]:
         return store + new.valid
 
     return list(
         set(
             functools.reduce(
-                aggregate,
+                aggregate,  # type: ignore
                 KNOWN_PARSING_ENGINES.values(),
                 [],
             )

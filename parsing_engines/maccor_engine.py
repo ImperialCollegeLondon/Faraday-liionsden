@@ -5,6 +5,7 @@ from typing import Any, TextIO
 import openpyxl
 import pandas as pd
 import xlrd
+from django.db import models
 from openpyxl.worksheet.worksheet import Worksheet
 from xlrd.sheet import Cell, Sheet
 
@@ -47,6 +48,7 @@ class MaccorParsingEngine(ParsingEngineBase):
         """
         column_name_mapping = MACCOR_COLUMN_MAPPING
         ext = os.path.splitext(file_obj.name)[1]
+        file_metadata: dict[str, Any] | list[Any] = {}
         if ext in [".csv", ".txt"]:
             skip_rows = get_header_size_csv(file_obj, set(cls.mandatory_columns.keys()))
             data = load_maccor_data_csv(file_obj, skip_rows)
@@ -129,7 +131,7 @@ def get_file_header_excel(
     return header
 
 
-def get_file_header_csv(file_obj: TextIO, skip_rows: int) -> list[str]:
+def get_file_header_csv(file_obj: models.FileField, skip_rows: int) -> list[str]:
     """Extracts the header from the Maccor csv or txt file.
 
     Args:
@@ -167,7 +169,7 @@ def get_header_size_excel(sheet: Sheet | Worksheet, columns: set) -> int:
     return 0
 
 
-def get_header_size_csv(file_obj: TextIO, columns: set) -> int:
+def get_header_size_csv(file_obj: models.FileField, columns: set) -> int:
     """Reads the file and determines the size of the header.
 
     Args:
@@ -184,6 +186,8 @@ def get_header_size_csv(file_obj: TextIO, columns: set) -> int:
         for i, line in enumerate(lines):
             if not is_metadata_row(line, columns, "csv"):
                 return i
+
+    return 0
 
 
 def load_maccor_data_excel(file_obj: TextIO, skip_rows: int) -> pd.DataFrame:
@@ -204,7 +208,7 @@ def load_maccor_data_excel(file_obj: TextIO, skip_rows: int) -> pd.DataFrame:
     return data
 
 
-def load_maccor_data_csv(file_obj: TextIO, skip_rows: int) -> pd.DataFrame:
+def load_maccor_data_csv(file_obj: models.FileField, skip_rows: int) -> pd.DataFrame:
     """Loads the data as a Pandas data frame.
 
     Args:

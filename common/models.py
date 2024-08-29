@@ -187,7 +187,7 @@ class BaseModelMandatoryName(BaseModel):
 
 
 # TODO: ModelForm Org.head = filter on Person WHERE Person.org = this
-class Org(HasNotes, HasSlug, HasAttributes, HasCreatedModifiedDates):
+class Org(HasNotes, HasSlug, HasAttributes, HasCreatedModifiedDates):  # type: ignore
     """Model for organizations.
 
     Being these publisher, manufacturer or institution, for example.
@@ -274,7 +274,7 @@ class YearField(models.IntegerField):
             )
 
 
-class Reference(
+class Reference(  # type: ignore
     HasSlug, HasStatus, HasOwner, HasAttributes, HasNotes, HasCreatedModifiedDates
 ):
     """A source of data, typically an academic paper, but can be a dataset or repo."""

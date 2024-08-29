@@ -253,7 +253,7 @@ ExperimentDeviceFormSetBase = inlineformset_factory(
 )
 
 
-class ExperimentDeviceFormSet(ExperimentDeviceFormSetBase):
+class ExperimentDeviceFormSet(ExperimentDeviceFormSetBase):  # type: ignore
     """
     modify ExperimentDeviceFormset to limit batch field to those the user has access to.
     """

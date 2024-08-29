@@ -18,7 +18,7 @@ class TestHasName(AbstractModelMixinTestCase):
     from common.models import HasName
 
     mixin = HasName
-    model: mixin
+    model: HasName
 
     def setUp(self):
         self.model.objects.create(name="Michael Faraday")
@@ -32,7 +32,7 @@ class TestHasStatus(AbstractModelMixinTestCase):
     from common.models import HasStatus
 
     mixin = HasStatus
-    model: mixin
+    model: HasStatus
 
     def setUp(self):
         for s, _ in self.mixin.OBJ_STATUS:
@@ -48,7 +48,7 @@ class TestHasOwner(AbstractModelMixinTestCase):
     from common.models import HasOwner
 
     mixin = HasOwner
-    model: mixin
+    model: HasOwner
 
     def setUp(self):
         self.user = baker.make_recipe("tests.management.user")
@@ -63,7 +63,7 @@ class TestHasCreatedModifiedDates(AbstractModelMixinTestCase):
     from common.models import HasCreatedModifiedDates
 
     mixin = HasCreatedModifiedDates
-    model: mixin
+    model: HasCreatedModifiedDates
 
     def setUp(self):
         self.model.objects.create()
@@ -84,7 +84,7 @@ class TestHasAttributes(AbstractModelMixinTestCase):
     from common.models import HasAttributes
 
     mixin = HasAttributes
-    model: mixin
+    model: HasAttributes
 
     def setUp(self):
         self.model.objects.create(attributes={"ranges": 2, "colour": "blue"})
@@ -98,7 +98,7 @@ class TestHasNotes(AbstractModelMixinTestCase):
     from common.models import HasNotes
 
     mixin = HasNotes
-    model: mixin
+    model: HasNotes
 
     def setUp(self):
         self.model.objects.create(notes="May the force be with you...")
@@ -112,7 +112,7 @@ class TestHasSlug(AbstractModelMixinTestCase):
     from common.models import HasSlug
 
     mixin = HasSlug
-    model: mixin
+    model: HasSlug
 
     def setUp(self):
         self.model.objects.create()
@@ -143,7 +143,7 @@ class TestBaseModelNoName(AbstractModelMixinTestCase):
     from common.models import BaseModelNoName
 
     mixin = BaseModelNoName
-    model: mixin
+    model: BaseModelNoName
 
     def setUp(self):
         user = baker.make_recipe("tests.management.user")
@@ -170,7 +170,7 @@ class TestBaseModel(AbstractModelMixinTestCase):
     from common.models import BaseModel
 
     mixin = BaseModel
-    model: mixin
+    model: BaseModel
 
     def setUp(self):
         user = baker.make_recipe("tests.management.user")
@@ -192,7 +192,7 @@ class TestBaseModelMandatoryName(AbstractModelMixinTestCase):
     from common.models import BaseModelMandatoryName
 
     mixin = BaseModelMandatoryName
-    model: mixin
+    model: BaseModelMandatoryName
 
     def setUp(self):
         user = baker.make_recipe("tests.management.user")
@@ -320,7 +320,7 @@ class TestHashedFile(AbstractModelMixinTestCase):
     from common.models import HashedFile
 
     mixin = HashedFile
-    model: mixin
+    model: HashedFile
 
     def setUp(self):
         self.data = SimpleUploadedFile(

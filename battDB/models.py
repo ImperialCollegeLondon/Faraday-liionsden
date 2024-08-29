@@ -668,7 +668,7 @@ class ExperimentDataFile(cm.BaseModel):
         verbose_name = "Data File"
 
 
-class UploadedFile(cm.HashedFile, cm.HasOwner, cm.HasStatus):
+class UploadedFile(cm.HashedFile, cm.HasOwner, cm.HasStatus):  # type: ignore
     edf = models.OneToOneField(
         ExperimentDataFile,
         on_delete=models.CASCADE,
