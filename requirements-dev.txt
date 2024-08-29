@@ -55,7 +55,7 @@ debugpy==1.8.5
     # via Liionsden (pyproject.toml)
 distlib==0.3.8
     # via virtualenv
-django==4.2.15
+django==5.1
     # via
     #   Liionsden (pyproject.toml)
     #   crispy-bootstrap5

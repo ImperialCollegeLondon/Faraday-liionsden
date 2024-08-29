@@ -207,3 +207,7 @@ BOOTSTRAP5 = dict(
         crossorigin="anonymous",
     )
 )
+
+
+# To facilitate testing of MPTT with bakery
+MPTT_ALLOW_TESTING_GENERATORS = True
