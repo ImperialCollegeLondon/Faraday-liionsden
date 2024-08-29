@@ -416,7 +416,7 @@ class NewExperimentDataFileForm(DataCreateForm):
                     <div class="alert alert-danger" role="alert">
                     No devices have been added to this experiment yet!
                     You must associate devices with the experiemnt before you can
-                    add experimental data. Go back and edit the experiment to add 
+                    add experimental data. Go back and edit the experiment to add
                     devices from an existing batch.
                     </div>
                     """

@@ -1,875 +1,819 @@
 [
-{
-  "model": "battDB.devicespecification",
-  "pk": 3,
-  "fields": {
-    "status": "private",
-    "user_owner": [
-      "admin"
-    ],
-    "created_on": "2023-01-04T08:47:59.960Z",
-    "modified_on": "2023-01-04T09:07:48.309Z",
-    "attributes": {},
-    "notes": "This is a test device specification",
-    "slug": "test-device-spec",
-    "parent": null,
-    "inherit_metadata": true,
-    "name": "Test Device Spec",
-    "abstract": false,
-    "complete": false,
-    "device_type": null,
-    "config": null,
-    "spec_file": "",
-    "lft": 1,
-    "rght": 2,
-    "tree_id": 1,
-    "level": 0
+  {
+    "model": "battDB.devicespecification",
+    "pk": 3,
+    "fields": {
+      "status": "private",
+      "user_owner": ["admin"],
+      "created_on": "2023-01-04T08:47:59.960Z",
+      "modified_on": "2023-01-04T09:07:48.309Z",
+      "attributes": {},
+      "notes": "This is a test device specification",
+      "slug": "test-device-spec",
+      "parent": null,
+      "inherit_metadata": true,
+      "name": "Test Device Spec",
+      "abstract": false,
+      "complete": false,
+      "device_type": null,
+      "config": null,
+      "spec_file": "",
+      "lft": 1,
+      "rght": 2,
+      "tree_id": 1,
+      "level": 0
+    }
+  },
+  {
+    "model": "battDB.batch",
+    "pk": 1,
+    "fields": {
+      "status": "public",
+      "user_owner": ["admin"],
+      "created_on": "2023-01-04T08:48:21.082Z",
+      "modified_on": "2023-01-04T09:07:21.673Z",
+      "attributes": {},
+      "notes": "This is a test batch",
+      "slug": "imperial-college-london-test-device-spec-10-of-2023-01-04",
+      "parent": null,
+      "inherit_metadata": true,
+      "specification": 1,
+      "manufacturer": 1,
+      "serialNo": "123abc",
+      "batch_size": 10,
+      "manufacturing_protocol": null,
+      "manufactured_on": "2023-01-04",
+      "lft": 1,
+      "rght": 2,
+      "tree_id": 1,
+      "level": 0
+    }
+  },
+  {
+    "model": "battDB.device",
+    "pk": 1,
+    "fields": {
+      "attributes": {},
+      "notes": null,
+      "batch": 1,
+      "seq_num": 1
+    }
+  },
+  {
+    "model": "battDB.device",
+    "pk": 2,
+    "fields": {
+      "attributes": {},
+      "notes": null,
+      "batch": 1,
+      "seq_num": 2
+    }
+  },
+  {
+    "model": "battDB.equipment",
+    "pk": 1,
+    "fields": {
+      "status": "private",
+      "user_owner": ["admin"],
+      "created_on": "2023-01-04T09:02:44.026Z",
+      "modified_on": "2023-01-04T09:02:44.026Z",
+      "attributes": {},
+      "notes": "This is a dummy cycler",
+      "slug": "a-test-cycler",
+      "name": "A Test Cycler",
+      "institution": 1,
+      "serialNo": "123xyz",
+      "default_parser": 2
+    }
+  },
+  {
+    "model": "battDB.experiment",
+    "pk": 1,
+    "fields": {
+      "status": "public",
+      "user_owner": ["admin"],
+      "created_on": "2023-01-04T08:49:38.389Z",
+      "modified_on": "2023-01-04T08:49:38.389Z",
+      "attributes": {},
+      "notes": "",
+      "slug": "admin-test-experiment-2023-01-04",
+      "name": "Test Experiment",
+      "date": "2023-01-04",
+      "config": 1,
+      "temperature": null,
+      "c_rate": null,
+      "exp_type": "constant",
+      "thermal": "none",
+      "external_link": null,
+      "summary": "This is a test experiment"
+    }
+  },
+  {
+    "model": "battDB.experimentdevice",
+    "pk": 1,
+    "fields": {
+      "experiment": 1,
+      "batch": 1,
+      "batch_sequence": 1,
+      "device_position": "cell_01"
+    }
+  },
+  {
+    "model": "battDB.experimentdevice",
+    "pk": 2,
+    "fields": {
+      "experiment": 1,
+      "batch": 1,
+      "batch_sequence": 2,
+      "device_position": "cell_01"
+    }
+  },
+  {
+    "model": "dfndb.compound",
+    "pk": 1,
+    "fields": {
+      "name": "Graphite",
+      "formula": "C"
+    }
+  },
+  {
+    "model": "dfndb.compound",
+    "pk": 2,
+    "fields": {
+      "name": "Iron Oxide",
+      "formula": "Fe2O3"
+    }
+  },
+  {
+    "model": "dfndb.component",
+    "pk": 1,
+    "fields": {
+      "status": "public",
+      "user_owner": ["admin"],
+      "created_on": "2023-01-04T09:04:58.513Z",
+      "modified_on": "2023-01-04T09:04:58.513Z",
+      "attributes": {},
+      "notes": "",
+      "slug": "a-test-cathode",
+      "name": "A Test Cathode",
+      "type": 2
+    }
+  },
+  {
+    "model": "dfndb.compositionpart",
+    "pk": 1,
+    "fields": {
+      "compound": 2,
+      "component": 1,
+      "amount": 1
+    }
+  },
+  {
+    "model": "dfndb.compositionpart",
+    "pk": 2,
+    "fields": {
+      "compound": 1,
+      "component": 1,
+      "amount": 1
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 1,
+    "fields": {
+      "quantityName": "Current",
+      "quantitySymbol": "I",
+      "unitName": "Amps",
+      "unitSymbol": "A",
+      "is_SI_unit": true,
+      "related_unit": null,
+      "related_scale": null
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 2,
+    "fields": {
+      "quantityName": "Voltage",
+      "quantitySymbol": "V",
+      "unitName": "Volts",
+      "unitSymbol": "V",
+      "is_SI_unit": true,
+      "related_unit": null,
+      "related_scale": null
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 3,
+    "fields": {
+      "quantityName": "Time",
+      "quantitySymbol": "t",
+      "unitName": "Seconds",
+      "unitSymbol": "s",
+      "is_SI_unit": true,
+      "related_unit": null,
+      "related_scale": null
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 4,
+    "fields": {
+      "quantityName": "Temperature",
+      "quantitySymbol": "T",
+      "unitName": "Kelvin",
+      "unitSymbol": "K",
+      "is_SI_unit": true,
+      "related_unit": null,
+      "related_scale": null
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 5,
+    "fields": {
+      "quantityName": "Temperature",
+      "quantitySymbol": "T",
+      "unitName": "Celsius",
+      "unitSymbol": "C",
+      "is_SI_unit": true,
+      "related_unit": null,
+      "related_scale": null
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 6,
+    "fields": {
+      "quantityName": "Charge",
+      "quantitySymbol": "Q",
+      "unitName": "Coulombs",
+      "unitSymbol": "C",
+      "is_SI_unit": true,
+      "related_unit": null,
+      "related_scale": null
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 7,
+    "fields": {
+      "quantityName": "Length",
+      "quantitySymbol": "L",
+      "unitName": "Metres",
+      "unitSymbol": "m",
+      "is_SI_unit": true,
+      "related_unit": null,
+      "related_scale": null
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 8,
+    "fields": {
+      "quantityName": "Mass",
+      "quantitySymbol": "m",
+      "unitName": "Kilogram",
+      "unitSymbol": "kg",
+      "is_SI_unit": true,
+      "related_unit": null,
+      "related_scale": null
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 9,
+    "fields": {
+      "quantityName": "Unitless",
+      "quantitySymbol": "",
+      "unitName": "One",
+      "unitSymbol": "1",
+      "is_SI_unit": true,
+      "related_unit": null,
+      "related_scale": null
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 10,
+    "fields": {
+      "quantityName": "Energy",
+      "quantitySymbol": "E",
+      "unitName": "Joules",
+      "unitSymbol": "J",
+      "is_SI_unit": true,
+      "related_unit": null,
+      "related_scale": null
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 11,
+    "fields": {
+      "quantityName": "Area",
+      "quantitySymbol": "A",
+      "unitName": "Metres squared",
+      "unitSymbol": "m^2",
+      "is_SI_unit": true,
+      "related_unit": null,
+      "related_scale": null
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 12,
+    "fields": {
+      "quantityName": "Areal capacity",
+      "quantitySymbol": "Q_A",
+      "unitName": "Coulombs per meters squared",
+      "unitSymbol": "C·m^{-2}",
+      "is_SI_unit": true,
+      "related_unit": null,
+      "related_scale": null
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 13,
+    "fields": {
+      "quantityName": "Current",
+      "quantitySymbol": "I",
+      "unitName": "miliamps",
+      "unitSymbol": "mA",
+      "is_SI_unit": false,
+      "related_unit": 1,
+      "related_scale": 0.001
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 14,
+    "fields": {
+      "quantityName": "Charge",
+      "quantitySymbol": "Q",
+      "unitName": "miliamps hour",
+      "unitSymbol": "mA·h",
+      "is_SI_unit": false,
+      "related_unit": 6,
+      "related_scale": 3.6
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 15,
+    "fields": {
+      "quantityName": "Charge",
+      "quantitySymbol": "Q",
+      "unitName": "amps hour",
+      "unitSymbol": "A·h",
+      "is_SI_unit": false,
+      "related_unit": 6,
+      "related_scale": 3600.0
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 16,
+    "fields": {
+      "quantityName": "Energy",
+      "quantitySymbol": "E",
+      "unitName": "Watts hour",
+      "unitSymbol": "W·h",
+      "is_SI_unit": false,
+      "related_unit": 10,
+      "related_scale": 3600.0
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 17,
+    "fields": {
+      "quantityName": "Length",
+      "quantitySymbol": "L",
+      "unitName": "centimetres",
+      "unitSymbol": "cm",
+      "is_SI_unit": false,
+      "related_unit": 7,
+      "related_scale": 0.01
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 18,
+    "fields": {
+      "quantityName": "Area",
+      "quantitySymbol": "A",
+      "unitName": "centimetres squared",
+      "unitSymbol": "cm^2",
+      "is_SI_unit": false,
+      "related_unit": 11,
+      "related_scale": 0.0001
+    }
+  },
+  {
+    "model": "dfndb.quantityunit",
+    "pk": 19,
+    "fields": {
+      "quantityName": "Areal capacity",
+      "quantitySymbol": "Q_A",
+      "unitName": "milliamps hour per centimetres squared",
+      "unitSymbol": "mA·h·cm^{-2}",
+      "is_SI_unit": false,
+      "related_unit": 12,
+      "related_scale": 36000.0
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 1,
+    "fields": {
+      "name": "Time",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.558Z",
+      "modified_on": "2023-01-04T08:46:07.558Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "t",
+      "unit": 3,
+      "parameter_type": "experiment"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 2,
+    "fields": {
+      "name": "Step time",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.575Z",
+      "modified_on": "2023-01-04T08:46:07.575Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "ts",
+      "unit": 3,
+      "parameter_type": "experiment"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 3,
+    "fields": {
+      "name": "Voltage",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.578Z",
+      "modified_on": "2023-01-04T08:46:07.578Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "V",
+      "unit": 2,
+      "parameter_type": "experiment"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 4,
+    "fields": {
+      "name": "Current",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.580Z",
+      "modified_on": "2023-01-04T08:46:07.580Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "I",
+      "unit": 13,
+      "parameter_type": "experiment"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 5,
+    "fields": {
+      "name": "Current",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.583Z",
+      "modified_on": "2023-01-04T08:46:07.583Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "I",
+      "unit": 1,
+      "parameter_type": "experiment"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 6,
+    "fields": {
+      "name": "Net charge passed",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.586Z",
+      "modified_on": "2023-01-04T08:46:07.586Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "Q-Q_0",
+      "unit": 14,
+      "parameter_type": "experiment"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 7,
+    "fields": {
+      "name": "Net charge passed",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.588Z",
+      "modified_on": "2023-01-04T08:46:07.588Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "Q-Q_0",
+      "unit": 15,
+      "parameter_type": "experiment"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 8,
+    "fields": {
+      "name": "Temperature",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.591Z",
+      "modified_on": "2023-01-04T08:46:07.591Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "T",
+      "unit": 5,
+      "parameter_type": "experiment"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 9,
+    "fields": {
+      "name": "Charge passed during discharge",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.594Z",
+      "modified_on": "2023-01-04T08:46:07.594Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "Q discharge",
+      "unit": 14,
+      "parameter_type": "experiment"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 10,
+    "fields": {
+      "name": "Net energy passed",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.597Z",
+      "modified_on": "2023-01-04T08:46:07.597Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "E",
+      "unit": 16,
+      "parameter_type": "experiment"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 11,
+    "fields": {
+      "name": "New section changes",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.599Z",
+      "modified_on": "2023-01-04T08:46:07.599Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "Ns changes",
+      "unit": 9,
+      "parameter_type": "experiment"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 12,
+    "fields": {
+      "name": "Cycle number",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.602Z",
+      "modified_on": "2023-01-04T08:46:07.602Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "Cyl",
+      "unit": 9,
+      "parameter_type": "experiment"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 13,
+    "fields": {
+      "name": "Record number",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.605Z",
+      "modified_on": "2023-01-04T08:46:07.605Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "Rec",
+      "unit": 9,
+      "parameter_type": "experiment"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 14,
+    "fields": {
+      "name": "Cell nominal capacity",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.608Z",
+      "modified_on": "2023-01-04T08:46:07.608Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "Q",
+      "unit": 15,
+      "parameter_type": "device"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 15,
+    "fields": {
+      "name": "Form factor",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.611Z",
+      "modified_on": "2023-01-04T08:46:07.611Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "f_f",
+      "unit": 9,
+      "parameter_type": "device"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 16,
+    "fields": {
+      "name": "Anode size",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.614Z",
+      "modified_on": "2023-01-04T08:46:07.614Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "A_{anode}",
+      "unit": 18,
+      "parameter_type": "device"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 17,
+    "fields": {
+      "name": "Cathode size",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.617Z",
+      "modified_on": "2023-01-04T08:46:07.617Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "A_{cathode}",
+      "unit": 18,
+      "parameter_type": "device"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 18,
+    "fields": {
+      "name": "Anode loading",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.619Z",
+      "modified_on": "2023-01-04T08:46:07.619Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "Q_{anode}",
+      "unit": 19,
+      "parameter_type": "device"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 19,
+    "fields": {
+      "name": "Cathode loading",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.622Z",
+      "modified_on": "2023-01-04T08:46:07.622Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "Q_{cathode}",
+      "unit": 19,
+      "parameter_type": "device"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 20,
+    "fields": {
+      "name": "Number of layers",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.624Z",
+      "modified_on": "2023-01-04T08:46:07.624Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "n_{layers}",
+      "unit": 9,
+      "parameter_type": "device"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 21,
+    "fields": {
+      "name": "Electrode coating",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.627Z",
+      "modified_on": "2023-01-04T08:46:07.627Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "coating",
+      "unit": 9,
+      "parameter_type": "device"
+    }
+  },
+  {
+    "model": "dfndb.parameter",
+    "pk": 22,
+    "fields": {
+      "name": "Electrolyte component",
+      "status": "Public",
+      "user_owner": ["AnonymousUser"],
+      "created_on": "2023-01-04T08:46:07.630Z",
+      "modified_on": "2023-01-04T08:46:07.630Z",
+      "attributes": {},
+      "notes": null,
+      "slug": "autogenerated",
+      "symbol": "eletrolyte",
+      "unit": 9,
+      "parameter_type": "device"
+    }
+  },
+  {
+    "model": "common.org",
+    "pk": 1,
+    "fields": {
+      "created_on": "2023-01-04T08:47:21.744Z",
+      "modified_on": "2023-01-04T08:47:21.744Z",
+      "attributes": {},
+      "notes": "",
+      "slug": "imperial-college-london",
+      "name": "Imperial College London",
+      "manager": ["admin"],
+      "is_research": true,
+      "is_publisher": false,
+      "is_mfg_cells": true,
+      "is_mfg_equip": false,
+      "website": null
+    }
   }
-},
-{
-  "model": "battDB.batch",
-  "pk": 1,
-  "fields": {
-    "status": "public",
-    "user_owner": [
-      "admin"
-    ],
-    "created_on": "2023-01-04T08:48:21.082Z",
-    "modified_on": "2023-01-04T09:07:21.673Z",
-    "attributes": {},
-    "notes": "This is a test batch",
-    "slug": "imperial-college-london-test-device-spec-10-of-2023-01-04",
-    "parent": null,
-    "inherit_metadata": true,
-    "specification": 1,
-    "manufacturer": 1,
-    "serialNo": "123abc",
-    "batch_size": 10,
-    "manufacturing_protocol": null,
-    "manufactured_on": "2023-01-04",
-    "lft": 1,
-    "rght": 2,
-    "tree_id": 1,
-    "level": 0
-  }
-},
-{
-  "model": "battDB.device",
-  "pk": 1,
-  "fields": {
-    "attributes": {},
-    "notes": null,
-    "batch": 1,
-    "seq_num": 1
-  }
-},
-{
-  "model": "battDB.device",
-  "pk": 2,
-  "fields": {
-    "attributes": {},
-    "notes": null,
-    "batch": 1,
-    "seq_num": 2
-  }
-},
-{
-  "model": "battDB.equipment",
-  "pk": 1,
-  "fields": {
-    "status": "private",
-    "user_owner": [
-      "admin"
-    ],
-    "created_on": "2023-01-04T09:02:44.026Z",
-    "modified_on": "2023-01-04T09:02:44.026Z",
-    "attributes": {},
-    "notes": "This is a dummy cycler",
-    "slug": "a-test-cycler",
-    "name": "A Test Cycler",
-    "institution": 1,
-    "serialNo": "123xyz",
-    "default_parser": 2
-  }
-},
-{
-  "model": "battDB.experiment",
-  "pk": 1,
-  "fields": {
-    "status": "public",
-    "user_owner": [
-      "admin"
-    ],
-    "created_on": "2023-01-04T08:49:38.389Z",
-    "modified_on": "2023-01-04T08:49:38.389Z",
-    "attributes": {},
-    "notes": "",
-    "slug": "admin-test-experiment-2023-01-04",
-    "name": "Test Experiment",
-    "date": "2023-01-04",
-    "config": 1,
-    "temperature": null,
-    "c_rate": null,
-    "exp_type": "constant",
-    "thermal": "none",
-    "external_link": null,
-    "summary": "This is a test experiment"
-  }
-},
-{
-  "model": "battDB.experimentdevice",
-  "pk": 1,
-  "fields": {
-    "experiment": 1,
-    "batch": 1,
-    "batch_sequence": 1,
-    "device_position": "cell_01"
-  }
-},
-{
-  "model": "battDB.experimentdevice",
-  "pk": 2,
-  "fields": {
-    "experiment": 1,
-    "batch": 1,
-    "batch_sequence": 2,
-    "device_position": "cell_01"
-  }
-},
-{
-  "model": "dfndb.compound",
-  "pk": 1,
-  "fields": {
-    "name": "Graphite",
-    "formula": "C"
-  }
-},
-{
-  "model": "dfndb.compound",
-  "pk": 2,
-  "fields": {
-    "name": "Iron Oxide",
-    "formula": "Fe2O3"
-  }
-},
-{
-  "model": "dfndb.component",
-  "pk": 1,
-  "fields": {
-    "status": "public",
-    "user_owner": [
-      "admin"
-    ],
-    "created_on": "2023-01-04T09:04:58.513Z",
-    "modified_on": "2023-01-04T09:04:58.513Z",
-    "attributes": {},
-    "notes": "",
-    "slug": "a-test-cathode",
-    "name": "A Test Cathode",
-    "type": 2
-  }
-},
-{
-  "model": "dfndb.compositionpart",
-  "pk": 1,
-  "fields": {
-    "compound": 2,
-    "component": 1,
-    "amount": 1
-  }
-},
-{
-  "model": "dfndb.compositionpart",
-  "pk": 2,
-  "fields": {
-    "compound": 1,
-    "component": 1,
-    "amount": 1
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 1,
-  "fields": {
-    "quantityName": "Current",
-    "quantitySymbol": "I",
-    "unitName": "Amps",
-    "unitSymbol": "A",
-    "is_SI_unit": true,
-    "related_unit": null,
-    "related_scale": null
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 2,
-  "fields": {
-    "quantityName": "Voltage",
-    "quantitySymbol": "V",
-    "unitName": "Volts",
-    "unitSymbol": "V",
-    "is_SI_unit": true,
-    "related_unit": null,
-    "related_scale": null
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 3,
-  "fields": {
-    "quantityName": "Time",
-    "quantitySymbol": "t",
-    "unitName": "Seconds",
-    "unitSymbol": "s",
-    "is_SI_unit": true,
-    "related_unit": null,
-    "related_scale": null
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 4,
-  "fields": {
-    "quantityName": "Temperature",
-    "quantitySymbol": "T",
-    "unitName": "Kelvin",
-    "unitSymbol": "K",
-    "is_SI_unit": true,
-    "related_unit": null,
-    "related_scale": null
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 5,
-  "fields": {
-    "quantityName": "Temperature",
-    "quantitySymbol": "T",
-    "unitName": "Celsius",
-    "unitSymbol": "C",
-    "is_SI_unit": true,
-    "related_unit": null,
-    "related_scale": null
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 6,
-  "fields": {
-    "quantityName": "Charge",
-    "quantitySymbol": "Q",
-    "unitName": "Coulombs",
-    "unitSymbol": "C",
-    "is_SI_unit": true,
-    "related_unit": null,
-    "related_scale": null
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 7,
-  "fields": {
-    "quantityName": "Length",
-    "quantitySymbol": "L",
-    "unitName": "Metres",
-    "unitSymbol": "m",
-    "is_SI_unit": true,
-    "related_unit": null,
-    "related_scale": null
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 8,
-  "fields": {
-    "quantityName": "Mass",
-    "quantitySymbol": "m",
-    "unitName": "Kilogram",
-    "unitSymbol": "kg",
-    "is_SI_unit": true,
-    "related_unit": null,
-    "related_scale": null
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 9,
-  "fields": {
-    "quantityName": "Unitless",
-    "quantitySymbol": "",
-    "unitName": "One",
-    "unitSymbol": "1",
-    "is_SI_unit": true,
-    "related_unit": null,
-    "related_scale": null
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 10,
-  "fields": {
-    "quantityName": "Energy",
-    "quantitySymbol": "E",
-    "unitName": "Joules",
-    "unitSymbol": "J",
-    "is_SI_unit": true,
-    "related_unit": null,
-    "related_scale": null
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 11,
-  "fields": {
-    "quantityName": "Area",
-    "quantitySymbol": "A",
-    "unitName": "Metres squared",
-    "unitSymbol": "m^2",
-    "is_SI_unit": true,
-    "related_unit": null,
-    "related_scale": null
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 12,
-  "fields": {
-    "quantityName": "Areal capacity",
-    "quantitySymbol": "Q_A",
-    "unitName": "Coulombs per meters squared",
-    "unitSymbol": "C·m^{-2}",
-    "is_SI_unit": true,
-    "related_unit": null,
-    "related_scale": null
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 13,
-  "fields": {
-    "quantityName": "Current",
-    "quantitySymbol": "I",
-    "unitName": "miliamps",
-    "unitSymbol": "mA",
-    "is_SI_unit": false,
-    "related_unit": 1,
-    "related_scale": 0.001
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 14,
-  "fields": {
-    "quantityName": "Charge",
-    "quantitySymbol": "Q",
-    "unitName": "miliamps hour",
-    "unitSymbol": "mA·h",
-    "is_SI_unit": false,
-    "related_unit": 6,
-    "related_scale": 3.6
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 15,
-  "fields": {
-    "quantityName": "Charge",
-    "quantitySymbol": "Q",
-    "unitName": "amps hour",
-    "unitSymbol": "A·h",
-    "is_SI_unit": false,
-    "related_unit": 6,
-    "related_scale": 3600.0
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 16,
-  "fields": {
-    "quantityName": "Energy",
-    "quantitySymbol": "E",
-    "unitName": "Watts hour",
-    "unitSymbol": "W·h",
-    "is_SI_unit": false,
-    "related_unit": 10,
-    "related_scale": 3600.0
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 17,
-  "fields": {
-    "quantityName": "Length",
-    "quantitySymbol": "L",
-    "unitName": "centimetres",
-    "unitSymbol": "cm",
-    "is_SI_unit": false,
-    "related_unit": 7,
-    "related_scale": 0.01
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 18,
-  "fields": {
-    "quantityName": "Area",
-    "quantitySymbol": "A",
-    "unitName": "centimetres squared",
-    "unitSymbol": "cm^2",
-    "is_SI_unit": false,
-    "related_unit": 11,
-    "related_scale": 0.0001
-  }
-},
-{
-  "model": "dfndb.quantityunit",
-  "pk": 19,
-  "fields": {
-    "quantityName": "Areal capacity",
-    "quantitySymbol": "Q_A",
-    "unitName": "milliamps hour per centimetres squared",
-    "unitSymbol": "mA·h·cm^{-2}",
-    "is_SI_unit": false,
-    "related_unit": 12,
-    "related_scale": 36000.0
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 1,
-  "fields": {
-    "name": "Time",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.558Z",
-    "modified_on": "2023-01-04T08:46:07.558Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "t",
-    "unit": 3,
-    "parameter_type": "experiment"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 2,
-  "fields": {
-    "name": "Step time",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.575Z",
-    "modified_on": "2023-01-04T08:46:07.575Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "ts",
-    "unit": 3,
-    "parameter_type": "experiment"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 3,
-  "fields": {
-    "name": "Voltage",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.578Z",
-    "modified_on": "2023-01-04T08:46:07.578Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "V",
-    "unit": 2,
-    "parameter_type": "experiment"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 4,
-  "fields": {
-    "name": "Current",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.580Z",
-    "modified_on": "2023-01-04T08:46:07.580Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "I",
-    "unit": 13,
-    "parameter_type": "experiment"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 5,
-  "fields": {
-    "name": "Current",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.583Z",
-    "modified_on": "2023-01-04T08:46:07.583Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "I",
-    "unit": 1,
-    "parameter_type": "experiment"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 6,
-  "fields": {
-    "name": "Net charge passed",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.586Z",
-    "modified_on": "2023-01-04T08:46:07.586Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "Q-Q_0",
-    "unit": 14,
-    "parameter_type": "experiment"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 7,
-  "fields": {
-    "name": "Net charge passed",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.588Z",
-    "modified_on": "2023-01-04T08:46:07.588Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "Q-Q_0",
-    "unit": 15,
-    "parameter_type": "experiment"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 8,
-  "fields": {
-    "name": "Temperature",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.591Z",
-    "modified_on": "2023-01-04T08:46:07.591Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "T",
-    "unit": 5,
-    "parameter_type": "experiment"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 9,
-  "fields": {
-    "name": "Charge passed during discharge",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.594Z",
-    "modified_on": "2023-01-04T08:46:07.594Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "Q discharge",
-    "unit": 14,
-    "parameter_type": "experiment"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 10,
-  "fields": {
-    "name": "Net energy passed",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.597Z",
-    "modified_on": "2023-01-04T08:46:07.597Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "E",
-    "unit": 16,
-    "parameter_type": "experiment"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 11,
-  "fields": {
-    "name": "New section changes",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.599Z",
-    "modified_on": "2023-01-04T08:46:07.599Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "Ns changes",
-    "unit": 9,
-    "parameter_type": "experiment"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 12,
-  "fields": {
-    "name": "Cycle number",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.602Z",
-    "modified_on": "2023-01-04T08:46:07.602Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "Cyl",
-    "unit": 9,
-    "parameter_type": "experiment"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 13,
-  "fields": {
-    "name": "Record number",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.605Z",
-    "modified_on": "2023-01-04T08:46:07.605Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "Rec",
-    "unit": 9,
-    "parameter_type": "experiment"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 14,
-  "fields": {
-    "name": "Cell nominal capacity",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.608Z",
-    "modified_on": "2023-01-04T08:46:07.608Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "Q",
-    "unit": 15,
-    "parameter_type": "device"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 15,
-  "fields": {
-    "name": "Form factor",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.611Z",
-    "modified_on": "2023-01-04T08:46:07.611Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "f_f",
-    "unit": 9,
-    "parameter_type": "device"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 16,
-  "fields": {
-    "name": "Anode size",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.614Z",
-    "modified_on": "2023-01-04T08:46:07.614Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "A_{anode}",
-    "unit": 18,
-    "parameter_type": "device"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 17,
-  "fields": {
-    "name": "Cathode size",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.617Z",
-    "modified_on": "2023-01-04T08:46:07.617Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "A_{cathode}",
-    "unit": 18,
-    "parameter_type": "device"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 18,
-  "fields": {
-    "name": "Anode loading",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.619Z",
-    "modified_on": "2023-01-04T08:46:07.619Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "Q_{anode}",
-    "unit": 19,
-    "parameter_type": "device"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 19,
-  "fields": {
-    "name": "Cathode loading",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.622Z",
-    "modified_on": "2023-01-04T08:46:07.622Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "Q_{cathode}",
-    "unit": 19,
-    "parameter_type": "device"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 20,
-  "fields": {
-    "name": "Number of layers",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.624Z",
-    "modified_on": "2023-01-04T08:46:07.624Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "n_{layers}",
-    "unit": 9,
-    "parameter_type": "device"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 21,
-  "fields": {
-    "name": "Electrode coating",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.627Z",
-    "modified_on": "2023-01-04T08:46:07.627Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "coating",
-    "unit": 9,
-    "parameter_type": "device"
-  }
-},
-{
-  "model": "dfndb.parameter",
-  "pk": 22,
-  "fields": {
-    "name": "Electrolyte component",
-    "status": "Public",
-    "user_owner": [
-      "AnonymousUser"
-    ],
-    "created_on": "2023-01-04T08:46:07.630Z",
-    "modified_on": "2023-01-04T08:46:07.630Z",
-    "attributes": {},
-    "notes": null,
-    "slug": "autogenerated",
-    "symbol": "eletrolyte",
-    "unit": 9,
-    "parameter_type": "device"
-  }
-},
-{
-  "model": "common.org",
-  "pk": 1,
-  "fields": {
-    "created_on": "2023-01-04T08:47:21.744Z",
-    "modified_on": "2023-01-04T08:47:21.744Z",
-    "attributes": {},
-    "notes": "",
-    "slug": "imperial-college-london",
-    "name": "Imperial College London",
-    "manager": [
-      "admin"
-    ],
-    "is_research": true,
-    "is_publisher": false,
-    "is_mfg_cells": true,
-    "is_mfg_equip": false,
-    "website": null
-  }
-}
 ]

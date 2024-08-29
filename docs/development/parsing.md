@@ -59,7 +59,7 @@ example, the generic mappings include:
 {
     ...
     "time": "time/s",
-    "Time": "time/s", 
+    "Time": "time/s",
     ...
 }
 ```
