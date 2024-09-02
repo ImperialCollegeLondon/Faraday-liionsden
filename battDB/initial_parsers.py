@@ -3,6 +3,7 @@
 These functions are run as part of a migration and pre-populate the database with
 some default parsers.
 """
+
 from logging import getLogger
 
 logger = getLogger()
