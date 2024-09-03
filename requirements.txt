@@ -142,7 +142,7 @@ plotly==5.23.0
     # via Liionsden (pyproject.toml)
 preparenovonix==1.0.3
     # via Liionsden (pyproject.toml)
-psycopg2==2.9.9
+psycopg2-binary==2.9.9
     # via Liionsden (pyproject.toml)
 pycparser==2.22
     # via cffi

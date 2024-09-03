@@ -16,7 +16,7 @@ requires-python = ">=3.11"
 
 dependencies = [
     "pandas",
-    "psycopg2",
+    "psycopg2-binary",
     "django_jsoneditor",
     "Django>=5.0",
     "djangorestframework",

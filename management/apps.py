@@ -6,4 +6,4 @@ class ManagementConfig(AppConfig):
     name = "management"
 
     def ready(self):
-        pass
+        import management.signals.handlers  # noqa
