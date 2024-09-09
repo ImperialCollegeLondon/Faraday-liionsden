@@ -201,7 +201,7 @@ requests==2.32.3
     # via
     #   azure-core
     #   coreapi
-ruff==0.6.2
+ruff==0.6.4
     # via Liionsden (pyproject.toml)
 six==1.16.0
     # via
