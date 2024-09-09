@@ -283,7 +283,7 @@ class TestDataAdmin(TestCase):
         self.obj = SimpleNamespace()
 
     def test_definition(self):
-        from battDB.admin import DataFileInline, DataRangeInline, DeviceDataInline
+        from battDB.admin import DataFileInline
         from battDB.models import ExperimentDataFile
 
         obj = baker.make_recipe("tests.battDB.edf")

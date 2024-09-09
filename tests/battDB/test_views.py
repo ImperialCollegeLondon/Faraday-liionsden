@@ -7,8 +7,6 @@ from model_bakery import baker
 
 import battDB.models as bdb
 
-# flake8: noqa: E501
-
 
 class CreateDeviceSpecificationTest(TestCase):
     def setUp(self):
@@ -33,15 +31,15 @@ class CreateDeviceSpecificationTest(TestCase):
         response = self.client.get(reverse("battDB:New Device"))
         self.assertContains(
             response,
-            '<select name="deviceparameter_set-0-parameter" class="select form-select" id="id_deviceparameter_set-0-parameter">',
+            '<select name="deviceparameter_set-0-parameter" class="select form-select" aria-describedby="id_deviceparameter_set-0-parameter_helptext" id="id_deviceparameter_set-0-parameter">',  # noqa
         )
         self.assertContains(
             response,
-            '<input type="text" name="deviceparameter_set-0-value" value="0.0" class="textinput textInput form-control" id="id_deviceparameter_set-0-value">',
+            '<input type="text" name="deviceparameter_set-0-value" value="0.0" class="textinput form-control" id="id_deviceparameter_set-0-value">',  # noqa
         )
         self.assertContains(
             response,
-            '<select name="devicecomponent_set-0-component" class="select form-select" id="id_devicecomponent_set-0-component">',
+            '<select name="devicecomponent_set-0-component" class="select form-select" aria-describedby="id_devicecomponent_set-0-component_helptext" id="id_devicecomponent_set-0-component">',  # noqa
         )
 
     def test_create_update_delete_devices(self):

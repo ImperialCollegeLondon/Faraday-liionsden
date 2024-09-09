@@ -31,7 +31,7 @@ class AbstractModelMixinTestCase(TestCase):
         try:
             with connection.schema_editor() as schema_editor:
                 schema_editor.create_model(cls.model)
-            super(AbstractModelMixinTestCase, cls).setUpClass()
+            super().setUpClass()
         except ProgrammingError:
             pass
 
@@ -41,6 +41,6 @@ class AbstractModelMixinTestCase(TestCase):
         try:
             with connection.schema_editor() as schema_editor:
                 schema_editor.delete_model(cls.model)
-            super(AbstractModelMixinTestCase, cls).tearDownClass()
+            super().tearDownClass()
         except ProgrammingError:
             pass

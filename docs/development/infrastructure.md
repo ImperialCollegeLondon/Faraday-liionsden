@@ -11,7 +11,7 @@ addition to the main `web` container:
   Django.
 - `azurite`: In production any media files (e.g. raw data files, PDFs etc. uploaded by
   users) are stored in [Azure
-  Blob](https://azure.microsoft.com/en-gb/products/storage/blobs) Containers. It is not
+  Blob](https://azure.microsoft.com/en-gb/products/storage/blobs) Containers. It is not  <!-- markdown-link-check-disable-line -->
   practical nor wise to rely on a cloud container for local development so the [Azurite
   image](https://hub.docker.com/_/microsoft-azure-storage-azurite) is used to run an
   Azure Storage emulator.
@@ -98,7 +98,7 @@ three CI/CD steps. This is configured in `.github/worklflows/ci.yml`:
 The development/production version of the app running on Azure was initially configured
 using [Terraform](https://www.terraform.io/) and [this guide on setting up a web
 application with
-Terraform](https://github.com/ImperialCollegeLondon/terraform_web_app_configuration). We
+Terraform](https://github.com/ImperialCollegeLondon/terraform_web_app_configuration). We <!-- markdown-link-check-disable-line -->
 have followed the "One Time Usage" workflow on that guide so please refer to it and the
 Terraform docs if any changes need to be made.
 

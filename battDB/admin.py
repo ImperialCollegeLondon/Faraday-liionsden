@@ -41,12 +41,14 @@ class DeviceSpecInline(common.admin.CompositeBaseInLine):
 class DeviceSpecAdmin(common.admin.HasMPTTAdmin):
     model = DeviceSpecification
     save_as = True
-    list_display = common.admin.HasMPTTAdmin.list_display + (
+    list_display = [
+        *common.admin.HasMPTTAdmin.list_display,
         "device_type",
         "abstract",
         "complete",
-    )
-    list_filter = (common.admin.HasMPTTAdmin.list_filter or []) + [
+    ]
+    list_filter = [
+        *common.admin.HasMPTTAdmin.list_filter,
         "device_type",
         "abstract",
         "complete",
@@ -80,12 +82,15 @@ class BatchInline(common.admin.TabularInline):
 
 
 class BatchAdmin(common.admin.BaseAdmin, mptt.admin.MPTTModelAdmin):
-    list_display = (
-        ["__str__"]
-        + ["manufacturer", "serialNo", "manufactured_on", "batch_size"]
-        + BaseAdmin.list_display_extra
-    )
-    list_filter = BaseAdmin.list_filter + ["manufacturer", "batch_size"]
+    list_display = [
+        "__str__",
+        "manufacturer",
+        "serialNo",
+        "manufactured_on",
+        "batch_size",
+        *BaseAdmin.list_display_extra,
+    ]
+    list_filter = [*BaseAdmin.list_filter, "manufacturer", "batch_size"]
     save_as = True
     inlines = [
         BatchInline,
@@ -109,10 +114,14 @@ class ExperimentDeviceInline(common.admin.TabularInline):
 
 
 class ExperimentAdmin(common.admin.BaseAdmin):
-    readonly_fields = ["data_files_list"] + BaseAdmin.readonly_fields
-    list_display = (
-        ["__str__"] + ["devices_", "files_", "cycles_"] + BaseAdmin.list_display_extra
-    )
+    readonly_fields = ["data_files_list", *BaseAdmin.readonly_fields]
+    list_display = [
+        "__str__",
+        "devices_",
+        "files_",
+        "cycles_",
+        *BaseAdmin.list_display_extra,
+    ]
     inlines = [ExperimentDeviceInline]
     save_as = True
 
@@ -125,7 +134,7 @@ class ExperimentAdmin(common.admin.BaseAdmin):
             )
         return mark_safe(links_str)
 
-    data_files_list.short_description = "Data Files"
+    setattr(data_files_list, "short_description", "Data Files")
 
 
 admin.site.register(Experiment, ExperimentAdmin)
@@ -206,20 +215,19 @@ class DataRangeInline(common.admin.TabularInline):
         else:
             return "N/A"
 
-    size.short_description = "Rows x Cols"
+    setattr(size, "short_description", "Rows x Cols")
 
     def get_graph_link(self, obj):
         if obj.ts_data is not None:
             return mark_safe(
                 """
-            <button type="button"> <a href="%s">%s</a> </button>
-            """
-                % ("/foo", "PLOT")
+            <button type="button"> <a href="{}">{}</a> </button>
+            """.format("/foo", "PLOT")
             )
         else:
             return "N/A"
 
-    get_graph_link.short_description = "Graph"
+    setattr(get_graph_link, "short_description", "Graph")
 
     def columns(self, obj):
         return str(obj.ts_headers)
@@ -251,8 +259,9 @@ class DataAdmin(BaseAdmin):
         "created_on",
         "status",
     ]
-    list_filter = ["experiment"] + BaseAdmin.list_filter
-    readonly_fields = BaseAdmin.readonly_fields + [
+    list_filter = ["experiment", *BaseAdmin.list_filter]
+    readonly_fields = [
+        *BaseAdmin.readonly_fields,
         "is_parsed",
         "get_experiment_link",
         "file_hash",
@@ -263,14 +272,14 @@ class DataAdmin(BaseAdmin):
     def file_data(self, obj):
         return "%dx%d" % (obj.file_rows(), len(obj.file_columns()))
 
-    file_data.short_description = "Row x Col"
+    setattr(file_data, "short_description", "Row x Col")
 
     def parsed_data(self, obj):
         parsed = len(obj.parsed_columns())
         missing = len(obj.missing_columns())
         return "%d/%d: %s" % (parsed, parsed + missing, obj.parsed_columns())
 
-    parsed_data.short_description = "Imported Cols"
+    setattr(parsed_data, "short_description", "Imported Cols")
 
     def get_experiment_link(self, obj):
         if hasattr(obj, "experiment") and obj.experiment is not None:
@@ -285,18 +294,18 @@ class DataAdmin(BaseAdmin):
         else:
             return "N/A"
 
-    get_experiment_link.short_description = "Experiment"
+    setattr(get_experiment_link, "short_description", "Experiment")
 
     def get_file_link(self, obj):
         if hasattr(obj, "raw_data_file") and obj.raw_data_file is not None:
             size = obj.raw_data_file.size()
             return mark_safe(
-                f'<button type="button"> <a href={reverse("battDB:Download File", kwargs={"pk": obj.id})}>{size}</a> </button>'
+                f'<button type="button"> <a href={reverse("battDB:Download File", kwargs={"pk": obj.id})}>{size}</a> </button>'  # noqa: E501
             )
         else:
             return "N/A"
 
-    get_file_link.short_description = "View RAW"
+    setattr(get_file_link, "short_description", "View RAW")
 
     def save_model(self, request, obj, form, change):
         pass  # don't actually save the parent instance

@@ -10,7 +10,7 @@ class FormSetWithUser(BaseInlineFormSet):
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)
-        super(FormSetWithUser, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class DataCreateForm(ModelForm):

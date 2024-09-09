@@ -7,7 +7,7 @@ from model_bakery import baker
 class BaseObjectTest(TestCase):
     @classmethod
     def setUpClass(self):
-        super(BaseObjectTest, self).setUpClass()
+        super().setUpClass()
         self.read_only = baker.make_recipe("tests.management.user")
         Group.objects.get(name="Read only").user_set.add(self.read_only)
         self.contributor = baker.make_recipe("tests.management.user")
@@ -19,7 +19,7 @@ class BaseObjectTest(TestCase):
 class TestCreatePrivate(BaseObjectTest):
     @classmethod
     def setUpClass(self):
-        super(TestCreatePrivate, self).setUpClass()
+        super().setUpClass()
         self.model = baker.make_recipe("tests.common.reference", status="private")
         self.model_owner = self.model.user_owner
         self.model_owner.is_active = True
@@ -66,7 +66,7 @@ class TestCreatePrivate(BaseObjectTest):
 class TestCreatePublic(BaseObjectTest):
     @classmethod
     def setUpClass(self):
-        super(TestCreatePublic, self).setUpClass()
+        super().setUpClass()
         self.model = baker.make_recipe("tests.common.reference", status="public")
         self.model_owner = self.model.user_owner
         self.model_owner.is_active = True
@@ -108,7 +108,7 @@ class TestCreatePublic(BaseObjectTest):
 class TestPublicToPrivate(BaseObjectTest):
     @classmethod
     def setUpClass(self):
-        super(TestPublicToPrivate, self).setUpClass()
+        super().setUpClass()
         self.model = baker.make_recipe("tests.common.reference", status="public")
         self.model.status = "private"
         self.model.save()
@@ -157,7 +157,7 @@ class TestPublicToPrivate(BaseObjectTest):
 class TestPublicToDeleted(BaseObjectTest):
     @classmethod
     def setUpClass(self):
-        super(TestPublicToDeleted, self).setUpClass()
+        super().setUpClass()
         self.model = baker.make_recipe("tests.common.reference", status="public")
         self.model.status = "deleted"
         self.model.save()
@@ -205,7 +205,7 @@ class TestPublicToDeleted(BaseObjectTest):
 class TestObjectNoOwner(BaseObjectTest):
     @classmethod
     def setUpClass(self):
-        super(TestObjectNoOwner, self).setUpClass()
+        super().setUpClass()
         self.model = baker.make_recipe("tests.common.org")
 
     def test_group_perms(self):

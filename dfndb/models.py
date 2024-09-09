@@ -31,7 +31,7 @@ class Compound(models.Model):
         return Formula(self.formula).mass
 
     def __str__(self):
-        return "%s (%s)" % (self.name, self.formula)
+        return f"{self.name} ({self.formula})"
 
 
 class Component(cm.BaseModelMandatoryName):
@@ -76,7 +76,7 @@ class CompositionPart(models.Model):
         return np.round((float(self.amount or 0) * 100 / total), decimals=2)
 
     def percentage(self):
-        return "%3.03f%%" % self.get_percentage()
+        return f"{self.get_percentage():3.3f}%"
 
     @property
     def user_owner(self):
@@ -140,11 +140,7 @@ class QuantityUnit(models.Model):
     )
 
     def __str__(self):
-        return "%s (%s) / %s" % (
-            self.quantityName,
-            self.quantitySymbol,
-            self.unitSymbol,
-        )
+        return f"{self.quantityName} ({self.quantitySymbol}) / {self.unitSymbol}"
 
     class Meta:
         unique_together = ("quantityName", "unitSymbol")
@@ -180,7 +176,7 @@ class Parameter(cm.BaseModel):
         unique_together = ("symbol", "unit")
 
     def __str__(self):
-        return "%s: %s / %s" % (self.name, self.symbol, self.unit.unitSymbol)
+        return f"{self.name}: {self.symbol} / {self.unit.unitSymbol}"
 
 
 class Data(cm.BaseModel):

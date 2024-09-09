@@ -89,7 +89,7 @@ permissions are inherited from there. The groups are:
 - User managers: Access to read/write/update/delete users. They can approve
   (activate) new users and give them appropriate roles, as well as updating the
   permissions of existing users. They cannot make users, or themselves,
-  administrators.  
+  administrators.
 
 - Maintainers: Have full access to the database, except for users and groups.
   Can read/add/change/delete any objects **including private objects** as

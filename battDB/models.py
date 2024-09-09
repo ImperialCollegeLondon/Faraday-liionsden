@@ -78,7 +78,7 @@ class DeviceSpecification(cm.BaseModelMandatoryName, cm.HasMPTT):
     def clean(self):
         if self.abstract and self.device_type is not None:
             raise ValidationError("Abstract specifications cannot have a device type")
-        return super(DeviceSpecification, self).clean()
+        return super().clean()
 
     def get_absolute_url(self):
         return reverse("battDB:Device", kwargs={"pk": self.pk})
@@ -659,7 +659,7 @@ class ExperimentDataFile(cm.BaseModel):
             self.ts_data = parsed_file["data"]
 
     def save(self):
-        super(ExperimentDataFile, self).save()
+        super().save()
 
         if self.is_parsed():
             self.create_ranges()
@@ -668,7 +668,7 @@ class ExperimentDataFile(cm.BaseModel):
         verbose_name = "Data File"
 
 
-class UploadedFile(cm.HashedFile, cm.HasOwner, cm.HasStatus):
+class UploadedFile(cm.HashedFile, cm.HasOwner, cm.HasStatus):  # type: ignore
     edf = models.OneToOneField(
         ExperimentDataFile,
         on_delete=models.CASCADE,

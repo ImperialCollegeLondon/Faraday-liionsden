@@ -15,7 +15,7 @@ Steps to reproduce the behaviour:
 1. Which file did you attempt to upload? Please provide a link if it is too large to attach to the issue, or at the very least the file name and e-mail it to the developers.
 2. Which parser was used?
 3. Is there anything unusual/atypical about the data file?
-4. What error message, if any, did you see? 
+4. What error message, if any, did you see?
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.

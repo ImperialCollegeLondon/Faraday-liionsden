@@ -1,6 +1,5 @@
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Text
 from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
@@ -168,7 +167,7 @@ class TestMaccorFunctions(TestCase):
         expected = 0
         for i, row in enumerate(sheet.get_rows()):
             if any(
-                [isinstance(cell.value, Text) and "Cyc#" in cell.value for cell in row]
+                [isinstance(cell.value, str) and "Cyc#" in cell.value for cell in row]
             ):
                 expected = i
 

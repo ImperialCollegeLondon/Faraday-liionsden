@@ -5,4 +5,4 @@ class CommonConfig(AppConfig):
     name = "common"
 
     def ready(self):
-        import common.signals.handlers
+        import common.signals.handlers  # noqa

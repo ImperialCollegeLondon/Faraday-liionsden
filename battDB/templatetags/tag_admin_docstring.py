@@ -7,5 +7,5 @@ register = template.Library()
 @register.simple_tag()
 def model_desc(obj):
     if obj.__doc__:
-        return mark_safe("<p>{}</p>".format(obj.__doc__))
+        return mark_safe(f"<p>{obj.__doc__}</p>")
     return ""

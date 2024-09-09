@@ -8,7 +8,7 @@ class DataFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ExperimentDataFile
-        exclude = []
+        exclude: list[str] = []
 
 
 class NewDataFileSerializer(DataFileSerializer):
@@ -24,7 +24,7 @@ class ExperimentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Experiment
-        exclude = []
+        exclude: list[str] = []
 
 
 class DataRangeSerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class DataRangeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DataRange
-        exclude = []
+        exclude: list[str] = []
 
 
 class FileHashSerializer(serializers.ModelSerializer):

@@ -1,9 +1,10 @@
 import re
 from logging import getLogger
-from typing import Any, Dict, List, TextIO, Tuple, Union
+from typing import Any
 
 import pandas as pd
 import yaml
+from django.db import models
 from yaml.scanner import ScannerError
 
 from .battery_exceptions import UnsupportedFileTypeError
@@ -16,14 +17,14 @@ class BiologicParsingEngine(ParsingEngineBase):
 
     name = "Biologic"
     description = "Biologic CSV/TSV/MPT"
-    valid: List[Tuple[str, str]] = [
+    valid: list[tuple[str, str]] = [
         ("text/plain", ".csv"),
         ("text/plain", ".mpt"),
         ("text/plain", ".tsv"),
         ("text/plain", ".txt"),
         ("text/plain", ".mps"),
     ]
-    mandatory_columns: Dict[str, Dict[str, Union[str, Tuple[str, str]]]] = {
+    mandatory_columns: dict[str, dict[str, str | tuple[str, str]]] = {
         "time/s": dict(symbol="t", unit=("Time", "s")),
         "Ecell/V": dict(symbol="V", unit=("Voltage", "V")),
         "I/mA": dict(symbol="I", unit=("Current", "mA")),
@@ -38,18 +39,18 @@ class BiologicParsingEngine(ParsingEngineBase):
     encoding = "iso-8859-1"
 
     @classmethod
-    def factory(cls, file_obj: TextIO) -> ParsingEngineBase:
+    def factory(cls, file_obj: models.FileField) -> ParsingEngineBase:
         """Factory method for creating a parsing engine.
 
         Args:
-            file_obj (TextIO): File to parse.
+            file_obj (models.FileField): File to parse.
         """
         column_name_mapping = BIOLOGIC_COLUMN_MAPPING
         skip_rows, file_type = get_header_size(file_obj, cls.encoding)
         # check validity of file
         if file_type in ("invalid", "settings"):
             data = pd.DataFrame([])
-            file_metadata = []
+            file_metadata: dict[str, Any] | list[Any] = {}
             getLogger().error(
                 f"File {file_obj.name} cannot be parsed: File type: {file_type}."
             )
@@ -60,12 +61,12 @@ class BiologicParsingEngine(ParsingEngineBase):
 
 
 def get_file_header(
-    file_obj: TextIO, skip_rows: int, encoding: str
-) -> Union[Dict[str, Any], List[Any]]:
+    file_obj: models.FileField, skip_rows: int, encoding: str
+) -> dict[str, Any] | list[Any]:
     """Extracts the header from the Biologic file.
 
     Args:
-        file_obj (TextIO): File to load the data from.
+        file_obj (models.FileField): File to load the data from.
         skip_rows (int): Location of the header, assumed equal to the number of rows to
             skip.
         encoding (str): Encoding of the file.
@@ -78,22 +79,22 @@ def get_file_header(
         return []
     with file_obj.open("r") as f:
         header = list(filter(len, (f.readline().rstrip() for _ in range(skip_rows))))
-        if type(header[0]) == bytes:
+        if type(header[0]) is bytes:
             header = [i.decode(encoding) for i in header]
     try:
-        header = header_to_yaml(header)
+        return header_to_yaml(header)
     except ScannerError:
         getLogger().warning(
             f"File header for {file_obj.name} could not be parsed as YAML format!"
         )
-    return header
+        return header
 
 
-def get_header_size(file_obj: TextIO, encoding: str) -> Tuple[int, str]:
+def get_header_size(file_obj: models.FileField, encoding: str) -> tuple[int, str]:
     """Reads the file and determines the size of the header.
 
     Args:
-        file_obj (TextIO): File to load the data from.
+        file_obj (models.FileField): File to load the data from.
         encoding (str): Encoding of the file.
 
     Returns:
@@ -123,7 +124,9 @@ def get_header_size(file_obj: TextIO, encoding: str) -> Tuple[int, str]:
             return (0, "invalid")
 
 
-def load_biologic_data(file_obj: TextIO, skip_rows: int, encoding: str) -> pd.DataFrame:
+def load_biologic_data(
+    file_obj: models.FileField, skip_rows: int, encoding: str
+) -> pd.DataFrame:
     """Loads the data as a Pandas data frame.
 
     Can work with files that have a header or that do not have one. It is assumed
@@ -131,7 +134,7 @@ def load_biologic_data(file_obj: TextIO, skip_rows: int, encoding: str) -> pd.Da
     using tabs. If there is still only 1 column, an erro is raised.
 
     Args:
-        file_obj (TextIO): File to load the data from.
+        file_obj (models.FileField): File to load the data from.
         skip_rows (int): Location of the header, assumed equal to the number of rows to
             skip.
         encoding (str): Encoding of the file.
@@ -177,7 +180,7 @@ yaml_replacements = {
 }
 
 
-def header_to_yaml(header: List[str]) -> Dict:
+def header_to_yaml(header: list[str]) -> dict:
     """Adapt BioLog file header to YAML format.
 
     The format of the BioLogix header is "almost" parsable directly as YAML We can hack
@@ -196,7 +199,9 @@ def header_to_yaml(header: List[str]) -> Dict:
     """
 
     # 1) Apply replacements
-    regex = re.compile("(%s)" % "|".join(map(re.escape, yaml_replacements.keys())))
+    regex = re.compile(
+        "({})".format("|".join(map(re.escape, yaml_replacements.keys())))
+    )
     rep_header = [
         regex.sub(lambda mo: yaml_replacements.get(mo.group(), f"{h}"), h)
         for h in header

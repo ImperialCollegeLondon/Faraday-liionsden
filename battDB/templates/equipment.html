@@ -3,7 +3,7 @@
 {% load tag_allfields %}
 {% load render_table from django_tables2 %}
 {% load export_url from django_tables2 %}
-{% load bootstrap5 %}
+{% load django_bootstrap5 %}
 {% load mptt_tags %}
 {% load guardian_tags %}
 
@@ -23,16 +23,16 @@
 <div class="card border-dark mb-3" style="max-width: 100%;">
   <div class="card-header"><h5>Equipment details</h5></div>
   <div class="card-body">
-    <b>Serial Number</b> 
+    <b>Serial Number</b>
     <br>
     {{ object.serialNo }}
     <br><br>
-    <b>Default parser</b> 
+    <b>Default parser</b>
     <br>
     {{ object.default_parser }}
     <br><br>
     <b>Used in experiments</b>
-    <br>    
+    <br>
     <table class="table">
       <thead class= "thead-light">
         <tr>

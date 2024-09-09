@@ -1,16 +1,15 @@
+from typing import Any
+
 import django_tables2 as tables2
-import plotly.graph_objs as go
 from django.contrib import messages
 from django.db import IntegrityError, transaction
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView
-from django.views.generic.edit import FormView
 from django_filters.views import FilterView
 from django_tables2.export.views import ExportMixin
 from django_tables2.views import MultiTableMixin, SingleTableMixin
 from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
 from pandas import DataFrame
-from plotly.offline import plot
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import ParseError
 from rest_framework.generics import CreateAPIView, GenericAPIView, ListAPIView
@@ -73,8 +72,6 @@ from .tables import (
     ExperimentTable,
     ParserTable,
 )
-
-# flake8: noqa E266
 
 
 def index(request):
@@ -141,7 +138,7 @@ class NewBatchView(PermissionRequiredMixin, NewDataView):
         that the user has permsission to view.
         """
 
-        kwargs = super(NewBatchView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         if not self.request.user:
             raise ValueError("User object not passed to form class.")
@@ -162,7 +159,7 @@ class NewDataFileView(PermissionRequiredMixin, NewDataViewInline):
         This is necessary to only display devices that belong to the experiment.
         """
 
-        kwargs = super(NewDataFileView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["experiment"] = Experiment.objects.get(pk=self.kwargs.get("pk"))
         return kwargs
 
@@ -287,7 +284,7 @@ class UpdateBatchView(PermissionRequiredMixin, UpdateDataView):
         that the user has permsission to view.
         """
 
-        kwargs = super(UpdateBatchView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
 
@@ -307,7 +304,7 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
         This is necessary to only display devices that belong to the experiment.
         """
 
-        kwargs = super(UpdateDataFileView, self).get_form_kwargs()
+        kwargs = super().get_form_kwargs()
         kwargs["experiment"] = Experiment.objects.get(pk=self.object.experiment.id)
         return kwargs
 
@@ -337,7 +334,7 @@ class UpdateDataFileView(PermissionRequiredMixin, UpdateDataInlineView):
             if "another" in request.POST:
                 return redirect(request.path_info)
             else:
-                return redirect("/battDB/exps/{}".format(self.object.experiment.id))
+                return redirect(f"/battDB/exps/{self.object.experiment.id}")
         messages.error(request, "Could not update information - form not valid.")
         return render(request, self.template_name, context)
 
@@ -558,7 +555,7 @@ class ExperimentView(PermissionRequiredMixin, MultiTableMixin, DetailView):
             Dictionary of lists. Each list contains a dictionary for each row of data.
         """
         data_files = self.object.data_files.all()
-        data_previews = {}
+        data_previews: dict[str, list[dict[Any, Any]] | None] = {}
         for data_file in data_files:
             if data_file.file_exists() and data_file.raw_data_file.parse:
                 # Get the headers and data

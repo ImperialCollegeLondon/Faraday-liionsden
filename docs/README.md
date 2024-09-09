@@ -6,8 +6,8 @@ Liionsden is a Web application comprising a database of electrochemical (Lithium
 Ideas drawn from:
 
 * 'Galvanalyser' by Luke Pitt and Prof. David Howey
-* [liionsden by Ivan Kotegov at Imperial College](https://github.com/FaradayInstitution/liionsden)
+* [liionsden by Ivan Kotegov at Imperial College](https://github.com/FaradayInstitution/liionsden) <!-- markdown-link-check-disable-line -->
 * [Universal Battery Database by Samuel Buteau](https://github.com/Samuel-Buteau/universal-battery-database)
-* [dfndb](https://github.com/ndrewwang/dfndb) by @ndrewwang
+* [dfndb](https://github.com/ndrewwang/dfndb) by @ndrewwang <!-- markdown-link-check-disable-line -->
 * Inspiration from commerical products such as [Voltaiq](http://www.voltaiq.com)
 * Cycler machines software e.g. Biologic BT-Lab

@@ -1,6 +1,8 @@
+from collections.abc import Callable
+
 from django.contrib import messages
 from django.db import transaction
-from django.shortcuts import redirect, render  # noqa: F401
+from django.shortcuts import redirect, render
 from django.views.generic.edit import DeleteView, FormView, UpdateView
 
 
@@ -11,7 +13,7 @@ class NewDataView(FormView):
 
     success_message = "New data added successfully."
     failure_message = "Cannot add data. Invalid information."
-    success_url = None
+    success_url: str | None = None
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
@@ -50,14 +52,15 @@ class NewDataViewInline(FormView):
     success_message = "New data added successfully."
     failure_message = "Cannot add data. Invalid information."
     success_url = None
-    inline_formsets = {}  # Dictionary of inline formsets to be added to context
+    # Dictionary of inline formsets to be added to context
+    inline_formsets: dict[str, Callable] = {}
 
     def get_context_data(self, **kwargs):
         """
         Helper function to get correct context to pass to render() in get()
         and post().
         """
-        data = super(NewDataViewInline, self).get_context_data(**kwargs)
+        data = super().get_context_data(**kwargs)
         if self.request.POST:
             for key, formset in self.inline_formsets.items():
                 data[key] = formset(self.request.POST, self.request.FILES)
@@ -152,14 +155,14 @@ class UpdateDataInlineView(UpdateView):
 
     success_message = "New data added successfully."
     failure_message = "Cannot add data. Invalid information."
-    inline_formsets = {}
+    inline_formsets: dict[str, Callable] = {}
 
     def get_context_data(self, **kwargs):
         """
         Helper function to get correct context to pass to render() in get()
         and post().
         """
-        data = super(UpdateDataInlineView, self).get_context_data(**kwargs)
+        data = super().get_context_data(**kwargs)
         if self.request.POST:
             for key, formset in self.inline_formsets.items():
                 data[key] = formset(self.request.POST, instance=self.object)

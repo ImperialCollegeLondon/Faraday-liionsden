@@ -50,7 +50,7 @@ Some general hints and potential gotchas:
 
 We are following the [pip-tools](https://pypi.org/project/pip-tools/) `pip-compile`
 convetion to generate `requirements.txt` and `requirements-dev.txt` from
-`requirements.in` and `requirements-dev.in`, respectively.
+`pyproject.toml` for dependencies and development dependencies, respectively.
 
 ### Related open-source software
 

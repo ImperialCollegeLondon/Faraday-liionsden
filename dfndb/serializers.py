@@ -6,4 +6,4 @@ from . import models
 class ParameterSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Parameter
-        exclude = []
+        exclude: list[str] = []

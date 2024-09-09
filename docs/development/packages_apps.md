@@ -14,7 +14,7 @@ Here is a brief summary of how and where imported Python packages and Django app
   packs and modules can be defined.
 - [django-guardian](https://django-guardian.readthedocs.io/en/stable/): Object
   level permissions.
-- [django-bootstrap-v5](https://pypi.org/project/django-bootstrap-v5/): Blend
+- [django-bootstrap5](https://pypi.org/project/django-bootstrap5/): Blend
   bootstrap v5 with Django for clean and reactive frontend pages.
 - [django-tables2](https://django-tables2.readthedocs.io/en/latest/): Creating
   HTML tables for searching through lists of models.

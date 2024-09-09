@@ -1,21 +1,11 @@
 import os
-from typing import (
-    Any,
-    Dict,
-    Iterable,
-    List,
-    Optional,
-    Sequence,
-    Set,
-    Text,
-    TextIO,
-    Tuple,
-    Union,
-)
+from collections.abc import Iterable, Sequence
+from typing import Any, TextIO
 
 import openpyxl
 import pandas as pd
 import xlrd
+from django.db import models
 from openpyxl.worksheet.worksheet import Worksheet
 from xlrd.sheet import Cell, Sheet
 
@@ -27,7 +17,7 @@ from .parsing_engines_base import ParsingEngineBase
 class MaccorParsingEngine(ParsingEngineBase):
     name = "Maccor"
     description = "Maccor XLS/XLSX"
-    valid: List[Tuple[str, str]] = [
+    valid: list[tuple[str, str]] = [
         ("application/vnd.ms-excel", ".xls"),
         ("application/CDFV2", ".xls"),
         ("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx"),
@@ -35,7 +25,7 @@ class MaccorParsingEngine(ParsingEngineBase):
         ("text/plain", ".csv"),
         ("text/plain", ".txt"),
     ]
-    mandatory_columns: Dict[str, Dict[str, Union[str, Tuple[str, str]]]] = {
+    mandatory_columns: dict[str, dict[str, str | tuple[str, str]]] = {
         "Rec#": dict(symbol="Rec", unit=("Unitless", "1")),
         "Cyc#": dict(symbol="Cyl", unit=("Unitless", "1")),
         "Step": dict(symbol="Ns changes", unit=("Unitless", "1")),
@@ -58,6 +48,7 @@ class MaccorParsingEngine(ParsingEngineBase):
         """
         column_name_mapping = MACCOR_COLUMN_MAPPING
         ext = os.path.splitext(file_obj.name)[1]
+        file_metadata: dict[str, Any] | list[Any] = {}
         if ext in [".csv", ".txt"]:
             skip_rows = get_header_size_csv(file_obj, set(cls.mandatory_columns.keys()))
             data = load_maccor_data_csv(file_obj, skip_rows)
@@ -81,7 +72,7 @@ class MaccorParsingEngine(ParsingEngineBase):
         return cls(file_obj, skip_rows, data, file_metadata, column_name_mapping)
 
 
-def factory_xls(file_obj: TextIO) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
+def factory_xls(file_obj: TextIO) -> tuple[Sheet | Worksheet, int | None]:
     """Factory method for retrieving information specific for Maccor XLS files.
 
     Args:
@@ -95,7 +86,7 @@ def factory_xls(file_obj: TextIO) -> Tuple[Union[Sheet, Worksheet], Optional[int
     return book.sheet_by_index(0), book.datemode
 
 
-def factory_xlsx(file_obj: TextIO) -> Tuple[Union[Sheet, Worksheet], Optional[int]]:
+def factory_xlsx(file_obj: TextIO) -> tuple[Sheet | Worksheet, int | None]:
     """Factory method for retrieving information specific for Maccor XLSX files.
 
     Args:
@@ -110,8 +101,8 @@ def factory_xlsx(file_obj: TextIO) -> Tuple[Union[Sheet, Worksheet], Optional[in
 
 
 def get_file_header_excel(
-    sheet: Union[Sheet, Worksheet], skip_rows: int, datemode: Optional[int]
-) -> Dict[str, Any]:
+    sheet: Sheet | Worksheet, skip_rows: int, datemode: int | None
+) -> dict[str, Any]:
     """Extracts the header from the Maccor file.
 
     The header is spread across columns, so these need to be scan for the key/value
@@ -125,7 +116,7 @@ def get_file_header_excel(
     Returns:
         Dict[str, Any]: A dictionary with the header information.
     """
-    header: Dict[str, Any] = {}
+    header: dict[str, Any] = {}
     for i, row in enumerate(sheet):
         if i == skip_rows:
             break
@@ -140,7 +131,7 @@ def get_file_header_excel(
     return header
 
 
-def get_file_header_csv(file_obj: TextIO, skip_rows: int) -> List[str]:
+def get_file_header_csv(file_obj: models.FileField, skip_rows: int) -> list[str]:
     """Extracts the header from the Maccor csv or txt file.
 
     Args:
@@ -156,12 +147,12 @@ def get_file_header_csv(file_obj: TextIO, skip_rows: int) -> List[str]:
         return []
     with file_obj.open("r") as f:
         header = list(filter(len, (f.readline().rstrip() for _ in range(skip_rows))))
-        if type(header[0]) == bytes:
+        if type(header[0]) is bytes:
             header = [i.decode("iso-8859-1") for i in header]
     return header
 
 
-def get_header_size_excel(sheet: Union[Sheet, Worksheet], columns: Set) -> int:
+def get_header_size_excel(sheet: Sheet | Worksheet, columns: set) -> int:
     """Reads the file and determines the size of the header.
 
     Args:
@@ -178,7 +169,7 @@ def get_header_size_excel(sheet: Union[Sheet, Worksheet], columns: Set) -> int:
     return 0
 
 
-def get_header_size_csv(file_obj: TextIO, columns: Set) -> int:
+def get_header_size_csv(file_obj: models.FileField, columns: set) -> int:
     """Reads the file and determines the size of the header.
 
     Args:
@@ -195,6 +186,8 @@ def get_header_size_csv(file_obj: TextIO, columns: Set) -> int:
         for i, line in enumerate(lines):
             if not is_metadata_row(line, columns, "csv"):
                 return i
+
+    return 0
 
 
 def load_maccor_data_excel(file_obj: TextIO, skip_rows: int) -> pd.DataFrame:
@@ -215,7 +208,7 @@ def load_maccor_data_excel(file_obj: TextIO, skip_rows: int) -> pd.DataFrame:
     return data
 
 
-def load_maccor_data_csv(file_obj: TextIO, skip_rows: int) -> pd.DataFrame:
+def load_maccor_data_csv(file_obj: models.FileField, skip_rows: int) -> pd.DataFrame:
     """Loads the data as a Pandas data frame.
 
     Args:
@@ -282,8 +275,8 @@ def is_metadata_row(row: Iterable, indicators: Iterable, filetype: str) -> bool:
 
 
 def get_metadata_value(
-    idx: int, row: Sequence[Cell], datemode: Optional[int]
-) -> Tuple[str, str, int]:
+    idx: int, row: Sequence[Cell], datemode: int | None
+) -> tuple[str, str, int]:
     """A wrapper for metadata value parsing, handling special cases.
 
     Args:
@@ -302,7 +295,7 @@ def get_metadata_value(
     key = row[idx]
     if not key:
         key = ""
-    elif isinstance(key.value, Text):
+    elif isinstance(key.value, str):
         key = key.value.replace("''", "'").strip().rstrip(":")
     else:
         key = key.value

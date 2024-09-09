@@ -1,8 +1,85 @@
-[tool.black]
-exclude = "venv/|battDB/migrations/|common/migrations/|dfndb/migrations/|other/|data/"
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
 
-[tool.isort]
-known_third_party = ["django", "guardian", "idutils", "magic", "model_bakery", "mptt", "pandas", "rest_framework", "xlrd", "yaml"]
-line_length = 88
-multi_line_output = 3
-include_trailing_comma = true
+[tool.setuptools.packages.find]
+# Exclude the coverage report file from setuptools package finder
+exclude = ["htmlcov"]
+
+[project]
+name = "Liionsden"
+version = "0.2.0"
+authors = [
+    { name = "Imperial College London RSE Team", email = "ict-rse-team@imperial.ac.uk" },
+]
+requires-python = ">=3.11"
+
+dependencies = [
+    "pandas",
+    "psycopg2-binary",
+    "django_jsoneditor",
+    "Django>=5.0",
+    "djangorestframework",
+    "preparenovonix",
+    "PyYAML",
+    "xlrd",
+    "django-extensions",
+    "django-ipware",
+    "coreapi-cli",
+    "django-mptt",
+    "idutils",
+    "whitenoise",
+    "model_bakery",
+    "django-guardian",
+    "django-bootstrap5",
+    "django-tables2",
+    "django-cleanup",
+    "python-magic",
+    "django-better-admin-arrayfield",
+    "django-crispy-forms",
+    "crispy-bootstrap5",
+    "django-bootstrap-datepicker-plus",
+    "django-filter",
+    "tablib",
+    "openpyxl",
+    "django-storages[azure]",
+    "django-override-storage",
+    "molmass",
+    "plotly",
+    "oauthlib",
+    "pillow",
+    "cryptography",
+    "debugpy",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+    "pip-tools",
+    "pre-commit",
+]
+
+[tool.mypy] # TODO: increase the strictness here
+# disallow_any_explicit = true
+# disallow_any_generics = true
+warn_unreachable = true
+warn_unused_ignores = true
+# disallow_untyped_defs = true
+explicit_package_bases = true
+
+[tool.ruff]
+exclude = ["*/migrations"]
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    # "D",   # pydocstyle - TODO: enable this when working on the documentation
+    "E",   # pycodestyle
+    "F",   # Pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "RUF", # ruff
+]
+ignore = ["RUF012"] # Typing on mutable class attributes
+pydocstyle.convention = "google"
