@@ -138,7 +138,7 @@ pillow==10.4.0
     # via
     #   Liionsden (pyproject.toml)
     #   matplotlib
-plotly==5.23.0
+plotly==5.24.0
     # via Liionsden (pyproject.toml)
 preparenovonix==1.0.3
     # via Liionsden (pyproject.toml)
