@@ -18,7 +18,7 @@ build==1.2.1
     # via pip-tools
 certifi==2024.7.4
     # via requests
-cffi==1.17.0
+cffi==1.17.1
     # via cryptography
 cfgv==3.4.0
     # via pre-commit
