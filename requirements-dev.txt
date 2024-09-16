@@ -42,7 +42,7 @@ coreschema==0.0.4
     # via coreapi
 crispy-bootstrap5==2024.2
     # via Liionsden (pyproject.toml)
-cryptography==43.0.0
+cryptography==43.0.1
     # via
     #   Liionsden (pyproject.toml)
     #   azure-storage-blob
