@@ -191,7 +191,7 @@ python-ipware==3.0.0
     # via django-ipware
 python-magic==0.4.27
     # via Liionsden (pyproject.toml)
-pytz==2024.1
+pytz==2024.2
     # via pandas
 pyyaml==6.0.2
     # via
