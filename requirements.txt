@@ -132,7 +132,7 @@ packaging==24.1
     #   django-jsoneditor
     #   matplotlib
     #   plotly
-pandas==2.2.2
+pandas==2.2.3
     # via Liionsden (pyproject.toml)
 pillow==10.4.0
     # via
