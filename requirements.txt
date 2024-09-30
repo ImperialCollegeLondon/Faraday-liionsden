@@ -63,7 +63,7 @@ django-bootstrap-datepicker-plus==5.0.5
     # via Liionsden (pyproject.toml)
 django-bootstrap5==24.2
     # via Liionsden (pyproject.toml)
-django-cleanup==8.1.0
+django-cleanup==9.0.0
     # via Liionsden (pyproject.toml)
 django-crispy-forms==2.3
     # via
