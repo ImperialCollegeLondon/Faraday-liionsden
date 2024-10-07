@@ -12,7 +12,7 @@ azure-core==1.30.2
     # via
     #   azure-storage-blob
     #   django-storages
-azure-storage-blob==12.23.0
+azure-storage-blob==12.23.1
     # via django-storages
 build==1.2.2
     # via pip-tools
