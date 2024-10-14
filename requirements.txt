@@ -42,7 +42,7 @@ cycler==0.12.1
     # via matplotlib
 debugpy==1.8.6
     # via Liionsden (pyproject.toml)
-django==5.1.1
+django==5.1.2
     # via
     #   Liionsden (pyproject.toml)
     #   crispy-bootstrap5
