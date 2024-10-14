@@ -148,7 +148,7 @@ pycparser==2.22
     # via cffi
 pydantic==2.8.2
     # via django-bootstrap-datepicker-plus
-pydantic-core==2.20.1
+pydantic-core==2.24.1
     # via pydantic
 pyparsing==3.1.4
     # via matplotlib
