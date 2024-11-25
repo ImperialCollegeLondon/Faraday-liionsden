@@ -101,7 +101,7 @@ django-tables2==2.7.0
     # via Liionsden (pyproject.toml)
 djangorestframework==3.15.2
     # via Liionsden (pyproject.toml)
-et-xmlfile==1.1.0
+et-xmlfile==2.0.0
     # via openpyxl
 filelock==3.16.1
     # via virtualenv
