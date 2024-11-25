@@ -18,7 +18,7 @@ repos:
         # https://prettier.io for list). Add other types here.
         types_or: [yaml, json]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.7.4"
+    rev: "v0.8.0"
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
@@ -30,7 +30,7 @@ repos:
         additional_dependencies: [types-requests, types-PyYAML]
         exclude: battDB/migrations/|common/migrations/|dfndb/migrations/|_other/|data/
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.42.0
+    rev: v0.43.0
     hooks:
       - id: markdownlint-fix
         args: ["--disable", "MD013", "--disable", "MD033"]
