@@ -97,7 +97,7 @@ fonttools==4.53.1
     # via matplotlib
 idna==3.8
     # via requests
-idutils==1.2.1
+idutils==1.4.2
     # via Liionsden (pyproject.toml)
 isbnlib==3.10.14
     # via idutils
