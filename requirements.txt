@@ -115,7 +115,7 @@ matplotlib==3.9.2
     # via preparenovonix
 model-bakery==1.19.5
     # via Liionsden (pyproject.toml)
-molmass==2024.5.24
+molmass==2024.10.25
     # via Liionsden (pyproject.toml)
 numpy==2.1.0
     # via
