@@ -93,7 +93,7 @@ djangorestframework==3.15.2
     # via Liionsden (pyproject.toml)
 et-xmlfile==2.0.0
     # via openpyxl
-fonttools==4.53.1
+fonttools==4.55.0
     # via matplotlib
 idna==3.8
     # via requests
