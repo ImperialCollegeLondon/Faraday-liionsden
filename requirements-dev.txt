@@ -211,7 +211,7 @@ six==1.16.0
     #   python-dateutil
 sqlparse==0.5.1
     # via django
-tablib==3.6.1
+tablib==3.7.0
     # via Liionsden (pyproject.toml)
 tenacity==9.0.0
     # via plotly
