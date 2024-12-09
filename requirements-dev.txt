@@ -40,7 +40,7 @@ coreapi-cli==1.0.9
     # via Liionsden (pyproject.toml)
 coreschema==0.0.4
     # via coreapi
-crispy-bootstrap5==2024.2
+crispy-bootstrap5==2024.10
     # via Liionsden (pyproject.toml)
 cryptography==43.0.3
     # via
