@@ -187,7 +187,7 @@ typing-extensions==4.12.2
     #   django-bootstrap-datepicker-plus
     #   pydantic
     #   pydantic-core
-tzdata==2024.1
+tzdata==2024.2
     # via
     #   django
     #   pandas
