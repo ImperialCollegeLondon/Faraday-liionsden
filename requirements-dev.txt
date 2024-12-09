@@ -179,7 +179,7 @@ pydantic-core==2.20.1
     # via pydantic
 pyparsing==3.1.4
     # via matplotlib
-pyproject-hooks==1.1.0
+pyproject-hooks==1.2.0
     # via
     #   build
     #   pip-tools
