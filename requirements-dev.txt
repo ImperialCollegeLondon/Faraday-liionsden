@@ -209,7 +209,7 @@ six==1.16.0
     #   idutils
     #   isodate
     #   python-dateutil
-sqlparse==0.5.1
+sqlparse==0.5.3
     # via django
 tablib==3.7.0
     # via Liionsden (pyproject.toml)
