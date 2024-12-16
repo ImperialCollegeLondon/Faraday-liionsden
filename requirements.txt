@@ -146,7 +146,7 @@ psycopg2-binary==2.9.10
     # via Liionsden (pyproject.toml)
 pycparser==2.22
     # via cffi
-pydantic==2.8.2
+pydantic==2.10.3
     # via django-bootstrap-datepicker-plus
 pydantic-core==2.20.1
     # via pydantic
