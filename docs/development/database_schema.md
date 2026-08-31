@@ -52,13 +52,13 @@ intended workflow for adding data to the database:
 
     ```python
     class DeviceSpecification(cm.BaseModelMandatoryName, cm.HasMPTT):
-
         components = models.ManyToManyField(dfn.Component, through="DeviceComponent")
+
 
     ...
 
-    class DeviceComponent(cm.HasName):
 
+    class DeviceComponent(cm.HasName):
         spec = models.ForeignKey(DeviceSpecification, on_delete=models.CASCADE)
         component = models.ForeignKey(dfn.Component, on_delete=models.CASCADE)
     ```
