@@ -69,14 +69,17 @@ class ParsingEngineBase(abc.ABC):
         self.data = self.data.loc[:, cols]
 
     def get_column_info(self) -> dict:
-        """Gathers some metadata for each column.
+        (
+            """Gathers some metadata for each column.
 
         In particular, it gathers if it is a numeric column and if it has data.
 
         Returns:
             A nested dictionary with the above information for each column, proved as
             keys 'is_numeric' and 'has_data.
-        """ ""
+        """
+            ""
+        )
         return {
             k: {
                 "is_numeric": is_numeric_dtype(self.data[k].dtype),
