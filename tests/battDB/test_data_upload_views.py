@@ -5,8 +5,6 @@ from model_bakery import baker
 
 import battDB.models as bdb
 
-# flake8: noqa: E501
-
 
 class DataUploadViewTest(TestCase):
     def setUp(self):
