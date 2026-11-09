@@ -121,8 +121,7 @@ CompositionPartFormSet = inlineformset_factory(
     can_delete=True,
     help_texts={
         "compound": mark_safe(
-            '<a href="/dfndb/new_compound/" target="_blank"> '
-            "new compound &#10697;</a>"
+            '<a href="/dfndb/new_compound/" target="_blank"> new compound &#10697;</a>'
         )
     },
 )
