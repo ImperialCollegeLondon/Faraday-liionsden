@@ -58,8 +58,7 @@ class NewDeviceForm(DataCreateForm):
         help_texts = {
             "device_type": "Is  this a cell or a module?",
             "parent": (
-                "Leave blank unless this cell is a part of "
-                "a particular module or pack"
+                "Leave blank unless this cell is a part of a particular module or pack"
             ),
         }
 
